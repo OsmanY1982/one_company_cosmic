@@ -292,7 +292,13 @@ class DashboardWindow(QMainWindow):
             except Exception:
                 pass
 
-        win = _ModuleWindow(planet, self)
+        # 业务管理 → 专用 BusinessWindow
+        if module_id == "business":
+            from modules.business.business_window import BusinessWindow
+            win = BusinessWindow(self)
+        else:
+            win = _ModuleWindow(planet, self)
+
         self._modules_open[module_id] = win
         win.show()
         self._add_message("action", f"已打开「{planet['name']}」")
