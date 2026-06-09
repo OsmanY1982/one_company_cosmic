@@ -13,14 +13,14 @@ from PyQt5.QtGui import (
     QLinearGradient, QPainterPath, QFont, QTextCursor, QMouseEvent
 )
 
-from core.cosmic import CosmicBackground
+from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPLE
 from core.agent import AgentCore
 from core.llm_client import ModelConfig, LLMClient
 from core.voice import VoiceListener
 
 
 # ═══════════ 模块星球定义 ═══════════
-MODULE_PLANETS = [
+ALL_PLANETS = [
     {"id": "business",     "name": "业务管理", "color": QColor(68, 136, 255),   "radius": 38, "orbit": 160},
     {"id": "personnel",    "name": "人员管理", "color": QColor(255, 102, 68),   "radius": 32, "orbit": 200},
     {"id": "intelligence", "name": "智能中心", "color": QColor(170, 68, 255),   "radius": 42, "orbit": 140},
@@ -28,13 +28,44 @@ MODULE_PLANETS = [
     {"id": "system",       "name": "系统设置", "color": QColor(136, 153, 170),  "radius": 28, "orbit": 280},
 ]
 
+# 会员可见模块（业务管理 + 智能中心）
+MEMBER_PLANET_IDS = {"business", "intelligence"}
+
+# ── 会员等级徽章配色 ──
+MEMBERSHIP_BADGE_COLORS = {
+    "trial":     QColor(0, 200, 255),     # 青色
+    "vip":       QColor(255, 180, 50),    # 金色
+    "permanent": QColor(140, 80, 255),    # 紫色
+}
+
+MEMBERSHIP_LABELS = {
+    "trial": "体验会员", "vip": "VIP会员", "permanent": "永久会员",
+}
+
 
 class DashboardWindow(QMainWindow):
     """舰桥 — AI Agent 驾驶舱"""
 
-    def __init__(self, config: ModelConfig = None):
+    def __init__(self, config: ModelConfig = None, role: str = "admin",
+                 membership_info: dict = None):
         super().__init__()
-        self.setWindowTitle("一人公司 — 舰桥")
+        self._role = role
+        self._membership_info = membership_info or {}
+
+        # 根据角色确定可见星球
+        if role == "member":
+            self._planets = [p for p in ALL_PLANETS if p["id"] in MEMBER_PLANET_IDS]
+            mode_title = "舰桥 · 船员模式"
+            if membership_info:
+                ms = membership_info
+                level = ms.get("membership", "trial")
+                expire = ms.get("expire_at", "")
+                mode_title += f" | 会员等级: {MEMBERSHIP_LABELS.get(level, level)} | 到期: {expire[:10]}"
+            self.setWindowTitle(f"一人公司 — {mode_title}")
+        else:
+            self._planets = list(ALL_PLANETS)
+            self.setWindowTitle("一人公司 — 舰桥 · 指挥官模式")
+
         self.setMinimumSize(1200, 760)
 
         self._config = config
@@ -70,7 +101,11 @@ class DashboardWindow(QMainWindow):
 
         # 欢迎
         fuel = "引擎就绪" if self._llm else "离线模式"
-        self._add_message("system", f"舰桥就绪。Agent {fuel}。输入命令或点击轨道星球。")
+        if self._role == "member":
+            ms = self._membership_info
+            level = MEMBERSHIP_LABELS.get(ms.get("membership", "trial"), "体验会员")
+            self._add_message("system",
+                f"舰桥就绪。Agent {fuel}。当前身份：{level}。输入命令或点击轨道星球。")
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -101,7 +136,14 @@ class DashboardWindow(QMainWindow):
 
         # 标题
         top_bar = QHBoxLayout()
-        title = QLabel("舰桥 · 指挥中心")
+        if self._role == "member":
+            ms = self._membership_info
+            level_label = MEMBERSHIP_LABELS.get(ms.get("membership", "trial"), "体验会员")
+            expire_str = (ms.get("expire_at", ""))[:10] if ms.get("expire_at") else "N/A"
+            title_text = f"舰桥 · 船员模式 | {level_label} | 到期: {expire_str}"
+        else:
+            title_text = "舰桥 · 指挥官模式"
+        title = QLabel(title_text)
         title.setStyleSheet("color: #8899bb; font-size: 13px; font-weight: 700; letter-spacing: 4px; background: transparent;")
         top_bar.addWidget(title)
         top_bar.addStretch()
@@ -251,10 +293,10 @@ class DashboardWindow(QMainWindow):
 
     # ════════════════ 处理器 ════════════════
 
-    MODULES_LIST = [(p["id"], p["name"], "") for p in MODULE_PLANETS]
+    MODULES_LIST = [(p["id"], p["name"], "") for p in ALL_PLANETS]
 
     def _do_open(self, intent):
-        names = {p["id"]: p["name"] for p in MODULE_PLANETS}
+        names = {p["id"]: p["name"] for p in self._planets}
         name = names.get(intent.target, intent.target)
         return f"正在导航至「{name}」..."
 
@@ -282,9 +324,18 @@ class DashboardWindow(QMainWindow):
 
     def _open_module(self, module_id: str):
         """打开子模块窗口"""
-        planet = next((p for p in MODULE_PLANETS if p["id"] == module_id), None)
+        planet = next((p for p in self._planets if p["id"] == module_id), None)
         if not planet:
             return
+
+        # 船员模式权限检查
+        if self._role == "member":
+            if module_id == "personnel":
+                self._add_message("system", "船员权限不足：人员管理仅指挥官可访问")
+                return
+            if module_id == "system":
+                self._add_message("system", "船员权限不足：系统设置仅指挥官可访问")
+                return
 
         if module_id in self._modules_open:
             try:
@@ -292,10 +343,21 @@ class DashboardWindow(QMainWindow):
             except Exception:
                 pass
 
-        # 业务管理 → 专用 BusinessWindow
         if module_id == "business":
             from modules.business.business_window import BusinessWindow
             win = BusinessWindow(self)
+        elif module_id == "personnel":
+            from modules.personnel.personnel_window import PersonnelWindow
+            win = PersonnelWindow(self)
+        elif module_id == "intelligence":
+            from modules.intelligence.intelligence_window import IntelligenceWindow
+            win = IntelligenceWindow(self, role=self._role)
+        elif module_id == "data":
+            from modules.data_center.data_window import DataWindow
+            win = DataWindow(self)
+        elif module_id == "system":
+            from modules.system.system_window import SystemWindow
+            win = SystemWindow(self)
         else:
             win = _ModuleWindow(planet, self)
 
@@ -366,8 +428,8 @@ class DashboardWindow(QMainWindow):
     def _get_planet_pos(self, planet: dict) -> QPointF:
         """计算星球当前位置（基于时间和轨道参数）"""
         cx = self._get_orbit_center()
-        idx = MODULE_PLANETS.index(planet)
-        phase = idx * math.pi * 2 / len(MODULE_PLANETS)
+        idx = self._planets.index(planet)
+        phase = idx * math.pi * 2 / len(self._planets)
         angle = phase + self._t * (0.15 + idx * 0.04)  # 不同速度
         px = cx.x() + math.cos(angle) * planet["orbit"]
         py = cx.y() + math.sin(angle) * planet["orbit"] * 0.55  # 椭圆效果
@@ -375,7 +437,7 @@ class DashboardWindow(QMainWindow):
 
     def _planet_at_pos(self, pos: QPointF) -> dict:
         """返回 pos 处的星球，无则 None"""
-        for p in MODULE_PLANETS:
+        for p in self._planets:
             pp = self._get_planet_pos(p)
             dist = math.hypot(pos.x() - pp.x(), pos.y() - pp.y())
             if dist <= p["radius"] + 12:  # 容忍点击区域
@@ -439,7 +501,7 @@ class DashboardWindow(QMainWindow):
         painter.drawLine(QPointF(ex, ey), QPointF(sx, sy))
 
         # 轨道线
-        for p in MODULE_PLANETS:
+        for p in self._planets:
             r = p["orbit"]
             alpha = 15 if p == self._hovered_planet else 8
             painter.setPen(QPen(QColor(p["color"].red(), p["color"].green(),
@@ -474,7 +536,7 @@ class DashboardWindow(QMainWindow):
                          Qt.AlignCenter, "AI CORE")
 
         # ── 星球 ──
-        for p in MODULE_PLANETS:
+        for p in self._planets:
             pp = self._get_planet_pos(p)
             c = p["color"]
             is_hovered = p == self._hovered_planet
@@ -533,6 +595,57 @@ class DashboardWindow(QMainWindow):
             painter.setFont(QFont("PingFang SC", 10, QFont.Bold if is_hovered else QFont.Normal))
             painter.drawText(QRectF(pp.x() - 50, pp.y() + r + 6, 100, 20),
                              Qt.AlignCenter, p["name"])
+
+        # ── 会员等级徽章（船员模式） ──
+        if self._role == "member" and self._membership_info:
+            ms = self._membership_info
+            level = ms.get("membership", "trial")
+            badge_color = MEMBERSHIP_BADGE_COLORS.get(level, MEMBERSHIP_BADGE_COLORS["trial"])
+            level_label = MEMBERSHIP_LABELS.get(level, "体验会员")
+
+            # 计算到期倒计时
+            expire_str = ms.get("expire_at", "")
+            countdown_text = ""
+            if expire_str:
+                try:
+                    from datetime import datetime
+                    expire_dt = datetime.strptime(expire_str, "%Y-%m-%d %H:%M:%S")
+                    now = datetime.now()
+                    remain = (expire_dt - now).days
+                    if remain > 0:
+                        countdown_text = f"剩余 {remain} 天"
+                    elif remain == 0:
+                        countdown_text = "今日到期"
+                    else:
+                        countdown_text = "已过期"
+                except Exception:
+                    pass
+
+            badge_x = w * 0.6
+            badge_y = 14
+            badge_w = 180
+            badge_h = 32
+
+            # 徽章背景
+            path = QPainterPath()
+            path.addRoundedRect(QRectF(badge_x, badge_y, badge_w, badge_h), 16, 16)
+            painter.setPen(QPen(QColor(badge_color.red(), badge_color.green(), badge_color.blue(), 80), 1))
+            painter.setBrush(QBrush(QColor(badge_color.red(), badge_color.green(),
+                                          badge_color.blue(), 25)))
+            painter.drawPath(path)
+
+            # 等级文字（居中偏左）
+            painter.setPen(QPen(QColor(badge_color.red(), badge_color.green(), badge_color.blue(), 220)))
+            painter.setFont(QFont("PingFang SC", 10, QFont.Bold))
+            painter.drawText(QRectF(badge_x + 10, badge_y, badge_w - 20, badge_h),
+                             Qt.AlignVCenter | Qt.AlignLeft, level_label)
+
+            # 倒计时（右侧）
+            if countdown_text:
+                painter.setPen(QPen(QColor(badge_color.red(), badge_color.green(), badge_color.blue(), 150)))
+                painter.setFont(QFont("Menlo", 9))
+                painter.drawText(QRectF(badge_x + 10, badge_y, badge_w - 20, badge_h),
+                                 Qt.AlignVCenter | Qt.AlignRight, countdown_text)
 
         # ── 右侧标签 ──
         painter.setPen(QPen(QColor(50, 80, 130, 80)))

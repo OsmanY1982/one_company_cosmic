@@ -105,8 +105,19 @@ def init_all_dbs():
         rights TEXT DEFAULT '',
         vip_expire TEXT DEFAULT '',
         status TEXT DEFAULT '激活',
+        membership_type TEXT DEFAULT 'trial',
+        membership_price REAL DEFAULT 0,
+        membership_expire TEXT DEFAULT '',
         created_at TEXT DEFAULT (datetime('now', 'localtime'))
     )''')
+    # 兼容旧表：尝试添加新字段
+    for col, col_type in [("membership_type", "TEXT DEFAULT 'trial'"),
+                           ("membership_price", "REAL DEFAULT 0"),
+                           ("membership_expire", "TEXT DEFAULT ''")]:
+        try:
+            c.execute(f"ALTER TABLE member ADD COLUMN {col} {col_type}")
+        except sqlite3.OperationalError:
+            pass  # 字段已存在
     conn.commit()
     conn.close()
 

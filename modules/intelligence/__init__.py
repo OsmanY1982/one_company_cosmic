@@ -1,0 +1,2 @@
+# 智能中心模块
+from modules.intelligence.intelligence_window import IntelligenceWindow
