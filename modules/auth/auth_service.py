@@ -4,9 +4,12 @@
 """
 import json
 import os
+import sqlite3
 from datetime import datetime, timedelta
 
 USER_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users.json")
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
+ACTIVATION_DB = os.path.join(DATA_DIR, "activation.db")
 
 # ── 会员类型定义 ──
 MEMBERSHIP_TRIAL = "trial"       # 体验会员 7天 免费
@@ -230,11 +233,92 @@ class AuthService:
         user = self._users.get(username)
         return user is not None and user.get("role") == "admin"
 
+    def activate_member(self, username: str, code: str) -> tuple:
+        """
+        通过激活码升级会员
+        返回: (ok: bool, msg: str)
+        """
+        self._reload()
+        user = self._users.get(username)
+        if not user:
+            return False, "用户不存在"
+
+        # 从 activation.db 查询激活码
+        if not os.path.exists(ACTIVATION_DB):
+            return False, "激活码系统未初始化"
+
+        conn = sqlite3.connect(ACTIVATION_DB)
+        conn.row_factory = sqlite3.Row
+        row = conn.execute(
+            "SELECT * FROM activation WHERE code = ?", (code,)
+        ).fetchone()
+
+        if not row:
+            conn.close()
+            return False, "激活码无效"
+
+        if row["is_used"]:
+            conn.close()
+            return False, "该激活码已被使用"
+
+        code_type = row["code_type"]
+        duration = row["duration_days"]
+
+        # 确定目标会员等级
+        if code_type == "永久" or duration >= 9999:
+            target = MEMBERSHIP_PERMANENT
+        elif duration >= 365:
+            target = MEMBERSHIP_VIP
+        elif duration > 0:
+            target = MEMBERSHIP_VIP  # 短期卡也算 VIP
+        else:
+            conn.close()
+            return False, "无效的激活码时长"
+
+        # 检查是否已是更高等级
+        current = user.get("membership", MEMBERSHIP_TRIAL)
+        if current == MEMBERSHIP_PERMANENT:
+            conn.close()
+            return False, "已是永久会员，无需激活"
+
+        # 执行升级
+        if target == MEMBERSHIP_PERMANENT:
+            user["membership"] = MEMBERSHIP_PERMANENT
+            user["expire_at"] = None
+        else:
+            if current == MEMBERSHIP_VIP:
+                # 已有 VIP，延长
+                old_expire = user.get("expire_at")
+                if old_expire:
+                    try:
+                        old_dt = datetime.strptime(old_expire, "%Y-%m-%d %H:%M:%S")
+                        new_dt = max(old_dt, datetime.now()) + timedelta(days=duration)
+                    except ValueError:
+                        new_dt = datetime.now() + timedelta(days=duration)
+                else:
+                    new_dt = datetime.now() + timedelta(days=duration)
+                user["expire_at"] = new_dt.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                user["membership"] = MEMBERSHIP_VIP
+                user["expire_at"] = (datetime.now() + timedelta(days=duration)).strftime("%Y-%m-%d %H:%M:%S")
+
+        # 标记激活码已使用
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        conn.execute(
+            "UPDATE activation SET is_used = 1, used_by = ?, used_at = ? WHERE code = ?",
+            (username, now, code)
+        )
+        conn.commit()
+        conn.close()
+
+        _save_users(self._users)
+        return True, "激活成功"
+
     def get_membership_info(self, username: str) -> dict:
         """获取会员信息摘要"""
         user = self._users.get(username)
         if not user:
-            return {"membership": MEMBERSHIP_TRIAL, "label": "体验会员",
+            return {"username": username, "membership": MEMBERSHIP_TRIAL, "label": "体验会员",
                     "expire_at": None, "days_left": 0, "role": "member"}
 
         membership = user.get("membership", MEMBERSHIP_TRIAL)
@@ -250,6 +334,7 @@ class AuthService:
                 days_left = 0
 
         return {
+            "username": username,
             "membership": membership,
             "label": MEMBERSHIP_LABELS.get(membership, "体验会员"),
             "expire_at": expire_at,

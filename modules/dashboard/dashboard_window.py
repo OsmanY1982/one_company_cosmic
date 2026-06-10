@@ -148,6 +148,24 @@ class DashboardWindow(QMainWindow):
         top_bar.addWidget(title)
         top_bar.addStretch()
 
+        # 船员模式：升级会员入口
+        if self._role == "member":
+            self._upgrade_btn = QPushButton("升级会员")
+            self._upgrade_btn.setCursor(Qt.PointingHandCursor)
+            self._upgrade_btn.setStyleSheet("""
+                QPushButton {
+                    background: rgba(255,180,45,35);
+                    color: #ffdd88;
+                    border: 1px solid rgba(255,200,60,55);
+                    border-radius: 14px;
+                    padding: 4px 14px;
+                    font-size: 11px; font-weight: 600;
+                }
+                QPushButton:hover { background: rgba(255,190,50,60); }
+            """)
+            self._upgrade_btn.clicked.connect(self._open_upgrade)
+            top_bar.addWidget(self._upgrade_btn)
+
         self._fuel_indicator = QLabel("")
         self._fuel_indicator.setStyleSheet("color: #00cc88; font-size: 9px; background: transparent;")
         if self._config:
@@ -364,6 +382,19 @@ class DashboardWindow(QMainWindow):
         self._modules_open[module_id] = win
         win.show()
         self._add_message("action", f"已打开「{planet['name']}」")
+
+    def _open_upgrade(self):
+        """船员点击升级会员按钮"""
+        from modules.auth.upgrade_window import UpgradeWindow
+        ms = self._membership_info
+        dlg = UpgradeWindow(
+            username=self._membership_info.get("username", ""),
+            role=self._role,
+            membership=ms.get("membership", "trial"),
+            expire_at=ms.get("expire_at"),
+            parent=self,
+        )
+        dlg.exec_()
 
     # ════════════════ 语音 ════════════════
 

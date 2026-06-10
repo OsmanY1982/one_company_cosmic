@@ -13,6 +13,7 @@ from PyQt5.QtGui import QColor
 from modules.personnel.personnel_window import (
     member_get_all, member_add, member_update, member_delete, member_stats
 )
+from modules.auth.auth_service import AuthService
 
 # ═══════ 暖橙 QSS ═══════
 BTN_PRIMARY = """
@@ -139,6 +140,93 @@ class MemberDialog(QDialog):
         }
 
 
+# ═══════════════ 管理员升级对话框 ═══════════════
+class AdminUpgradeDialog(QDialog):
+    """管理员直接升级会员（无需激活码）"""
+
+    def __init__(self, username, current_membership, current_expire, parent=None):
+        super().__init__(parent)
+        self._username = username
+        self._auth = AuthService()
+
+        self.setWindowTitle(f"升级会员 — {username}")
+        self.setFixedSize(400, 220)
+        self.setStyleSheet("""
+            QDialog {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #0a0402, stop:1 #140a06);
+                border: 1px solid rgba(255,100,60,45); border-radius: 12px;
+            }
+            QLabel { color: #ccaa99; font-size: 12px; background: transparent; }
+            QComboBox {
+                background: rgba(15,8,5,230); color: #ddbbaa;
+                border: 1px solid rgba(255,120,60,35); border-radius: 6px;
+                padding: 7px 10px; font-size: 12px;
+            }
+            QComboBox QAbstractItemView {
+                background: #140a06; color: #ddbbaa;
+                selection-background-color: rgba(255,100,60,60);
+            }
+        """)
+
+        layout = QVBoxLayout(self)
+        layout.setSpacing(14)
+        layout.setContentsMargins(24, 20, 24, 20)
+
+        # 当前状态
+        info_label = QLabel(f"当前等级：{current_membership}　|　到期：{current_expire or '永久'}")
+        info_label.setStyleSheet("color: #ffccaa; font-size: 13px; font-weight: 600;")
+        layout.addWidget(info_label)
+
+        # 目标等级
+        target_row = QHBoxLayout()
+        target_row.addWidget(QLabel("目标等级："))
+        self._level_combo = QComboBox()
+        self._level_combo.addItems(["VIP", "永久"])
+        target_row.addWidget(self._level_combo, 1)
+        layout.addLayout(target_row)
+
+        layout.addStretch()
+
+        # 按钮
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        cancel_btn = QPushButton("取消")
+        cancel_btn.clicked.connect(self.reject)
+        cancel_btn.setStyleSheet("""
+            QPushButton {
+                background: rgba(200,60,40,40); color: #ffaaaa;
+                border: 1px solid rgba(200,80,50,60); border-radius: 16px;
+                padding: 6px 18px; font-size: 11px;
+            }
+            QPushButton:hover { background: rgba(220,80,50,70); }
+        """)
+        btn_row.addWidget(cancel_btn)
+
+        confirm_btn = QPushButton("确认升级")
+        confirm_btn.clicked.connect(self._do_upgrade)
+        confirm_btn.setStyleSheet("""
+            QPushButton {
+                background: rgba(255,100,60,40); color: #ffccaa;
+                border: 1px solid rgba(255,120,70,60); border-radius: 16px;
+                padding: 6px 18px; font-size: 11px; font-weight: 600;
+            }
+            QPushButton:hover { background: rgba(255,120,70,70); }
+        """)
+        btn_row.addWidget(confirm_btn)
+        layout.addLayout(btn_row)
+
+    def _do_upgrade(self):
+        target = self._level_combo.currentText()
+        target_key = "vip" if target == "VIP" else "permanent"
+        ok, msg = self._auth.upgrade_membership(self._username, target_key)
+        if ok:
+            QMessageBox.information(self, "升级成功", msg)
+            self.accept()
+        else:
+            QMessageBox.warning(self, "升级失败", msg)
+
+
 # ═══════════════ 会员管理主窗口 ═══════════════
 class MemberWindow(QDialog):
     def __init__(self, parent=None):
@@ -215,6 +303,18 @@ class MemberWindow(QDialog):
         self.level_filter.currentTextChanged.connect(self._load)
         toolbar.addWidget(self.level_filter)
         toolbar.addStretch()
+
+        btn_upgrade = QPushButton("升级")
+        btn_upgrade.setStyleSheet("""
+            QPushButton {
+                background: rgba(255,180,45,40); color: #ffdd88;
+                border: 1px solid rgba(255,200,60,60); border-radius: 16px;
+                padding: 6px 18px; font-size: 11px; font-weight: 600;
+            }
+            QPushButton:hover { background: rgba(255,200,60,70); }
+        """)
+        btn_upgrade.clicked.connect(self._upgrade)
+        toolbar.addWidget(btn_upgrade)
 
         btn_add = QPushButton("+ 添加会员")
         btn_add.setStyleSheet(BTN_PRIMARY)
@@ -319,4 +419,22 @@ class MemberWindow(QDialog):
             self, "确认", f"确定删除会员 #{mid} 吗？"
         ):
             member_delete(mid)
+            self._load()
+
+    def _upgrade(self):
+        """管理员升级会员等级"""
+        row = self.table.currentRow()
+        if row < 0:
+            return QMessageBox.warning(self, "提示", "请先选中一行")
+
+        name = self.table.item(row, 1).text().strip()  # 姓名列
+        level = self.table.item(row, 4).text().strip()  # 等级列
+        expire = self.table.item(row, 7).text().strip() if self.table.item(row, 7) else ""  # VIP到期列
+
+        # 映射 personnel level → auth membership
+        level_map = {"体验": "trial", "VIP": "vip", "永久": "permanent"}
+        current_membership = level_map.get(level, "trial")
+
+        dlg = AdminUpgradeDialog(name, current_membership, expire, self)
+        if dlg.exec_() == QDialog.Accepted:
             self._load()
