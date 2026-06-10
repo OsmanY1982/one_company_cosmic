@@ -1,113 +1,88 @@
 """
 数据中心 → 星云观测站 · NEBULA OBSERVATORY
-宇宙主题窗口：数据报表 / 数据大屏
+小星球导航模式：2颗小星球环绕星云核心光球
 """
-import os, sqlite3, csv
+import os, sqlite3, csv, math
 from datetime import datetime
 from PyQt5.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget,
-    QTableWidget, QTableWidgetItem, QPushButton, QLabel,
-    QHeaderView, QTextEdit, QLineEdit,
-    QComboBox, QGroupBox, QFrame, QFileDialog
+    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QPushButton, QLabel, QFrame, QDialog
 )
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QColor
+from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF
+from PyQt5.QtGui import (
+    QPainter, QColor, QRadialGradient, QPen, QBrush,
+    QLinearGradient, QFont, QMouseEvent
+)
 from core.cosmic import CosmicBackground
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
 
-# ═══════ 宇宙 QSS ═══════
-TAB_STYLE = """
-    QTabWidget::pane {
-        background: transparent;
-        border: 1px solid rgba(0,180,170,30);
-        border-radius: 10px;
-    }
-    QTabBar::tab {
-        background: rgba(8,22,24,220);
-        color: #88aaaa; padding: 10px 22px;
-        border: none; border-bottom: 2px solid transparent;
-        font-size: 12px; font-weight: 600; letter-spacing: 2px; min-width: 70px;
-    }
-    QTabBar::tab:selected {
-        color: #aaeecc;
-        border-bottom: 2px solid #00b4aa;
-        background: rgba(12,28,30,235);
-    }
-    QTabBar::tab:hover { color: #88ddbb; }
-"""
-TABLE_STYLE = """
-    QTableWidget {
-        background: rgba(6,18,20,220); color: #aacccc;
-        border: 1px solid rgba(0,160,140,30); border-radius: 8px;
-        gridline-color: rgba(0,100,80,25); font-size: 12px;
-        selection-background-color: rgba(0,180,150,60);
-    }
-    QTableWidget::item { padding: 5px 10px; }
-    QHeaderView::section {
-        background: rgba(10,22,24,230); color: #88aaaa; padding: 8px 10px;
-        border: none; border-bottom: 1px solid rgba(0,180,160,40);
-        font-weight: 700; font-size: 11px; letter-spacing: 1px;
-    }
-"""
-INPUT_STYLE = """
-    QLineEdit, QComboBox, QTextEdit {
-        background: rgba(6,18,20,230); color: #aacccc;
-        border: 1px solid rgba(0,160,140,35); border-radius: 6px;
-        padding: 6px 10px; font-size: 12px;
-    }
-    QLineEdit:focus { border: 1px solid rgba(0,200,160,180); }
-    QComboBox::drop-down { border: none; }
-    QComboBox QAbstractItemView {
-        background: #0a1618; color: #aacccc; selection-background-color: rgba(0,180,150,80);
-    }
-"""
-BTN_PRIMARY = """
-    QPushButton {
-        background: rgba(0,160,140,40); color: #aaeecc;
-        border: 1px solid rgba(0,180,150,60); border-radius: 16px;
-        padding: 6px 18px; font-size: 11px; font-weight: 600;
-    }
-    QPushButton:hover { background: rgba(0,200,160,70); }
-"""
+# ═══════ 小星球定义 ═══════
+NEBULA_PLANETS = [
+    {"id": "report", "name": "数据报表", "color": QColor(0, 200, 160), "orbit": 160, "radius": 34},
+    {"id": "bi",     "name": "数据大屏", "color": QColor(60, 200, 200), "orbit": 240, "radius": 28},
+]
+
+CORE_COLOR = QColor(0, 204, 160)  # 青绿色 #00cca0
 
 
 class DataWindow(QMainWindow):
-    """星云观测站 · NEBULA OBSERVATORY"""
+    """星云观测站 · NEBULA OBSERVATORY — 小星球导航"""
 
     def __init__(self, parent=None, role="admin"):
         super().__init__(parent)
         self._role = role
         self.setWindowTitle("一人公司 — 星云观测站 · NEBULA OBSERVATORY")
-        self.setMinimumSize(1100, 720)
+        self.setMinimumSize(900, 620)
+        self._t = 0
+        self._hovered_planet = None
+        self._open_windows = {}
+
+        # 星空背景
+        self._cosmic = CosmicBackground()
+        self.setCentralWidget(self._cosmic)
+
+        # HUD 层
+        self._hud = QWidget(self._cosmic)
+        self._hud.setAttribute(Qt.WA_TranslucentBackground)
+        self._hud.setGeometry(0, 0, self.width(), self.height())
+        self._hud.setMouseTracking(True)
+        self._hud.mouseMoveEvent = self._on_mouse_move
+        self._hud.mousePressEvent = self._on_click
+
         self._build_ui()
-        self._load_all()
+
+        # 动画
+        self._anim = QTimer(self)
+        self._anim.timeout.connect(self._tick)
+        self._anim.start(50)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self._hud.setGeometry(0, 0, self.width(), self.height())
 
     def _build_ui(self):
-        bg = CosmicBackground()
-        self.setCentralWidget(bg)
+        self._hud.paintEvent = self._paint_hud
 
-        hud = QWidget(bg)
-        hud.setAttribute(Qt.WA_TranslucentBackground)
-        hud.setGeometry(0, 0, self.width(), self.height())
-        self._hud = hud
-
-        layout = QVBoxLayout(hud)
-        layout.setSpacing(0); layout.setContentsMargins(24, 16, 24, 16)
-
-        header = QWidget(); header.setFixedHeight(80)
+        # ── 顶部 Header ──
+        header = QWidget(self._hud)
         header.setStyleSheet("background: transparent;")
-        hl = QVBoxLayout(header); hl.setSpacing(4)
+        header.setGeometry(0, 10, self.width(), 80)
+        hl = QVBoxLayout(header)
+        hl.setSpacing(4)
+        hl.setContentsMargins(24, 0, 24, 0)
 
         title = QLabel("星云观测站")
-        title.setStyleSheet("color: #aaeecc; font-size: 24px; font-weight: 800; letter-spacing: 8px; background: transparent;")
+        title.setStyleSheet("color: #aaeecc; font-size: 22px; font-weight: 800; letter-spacing: 6px; background: transparent;")
         hl.addWidget(title, alignment=Qt.AlignCenter)
 
-        subtitle = QLabel("NEBULA OBSERVATORY · 数据洞察中枢")
-        subtitle.setStyleSheet("color: #558877; font-size: 11px; letter-spacing: 3px; background: transparent;")
+        subtitle = QLabel("NEBULA OBSERVATORY · 点击星球进入模块")
+        subtitle.setStyleSheet("color: #558877; font-size: 10px; letter-spacing: 2px; background: transparent;")
         hl.addWidget(subtitle, alignment=Qt.AlignCenter)
 
-        line = QFrame(); line.setFixedHeight(2)
+        # 辉光线
+        line = QFrame()
+        line.setFixedHeight(2)
         line.setStyleSheet("""
             background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
                 stop:0 transparent, stop:0.3 rgba(0,180,150,50),
@@ -116,245 +91,193 @@ class DataWindow(QMainWindow):
             border: none;
         """)
         hl.addWidget(line)
-        layout.addWidget(header)
 
-        self.tabs = QTabWidget()
-        self.tabs.setStyleSheet(TAB_STYLE)
-        layout.addWidget(self.tabs)
+        # 底部提示
+        hint = QLabel("点击轨道星球进入对应模块")
+        hint.setStyleSheet("color: #335544; font-size: 10px; background: transparent;")
+        hint.setAlignment(Qt.AlignCenter)
+        hint.setGeometry(0, self.height() - 30, self.width(), 24)
 
-        self._build_report_tab()
-        self._build_bi_tab()
+    def _get_orbit_center(self) -> QPointF:
+        w = self._hud.width()
+        h = self._hud.height()
+        return QPointF(w * 0.5, h * 0.55)
 
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        if hasattr(self, '_hud'):
-            self._hud.setGeometry(0, 0, self.width(), self.height())
+    def _get_planet_pos(self, planet: dict) -> QPointF:
+        cx = self._get_orbit_center()
+        idx = NEBULA_PLANETS.index(planet)
+        phase = idx * math.pi * 0.75  # 初始相位差
+        angle = phase + self._t * (0.12 + idx * 0.06)
+        px = cx.x() + math.cos(angle) * planet["orbit"]
+        py = cx.y() + math.sin(angle) * planet["orbit"] * 0.55
+        return QPointF(px, py)
 
-    def _build_report_tab(self):
-        tab = QWidget()
-        l = QVBoxLayout(tab)
-        l.setSpacing(10); l.setContentsMargins(16, 12, 16, 12)
+    def _planet_at_pos(self, pos: QPointF):
+        for p in NEBULA_PLANETS:
+            pp = self._get_planet_pos(p)
+            dist = math.hypot(pos.x() - pp.x(), pos.y() - pp.y())
+            if dist <= p["radius"] + 14:
+                return p
+        return None
 
-        cards = QHBoxLayout()
-        self.kpi_labels = {}
-        for name, color in [("财务收入","#44cc88"),("会员总数","#4488ff"),("客户数量","#ffaa44"),("订单总数","#cc88ff"),("团队人数","#ff6688")]:
-            card = QFrame()
-            card.setStyleSheet(f"background: rgba(8,20,22,230); border: 1px solid rgba(0,160,140,30); border-radius: 10px; padding: 12px; min-width: 130px;")
-            cll = QVBoxLayout(card); cll.setContentsMargins(0,0,0,0)
-            lb = QLabel(name); lb.setStyleSheet("color: #558877; font-size: 11px; background:transparent;")
-            vl = QLabel("—"); vl.setStyleSheet(f"color: {color}; font-size: 22px; font-weight: 700; background:transparent;")
-            cll.addWidget(lb); cll.addWidget(vl)
-            self.kpi_labels[name] = vl
-            cards.addWidget(card)
-        cards.addStretch()
-        l.addLayout(cards)
+    def _on_mouse_move(self, event: QMouseEvent):
+        old = self._hovered_planet
+        self._hovered_planet = self._planet_at_pos(event.pos())
+        if old != self._hovered_planet:
+            self._hud.update()
+            if self._hovered_planet:
+                self.setCursor(Qt.PointingHandCursor)
+            else:
+                self.setCursor(Qt.ArrowCursor)
 
-        sr = QHBoxLayout()
-        sr.addWidget(QLabel("报表类型:"))
-        self.report_type = QComboBox()
-        self.report_type.addItems(["收入概览","订单明细","会员统计","客户分析","产品销售"])
-        self.report_type.setStyleSheet(INPUT_STYLE)
-        self.report_type.currentTextChanged.connect(self._refresh_report)
-        sr.addWidget(self.report_type); sr.addStretch()
-        export = QPushButton("导出CSV"); export.setStyleSheet(BTN_PRIMARY); export.clicked.connect(self._export_report)
-        sr.addWidget(export)
-        l.addLayout(sr)
+    def _on_click(self, event: QMouseEvent):
+        planet = self._planet_at_pos(event.pos())
+        if planet:
+            self._open_planet(planet["id"])
 
-        self.report_table = QTableWidget()
-        self.report_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.report_table.setStyleSheet(TABLE_STYLE)
-        self.report_table.setEditTriggers(QTableWidget.NoEditTriggers)
-        l.addWidget(self.report_table)
+    def _open_planet(self, pid: str):
+        if pid in self._open_windows:
+            try:
+                self._open_windows[pid].close()
+            except Exception:
+                pass
 
-        self.report_summary = QTextEdit()
-        self.report_summary.setReadOnly(True); self.report_summary.setMaximumHeight(100)
-        self.report_summary.setStyleSheet(INPUT_STYLE)
-        l.addWidget(self.report_summary)
+        if pid == "report":
+            from modules.data_center.report_window import ReportWindow
+            win = ReportWindow(self)
+        elif pid == "bi":
+            from modules.data_center.bi_window import BiWindow
+            win = BiWindow(self)
+        else:
+            return
 
-        self.tabs.addTab(tab, "数据报表")
+        self._open_windows[pid] = win
+        win.show()
 
-    def _setup_table(self, headers):
-        self.report_table.clear()
-        self.report_table.setColumnCount(len(headers))
-        self.report_table.setHorizontalHeaderLabels(headers)
-        self.report_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    def _tick(self):
+        self._t += 0.04
+        self._hud.update()
 
-    def _refresh_report(self):
-        rtype = self.report_type.currentText()
-        try:
-            if rtype == "收入概览": self._load_finance()
-            elif rtype == "订单明细": self._load_orders()
-            elif rtype == "会员统计": self._load_members()
-            elif rtype == "客户分析": self._load_customers()
-            elif rtype == "产品销售": self._load_products()
-        except Exception as e:
-            self.report_summary.setText(f"加载异常: {e}")
+    def _paint_hud(self, event):
+        painter = QPainter(self._hud)
+        painter.setRenderHint(QPainter.Antialiasing)
+        w, h = self._hud.width(), self._hud.height()
+        cx = self._get_orbit_center()
 
-    def _load_finance(self):
-        db = os.path.join(DATA_DIR, "finance.db")
-        if not os.path.exists(db):
-            self._setup_table(["提示"]); self.report_summary.setText("暂无财务数据"); return
-        conn = sqlite3.connect(db); conn.row_factory = sqlite3.Row
-        rows = conn.execute("SELECT * FROM finance ORDER BY id DESC LIMIT 50").fetchall(); conn.close()
-        self._setup_table(["ID","类型","金额","备注","日期"])
-        self.report_table.setRowCount(len(rows))
-        inc = exp = 0
-        for i, r in enumerate(rows):
-            for j, k in enumerate(['id','type','amount','note','date']):
-                self.report_table.setItem(i, j, QTableWidgetItem(str(r[k]) if r[k] is not None else ""))
-            amt = float(r['amount'] or 0)
-            if r['type'] and '收入' in str(r['type']): inc += amt
-            else: exp += amt
-        self.report_summary.setText(f"总收入: ¥{inc:.2f} | 总支出: ¥{exp:.2f} | 利润: ¥{inc-exp:.2f}")
+        # ── 轨道环 ──
+        for p in NEBULA_PLANETS:
+            r = p["orbit"]
+            alpha = 20 if p == self._hovered_planet else 10
+            c = p["color"]
+            painter.setPen(QPen(QColor(c.red(), c.green(), c.blue(), alpha), 0.8))
+            painter.setBrush(Qt.NoBrush)
+            painter.drawEllipse(cx, r, r * 0.55)
 
-    def _load_orders(self):
-        db = os.path.join(DATA_DIR, "order.db")
-        if not os.path.exists(db): self._setup_table(["提示"]); self.report_summary.setText("暂无订单"); return
-        conn = sqlite3.connect(db); conn.row_factory = sqlite3.Row
-        rows = conn.execute("SELECT * FROM orders ORDER BY id DESC LIMIT 50").fetchall()
-        t = conn.execute("SELECT COUNT(*), COALESCE(SUM(total_amount),0) FROM orders").fetchone(); conn.close()
-        self._setup_table(["ID","订单号","客户","金额","时间","状态"])
-        self.report_table.setRowCount(len(rows))
-        for i, r in enumerate(rows):
-            for j, k in enumerate(['id','order_no','customer_name','total_amount','created_at','status']):
-                self.report_table.setItem(i, j, QTableWidgetItem(str(r[k]) if r[k] is not None else ""))
-        self.report_summary.setText(f"订单总数: {t[0]} | 总金额: ¥{t[1]:.2f}")
+        # ── 扫描弧线 ──
+        scan_r = 270
+        scan_a = self._t * 0.4 % (math.pi * 2)
+        s_end = QPointF(cx.x() + math.cos(scan_a) * scan_r,
+                        cx.y() + math.sin(scan_a) * scan_r * 0.55)
+        s_start = QPointF(cx.x() + math.cos(scan_a + 0.5) * scan_r,
+                          cx.y() + math.sin(scan_a + 0.5) * scan_r * 0.55)
+        sg = QLinearGradient(s_start, s_end)
+        sg.setColorAt(0, QColor(0, 0, 0, 0))
+        sg.setColorAt(0.45, QColor(0, 200, 160, 10))
+        sg.setColorAt(0.5, QColor(0, 220, 180, 35))
+        sg.setColorAt(0.55, QColor(0, 200, 160, 10))
+        sg.setColorAt(1, QColor(0, 0, 0, 0))
+        painter.setPen(QPen(QBrush(sg), 1.5))
+        painter.drawLine(s_start, s_end)
 
-    def _load_members(self):
-        db = os.path.join(DATA_DIR, "member.db")
-        if not os.path.exists(db): self._setup_table(["提示"]); self.report_summary.setText("暂无会员"); return
-        conn = sqlite3.connect(db); conn.row_factory = sqlite3.Row
-        rows = conn.execute("SELECT * FROM member ORDER BY id DESC LIMIT 50").fetchall()
-        stats = conn.execute("SELECT level, COUNT(*) as c FROM member GROUP BY level").fetchall(); conn.close()
-        self._setup_table(["ID","姓名","电话","等级","积分","VIP到期","状态"])
-        self.report_table.setRowCount(len(rows))
-        for i, r in enumerate(rows):
-            for j, k in enumerate(['id','name','phone','level','points','vip_expire','status']):
-                self.report_table.setItem(i, j, QTableWidgetItem(str(r[k]) if r[k] is not None else ""))
-        levels = " | ".join([f"{s['level']}:{s['c']}" for s in stats])
-        self.report_summary.setText(f"总计: {sum(s['c'] for s in stats)} | {levels}")
+        # ── 中心星云核心光球 ──
+        core_pulse = 0.5 + 0.5 * math.sin(self._t * 1.2)
+        core_r = 30 + core_pulse * 10
 
-    def _load_customers(self):
-        db = os.path.join(DATA_DIR, "customer.db")
-        if not os.path.exists(db): self._setup_table(["提示"]); self.report_summary.setText("暂无客户"); return
-        conn = sqlite3.connect(db); conn.row_factory = sqlite3.Row
-        rows = conn.execute("SELECT * FROM customer ORDER BY id DESC LIMIT 50").fetchall()
-        total = conn.execute("SELECT COUNT(*) FROM customer").fetchone()[0]; conn.close()
-        self._setup_table(["ID","姓名","电话","公司","等级","备注"])
-        self.report_table.setRowCount(len(rows))
-        for i, r in enumerate(rows):
-            for j, k in enumerate(['id','name','phone','company','level','notes']):
-                self.report_table.setItem(i, j, QTableWidgetItem(str(r[k]) if r[k] is not None else ""))
-        self.report_summary.setText(f"客户总数: {total}")
+        for layer in range(4, 0, -1):
+            lr = core_r + layer * 16
+            alpha = int((35 + layer * 18) * (1 - layer * 0.18))
+            g = QRadialGradient(cx, lr)
+            g.setColorAt(0, QColor(0, 220, 170, alpha))
+            g.setColorAt(0.5, QColor(0, 140, 120, alpha // 3))
+            g.setColorAt(1, QColor(0, 0, 0, 0))
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(QBrush(g))
+            painter.drawEllipse(cx, lr, lr)
 
-    def _load_products(self):
-        db = os.path.join(DATA_DIR, "product.db")
-        if not os.path.exists(db): self._setup_table(["提示"]); self.report_summary.setText("暂无产品"); return
-        conn = sqlite3.connect(db); conn.row_factory = sqlite3.Row
-        rows = conn.execute("SELECT * FROM product ORDER BY id DESC LIMIT 50").fetchall()
-        total = conn.execute("SELECT COUNT(*) FROM product").fetchone()[0]; conn.close()
-        self._setup_table(["ID","名称","类别","价格","库存","状态"])
-        self.report_table.setRowCount(len(rows))
-        for i, r in enumerate(rows):
-            for j, k in enumerate(['id','name','category','price','stock','status']):
-                self.report_table.setItem(i, j, QTableWidgetItem(str(r[k]) if r[k] is not None else ""))
-        self.report_summary.setText(f"产品总数: {total}")
+        # 核心白点
+        painter.setBrush(QBrush(QColor(180, 255, 240)))
+        painter.drawEllipse(cx, core_r, core_r)
 
-    def _export_report(self):
-        fp, _ = QFileDialog.getSaveFileName(self, "导出", f"report_{datetime.now().strftime('%Y%m%d')}.csv", "CSV (*.csv)")
-        if not fp: return
-        with open(fp, 'w', encoding='utf-8-sig', newline='') as f:
-            w = csv.writer(f)
-            headers = [self.report_table.horizontalHeaderItem(c).text() for c in range(self.report_table.columnCount())]
-            w.writerow(headers)
-            for row in range(self.report_table.rowCount()):
-                w.writerow([self.report_table.item(row, c).text() if self.report_table.item(row, c) else "" for c in range(self.report_table.columnCount())])
-        self.report_summary.setText(f"已导出: {fp}")
+        # 核心标签
+        painter.setPen(QPen(QColor(80, 180, 160, 160)))
+        painter.setFont(QFont("Menlo", 8))
+        painter.drawText(QRectF(cx.x() - 50, cx.y() + core_r + 14, 100, 16),
+                         Qt.AlignCenter, "NEBULA CORE")
 
-    def _build_bi_tab(self):
-        tab = QWidget()
-        l = QVBoxLayout(tab)
-        l.setSpacing(10); l.setContentsMargins(16, 12, 16, 12)
+        # ── 小星球 ──
+        for p in NEBULA_PLANETS:
+            pp = self._get_planet_pos(p)
+            c = p["color"]
+            is_hovered = p == self._hovered_planet
+            r = p["radius"]
 
-        fs = QPushButton("全屏 (F11)"); fs.setStyleSheet(BTN_PRIMARY); fs.clicked.connect(lambda: self.showFullScreen() if not self.isFullScreen() else self.showNormal())
-        l.addWidget(fs, alignment=Qt.AlignRight)
+            # 辉光
+            glow_r = r + (14 if is_hovered else 7)
+            for layer in range(3, 0, -1):
+                lr = glow_r + layer * 7
+                a = int((45 - layer * 10) * (1.3 if is_hovered else 1.0))
+                g = QRadialGradient(pp, lr)
+                g.setColorAt(0, QColor(c.red(), c.green(), c.blue(), a))
+                g.setColorAt(0.6, QColor(c.red(), c.green(), c.blue(), a // 4))
+                g.setColorAt(1, QColor(0, 0, 0, 0))
+                painter.setPen(Qt.NoPen)
+                painter.setBrush(QBrush(g))
+                painter.drawEllipse(pp, lr, lr)
 
-        cards = QHBoxLayout()
-        self.bi_kpi = {}
-        for name, color, unit in [("总营收","#00ffaa","本月"),("订单数","#44ccff","本月"),("客单价","#ffaa44","平均"),("新增客户","#cc88ff","本月")]:
-            card = QFrame()
-            card.setStyleSheet(f"background: rgba(6,16,18,240); border: 1px solid rgba(0,180,150,40); border-radius: 14px; padding: 18px; min-width: 160px;")
-            cll = QVBoxLayout(card); cll.setContentsMargins(0,0,0,0); cll.setSpacing(6)
-            lb = QLabel(name); lb.setStyleSheet(f"color: {color}; font-size: 13px; font-weight: 700; background:transparent;")
-            vl = QLabel("—"); vl.setStyleSheet(f"color: {color}; font-size: 32px; font-weight: 800; background:transparent;")
-            ul = QLabel(unit); ul.setStyleSheet("color: #447766; font-size: 10px; background:transparent;")
-            cll.addWidget(lb); cll.addWidget(vl); cll.addWidget(ul)
-            self.bi_kpi[name] = vl
-            cards.addWidget(card)
-        cards.addStretch()
-        l.addLayout(cards)
+            # 星球本体
+            body_g = QRadialGradient(
+                QPointF(pp.x() - r * 0.25, pp.y() - r * 0.25), r * 1.2
+            )
+            body_g.setColorAt(0, QColor(
+                min(c.red() + 50, 255),
+                min(c.green() + 50, 255),
+                min(c.blue() + 50, 255),
+            ))
+            body_g.setColorAt(0.6, c)
+            body_g.setColorAt(1, QColor(
+                max(c.red() - 35, 0),
+                max(c.green() - 35, 0),
+                max(c.blue() - 35, 0),
+            ))
+            painter.setBrush(QBrush(body_g))
+            painter.setPen(QPen(QColor(c.red(), c.green(), c.blue(), 80), 1.5))
+            painter.drawEllipse(pp, r, r)
 
-        trend = QFrame()
-        trend.setStyleSheet("background: rgba(8,18,20,220); border: 1px solid rgba(0,180,150,35); border-radius: 10px; padding: 14px;")
-        tl = QVBoxLayout(trend)
-        tl.addWidget(QLabel("数据趋势概览 (最近 30 天)")); tl.itemAt(0).widget().setStyleSheet("color: #88aaaa; font-size: 13px; font-weight: 700; background:transparent;")
-        self.bi_trend = QTextEdit(); self.bi_trend.setReadOnly(True)
-        self.bi_trend.setStyleSheet("background: rgba(4,12,14,220); color: #88ccaa; border: 1px solid rgba(0,150,120,30); border-radius: 8px; padding: 12px; font-size: 12px; font-family: 'Courier New', monospace;")
-        tl.addWidget(self.bi_trend)
-        l.addWidget(trend)
+            # 悬停光环
+            if is_hovered:
+                ring_r = r + 5
+                ring_g = QRadialGradient(pp, ring_r + 3)
+                ring_g.setColorAt(0.7, QColor(0, 0, 0, 0))
+                ring_g.setColorAt(0.8, QColor(c.red(), c.green(), c.blue(), 160))
+                ring_g.setColorAt(1, QColor(0, 0, 0, 0))
+                painter.setPen(QPen(QBrush(ring_g), 2))
+                painter.setBrush(Qt.NoBrush)
+                painter.drawEllipse(pp, ring_r, ring_r)
 
-        l.addWidget(QLabel("详细数据"))
-        self.bi_table = QTableWidget()
-        self.bi_table.setColumnCount(5)
-        self.bi_table.setHorizontalHeaderLabels(["日期","收入","订单","新增客户","客单价"])
-        self.bi_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.bi_table.setStyleSheet(TABLE_STYLE)
-        self.bi_table.setEditTriggers(QTableWidget.NoEditTriggers)
-        l.addWidget(self.bi_table)
+            # 名称
+            painter.setPen(QPen(QColor(
+                min(c.red() + 70, 255),
+                min(c.green() + 70, 255),
+                min(c.blue() + 70, 255),
+                200 if is_hovered else 100
+            )))
+            painter.setFont(QFont("PingFang SC", 10, QFont.Bold if is_hovered else QFont.Normal))
+            painter.drawText(QRectF(pp.x() - 55, pp.y() + r + 6, 110, 20),
+                             Qt.AlignCenter, p["name"])
 
-        self.tabs.addTab(tab, "数据大屏")
+        # ── 顶部标签 ──
+        painter.setPen(QPen(QColor(30, 80, 70, 80)))
+        painter.setFont(QFont("Menlo", 9))
+        painter.drawText(QRectF(0, 50, w, 18), Qt.AlignCenter, "ORBIT NAVIGATION")
 
-    def _load_all(self):
-        try:
-            total_revenue = total_orders = total_customers = 0
-
-            db = os.path.join(DATA_DIR, "order.db")
-            if os.path.exists(db):
-                conn = sqlite3.connect(db); conn.row_factory = sqlite3.Row
-                r = conn.execute("SELECT COUNT(*) as c, COALESCE(SUM(total_amount),0) as s FROM orders").fetchone()
-                total_orders = r['c']; total_revenue = r['s']; conn.close()
-
-            db = os.path.join(DATA_DIR, "customer.db")
-            if os.path.exists(db):
-                conn = sqlite3.connect(db); total_customers = conn.execute("SELECT COUNT(*) FROM customer").fetchone()[0]; conn.close()
-
-            avg_order = total_revenue / total_orders if total_orders > 0 else 0
-
-            self.kpi_labels["财务收入"].setText(f"¥{total_revenue:.0f}")
-            self.kpi_labels["订单总数"].setText(str(total_orders))
-            self.kpi_labels["客户数量"].setText(str(total_customers))
-
-            self.bi_kpi["总营收"].setText(f"¥{total_revenue:.0f}")
-            self.bi_kpi["订单数"].setText(str(total_orders))
-            self.bi_kpi["客单价"].setText(f"¥{avg_order:.0f}")
-            self.bi_kpi["新增客户"].setText(str(total_customers))
-
-            self.bi_trend.setText("\n".join([
-                f"  {'─' * 40}",
-                f"  本月总营收: ¥{total_revenue:.2f}",
-                f"  订单总数: {total_orders} 单",
-                f"  客户数: {total_customers}",
-                f"  平均客单价: ¥{avg_order:.2f}",
-                f"  {'─' * 40}",
-            ]))
-
-            self.bi_table.setRowCount(1)
-            self.bi_table.setItem(0, 0, QTableWidgetItem("当前汇总"))
-            self.bi_table.setItem(0, 1, QTableWidgetItem(f"¥{total_revenue:.2f}"))
-            self.bi_table.setItem(0, 2, QTableWidgetItem(str(total_orders)))
-            self.bi_table.setItem(0, 3, QTableWidgetItem(str(total_customers)))
-            self.bi_table.setItem(0, 4, QTableWidgetItem(f"¥{avg_order:.2f}"))
-
-            self._load_finance()
-        except Exception:
-            pass
+        painter.end()
