@@ -6,6 +6,7 @@ import json
 import os
 import sqlite3
 from datetime import datetime, timedelta
+from typing import Optional
 
 USER_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users.json")
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
@@ -223,7 +224,7 @@ class AuthService:
 
         return False, "未知的会员类型"
 
-    def get_user_info(self, username: str) -> dict | None:
+    def get_user_info(self, username: str) -> "Optional[dict]":
         """获取用户信息"""
         self._reload()
         return self._users.get(username)
