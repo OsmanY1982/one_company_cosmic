@@ -1,0 +1,402 @@
+"""
+客户管理 · ORBIT — 独立弹窗模块
+"""
+import os
+import sqlite3
+import random
+from datetime import datetime
+from PyQt5.QtWidgets import (
+    QDialog, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
+    QPushButton, QLabel, QLineEdit, QHeaderView, QMessageBox,
+    QFormLayout, QComboBox, QTextEdit
+)
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
+
+# ── 路径 ──
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+CUSTOMER_DB = os.path.join(BASE_DIR, "modules", "business", "customer_db.sqlite")
+
+# ── 数据库初始化 ──
+def _init_customer_db():
+    os.makedirs(os.path.dirname(CUSTOMER_DB), exist_ok=True)
+    conn = sqlite3.connect(CUSTOMER_DB)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS customers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        customer_no TEXT,
+        name TEXT,
+        phone TEXT,
+        email TEXT,
+        level TEXT DEFAULT '普通',
+        source TEXT,
+        remark TEXT,
+        total_orders INTEGER DEFAULT 0,
+        total_amount REAL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+    conn.commit()
+    conn.close()
+
+
+# ── QSS ──
+CUSTOMER_QSS = """
+QDialog {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #1a1008, stop:1 #2e180e);
+    border: 1px solid rgba(220,100,30,40);
+    border-radius: 12px;
+}
+QLabel {
+    color: #e8c090;
+    background: transparent;
+}
+QLineEdit, QTextEdit, QComboBox, QSpinBox, QDoubleSpinBox {
+    background: rgba(30,16,8,200);
+    color: #e8c090;
+    border: 1px solid rgba(220,100,30,40);
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+QTableWidget {
+    background: rgba(26,16,8,220);
+    color: #e8c090;
+    border: 1px solid rgba(220,100,30,40);
+    border-radius: 8px;
+    gridline-color: rgba(180,70,20,30);
+    selection-background-color: rgba(220,100,30,60);
+}
+QTableWidget::item {
+    padding: 4px 8px;
+}
+QHeaderView::section {
+    background: rgba(60,28,10,180);
+    color: #e8a060;
+    border: 1px solid rgba(220,100,30,30);
+    padding: 6px;
+    font-weight: bold;
+}
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgba(220,100,30,200), stop:1 rgba(240,140,60,200));
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgba(240,120,40,230), stop:1 rgba(255,160,80,230));
+}
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgba(180,70,20,220), stop:1 rgba(200,100,40,220));
+}
+QComboBox::drop-down {
+    border: none;
+}
+QComboBox QAbstractItemView {
+    background: rgba(30,16,8,240);
+    color: #e8c090;
+    selection-background-color: rgba(220,100,30,80);
+    border: 1px solid rgba(220,100,30,40);
+}
+"""
+
+
+# ═══════════════════════════════════════════════════════
+#  CustomerDialog — 新增/编辑表单
+# ═══════════════════════════════════════════════════════
+
+class CustomerDialog(QDialog):
+    def __init__(self, parent=None, customer_data=None):
+        super().__init__(parent)
+        self.setWindowTitle("新增客户" if customer_data is None else "编辑客户")
+        self.resize(440, 420)
+        self.setStyleSheet(CUSTOMER_QSS)
+        self._customer_data = customer_data
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(24, 24, 24, 24)
+        layout.setSpacing(12)
+
+        title = QLabel("新增客户" if customer_data is None else "编辑客户")
+        title.setStyleSheet("font-size: 16px; font-weight: bold; color: #e8a060;")
+        title.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title)
+
+        form = QFormLayout()
+        form.setSpacing(10)
+
+        self.name_edit = QLineEdit()
+        self.name_edit.setPlaceholderText("客户姓名")
+        self.phone_edit = QLineEdit()
+        self.phone_edit.setPlaceholderText("联系电话")
+        self.email_edit = QLineEdit()
+        self.email_edit.setPlaceholderText("邮箱地址")
+
+        self.level_combo = QComboBox()
+        self.level_combo.addItems(["普通", "VIP", "钻石"])
+        self.source_combo = QComboBox()
+        self.source_combo.addItems(["官网", "推荐", "展会", "其他"])
+        self.remark_edit = QTextEdit()
+        self.remark_edit.setMaximumHeight(80)
+
+        form.addRow("姓名:", self.name_edit)
+        form.addRow("电话:", self.phone_edit)
+        form.addRow("邮箱:", self.email_edit)
+        form.addRow("级别:", self.level_combo)
+        form.addRow("来源:", self.source_combo)
+        form.addRow("备注:", self.remark_edit)
+
+        layout.addLayout(form)
+
+        # 按钮
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+        save_btn = QPushButton("保存")
+        save_btn.clicked.connect(self._on_save)
+        cancel_btn = QPushButton("取消")
+        cancel_btn.setStyleSheet("""
+            QPushButton {
+                background: rgba(60,40,30,150);
+                color: #998866;
+                border: 1px solid rgba(180,120,80,40);
+                border-radius: 6px;
+                padding: 8px 20px;
+            }
+            QPushButton:hover { background: rgba(80,60,50,180); }
+        """)
+        cancel_btn.clicked.connect(self.reject)
+        btn_layout.addWidget(save_btn)
+        btn_layout.addWidget(cancel_btn)
+        layout.addLayout(btn_layout)
+
+        if customer_data:
+            self._fill_data(customer_data)
+
+    def _fill_data(self, data):
+        self.name_edit.setText(data.get("name", ""))
+        self.phone_edit.setText(data.get("phone", ""))
+        self.email_edit.setText(data.get("email", ""))
+        level = data.get("level", "普通")
+        idx = self.level_combo.findText(level)
+        if idx >= 0:
+            self.level_combo.setCurrentIndex(idx)
+        source = data.get("source", "")
+        idx = self.source_combo.findText(source)
+        if idx >= 0:
+            self.source_combo.setCurrentIndex(idx)
+        self.remark_edit.setPlainText(data.get("remark", ""))
+
+    def _on_save(self):
+        if not self.name_edit.text().strip():
+            QMessageBox.warning(self, "提示", "请输入客户姓名")
+            return
+        self.accept()
+
+    def get_data(self):
+        return {
+            "name": self.name_edit.text().strip(),
+            "phone": self.phone_edit.text().strip(),
+            "email": self.email_edit.text().strip(),
+            "level": self.level_combo.currentText(),
+            "source": self.source_combo.currentText(),
+            "remark": self.remark_edit.toPlainText().strip(),
+        }
+
+
+# ═══════════════════════════════════════════════════════
+#  CustomerWindow
+# ═══════════════════════════════════════════════════════
+
+class CustomerWindow(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("客户管理 · ORBIT")
+        self.resize(550, 500)
+        self.setStyleSheet(CUSTOMER_QSS)
+
+        _init_customer_db()
+
+        self._init_ui()
+        self._load_data()
+
+    def _init_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(10)
+
+        # 标题
+        title = QLabel("客户管理 · ORBIT")
+        title.setStyleSheet("font-size: 18px; font-weight: bold; color: #e8a060;")
+        title.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title)
+
+        # 搜索栏 + 级别筛选
+        top_layout = QHBoxLayout()
+        self.search_edit = QLineEdit()
+        self.search_edit.setPlaceholderText("搜索姓名 / 电话...")
+        self.search_edit.textChanged.connect(self._on_search)
+        top_layout.addWidget(self.search_edit)
+
+        self.level_filter = QComboBox()
+        self.level_filter.addItems(["全部", "普通", "VIP", "钻石"])
+        self.level_filter.currentTextChanged.connect(self._on_filter)
+        top_layout.addWidget(self.level_filter)
+
+        layout.addLayout(top_layout)
+
+        # 表格
+        self.table = QTableWidget()
+        self.table.setColumnCount(8)
+        self.table.setHorizontalHeaderLabels(
+            ["编号", "姓名", "电话", "邮箱", "级别", "累计消费", "来源", "备注"])
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.table.setSelectionMode(QTableWidget.SingleSelection)
+        layout.addWidget(self.table)
+
+        # 按钮栏
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+
+        self.add_btn = QPushButton("新增")
+        self.add_btn.clicked.connect(self._on_add)
+        self.edit_btn = QPushButton("编辑")
+        self.edit_btn.clicked.connect(self._on_edit)
+        self.del_btn = QPushButton("删除")
+        self.del_btn.clicked.connect(self._on_delete)
+
+        btn_layout.addWidget(self.add_btn)
+        btn_layout.addWidget(self.edit_btn)
+        btn_layout.addWidget(self.del_btn)
+        layout.addLayout(btn_layout)
+
+    def _get_conn(self):
+        conn = sqlite3.connect(CUSTOMER_DB)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    def _build_query(self):
+        search = self.search_edit.text().strip()
+        level = self.level_filter.currentText()
+
+        where_clauses = []
+        params = []
+
+        if search:
+            where_clauses.append("(name LIKE ? OR phone LIKE ?)")
+            params.extend([f"%{search}%", f"%{search}%"])
+        if level and level != "全部":
+            where_clauses.append("level = ?")
+            params.append(level)
+
+        sql = "SELECT * FROM customers"
+        if where_clauses:
+            sql += " WHERE " + " AND ".join(where_clauses)
+        sql += " ORDER BY created_at DESC"
+        return sql, params
+
+    def _load_data(self):
+        conn = self._get_conn()
+        c = conn.cursor()
+        sql, params = self._build_query()
+        c.execute(sql, params)
+        rows = c.fetchall()
+        conn.close()
+
+        self.table.setRowCount(len(rows))
+        for i, row in enumerate(rows):
+            items = [
+                row["customer_no"] or "",
+                row["name"] or "",
+                row["phone"] or "",
+                row["email"] or "",
+                row["level"] or "普通",
+                f"¥{row['total_amount']:,.2f}" if row.get("total_amount") else "¥0.00",
+                row["source"] or "",
+                row["remark"] or "",
+            ]
+            for j, val in enumerate(items):
+                self.table.setItem(i, j, QTableWidgetItem(val))
+
+    def _on_search(self, text):
+        self._load_data()
+
+    def _on_filter(self, text):
+        self._load_data()
+
+    def _get_selected_id(self):
+        idx = self.table.currentRow()
+        if idx < 0:
+            return None
+        item = self.table.item(idx, 0)
+        if item is None:
+            return None
+        return item.text()
+
+    def _on_add(self):
+        dlg = CustomerDialog(self)
+        if dlg.exec_() != QDialog.Accepted:
+            return
+        data = dlg.get_data()
+        customer_no = "CU" + datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(100, 999))
+
+        conn = self._get_conn()
+        c = conn.cursor()
+        c.execute("""INSERT INTO customers (customer_no, name, phone, email, level, source, remark)
+            VALUES (?,?,?,?,?,?,?)""",
+            (customer_no, data["name"], data["phone"], data["email"],
+             data["level"], data["source"], data["remark"]))
+        conn.commit()
+        conn.close()
+        self._load_data()
+
+    def _on_edit(self):
+        customer_no = self._get_selected_id()
+        if customer_no is None:
+            QMessageBox.information(self, "提示", "请先选择一个客户")
+            return
+
+        conn = self._get_conn()
+        c = conn.cursor()
+        c.execute("SELECT * FROM customers WHERE customer_no = ?", (customer_no,))
+        row = c.fetchone()
+        conn.close()
+        if row is None:
+            return
+
+        data = dict(row)
+        dlg = CustomerDialog(self, customer_data=data)
+        if dlg.exec_() != QDialog.Accepted:
+            return
+        new_data = dlg.get_data()
+
+        conn = self._get_conn()
+        c = conn.cursor()
+        c.execute("""UPDATE customers SET name=?, phone=?, email=?, level=?, source=?, remark=?
+            WHERE customer_no=?""",
+            (new_data["name"], new_data["phone"], new_data["email"],
+             new_data["level"], new_data["source"], new_data["remark"], customer_no))
+        conn.commit()
+        conn.close()
+        self._load_data()
+
+    def _on_delete(self):
+        customer_no = self._get_selected_id()
+        if customer_no is None:
+            QMessageBox.information(self, "提示", "请先选择一个客户")
+            return
+        reply = QMessageBox.question(self, "确认删除", f"确定要删除客户 {customer_no} 吗？",
+                                     QMessageBox.Yes | QMessageBox.No)
+        if reply != QMessageBox.Yes:
+            return
+        conn = self._get_conn()
+        c = conn.cursor()
+        c.execute("DELETE FROM customers WHERE customer_no = ?", (customer_no,))
+        conn.commit()
+        conn.close()
+        self._load_data()

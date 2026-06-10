@@ -709,7 +709,7 @@ class PersonnelWindow(QMainWindow):
         main.addWidget(self._planet_hud, stretch=1)
 
         # 底部提示
-        hint = QLabel("点击星球进入模块 · Wallet / Distribution 施工中")
+        hint = QLabel("点击星球进入模块 · 员工 / 会员 / 钱包 / 分销")
         hint.setStyleSheet(
             "color: #554433; font-size: 10px; letter-spacing: 2px; "
             "background: transparent; padding: 6px 0;"
@@ -727,6 +727,8 @@ class PersonnelWindow(QMainWindow):
             from modules.personnel.member_window import MemberWindow
             MemberWindow(self).exec_()
         elif planet_id == "wallet":
-            QMessageBox.information(self, "提示", "钱包模块施工中，敬请期待。")
+            from modules.personnel.wallet_window import WalletWindow
+            WalletWindow(self).exec_()
         elif planet_id == "dist":
-            QMessageBox.information(self, "提示", "分销模块施工中，敬请期待。")
+            from modules.personnel.distribution_window import DistributionWindow
+            DistributionWindow(self).exec_()
