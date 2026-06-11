@@ -2,6 +2,7 @@
 认证服务模块 — 用户注册/登录/会员管理
 数据持久化到 modules/auth/users.json
 """
+import traceback
 import json
 import os
 import sqlite3
@@ -54,8 +55,28 @@ def _load_users() -> dict:
         _save_users(users)
         return users
 
-    with open(USER_DB, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    try:
+        with open(USER_DB, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, IOError) as e:
+        # JSON 文件损坏：备份损坏文件，回退到默认管理员
+        corrupted = USER_DB + ".corrupted"
+        try:
+            os.rename(USER_DB, corrupted)
+            print(f"[auth] users.json 损坏，已备份到 {corrupted}：{e}")
+        except Exception:
+            pass  # gracefully degrade on I/O failure
+        users = {
+            ADMIN_USERNAME: {
+                "password": ADMIN_PASSWORD,
+                "role": "admin",
+                "membership": MEMBERSHIP_PERMANENT,
+                "expire_at": None,
+                "created_at": "2026-01-01 00:00:00",
+            }
+        }
+        _save_users(users)
+        return users
 
     if not data:
         data = {
@@ -111,8 +132,10 @@ def _load_users() -> dict:
 
 def _save_users(users: dict):
     os.makedirs(os.path.dirname(USER_DB), exist_ok=True)
-    with open(USER_DB, "w", encoding="utf-8") as f:
+    tmp_path = USER_DB + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
         json.dump(users, f, ensure_ascii=False, indent=2)
+    os.replace(tmp_path, USER_DB)  # 原子替换，防止写入中断导致文件损坏
 
 
 class AuthService:
@@ -183,7 +206,7 @@ class AuthService:
                         "user": user,
                     }
             except ValueError:
-                pass
+                traceback.print_exc()
 
         return {"ok": True, "msg": "登录成功", "user": user}
 

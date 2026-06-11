@@ -1,0 +1,129 @@
+2026-05-20 02:22:07 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 02:22:07 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 02:22:08 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 03:15:19 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:15:19 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 03:15:20 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 03:15:28 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:15:28 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 03:15:47 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-20 03:15:47 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-20 03:15:47 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:15:47 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 03:16:01 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-20 03:16:01 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-20 03:16:01 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:16:01 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 03:16:03 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-20 03:16:03 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-20 03:16:03 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:16:03 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 03:16:38 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: messages with role \"tool\" must be a response to a preceeding message with \"tool_calls\".","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-045d4f2e-4b7a-9c8d-a04b-367a422cc618","request_id":"045d4f2e-4b7a-9c8d-a04b-367a422cc618"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: messages with role \"tool\" must be a response to a preceeding message with \"tool_calls\".","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-045d4f2e-4b7a-9c8d-a04b-367a422cc618","request_id":"045d4f2e-4b7a-9c8d-a04b-367a422cc618"}
+2026-05-20 03:17:58 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:17:58 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 03:17:58 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 03:22:08 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:22:08 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 03:22:09 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 03:40:44 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-20 03:40:44 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-20 03:40:44 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:40:44 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 03:40:47 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-20 03:40:47 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-20 03:40:47 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 03:40:47 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 08:31:11 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 08:31:11 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 08:31:11 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 08:31:20 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 08:31:20 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 08:36:57 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 08:36:57 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 08:36:57 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 08:49:09 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 08:49:09 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 08:49:10 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 08:49:19 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 08:49:19 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 08:57:09 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 08:57:09 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 08:57:10 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 08:57:23 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 08:57:23 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 13:38:33 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 13:38:33 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 13:38:33 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 13:38:42 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 13:38:42 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 14:10:36 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 14:10:36 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 14:10:37 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 14:10:37 [ERROR] opcclaw: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-20 14:10:42 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 14:10:42 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 14:12:00 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 14:12:00 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 14:12:01 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 14:12:01 [ERROR] opcclaw: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-20 14:12:30 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 14:12:30 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 14:12:30 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 14:12:30 [ERROR] opcclaw: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-20 15:20:02 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 15:20:02 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 15:20:03 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 15:20:03 [ERROR] opcclaw: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-20 15:20:08 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 15:20:08 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 21:54:43 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 21:54:43 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 21:54:44 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 21:54:44 [ERROR] opcclaw: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-20 21:54:47 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 21:54:47 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 21:54:58 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 21:54:58 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-20 21:54:58 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-20 21:54:58 [ERROR] opcclaw: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-20 21:55:02 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-20 21:55:02 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-21 08:39:35 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-21 08:39:35 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-21 08:39:36 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-21 08:39:36 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key

@@ -2,6 +2,7 @@
 系统日志 · ENGINEERING DECK
 QDialog：日志表格 + 级别/时间筛选 + 导出，紫色点缀金属灰主题
 """
+import traceback
 import os, sqlite3, csv
 from datetime import datetime, timedelta
 from PyQt5.QtWidgets import (
@@ -204,4 +205,4 @@ class LogsWindow(QDialog):
                          (module, action, detail))
             conn.commit(); conn.close()
         except Exception:
-            pass
+            traceback.print_exc()

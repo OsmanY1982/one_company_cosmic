@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import (
     QPainter, QColor, QPen, QBrush,
-    QLinearGradient, QFont, QPainterPath
+    QLinearGradient, QRadialGradient, QFont, QPainterPath
 )
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
@@ -268,6 +268,8 @@ class ReportWindow(QDialog):
 
     def _refresh(self):
         rtype = self.report_type.currentText()
+        # 更新团队人数KPI（所有报表类型通用）
+        self._load_team_kpi()
         try:
             if rtype == "收入概览":
                 self._load_finance()
@@ -282,17 +284,31 @@ class ReportWindow(QDialog):
         except Exception as e:
             self.summary.setText(f"加载异常: {e}")
 
+    def _load_team_kpi(self):
+        """加载团队人数 KPI"""
+        db = os.path.join(DATA_DIR, "staff.db")
+        if os.path.exists(db):
+            try:
+                conn = sqlite3.connect(db)
+                total = conn.execute("SELECT COUNT(*) FROM staff").fetchone()[0]
+                conn.close()
+                self.kpi_labels["团队人数"].setText(str(total))
+            except Exception:
+                self.kpi_labels["团队人数"].setText("—")
+        else:
+            self.kpi_labels["团队人数"].setText("—")
+
     def _load_finance(self):
         db = os.path.join(DATA_DIR, "finance.db")
         if not os.path.exists(db):
             self._setup_table(["提示"]); self.summary.setText("暂无财务数据"); return
         conn = sqlite3.connect(db); conn.row_factory = sqlite3.Row
         rows = conn.execute("SELECT * FROM finance ORDER BY id DESC LIMIT 50").fetchall(); conn.close()
-        self._setup_table(["ID","类型","金额","备注","日期"])
+        self._setup_table(["ID","类型","类别","金额","备注","日期"])
         self.table.setRowCount(len(rows))
         inc = exp = 0
         for i, r in enumerate(rows):
-            for j, k in enumerate(['id', 'type', 'amount', 'note', 'date']):
+            for j, k in enumerate(['id', 'type', 'category', 'amount', 'note', 'created_at']):
                 self.table.setItem(i, j, QTableWidgetItem(str(r[k]) if r[k] is not None else ""))
             amt = float(r['amount'] or 0)
             if r['type'] and '收入' in str(r['type']): inc += amt
@@ -343,7 +359,7 @@ class ReportWindow(QDialog):
         self._setup_table(["ID","姓名","电话","公司","等级","备注"])
         self.table.setRowCount(len(rows))
         for i, r in enumerate(rows):
-            for j, k in enumerate(['id', 'name', 'phone', 'company', 'level', 'notes']):
+            for j, k in enumerate(['id', 'name', 'phone', 'company', 'level', 'note']):
                 self.table.setItem(i, j, QTableWidgetItem(str(r[k]) if r[k] is not None else ""))
         self.kpi_labels["客户数量"].setText(str(total))
         self.summary.setText(f"客户总数: {total}")

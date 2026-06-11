@@ -1,0 +1,110 @@
+2026-06-04 00:06:28 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 00:15:07 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 00:25:06 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 00:25:08 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 00:25:28 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 00:56:38 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 00:56:41 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 01:21:17 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 01:21:19 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 01:45:46 [INFO] opcclaw: OPCclaw 日志系统已启动
+2026-06-04 01:45:46 [INFO] main: Initializing OPCclaw...
+2026-06-04 01:45:46 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-06-04 01:45:46 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:24:57 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:24:59 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:25:14 [ERROR] opcclaw.core.tool_registry: Tool get_summary_stats failed: OperationalError: no such column: total_amount
+2026-06-04 19:25:14 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-04 19:25:40 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-04 19:25:41 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-337a239b-978f-92c8-a705-cf01cad6f1cc","request_id":"337a239b-978f-92c8-a705-cf01cad6f1cc"}
+Traceback (most recent call last):
+  File "D:\one_company_desktop\opcclaw\core\llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\opcclaw\core\chat_engine.py", line 264, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\opcclaw\core\llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\opcclaw\core\llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-337a239b-978f-92c8-a705-cf01cad6f1cc","request_id":"337a239b-978f-92c8-a705-cf01cad6f1cc"}
+2026-06-04 19:27:05 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-06-04 19:27:05 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:27:06 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-06-04 19:27:06 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:27:08 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-06-04 19:27:08 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:27:10 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-06-04 19:27:10 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:27:21 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-04 19:27:22 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-77e0fd80-cff1-96a3-bd3f-3256d42f49c3","request_id":"77e0fd80-cff1-96a3-bd3f-3256d42f49c3"}
+Traceback (most recent call last):
+  File "D:\one_company_desktop\opcclaw\core\llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\opcclaw\core\chat_engine.py", line 266, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\opcclaw\core\llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\opcclaw\core\llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-77e0fd80-cff1-96a3-bd3f-3256d42f49c3","request_id":"77e0fd80-cff1-96a3-bd3f-3256d42f49c3"}
+2026-06-04 19:28:28 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-06-04 19:28:28 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:28:30 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-06-04 19:28:30 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:28:30 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-06-04 19:28:31 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-06-04 19:28:35 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-04 19:29:41 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-04 19:29:45 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-04 19:29:47 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-04 19:30:05 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()

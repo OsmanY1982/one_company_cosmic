@@ -1,0 +1,888 @@
+2026-05-19 08:12:22 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 08:12:23 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 08:12:27 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 08:12:46 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 08:12:46 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 09:14:24 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 09:14:24 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 09:14:30 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 09:15:13 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 09:15:13 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 09:15:18 [ERROR] opcclaw: LLM API failed: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 248, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+2026-05-19 09:15:55 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 09:15:55 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 09:15:57 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 09:15:57 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 09:16:13 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"parameter.enable_thinking must be set to false for non-streaming calls","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-d78cf254-61dc-9e7c-a001-c9cb8eea6923","request_id":"d78cf254-61dc-9e7c-a001-c9cb8eea6923"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"parameter.enable_thinking must be set to false for non-streaming calls","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-d78cf254-61dc-9e7c-a001-c9cb8eea6923","request_id":"d78cf254-61dc-9e7c-a001-c9cb8eea6923"}
+2026-05-19 09:16:41 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"parameter.enable_thinking must be set to false for non-streaming calls","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-b3354747-9c03-9d90-8440-e235ed31602d","request_id":"b3354747-9c03-9d90-8440-e235ed31602d"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"parameter.enable_thinking must be set to false for non-streaming calls","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-b3354747-9c03-9d90-8440-e235ed31602d","request_id":"b3354747-9c03-9d90-8440-e235ed31602d"}
+2026-05-19 14:23:16 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 14:23:17 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 14:23:25 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 14:23:34 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 14:23:35 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 14:23:36 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 14:23:57 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"parameter.enable_thinking must be set to false for non-streaming calls","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-1e5b3ab0-107d-94ce-a846-1f31edd331cc","request_id":"1e5b3ab0-107d-94ce-a846-1f31edd331cc"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"parameter.enable_thinking must be set to false for non-streaming calls","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-1e5b3ab0-107d-94ce-a846-1f31edd331cc","request_id":"1e5b3ab0-107d-94ce-a846-1f31edd331cc"}
+2026-05-19 14:24:19 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 14:24:19 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 14:24:29 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-2121960b-b682-9573-a785-767214f78c16","request_id":"2121960b-b682-9573-a785-767214f78c16"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-2121960b-b682-9573-a785-767214f78c16","request_id":"2121960b-b682-9573-a785-767214f78c16"}
+2026-05-19 14:28:14 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 14:28:14 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 14:28:21 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-75088aec-a5dd-97a1-af5d-45bd650b0396","request_id":"75088aec-a5dd-97a1-af5d-45bd650b0396"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-75088aec-a5dd-97a1-af5d-45bd650b0396","request_id":"75088aec-a5dd-97a1-af5d-45bd650b0396"}
+2026-05-19 14:28:45 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 14:28:46 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 14:29:03 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-e2535aae-8f2c-9529-98d0-de7ce66e0fb8","request_id":"e2535aae-8f2c-9529-98d0-de7ce66e0fb8"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-e2535aae-8f2c-9529-98d0-de7ce66e0fb8","request_id":"e2535aae-8f2c-9529-98d0-de7ce66e0fb8"}
+2026-05-19 17:28:45 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 17:28:46 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 17:28:52 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 17:29:08 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 17:29:08 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 17:29:40 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 17:29:40 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 17:29:41 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 17:29:42 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 17:29:49 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-5dd4eb45-2a2f-9396-ba18-42fb98e664e5","request_id":"5dd4eb45-2a2f-9396-ba18-42fb98e664e5"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-5dd4eb45-2a2f-9396-ba18-42fb98e664e5","request_id":"5dd4eb45-2a2f-9396-ba18-42fb98e664e5"}
+2026-05-19 17:41:14 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 17:41:17 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 17:41:18 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 18:02:09 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 18:02:14 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 18:03:44 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 18:03:45 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 18:03:49 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 18:04:14 [ERROR] opcclaw: LLM API failed: [QClaw代理] Token 用尽或额度不足: {"error":{"code":"9002","message":"该功能暂不可用，请稍后再试<!--error_code:9002-->","type":"auth_error","source":"gateway"}}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 248, in _make_request
+    raise RuntimeError(
+RuntimeError: [QClaw代理] Token 用尽或额度不足: {"error":{"code":"9002","message":"该功能暂不可用，请稍后再试<!--error_code:9002-->","type":"auth_error","source":"gateway"}}
+2026-05-19 18:06:38 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 18:06:38 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 18:06:45 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 18:06:45 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 18:06:51 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-d80b3847-9e57-903a-96c6-2a686a66daf9","request_id":"d80b3847-9e57-903a-96c6-2a686a66daf9"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-d80b3847-9e57-903a-96c6-2a686a66daf9","request_id":"d80b3847-9e57-903a-96c6-2a686a66daf9"}
+2026-05-19 18:29:15 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 18:29:15 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 18:29:15 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:23:04 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:23:09 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:23:14 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:23:18 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:23:24 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:23:32 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:23:56 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:00 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:05 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:10 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:16 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:21 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:26 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:31 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:38 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 19:24:44 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:08:17 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:08:18 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 21:08:25 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:08:42 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-f24dc23c-dec9-9daf-a92e-72c15bb2ad5a","request_id":"f24dc23c-dec9-9daf-a92e-72c15bb2ad5a"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"current user api does not support http call","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-f24dc23c-dec9-9daf-a92e-72c15bb2ad5a","request_id":"f24dc23c-dec9-9daf-a92e-72c15bb2ad5a"}
+2026-05-19 21:08:58 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 21:08:58 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:09:00 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 21:09:00 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:09:08 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: messages with role \"tool\" must be a response to a preceeding message with \"tool_calls\".","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-044f0211-080e-9310-89ca-adde4861f53d","request_id":"044f0211-080e-9310-89ca-adde4861f53d"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: messages with role \"tool\" must be a response to a preceeding message with \"tool_calls\".","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-044f0211-080e-9310-89ca-adde4861f53d","request_id":"044f0211-080e-9310-89ca-adde4861f53d"}
+2026-05-19 21:44:04 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:44:04 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 21:44:04 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:50:38 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:50:47 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:50:52 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:50:57 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:02 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:07 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:11 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:21 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:23 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:23 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:23 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:29 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:33 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:33 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:33 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 21:51:39 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:39 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:44 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:44 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:49 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:49 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:53 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:53 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:51:59 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 21:51:59 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 21:58:06 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+2026-05-19 22:12:30 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+2026-05-19 22:24:16 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 22:24:16 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 22:24:16 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 22:34:54 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+2026-05-19 22:35:11 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 22:35:11 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 22:35:11 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 22:37:33 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+2026-05-19 22:39:27 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+2026-05-19 22:40:17 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+2026-05-19 23:03:36 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:03:36 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:03:37 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:03:49 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:03:49 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:03:50 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:05:19 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:05:19 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:05:20 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:05:30 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:05:30 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:16:49 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:16:49 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:16:49 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:16:53 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:16:53 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:19:30 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:19:30 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:19:30 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:41:21 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:41:21 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:41:22 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:41:27 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:41:27 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:42:17 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:42:17 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:42:17 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:42:19 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:42:19 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:42:20 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:42:31 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:42:31 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:42:32 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:42:34 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:42:34 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:42:34 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:47:02 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:47:02 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:47:03 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable
+2026-05-19 23:47:09 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:47:09 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:50:00 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-19 23:50:00 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-19 23:50:00 [ERROR] opcclaw: [OPCclaw] Voice init failed: 'NoneType' object is not callable

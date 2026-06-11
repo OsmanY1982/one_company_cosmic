@@ -383,10 +383,10 @@ class MemberWindow(QDialog):
 
         # 更新统计
         stats = member_stats()
-        self.card_total.findChildren(QLabel)[1].setText(str(stats['total']))
+        self.card_total.findChild(QLabel, "card_value").setText(str(stats['total']))
         vip_cnt = stats['levels'].get('VIP', 0) + stats['levels'].get('永久', 0)
-        self.card_vip.findChildren(QLabel)[1].setText(str(vip_cnt))
-        self.card_normal.findChildren(QLabel)[1].setText(
+        self.card_vip.findChild(QLabel, "card_value").setText(str(vip_cnt))
+        self.card_normal.findChild(QLabel, "card_value").setText(
             str(stats['levels'].get('体验', 0))
         )
 

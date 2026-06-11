@@ -172,8 +172,9 @@ class ConnectWindow(QMainWindow):
         self._engine = EngineGlow(self._cosmic)
         self._engine.setGeometry(0, 0, 920, 680)
 
-        # HUD 覆盖层
-        self._hud = QWidget(self._cosmic)
+        # HUD 覆盖层 — 必须是窗口直接子控件，不是 _cosmic 子控件
+        # 否则 _cosmic 的 WA_TransparentForMouseEvents 会在 macOS 26.x 拦截所有鼠标事件
+        self._hud = QWidget(self)
         self._hud.setAttribute(Qt.WA_TranslucentBackground)
         self._hud.setGeometry(0, 0, 920, 680)
 
@@ -183,6 +184,9 @@ class ConnectWindow(QMainWindow):
 
         self._build_ui()
         self._select_provider("ollama")
+
+        # 确保 HUD 在星空背景之上
+        self._hud.raise_()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -355,10 +359,11 @@ class ConnectWindow(QMainWindow):
     def _card_style(self, fid: str) -> str:
         info = FUEL_TYPES[fid]
         c = info["icon_color"]
+        qc = QColor(c)
         selected = fid == self._selected_provider
         border = f"1px solid {c}" if selected else "1px solid rgba(40, 70, 110, 35)"
         bg = "rgba(14, 24, 44, 240)" if selected else "rgba(8, 14, 28, 210)"
-        shadow = f"rgba({int(c[1:3],16)},{int(c[3:5],16)},{int(c[5:7],16)},60)" if selected else "transparent"
+        shadow = f"rgba({qc.red()},{qc.green()},{qc.blue()},60)" if selected else "transparent"
         return f"""
             QPushButton {{
                 background: {bg};
@@ -496,10 +501,72 @@ class ConnectWindow(QMainWindow):
 
     def _enter_dashboard(self):
         config = self._build_config()
+        self._save_to_opcclaw(config)
         from modules.dashboard.dashboard_window import DashboardWindow
         self._dash = DashboardWindow(config=config)
         self._dash.show()
         self.close()
+
+    def _save_to_opcclaw(self, config):
+        """将 connect_window 选中的配置写入 opcclaw_config.json"""
+        import json, os
+        data_dir = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+            "data"
+        )
+        os.makedirs(data_dir, exist_ok=True)
+        cfg_path = os.path.join(data_dir, "opcclaw_config.json")
+
+        # 读取已有配置（保留其他供应商）
+        existing = {}
+        if os.path.exists(cfg_path):
+            try:
+                with open(cfg_path, "r", encoding="utf-8") as f:
+                    existing = json.load(f)
+            except Exception as e:
+                print(f"[connect_window] 加载配置失败: {e}")
+
+        cloud_providers = existing.get("cloud_providers", {})
+        local_providers = existing.get("local_providers", {})
+
+        provider_id = config.provider
+        is_local = provider_id == "ollama"
+        provider_type = "openai_compatible"
+
+        # 构建 base_url：LLMClient 的 PROVIDERS 中 base_url + api_path 去掉末尾 /chat/completions
+        info = PROVIDERS[provider_id]
+        raw_base = info.get("base_url", "")
+        api_path = info.get("api_path", "/v1/chat/completions")
+        if api_path.endswith("/chat/completions"):
+            api_prefix = api_path[:-len("/chat/completions")]
+        elif api_path.endswith("/messages"):
+            api_prefix = api_path[:-len("/messages")]
+        else:
+            api_prefix = api_path.rstrip("/")
+        base_url = (raw_base.rstrip("/") + api_prefix) if api_prefix else raw_base
+
+        provider_data = {
+            "name": info["name"].replace(" (本地)", "").replace(" (云端)", ""),
+            "provider_type": provider_type,
+            "base_url": base_url,
+            "model": config.model_name,
+            "api_key": config.api_key,
+        }
+
+        if is_local:
+            local_providers[provider_id] = provider_data
+        else:
+            cloud_providers[provider_id] = provider_data
+
+        opcclaw_config = {
+            "active_provider_id": provider_id,
+            "active_provider_type": "local" if is_local else "cloud",
+            "cloud_providers": cloud_providers,
+            "local_providers": local_providers,
+        }
+
+        with open(cfg_path, "w", encoding="utf-8") as f:
+            json.dump(opcclaw_config, f, indent=2, ensure_ascii=False)
 
     def _enter_normal_mode(self):
         """无 AI 引擎 — 直接进入舰桥，使用规则引擎"""
@@ -516,6 +583,9 @@ class ConnectWindow(QMainWindow):
 
     def _paint_hud(self, event):
         """HUD 装饰覆盖"""
+        # 先让 Qt 完成正常的 widget 绘制（包括子控件的绘制准备）
+        QWidget.paintEvent(self._hud, event)
+
         painter = QPainter(self._hud)
         painter.setRenderHint(QPainter.Antialiasing)
         w, h = self._hud.width(), self._hud.height()

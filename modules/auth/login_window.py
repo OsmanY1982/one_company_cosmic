@@ -3,11 +3,12 @@
 底部蓝色地球缓慢旋转 + 上方全息登录/注册表单
 管理员入口 → 独立管理员登录对话框
 会员路由：admin → 指挥官舰桥 / member → 船员舰桥
+支持记住密码（存储到 data/remembered_login.json）
 """
-import math
+import math, os, json, base64
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QStackedWidget,
-    QLineEdit, QPushButton, QLabel, QMessageBox
+    QLineEdit, QPushButton, QLabel, QMessageBox, QCheckBox
 )
 from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF
 from PyQt5.QtGui import (
@@ -17,6 +18,40 @@ from PyQt5.QtGui import (
 
 from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPLE
 from modules.auth.auth_service import AuthService, MEMBERSHIP_LABELS
+from modules.auth.model_setup_window import ModelSetupWindow
+
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
+REMEMBERED_LOGIN = os.path.join(DATA_DIR, "remembered_login.json")
+
+def _load_remembered():
+    """加载记住的登录凭据"""
+    try:
+        if os.path.exists(REMEMBERED_LOGIN):
+            with open(REMEMBERED_LOGIN, "r") as f:
+                data = json.load(f)
+            if data.get("password"):
+                data["password"] = base64.b64decode(data["password"]).decode()
+            return data
+    except Exception:
+        pass  # gracefully degrade on I/O failure
+    return {}
+
+def _save_remembered(username, password):
+    """保存记住的登录凭据"""
+    try:
+        data = {"username": username, "password": base64.b64encode(password.encode()).decode()}
+        with open(REMEMBERED_LOGIN, "w") as f:
+            json.dump(data, f)
+    except Exception:
+        pass  # gracefully degrade on I/O failure
+
+def _clear_remembered():
+    """清除记住的登录凭据"""
+    try:
+        if os.path.exists(REMEMBERED_LOGIN):
+            os.remove(REMEMBERED_LOGIN)
+    except Exception:
+        pass  # gracefully degrade on I/O failure
 
 
 class EarthGlobe:
@@ -131,7 +166,9 @@ class LoginWindow(QMainWindow):
         self._cosmic = CosmicBackground()
         self.setCentralWidget(self._cosmic)
 
-        self._hud = QWidget(self._cosmic)
+        # 注意：_hud 必须是 LoginWindow 的直接子控件，不能是 _cosmic 的子控件
+        # 否则 _cosmic 的 WA_TransparentForMouseEvents 会在 macOS 26.x 下屏蔽所有子控件的鼠标事件
+        self._hud = QWidget(self)
         self._hud.setAttribute(Qt.WA_TranslucentBackground)
         self._hud.setGeometry(0, 0, 900, 680)
 
@@ -144,6 +181,15 @@ class LoginWindow(QMainWindow):
         self._mode = "login"
 
         self._build_ui()
+
+        # 自动填充记住的密码
+        remembered = _load_remembered()
+        if remembered:
+            self._login_user.setText(remembered.get("username", ""))
+            self._login_pass.setText(remembered.get("password", ""))
+            self._remember_check.setChecked(True)
+
+        self._hud.raise_()  # 确保 HUD 在 _cosmic 上方
 
         self._anim = QTimer(self)
         self._anim.timeout.connect(self._tick)
@@ -213,7 +259,13 @@ class LoginWindow(QMainWindow):
         self._login_pass.returnPressed.connect(self._do_login)
         v.addWidget(self._login_pass)
 
-        v.addSpacing(6)
+        v.addSpacing(4)
+        self._remember_check = QCheckBox("记住密码")
+        self._remember_check.setStyleSheet(
+            "color: #446688; font-size: 11px; background: transparent; spacing: 6px;"
+        )
+        v.addWidget(self._remember_check, alignment=Qt.AlignCenter)
+        v.addSpacing(2)
 
         btn = QPushButton("发 射")
         btn.setStyleSheet("""
@@ -352,6 +404,9 @@ class LoginWindow(QMainWindow):
         self._hud.update()
 
     def _paint_hud(self, event):
+        # 先让 Qt 完成正常的 widget 绘制（包括子控件的绘制准备）
+        QWidget.paintEvent(self._hud, event)
+
         painter = QPainter(self._hud)
         painter.setRenderHint(QPainter.Antialiasing)
         w, h = self._hud.width(), self._hud.height()
@@ -412,9 +467,15 @@ class LoginWindow(QMainWindow):
             QMessageBox.warning(self, "对接失败", result["msg"])
             return
 
+        # 记住/清除密码
+        if self._remember_check.isChecked():
+            _save_remembered(username, password)
+        else:
+            _clear_remembered()
+
         user = result["user"]
         role = user.get("role", "member")
-        self._open_dashboard(username, role)
+        self._open_model_setup(username, role)
 
     def _do_register(self):
         username = self._reg_user.text().strip()
@@ -440,22 +501,73 @@ class LoginWindow(QMainWindow):
 
     def _open_admin_login(self):
         """打开管理员登录对话框"""
-        from modules.auth.admin_login_dialog import AdminLoginDialog
+        import traceback
+        print("[_open_admin_login] CLICKED — 进入管理员入口")
+        try:
+            from modules.auth.admin_login_dialog import AdminLoginDialog
+            print("[_open_admin_login] import OK")
 
-        def on_admin_success():
-            self._open_dashboard("admin", "admin")
+            def on_admin_success():
+                self._open_model_setup("admin", "admin")
 
-        dlg = AdminLoginDialog(on_success=on_admin_success, parent=self)
-        dlg.exec_()
+            dlg = AdminLoginDialog(on_success=on_admin_success, parent=self)
+            print(f"[_open_admin_login] dialog created, flags={hex(int(dlg.windowFlags()))}")
+            result = dlg.exec_()
+            print(f"[_open_admin_login] exec_ returned {result}")
+        except Exception as e:
+            traceback.print_exc()
+            QMessageBox.critical(self, "系统错误", f"打开管理舱失败：{e}")
 
-    def _open_dashboard(self, username: str, role: str):
-        """根据角色打开对应舰桥"""
-        from modules.dashboard.dashboard_window import DashboardWindow
-
+    def _open_model_setup(self, username: str, role: str):
+        """登录成功后打开模型配置窗口"""
         membership_info = None
         if role == "member":
             membership_info = self._auth.get_membership_info(username)
 
-        self._dash = DashboardWindow(role=role, membership_info=membership_info, config=None)
-        self._dash.show()
+        self._setup = ModelSetupWindow(
+            username=username, role=role, membership_info=membership_info
+        )
+        self._setup.setup_complete.connect(self._on_setup_complete)
+        self._setup.show()
         self.close()
+
+    def _on_setup_complete(self, result: dict):
+        """模型配置完成后打开主控面板 + 自动启动悬浮星球"""
+        from modules.dashboard.dashboard_window import DashboardWindow
+        from modules.intelligence.opcclaw_floating_planet import FloatingPlanet
+
+        config = result.get("config", {})
+        engine = result.get("engine", None)
+        username = result.get("username", "")
+        role = result.get("role", "member")
+        membership_info = result.get("membership_info")
+
+        self._dash = DashboardWindow(
+            role=role,
+            membership_info=membership_info,
+            config=config,
+            opcclaw_engine=engine,
+        )
+        self._dash.show()
+
+        # 自动启动悬浮星球
+        try:
+            self._floating = FloatingPlanet(
+                opcclaw_engine=engine,
+                role=role,
+                membership_info=membership_info,
+                config=config,
+            )
+            self._floating.show()
+            self._floating.raise_()
+        except Exception as e:
+            print(f"[Login] FloatingPlanet launch failed: {e}")
+            traceback.print_exc()
+            QMessageBox.warning(
+                self._dash, "悬浮球启动失败",
+                f"悬浮星球未能启动：{e}\n可通过主控面板重新打开。"
+            )
+
+    def _open_dashboard(self, username: str, role: str):
+        """根据角色打开对应舰桥（旧接口，保留兼容）"""
+        self._open_model_setup(username, role)

@@ -5,5 +5,12 @@
     "membership": "permanent",
     "expire_at": null,
     "created_at": "2026-01-01 00:00:00"
+  },
+  "m123": {
+    "password": "123456",
+    "role": "member",
+    "membership": "trial",
+    "expire_at": "2026-06-18 21:50:11",
+    "created_at": "2026-06-11 21:50:11"
   }
 }

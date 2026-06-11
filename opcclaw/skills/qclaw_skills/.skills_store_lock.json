@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "skills": {
+    "web-search": {
+      "name": "Web Search",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=web-search",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "summarize": {
+      "name": "Summarize",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=summarize",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "file-manager": {
+      "name": "File Manager",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=file-manager",
+      "source": "skillhub",
+      "version": "1.2.0"
+    },
+    "word-docx": {
+      "name": "Word / DOCX",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=word-docx",
+      "source": "skillhub",
+      "version": "1.0.2"
+    },
+    "excel-xlsx": {
+      "name": "Excel / XLSX",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=excel-xlsx",
+      "source": "skillhub",
+      "version": "1.0.2"
+    },
+    "pdf-extract": {
+      "name": "Pdf Extract",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=pdf-extract",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "markdown-converter": {
+      "name": "Markdown Converter",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=markdown-converter",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "image": {
+      "name": "image",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=image",
+      "source": "skillhub",
+      "version": ""
+    },
+    "baidu-search": {
+      "name": "baidu web search",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=baidu-search",
+      "source": "skillhub",
+      "version": "1.1.0"
+    },
+    "filesystem-mcp": {
+      "name": "Filesystem MCP Server",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=filesystem-mcp",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "web-browsing": {
+      "name": "Web Browsing",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=web-browsing",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "planning-with-files": {
+      "name": "Planning with files",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=planning-with-files",
+      "source": "skillhub",
+      "version": "2.36.1"
+    },
+    "webscraper-v2": {
+      "name": "Web Scraper Pro",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=webscraper-v2",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "video-image-file-analysis": {
+      "name": "Video Image & File Analysis 多模态视觉视频图片文件分析专家",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=video-image-file-analysis",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "makefile-build": {
+      "name": "Makefile & Build",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=makefile-build",
+      "source": "skillhub",
+      "version": "1.0.0"
+    }
+  }
+}

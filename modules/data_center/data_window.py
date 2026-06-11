@@ -2,6 +2,7 @@
 数据中心 → 星云观测站 · NEBULA OBSERVATORY
 小星球导航模式：2颗小星球环绕星云核心光球
 """
+import traceback
 import os, sqlite3, csv, math
 from datetime import datetime
 from PyQt5.QtWidgets import (
@@ -42,8 +43,9 @@ class DataWindow(QMainWindow):
         self._cosmic = CosmicBackground()
         self.setCentralWidget(self._cosmic)
 
-        # HUD 层
-        self._hud = QWidget(self._cosmic)
+        # HUD 层 — 必须是窗口直接子控件，不是 _cosmic 子控件
+        # 否则 _cosmic 的 WA_TransparentForMouseEvents 会在 macOS 26.x 拦截所有鼠标事件
+        self._hud = QWidget(self)
         self._hud.setAttribute(Qt.WA_TranslucentBackground)
         self._hud.setGeometry(0, 0, self.width(), self.height())
         self._hud.setMouseTracking(True)
@@ -51,6 +53,9 @@ class DataWindow(QMainWindow):
         self._hud.mousePressEvent = self._on_click
 
         self._build_ui()
+
+        # 确保 HUD 在星空背景之上
+        self._hud.raise_()
 
         # 动画
         self._anim = QTimer(self)
@@ -140,14 +145,14 @@ class DataWindow(QMainWindow):
             try:
                 self._open_windows[pid].close()
             except Exception:
-                pass
+                traceback.print_exc()
 
         if pid == "report":
             from modules.data_center.report_window import ReportWindow
             win = ReportWindow(self)
         elif pid == "bi":
-            from modules.data_center.bi_window import BiWindow
-            win = BiWindow(self)
+            from modules.data_center.bi_window import BIWindow
+            win = BIWindow(self)
         else:
             return
 
@@ -159,6 +164,7 @@ class DataWindow(QMainWindow):
         self._hud.update()
 
     def _paint_hud(self, event):
+        QWidget.paintEvent(self._hud, event)
         painter = QPainter(self._hud)
         painter.setRenderHint(QPainter.Antialiasing)
         w, h = self._hud.width(), self._hud.height()

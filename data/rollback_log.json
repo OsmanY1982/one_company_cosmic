@@ -1,0 +1,13 @@
+{
+  "policy": "module-only",
+  "records": [
+    {
+      "id": "RB-20260611080820",
+      "timestamp": "2026-06-11 08:08:20",
+      "module": "modules/auth/login_window.py",
+      "reason": "测试正常回滚流程",
+      "operator": "AI",
+      "status": "approved"
+    }
+  ]
+}

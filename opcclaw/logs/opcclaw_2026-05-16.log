@@ -1,0 +1,666 @@
+2026-05-16 00:03:05 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 00:03:05 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 00:03:09 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 00:03:09 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 00:03:27 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 00:03:27 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 00:03:27 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 00:03:27 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 16:58:50 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 16:58:50 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 16:58:52 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 16:58:52 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 16:59:40 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 16:59:40 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 16:59:42 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 16:59:42 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:02:28 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:02:28 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:02:31 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:02:31 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:06:25 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:06:25 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:06:27 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:06:27 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:08:01 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:08:01 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:52:30 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:52:30 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:52:32 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:52:32 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:54:35 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:54:35 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:57:01 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","type":"Arrearage","param":null,"code":"Arrearage"},"id":"chatcmpl-0256108f-0099-9d40-9d72-abd5e2cca897","request_id":"0256108f-0099-9d40-9d72-abd5e2cca897"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","type":"Arrearage","param":null,"code":"Arrearage"},"id":"chatcmpl-0256108f-0099-9d40-9d72-abd5e2cca897","request_id":"0256108f-0099-9d40-9d72-abd5e2cca897"}
+2026-05-16 17:58:10 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 17:58:10 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 17:58:10 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:58:10 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:58:13 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 17:58:13 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 17:58:13 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 17:58:13 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 17:58:28 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","type":"Arrearage","param":null,"code":"Arrearage"},"id":"chatcmpl-131c3567-4b39-90cb-9c47-4e7d73ec7ece","request_id":"131c3567-4b39-90cb-9c47-4e7d73ec7ece"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","type":"Arrearage","param":null,"code":"Arrearage"},"id":"chatcmpl-131c3567-4b39-90cb-9c47-4e7d73ec7ece","request_id":"131c3567-4b39-90cb-9c47-4e7d73ec7ece"}
+2026-05-16 18:26:08 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:26:08 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:26:10 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:26:10 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:33:29 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:33:29 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:38:21 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 18:38:21 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 18:38:21 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:38:21 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:38:23 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 18:38:23 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 18:38:23 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:38:23 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:38:30 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: Function call not supported.","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-77192b29-d466-9ccf-b268-f54086d6e1ba","request_id":"77192b29-d466-9ccf-b268-f54086d6e1ba"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: Function call not supported.","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-77192b29-d466-9ccf-b268-f54086d6e1ba","request_id":"77192b29-d466-9ccf-b268-f54086d6e1ba"}
+2026-05-16 18:39:05 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 18:39:05 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 18:39:05 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:39:05 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:39:06 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 18:39:06 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 18:39:06 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:39:06 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:39:34 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool call is not supported.","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-cd149cb1-eda6-9b00-9f15-9b994ce00253","request_id":"cd149cb1-eda6-9b00-9f15-9b994ce00253"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool call is not supported.","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-cd149cb1-eda6-9b00-9f15-9b994ce00253","request_id":"cd149cb1-eda6-9b00-9f15-9b994ce00253"}
+2026-05-16 18:40:08 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 18:40:08 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 18:40:08 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:40:08 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:40:09 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 18:40:09 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 18:40:09 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:40:09 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:40:24 [ERROR] opcclaw: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: An assistant message with \"tool_calls\" must be followed by tool messages responding to each \"tool_call_id\". The following tool_call_ids did not have response messages: message[3].role","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-8b639108-5bce-9eb2-a4e4-0c69c5d1177f","request_id":"8b639108-5bce-9eb2-a4e4-0c69c5d1177f"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: An assistant message with \"tool_calls\" must be followed by tool messages responding to each \"tool_call_id\". The following tool_call_ids did not have response messages: message[3].role","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-8b639108-5bce-9eb2-a4e4-0c69c5d1177f","request_id":"8b639108-5bce-9eb2-a4e4-0c69c5d1177f"}
+2026-05-16 18:40:55 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 18:40:55 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 18:40:55 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:40:55 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 18:49:02 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 18:49:02 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 18:49:02 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 18:49:02 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:05:30 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:05:30 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:05:32 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:05:32 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:06:19 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:06:19 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:08:34 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:08:34 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:08:39 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:08:39 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:08:43 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:08:43 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:08:48 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:08:48 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:08:53 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:08:53 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:08:58 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:08:58 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:09:03 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:09:03 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:09:07 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:09:07 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:09:36 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:09:36 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:21:35 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:21:35 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:21:37 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:21:37 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:29:46 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:29:47 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:29:47 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:29:50 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:29:50 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:35:07 [ERROR] opcclaw: LLM API failed: [Ollama (llama3.2:1b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (llama3.2:1b)] 请求异常: timed out
+2026-05-16 19:42:30 [ERROR] opcclaw: LLM API failed: [Ollama (llama3.2:1b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (llama3.2:1b)] 请求异常: timed out
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:44:23 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:44:24 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:44:24 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:44:41 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 19:44:41 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 19:52:39 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (qwen2.5:0.5b)] 请求异常: timed out
+2026-05-16 20:01:54 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 请求异常: [WinError 10054] 远程主机强迫关闭了一个现有的连接。
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 261, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama (qwen2.5:0.5b)] 请求异常: [WinError 10054] 远程主机强迫关闭了一个现有的连接。
+2026-05-16 20:32:16 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 20:32:16 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 20:32:18 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 20:32:18 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 20:32:54 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 20:32:54 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 21:10:31 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 21:10:31 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 21:10:33 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 21:10:33 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 21:11:29 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 21:11:29 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 21:11:34 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 连接失败: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+请检查: 1) 网络连接 2) base_url 是否正确 (http://localhost:11434/v1)
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1344, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1336, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1382, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1001, in connect
+    self.sock = self._create_connection(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 865, in create_connection
+    raise exceptions[0]
+  File "C:\Program Files\Python312\Lib\socket.py", line 850, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1347, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama (qwen2.5:0.5b)] 连接失败: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+请检查: 1) 网络连接 2) base_url 是否正确 (http://localhost:11434/v1)
+2026-05-16 21:49:46 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 21:49:46 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 21:49:48 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 21:49:48 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 21:55:13 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 21:55:13 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 21:56:33 [ERROR] opcclaw: LLM API failed: [Ollama (qwen2.5:0.5b)] 连接失败: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+请检查: 1) 网络连接 2) base_url 是否正确 (http://localhost:11434/v1)
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1344, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1336, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1382, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1001, in connect
+    self.sock = self._create_connection(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 865, in create_connection
+    raise exceptions[0]
+  File "C:\Program Files\Python312\Lib\socket.py", line 850, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 1347, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\opcclaw\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\opcclaw\core\llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama (qwen2.5:0.5b)] 连接失败: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+请检查: 1) 网络连接 2) base_url 是否正确 (http://localhost:11434/v1)
+2026-05-16 22:00:09 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 22:00:09 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 22:00:11 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 22:00:11 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 22:00:45 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 22:00:45 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 22:19:52 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 22:19:52 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 22:19:55 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 22:19:55 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 22:21:10 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 22:21:10 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 22:57:36 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 22:57:36 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 22:57:38 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 22:57:38 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-16 23:15:52 [INFO] opcclaw: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-16 23:15:52 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key

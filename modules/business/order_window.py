@@ -1,6 +1,7 @@
 """
 订单管理 · ORBIT — 独立弹窗模块
 """
+import traceback
 import os
 import sqlite3
 import random
@@ -16,9 +17,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 # ── 路径 ──
+from core.data import ORDER_DB, FINANCE_DB
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ORDER_DB = os.path.join(BASE_DIR, "modules", "business", "order_db.sqlite")
-FINANCE_DB = os.path.join(BASE_DIR, "modules", "business", "finance_db.sqlite")
 
 
 # ── 数据库初始化 ──
@@ -28,32 +28,52 @@ def _init_order_db():
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_no TEXT,
-        customer TEXT,
-        product TEXT,
-        quantity INTEGER,
-        amount REAL,
-        date TEXT,
+        order_no TEXT UNIQUE NOT NULL,
+        customer_name TEXT,
+        product_name TEXT,
+        quantity INTEGER DEFAULT 1,
+        unit_price REAL DEFAULT 0,
+        total_amount REAL DEFAULT 0,
         status TEXT DEFAULT '待处理',
-        remark TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        note TEXT,
+        payment_method TEXT DEFAULT '',
+        date TEXT DEFAULT '',
+        created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
+    # 迁移：为已有 orders 表补充业务字段
+    for col, col_def in [
+        ("date", "TEXT DEFAULT ''"),
+        ("payment_method", "TEXT DEFAULT ''"),
+    ]:
+        try: c.execute(f"ALTER TABLE orders ADD COLUMN {col} {col_def}")
+        except sqlite3.OperationalError: pass
     conn.commit()
     conn.close()
 
 
 def _init_finance_db():
+    """初始化财务表，与 data/finance.db 保持一致"""
     os.makedirs(os.path.dirname(FINANCE_DB), exist_ok=True)
     conn = sqlite3.connect(FINANCE_DB)
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS finance (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        type TEXT,
-        amount REAL,
-        date TEXT,
-        desc TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        type TEXT NOT NULL,
+        category TEXT DEFAULT '',
+        amount REAL NOT NULL,
+        date TEXT NOT NULL,
+        description TEXT DEFAULT '',
+        order_no TEXT DEFAULT '',
+        finance_no TEXT DEFAULT '',
+        created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
+    # 迁移：为已有 finance 表补充业务字段
+    for col, col_def in [
+        ("order_no", "TEXT DEFAULT ''"),
+        ("finance_no", "TEXT DEFAULT ''"),
+    ]:
+        try: c.execute(f"ALTER TABLE finance ADD COLUMN {col} {col_def}")
+        except sqlite3.OperationalError: pass
     conn.commit()
     conn.close()
 
@@ -203,18 +223,18 @@ class OrderDialog(QDialog):
             self._fill_data(order_data)
 
     def _fill_data(self, data):
-        self.customer_edit.setText(data.get("customer", ""))
-        self.product_edit.setText(data.get("product", ""))
+        self.customer_edit.setText(data.get("customer_name", ""))
+        self.product_edit.setText(data.get("product_name", ""))
         self.quantity_spin.setValue(data.get("quantity", 1))
-        self.amount_spin.setValue(data.get("amount", 0))
-        self.remark_edit.setPlainText(data.get("remark", ""))
+        self.amount_spin.setValue(data.get("total_amount", 0))
+        self.remark_edit.setPlainText(data.get("note", ""))
         date_str = data.get("date", "")
         if date_str:
             try:
                 dt = datetime.strptime(date_str, "%Y-%m-%d")
                 self.date_edit.setDate(dt.date())
             except ValueError:
-                pass
+                traceback.print_exc()
         status = data.get("status", "待处理")
         idx = self.status_combo.findText(status)
         if idx >= 0:
@@ -228,13 +248,13 @@ class OrderDialog(QDialog):
 
     def get_data(self):
         return {
-            "customer": self.customer_edit.text().strip(),
-            "product": self.product_edit.text().strip(),
+            "customer_name": self.customer_edit.text().strip(),
+            "product_name": self.product_edit.text().strip(),
             "quantity": self.quantity_spin.value(),
-            "amount": self.amount_spin.value(),
+            "total_amount": self.amount_spin.value(),
             "date": self.date_edit.date().toString("yyyy-MM-dd"),
             "status": self.status_combo.currentText(),
-            "remark": self.remark_edit.toPlainText().strip(),
+            "note": self.remark_edit.toPlainText().strip(),
         }
 
 
@@ -313,7 +333,7 @@ class OrderWindow(QDialog):
         c = conn.cursor()
         if search:
             c.execute("""SELECT * FROM orders
-                WHERE customer LIKE ? OR product LIKE ? OR order_no LIKE ?
+                WHERE customer_name LIKE ? OR product_name LIKE ? OR order_no LIKE ?
                 ORDER BY created_at DESC""",
                 (f"%{search}%", f"%{search}%", f"%{search}%"))
         else:
@@ -325,13 +345,13 @@ class OrderWindow(QDialog):
         for i, row in enumerate(rows):
             items = [
                 row["order_no"] or "",
-                row["customer"] or "",
-                row["product"] or "",
+                row["customer_name"] or "",
+                row["product_name"] or "",
                 str(row["quantity"] or ""),
-                f"¥{row['amount']:,.2f}" if row["amount"] else "",
+                f"¥{row['total_amount']:,.2f}" if row["total_amount"] else "",
                 str(row["date"] or ""),
                 row["status"] or "待处理",
-                row["remark"] or "",
+                row["note"] or "",
             ]
             for j, val in enumerate(items):
                 self.table.setItem(i, j, QTableWidgetItem(val))
@@ -357,15 +377,15 @@ class OrderWindow(QDialog):
 
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("""INSERT INTO orders (order_no, customer, product, quantity, amount, date, status, remark)
+        c.execute("""INSERT INTO orders (order_no, customer_name, product_name, quantity, total_amount, date, status, note)
             VALUES (?,?,?,?,?,?,?,?)""",
-            (order_no, data["customer"], data["product"], data["quantity"],
-             data["amount"], data["date"], data["status"], data["remark"]))
+            (order_no, data["customer_name"], data["product_name"], data["quantity"],
+             data["total_amount"], data["date"], data["status"], data["note"]))
         conn.commit()
         conn.close()
 
         # 联动：写入财务收入
-        self._sync_finance(order_no, data["amount"])
+        self._sync_finance(order_no, data["total_amount"])
 
         self._load_data(self.search_edit.text().strip())
 
@@ -391,13 +411,17 @@ class OrderWindow(QDialog):
 
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("""UPDATE orders SET customer=?, product=?, quantity=?,
-            amount=?, date=?, status=?, remark=? WHERE order_no=?""",
-            (new_data["customer"], new_data["product"], new_data["quantity"],
-             new_data["amount"], new_data["date"], new_data["status"],
-             new_data["remark"], order_no))
+        c.execute("""UPDATE orders SET customer_name=?, product_name=?, quantity=?,
+            total_amount=?, date=?, status=?, note=? WHERE order_no=?""",
+            (new_data["customer_name"], new_data["product_name"], new_data["quantity"],
+             new_data["total_amount"], new_data["date"], new_data["status"],
+             new_data["note"], order_no))
         conn.commit()
         conn.close()
+
+        # 联动：更新财务记录
+        self._sync_finance(order_no, new_data["total_amount"])
+
         self._load_data(self.search_edit.text().strip())
 
     def _on_delete(self):
@@ -414,6 +438,10 @@ class OrderWindow(QDialog):
         c.execute("DELETE FROM orders WHERE order_no = ?", (order_no,))
         conn.commit()
         conn.close()
+
+        # 联动：清理财务记录
+        self._delete_finance(order_no)
+
         self._load_data(self.search_edit.text().strip())
 
     def _on_export(self):
@@ -435,22 +463,36 @@ class OrderWindow(QDialog):
             writer.writerow(["订单编号", "客户", "产品", "数量", "金额", "日期", "状态", "备注", "创建时间"])
             for row in rows:
                 writer.writerow([
-                    row["order_no"], row["customer"], row["product"],
-                    row["quantity"], row["amount"], row["date"],
-                    row["status"], row["remark"], row["created_at"],
+                    row["order_no"], row["customer_name"], row["product_name"],
+                    row["quantity"], row["total_amount"], row["date"],
+                    row["status"], row["note"], row["created_at"],
                 ])
 
         QMessageBox.information(self, "导出成功", f"已导出至:\n{path}")
 
-    def _sync_finance(self, order_no, amount):
+    def _sync_finance(self, order_no, amount, category="订单收入"):
         try:
             conn = sqlite3.connect(FINANCE_DB)
             c = conn.cursor()
-            c.execute("""INSERT INTO finance (type, amount, date, desc)
-                VALUES (?,?,?,?)""",
-                ("收入", amount, datetime.now().strftime("%Y-%m-%d"),
-                 f"订单{order_no}"))
+            c.execute("DELETE FROM finance WHERE order_no = ?", (order_no,))
+            finance_no = "FN" + datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(100, 999))
+            c.execute("""INSERT INTO finance (type, category, amount, date, description, order_no, finance_no)
+                VALUES (?,?,?,?,?,?,?)""",
+                ("收入", category, amount,
+                 datetime.now().strftime("%Y-%m-%d"),
+                 f"订单{order_no}", order_no, finance_no))
             conn.commit()
             conn.close()
         except Exception:
-            pass
+            traceback.print_exc()
+
+    def _delete_finance(self, order_no):
+        """删除订单时清理对应财务记录"""
+        try:
+            conn = sqlite3.connect(FINANCE_DB)
+            c = conn.cursor()
+            c.execute("DELETE FROM finance WHERE order_no = ?", (order_no,))
+            conn.commit()
+            conn.close()
+        except Exception:
+            traceback.print_exc()

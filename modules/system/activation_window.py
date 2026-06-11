@@ -2,6 +2,7 @@
 激活码 · ENGINEERING DECK
 QDialog：激活码生成 / 验证 / 使用记录，金色点缀金属灰主题
 """
+import traceback
 import os, sqlite3, random, string
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout,
@@ -213,4 +214,4 @@ class ActivationWindow(QDialog):
                          (module, action, detail))
             conn.commit(); conn.close()
         except Exception:
-            pass
+            traceback.print_exc()

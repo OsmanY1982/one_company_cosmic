@@ -14,27 +14,38 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 # ── 路径 ──
+from core.data import CUSTOMER_DB
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-CUSTOMER_DB = os.path.join(BASE_DIR, "modules", "business", "customer_db.sqlite")
 
 # ── 数据库初始化 ──
 def _init_customer_db():
     os.makedirs(os.path.dirname(CUSTOMER_DB), exist_ok=True)
     conn = sqlite3.connect(CUSTOMER_DB)
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS customers (
+    c.execute('''CREATE TABLE IF NOT EXISTS customer (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        customer_no TEXT,
-        name TEXT,
-        phone TEXT,
-        email TEXT,
+        name TEXT NOT NULL,
+        company TEXT DEFAULT '',
+        phone TEXT DEFAULT '',
+        email TEXT DEFAULT '',
+        address TEXT DEFAULT '',
         level TEXT DEFAULT '普通',
-        source TEXT,
-        remark TEXT,
+        note TEXT DEFAULT '',
+        customer_no TEXT DEFAULT '',
+        source TEXT DEFAULT '',
         total_orders INTEGER DEFAULT 0,
         total_amount REAL DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
+    # 迁移：为已有 customer 表补充业务字段
+    for col, col_def in [
+        ("customer_no", "TEXT DEFAULT ''"),
+        ("source", "TEXT DEFAULT ''"),
+        ("total_orders", "INTEGER DEFAULT 0"),
+        ("total_amount", "REAL DEFAULT 0"),
+    ]:
+        try: c.execute(f"ALTER TABLE customer ADD COLUMN {col} {col_def}")
+        except sqlite3.OperationalError: pass
     conn.commit()
     conn.close()
 
@@ -203,7 +214,7 @@ class CustomerDialog(QDialog):
             "email": self.email_edit.text().strip(),
             "level": self.level_combo.currentText(),
             "source": self.source_combo.currentText(),
-            "remark": self.remark_edit.toPlainText().strip(),
+            "note": self.remark_edit.toPlainText().strip(),
         }
 
 
@@ -294,7 +305,7 @@ class CustomerWindow(QDialog):
             where_clauses.append("level = ?")
             params.append(level)
 
-        sql = "SELECT * FROM customers"
+        sql = "SELECT * FROM customer"
         if where_clauses:
             sql += " WHERE " + " AND ".join(where_clauses)
         sql += " ORDER BY created_at DESC"
@@ -318,7 +329,7 @@ class CustomerWindow(QDialog):
                 row["level"] or "普通",
                 f"¥{row['total_amount']:,.2f}" if row.get("total_amount") else "¥0.00",
                 row["source"] or "",
-                row["remark"] or "",
+                row["note"] or "",
             ]
             for j, val in enumerate(items):
                 self.table.setItem(i, j, QTableWidgetItem(val))
@@ -347,10 +358,10 @@ class CustomerWindow(QDialog):
 
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("""INSERT INTO customers (customer_no, name, phone, email, level, source, remark)
+        c.execute("""INSERT INTO customer (customer_no, name, phone, email, level, source, note)
             VALUES (?,?,?,?,?,?,?)""",
             (customer_no, data["name"], data["phone"], data["email"],
-             data["level"], data["source"], data["remark"]))
+             data["level"], data["source"], data["note"]))
         conn.commit()
         conn.close()
         self._load_data()
@@ -363,7 +374,7 @@ class CustomerWindow(QDialog):
 
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("SELECT * FROM customers WHERE customer_no = ?", (customer_no,))
+        c.execute("SELECT * FROM customer WHERE customer_no = ?", (customer_no,))
         row = c.fetchone()
         conn.close()
         if row is None:
@@ -377,10 +388,10 @@ class CustomerWindow(QDialog):
 
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("""UPDATE customers SET name=?, phone=?, email=?, level=?, source=?, remark=?
+        c.execute("""UPDATE customer SET name=?, phone=?, email=?, level=?, source=?, note=?
             WHERE customer_no=?""",
             (new_data["name"], new_data["phone"], new_data["email"],
-             new_data["level"], new_data["source"], new_data["remark"], customer_no))
+             new_data["level"], new_data["source"], new_data["note"], customer_no))
         conn.commit()
         conn.close()
         self._load_data()
@@ -396,7 +407,7 @@ class CustomerWindow(QDialog):
             return
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("DELETE FROM customers WHERE customer_no = ?", (customer_no,))
+        c.execute("DELETE FROM customer WHERE customer_no = ?", (customer_no,))
         conn.commit()
         conn.close()
         self._load_data()

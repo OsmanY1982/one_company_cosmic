@@ -269,7 +269,8 @@ class VaultWindow(QDialog):
             self._show_main()
         else:
             try:
-                raw = open(VAULT_FILE, encoding='utf-8').read()
+                with open(VAULT_FILE, encoding='utf-8') as f:
+                    raw = f.read()
                 data = json.loads(vault_decrypt(raw, pwd))
                 self._vault_master_pwd = pwd
                 self._vault_entries = data.get('entries', [])

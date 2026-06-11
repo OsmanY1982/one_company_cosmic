@@ -2,6 +2,7 @@
 系统设置 → 工程舱 · ENGINEERING DECK
 小星球导航模式：4颗小星球环绕工程舱核心
 """
+import traceback
 import os, sqlite3, json, math
 from datetime import datetime, timedelta
 from PyQt5.QtWidgets import (
@@ -73,12 +74,13 @@ class SystemWindow(QMainWindow):
         self._cosmic = CosmicBackground()
         self.setCentralWidget(self._cosmic)
 
-        self._hud = QWidget(self._cosmic)
+        self._hud = QWidget(self)
         self._hud.setAttribute(Qt.WA_TranslucentBackground)
         self._hud.setGeometry(0, 0, self.width(), self.height())
         self._hud.setMouseTracking(True)
         self._hud.mouseMoveEvent = self._on_mouse_move
         self._hud.mousePressEvent = self._on_click
+        self._hud.raise_()
 
         self._build_ui()
 
@@ -162,7 +164,7 @@ class SystemWindow(QMainWindow):
             try:
                 self._open_windows[pid].close()
             except Exception:
-                pass
+                traceback.print_exc()
 
         if pid == "base_info":
             from modules.system.base_info_window import BaseInfoWindow
@@ -187,6 +189,7 @@ class SystemWindow(QMainWindow):
         self._hud.update()
 
     def _paint_hud(self, event):
+        QWidget.paintEvent(self._hud, event)
         painter = QPainter(self._hud)
         painter.setRenderHint(QPainter.Antialiasing)
         w, h = self._hud.width(), self._hud.height()

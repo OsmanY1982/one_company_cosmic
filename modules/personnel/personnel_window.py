@@ -181,11 +181,11 @@ def wallet_init_db():
         created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
     try: conn.execute("ALTER TABLE wallet ADD COLUMN status TEXT DEFAULT 'active'")
-    except: pass
+    except sqlite3.OperationalError: pass
     try: conn.execute("ALTER TABLE wallet_withdraw ADD COLUMN reviewed_by TEXT DEFAULT ''")
-    except: pass
+    except sqlite3.OperationalError: pass
     try: conn.execute("ALTER TABLE wallet_withdraw ADD COLUMN reviewed_at TEXT DEFAULT ''")
-    except: pass
+    except sqlite3.OperationalError: pass
     conn.commit(); conn.close()
 
 def wallet_get_all():
@@ -487,7 +487,8 @@ def dist_get_team(search=""):
 # 初始化所有 DB
 for init in [staff_init_db, member_init_db, wallet_init_db, dist_init_db]:
     try: init()
-    except: pass
+    except Exception as e:
+        import traceback; traceback.print_exc()
 
 
 # ═══════════════ 星球导航 HUD 层 ═══════════════
@@ -704,9 +705,10 @@ class PersonnelWindow(QMainWindow):
         hl.addWidget(line)
         main.addWidget(header)
 
-        # ── 星球导航 HUD ──
-        self._planet_hud = PlanetHUD(callback=self._on_planet_click)
-        main.addWidget(self._planet_hud, stretch=1)
+        # ── 星球导航 HUD ──（父控件 self，避免 CosmicBackground WA_TransparentForMouseEvents 穿透）
+        self._planet_hud = PlanetHUD(self, callback=self._on_planet_click)
+        self._planet_hud.setGeometry(0, 0, self.width(), self.height())
+        self._planet_hud.raise_()
 
         # 底部提示
         hint = QLabel("点击星球进入模块 · 员工 / 会员 / 钱包 / 分销")
@@ -718,6 +720,8 @@ class PersonnelWindow(QMainWindow):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
+        if hasattr(self, '_planet_hud'):
+            self._planet_hud.setGeometry(0, 0, self.width(), self.height())
 
     def _on_planet_click(self, planet_id):
         if planet_id == "staff":

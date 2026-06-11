@@ -1,0 +1,8 @@
+{
+  "provider": "custom",
+  "api_key": "sk-223d727a8fb24d69b9b1028bc5e3d120",
+  "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "model_name": "qwen3.7-max",
+  "temperature": 0.7,
+  "max_tokens": 2048
+}

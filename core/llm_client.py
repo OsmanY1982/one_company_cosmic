@@ -2,10 +2,14 @@
 LLM 客户端 — 统一的本地/云端大模型接口
 支持：Ollama(本地) / OpenAI / DeepSeek / Claude / 通义千问 / 自定义OpenAI兼容
 """
+import traceback
 import json
-import httpx
 from typing import Optional, AsyncIterator, Dict, List
 from dataclasses import dataclass, field
+
+from core.deps import ensure
+ensure("httpx")
+import httpx
 
 
 @dataclass
@@ -81,7 +85,7 @@ PROVIDERS = {
         "name": "自定义 OpenAI 兼容",
         "base_url": "http://localhost:8080",
         "api_path": "/v1/chat/completions",
-        "needs_key": False,
+        "needs_key": True,
         "needs_model_list": False,
         "description": "兼容 OpenAI API 格式的任意服务",
     },
@@ -215,5 +219,29 @@ class LLMClient:
                 models = [m["name"] for m in resp.json().get("models", [])]
                 return models
         except Exception:
-            pass
+            traceback.print_exc()
+        return []
+
+    @staticmethod
+    def discover_ollama_models() -> List[dict]:
+        """静态方法：自动发现本地 Ollama 模型，返回含名称/大小/参数量/能力的列表"""
+        try:
+            import urllib.request
+            resp = urllib.request.urlopen("http://localhost:11434/api/tags", timeout=3)
+            raw = json.loads(resp.read())
+            result = []
+            for m in raw.get("models", []):
+                details = m.get("details", {})
+                entry = {
+                    "name": m["name"],
+                    "size_mb": round(m.get("size", 0) / (1024 * 1024), 1),
+                    "param_size": details.get("parameter_size", "?"),
+                    "context_length": details.get("context_length", 0),
+                    "capabilities": m.get("capabilities", []),
+                    "modified": m.get("modified_at", ""),
+                }
+                result.append(entry)
+            return result
+        except Exception:
+            traceback.print_exc()
         return []

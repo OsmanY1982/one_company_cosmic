@@ -1,13 +1,15 @@
 """
 钱包管理 · CREW
 独立的 QDialog 子窗口，暖橙渐变主题
+对接 personnel_window DAO 层（wallet.db）
 """
-import sqlite3, os, math
+import traceback
+import os
 from datetime import datetime
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
     QPushButton, QLabel, QHeaderView, QMessageBox, QComboBox,
-    QDoubleSpinBox, QFrame
+    QDoubleSpinBox, QFrame, QLineEdit, QTextEdit, QFormLayout
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import (
@@ -15,10 +17,13 @@ from PyQt5.QtGui import (
     QBrush, QFont, QPainterPath
 )
 
-# ═══════ 数据库路径 ═══════
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
-DB_PATH = os.path.join(DATA_DIR, "personnel_db.sqlite")
-os.makedirs(DATA_DIR, exist_ok=True)
+from modules.personnel.personnel_window import (
+    staff_get_all,
+    wallet_get_all, wallet_create, wallet_recharge, wallet_get_by_user,
+    wallet_withdraw_request, wallet_get_trans, wallet_stats,
+    wallet_approve_withdraw, wallet_reject_withdraw,
+    wallet_get_withdraw,
+)
 
 # ═══════ 暖橙 QSS ═══════
 BTN_ORANGE = """
@@ -38,6 +43,15 @@ BTN_DANGER = """
         border-radius: 16px; padding: 6px 18px; font-size: 11px;
     }
     QPushButton:hover { background: rgba(220,80,50,70); }
+"""
+BTN_GREEN = """
+    QPushButton {
+        background: rgba(40,160,100,40);
+        color: #88ffbb;
+        border: 1px solid rgba(60,180,120,60);
+        border-radius: 16px; padding: 6px 18px; font-size: 11px;
+    }
+    QPushButton:hover { background: rgba(50,200,120,70); }
 """
 TABLE_STYLE = """
     QTableWidget {
@@ -81,108 +95,6 @@ DIALOG_QSS = """
 """
 
 
-# ═══════ DAO ═══════
-def _get_conn():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA foreign_keys=ON")
-    return conn
-
-def wallet_init_db():
-    conn = _get_conn()
-    conn.execute('''CREATE TABLE IF NOT EXISTS wallets (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        staff_id INTEGER, staff_name TEXT,
-        balance REAL DEFAULT 0, total_income REAL DEFAULT 0,
-        total_withdraw REAL DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(staff_id) REFERENCES staff(id)
-    )''')
-    conn.execute('''CREATE TABLE IF NOT EXISTS transactions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        staff_id INTEGER, staff_name TEXT,
-        type TEXT, amount REAL, balance_after REAL,
-        remark TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )''')
-    conn.commit()
-    conn.close()
-
-def wallet_get_or_create(staff_id, staff_name):
-    conn = _get_conn()
-    row = conn.execute("SELECT * FROM wallets WHERE staff_id=?", (staff_id,)).fetchone()
-    if not row:
-        conn.execute(
-            "INSERT INTO wallets(staff_id,staff_name,balance,total_income,total_withdraw) VALUES(?,?,0,0,0)",
-            (staff_id, staff_name))
-        conn.commit()
-        row = conn.execute("SELECT * FROM wallets WHERE staff_id=?", (staff_id,)).fetchone()
-    else:
-        if row['staff_name'] != staff_name:
-            conn.execute("UPDATE wallets SET staff_name=? WHERE staff_id=?", (staff_name, staff_id))
-            conn.commit()
-            row = conn.execute("SELECT * FROM wallets WHERE staff_id=?", (staff_id,)).fetchone()
-    conn.close()
-    return dict(row)
-
-def wallet_recharge(staff_id, staff_name, amount):
-    conn = _get_conn()
-    w = wallet_get_or_create(staff_id, staff_name)
-    new_balance = w['balance'] + amount
-    new_income = w['total_income'] + amount
-    conn.execute("UPDATE wallets SET balance=?,total_income=? WHERE staff_id=?",
-                 (new_balance, new_income, staff_id))
-    conn.execute(
-        "INSERT INTO transactions(staff_id,staff_name,type,amount,balance_after,remark) VALUES(?,?,?,?,?,?)",
-        (staff_id, staff_name, '充值', amount, new_balance, '余额充值'))
-    conn.commit()
-    conn.close()
-    return new_balance
-
-def wallet_withdraw(staff_id, staff_name, amount):
-    conn = _get_conn()
-    w = wallet_get_or_create(staff_id, staff_name)
-    if amount > w['balance']:
-        conn.close()
-        return None, f"余额不足，当前余额: {w['balance']:.2f}"
-    new_balance = w['balance'] - amount
-    new_withdraw = w['total_withdraw'] + amount
-    conn.execute("UPDATE wallets SET balance=?,total_withdraw=? WHERE staff_id=?",
-                 (new_balance, new_withdraw, staff_id))
-    conn.execute(
-        "INSERT INTO transactions(staff_id,staff_name,type,amount,balance_after,remark) VALUES(?,?,?,?,?,?)",
-        (staff_id, staff_name, '提现', amount, new_balance, '余额提现'))
-    conn.commit()
-    conn.close()
-    return new_balance, None
-
-def wallet_get_all_transactions(limit=200):
-    conn = _get_conn()
-    rows = conn.execute(
-        "SELECT * FROM transactions ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
-    conn.close()
-    return rows
-
-def wallet_get_stats():
-    conn = _get_conn()
-    total_balance = conn.execute("SELECT COALESCE(SUM(balance),0) FROM wallets").fetchone()[0]
-    total_income = conn.execute("SELECT COALESCE(SUM(total_income),0) FROM wallets").fetchone()[0]
-    total_withdraw = conn.execute("SELECT COALESCE(SUM(total_withdraw),0) FROM wallets").fetchone()[0]
-    conn.close()
-    return total_balance, total_income, total_withdraw
-
-def staff_get_all_names():
-    db = os.path.join(DATA_DIR, "staff.db")
-    if not os.path.exists(db):
-        return []
-    conn = sqlite3.connect(db)
-    conn.row_factory = sqlite3.Row
-    rows = conn.execute("SELECT id, name FROM staff ORDER BY id").fetchall()
-    conn.close()
-    return rows
-
-
 # ═══════ 余额卡片自绘 ═══════
 class BalanceCard(QFrame):
     def __init__(self, title, color_start, color_end, parent=None):
@@ -191,7 +103,7 @@ class BalanceCard(QFrame):
         self._value = 0.0
         self._color_start = QColor(*color_start)
         self._color_end = QColor(*color_end)
-        self.setFixedSize(180, 90)
+        self.setFixedSize(170, 80)
         self.setAttribute(Qt.WA_TranslucentBackground)
 
     def set_value(self, v):
@@ -203,7 +115,6 @@ class BalanceCard(QFrame):
         painter.setRenderHint(QPainter.Antialiasing)
         w, h = self.width(), self.height()
 
-        # 卡面背景
         path = QPainterPath()
         path.addRoundedRect(0, 0, w, h, 12, 12)
         grad = QLinearGradient(0, 0, w, h)
@@ -213,17 +124,100 @@ class BalanceCard(QFrame):
         painter.setPen(QPen(QColor(255, 140, 40, 60), 1))
         painter.drawPath(path)
 
-        # 标题
         painter.setPen(QColor(255, 200, 160, 180))
         painter.setFont(QFont("sans-serif", 10))
         painter.drawText(14, 24, self._title)
 
-        # 数值
         painter.setPen(QColor(255, 230, 200))
-        painter.setFont(QFont("sans-serif", 22, QFont.Bold))
-        painter.drawText(14, 60, f"¥{self._value:,.2f}")
+        painter.setFont(QFont("sans-serif", 20, QFont.Bold))
+        painter.drawText(14, 54, f"¥{self._value:,.2f}")
 
         painter.end()
+
+
+# ═══════════════ 提现审核弹窗 ═══════════════
+class WithdrawAuditDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("提现审核")
+        self.setMinimumSize(600, 450)
+        self.setStyleSheet(DIALOG_QSS)
+        self._build_ui()
+        self._load()
+
+    def _build_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setSpacing(10)
+        layout.setContentsMargins(20, 16, 20, 16)
+
+        title = QLabel("提现待审核")
+        title.setStyleSheet(
+            "color: #ffccaa; font-size: 16px; font-weight: 800; "
+            "letter-spacing: 4px; background: transparent;"
+        )
+        layout.addWidget(title, alignment=Qt.AlignCenter)
+
+        self._table = QTableWidget()
+        self._table.setColumnCount(6)
+        self._table.setHorizontalHeaderLabels(["ID", "用户", "金额", "方式", "时间", "备注"])
+        self._table.setStyleSheet(TABLE_STYLE)
+        self._table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self._table.setSelectionBehavior(QTableWidget.SelectRows)
+        self._table.setEditTriggers(QTableWidget.NoEditTriggers)
+        layout.addWidget(self._table)
+
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        approve_btn = QPushButton("通过")
+        approve_btn.setStyleSheet(BTN_GREEN)
+        approve_btn.clicked.connect(self._on_approve)
+        reject_btn = QPushButton("驳回")
+        reject_btn.setStyleSheet(BTN_DANGER)
+        reject_btn.clicked.connect(self._on_reject)
+        btn_row.addWidget(approve_btn)
+        btn_row.addWidget(reject_btn)
+        layout.addLayout(btn_row)
+
+    def _load(self):
+        rows = wallet_get_withdraw("pending")
+        self._table.setRowCount(len(rows))
+        for i, r in enumerate(rows):
+            self._table.setItem(i, 0, QTableWidgetItem(str(r["id"])))
+            self._table.setItem(i, 1, QTableWidgetItem(r["user_id"] or ""))
+            self._table.setItem(i, 2, QTableWidgetItem(f"¥{float(r['amount']):,.2f}"))
+            self._table.setItem(i, 3, QTableWidgetItem(r["method"] or ""))
+            self._table.setItem(i, 4, QTableWidgetItem(r["created_at"] or ""))
+            self._table.setItem(i, 5, QTableWidgetItem(r["note"] or ""))
+
+    def _get_selected(self):
+        row = self._table.currentRow()
+        if row < 0:
+            return None
+        return int(self._table.item(row, 0).text())
+
+    def _on_approve(self):
+        wid = self._get_selected()
+        if wid is None:
+            QMessageBox.warning(self, "提示", "请先选择一条提现记录")
+            return
+        r = wallet_approve_withdraw(wid, operator="admin")
+        if r["ok"]:
+            QMessageBox.information(self, "成功", f"已通过提现 ¥{r.get('amount',0):,.2f}")
+        else:
+            QMessageBox.warning(self, "失败", r["error"])
+        self._load()
+
+    def _on_reject(self):
+        wid = self._get_selected()
+        if wid is None:
+            QMessageBox.warning(self, "提示", "请先选择一条提现记录")
+            return
+        r = wallet_reject_withdraw(wid, operator="admin", note="驳回")
+        if r["ok"]:
+            QMessageBox.information(self, "成功", "已驳回提现申请")
+        else:
+            QMessageBox.warning(self, "失败", r["error"])
+        self._load()
 
 
 # ═══════════════ 钱包管理窗口 ═══════════════
@@ -231,8 +225,9 @@ class WalletWindow(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("钱包管理 · CREW")
-        self.setFixedSize(600, 550)
+        self.setMinimumSize(650, 600)
         self.setStyleSheet(DIALOG_QSS)
+        self._staff_map = {}  # id → name
         self._build_ui()
         self._load_data()
 
@@ -271,23 +266,25 @@ class WalletWindow(QDialog):
         cards_layout.addWidget(self._card_withdraw)
         main.addLayout(cards_layout)
 
-        # ── 分隔线 ──
         line2 = QFrame()
         line2.setFixedHeight(1)
         line2.setStyleSheet("background: rgba(255,140,40,20); border: none;")
         main.addWidget(line2)
 
-        # ── 员工选择 + 余额 ──
+        # ── 员工选择 + 钱包操作 ──
         staff_layout = QHBoxLayout()
         staff_layout.setSpacing(12)
-        staff_label = QLabel("选择员工")
+
+        staff_label = QLabel("员工/用户")
         staff_label.setStyleSheet("color: #ccaa99; font-size: 12px; background: transparent;")
         staff_layout.addWidget(staff_label)
 
-        self._staff_combo = QComboBox()
-        self._staff_combo.setMinimumWidth(160)
-        self._staff_combo.currentIndexChanged.connect(self._on_staff_changed)
-        staff_layout.addWidget(self._staff_combo)
+        self._user_combo = QComboBox()
+        self._user_combo.setMinimumWidth(160)
+        self._user_combo.setEditable(True)
+        self._user_combo.setInsertPolicy(QComboBox.NoInsert)
+        self._user_combo.currentTextChanged.connect(self._on_user_changed)
+        staff_layout.addWidget(self._user_combo)
 
         staff_layout.addStretch()
 
@@ -320,7 +317,7 @@ class WalletWindow(QDialog):
 
         op_layout.addSpacing(20)
 
-        withdraw_label = QLabel("提现")
+        withdraw_label = QLabel("提现申请")
         withdraw_label.setStyleSheet("color: #ccaa99; font-size: 11px; background: transparent;")
         op_layout.addWidget(withdraw_label)
 
@@ -337,18 +334,24 @@ class WalletWindow(QDialog):
         op_layout.addWidget(self._withdraw_btn)
 
         op_layout.addStretch()
+
+        self._audit_btn = QPushButton("审核")
+        self._audit_btn.setStyleSheet(BTN_GREEN)
+        self._audit_btn.clicked.connect(self._open_audit)
+        op_layout.addWidget(self._audit_btn)
         main.addLayout(op_layout)
 
         # ── 交易记录表格 ──
         table_label = QLabel("交易记录")
         table_label.setStyleSheet(
-            "color: #bb9988; font-size: 13px; font-weight: 700; letter-spacing: 2px; background: transparent;"
+            "color: #bb9988; font-size: 13px; font-weight: 700; "
+            "letter-spacing: 2px; background: transparent;"
         )
         main.addWidget(table_label)
 
         self._table = QTableWidget()
-        self._table.setColumnCount(6)
-        self._table.setHorizontalHeaderLabels(["员工", "类型", "金额", "余额", "时间", "备注"])
+        self._table.setColumnCount(5)
+        self._table.setHorizontalHeaderLabels(["用户", "类型", "金额", "备注", "时间"])
         self._table.setStyleSheet(TABLE_STYLE)
         self._table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self._table.setSelectionBehavior(QTableWidget.SelectRows)
@@ -357,96 +360,126 @@ class WalletWindow(QDialog):
         main.addWidget(self._table)
 
     def _load_data(self):
-        # 加载员工下拉
-        self._staff_data = {}
-        self._staff_combo.blockSignals(True)
-        self._staff_combo.clear()
-        staff_rows = staff_get_all_names()
-        for row in staff_rows:
-            sid = row['id']
-            name = row['name']
-            self._staff_data[sid] = name
-            self._staff_combo.addItem(f"{name} (ID:{sid})", sid)
-        self._staff_combo.blockSignals(False)
+        # 加载员工列表作为钱包用户候选
+        self._staff_map = {}
+        self._user_combo.blockSignals(True)
+        self._user_combo.clear()
+        try:
+            staff_rows = staff_get_all()
+            for row in staff_rows:
+                sid = str(row["id"])
+                name = row["name"] or f"员工#{sid}"
+                self._staff_map[sid] = name
+                self._user_combo.addItem(f"{name} (ID:{sid})", sid)
+        except Exception:
+            traceback.print_exc()
+        self._user_combo.blockSignals(False)
 
-        # 更新统计卡片
         self._refresh_stats()
-
-        # 加载交易记录
         self._load_transactions()
 
-        # 当前选中员工余额
-        self._on_staff_changed()
-
     def _refresh_stats(self):
-        bal, inc, wd = wallet_get_stats()
-        self._card_balance.set_value(bal)
-        self._card_income.set_value(inc)
-        self._card_withdraw.set_value(wd)
+        try:
+            s = wallet_stats()
+            self._card_balance.set_value(s.get("balance", 0))
+            self._card_income.set_value(s.get("income", 0))
+            self._card_withdraw.set_value(s.get("expense", 0))
+            pending = s.get("pending", 0)
+            self._audit_btn.setText(f"审核({pending})" if pending else "审核")
+        except Exception:
+            traceback.print_exc()
 
     def _load_transactions(self):
-        rows = wallet_get_all_transactions()
-        self._table.setRowCount(len(rows))
-        for i, r in enumerate(rows):
-            self._table.setItem(i, 0, QTableWidgetItem(r['staff_name'] or ''))
-            type_item = QTableWidgetItem(r['type'] or '')
-            if r['type'] == '充值':
-                type_item.setForeground(QColor(136, 255, 187))
-            elif r['type'] == '提现':
-                type_item.setForeground(QColor(255, 170, 170))
-            self._table.setItem(i, 1, type_item)
-            self._table.setItem(i, 2, QTableWidgetItem(f"¥{r['amount']:,.2f}"))
-            self._table.setItem(i, 3, QTableWidgetItem(f"¥{r['balance_after']:,.2f}"))
-            self._table.setItem(i, 4, QTableWidgetItem(r['created_at'] or ''))
-            self._table.setItem(i, 5, QTableWidgetItem(r['remark'] or ''))
+        try:
+            rows = wallet_get_trans()
+            self._table.setRowCount(len(rows))
+            for i, r in enumerate(rows):
+                self._table.setItem(i, 0, QTableWidgetItem(r["user_id"] or ""))
+                ttype = r["trans_type"] or ""
+                type_item = QTableWidgetItem(ttype)
+                if "收入" in ttype or "充值" in ttype or "佣金" in ttype:
+                    type_item.setForeground(QColor(136, 255, 187))
+                elif "支出" in ttype or "提现" in ttype or "转账" in ttype:
+                    type_item.setForeground(QColor(255, 170, 170))
+                self._table.setItem(i, 1, type_item)
+                amt = float(r["amount"]) if r.get("amount") else 0
+                self._table.setItem(i, 2, QTableWidgetItem(f"¥{amt:,.2f}"))
+                self._table.setItem(i, 3, QTableWidgetItem(r["note"] or ""))
+                self._table.setItem(i, 4, QTableWidgetItem(r["created_at"] or ""))
+        except Exception:
+            traceback.print_exc()
 
-    def _on_staff_changed(self):
-        sid = self._staff_combo.currentData()
-        if sid is None:
+    def _get_current_user(self):
+        sid = self._user_combo.currentData()
+        if sid:
+            return sid, self._staff_map.get(sid, "")
+        # 如果编辑了自定义文本
+        text = self._user_combo.currentText().strip()
+        if text:
+            return text, text
+        return None, ""
+
+    def _on_user_changed(self):
+        uid, _ = self._get_current_user()
+        if not uid:
             self._balance_label.setText("余额: ¥0.00")
             return
-        name = self._staff_data.get(sid, "")
-        w = wallet_get_or_create(sid, name)
-        self._balance_label.setText(f"余额: ¥{w['balance']:,.2f}")
+        try:
+            w = wallet_get_by_user(uid)
+            if w:
+                self._balance_label.setText(f"余额: ¥{float(w['balance']):,.2f}")
+            else:
+                self._balance_label.setText("余额: ¥0.00 (未开通)")
+        except Exception:
+            self._balance_label.setText("余额: —")
+
+    def _ensure_wallet(self, uid, name):
+        w = wallet_get_by_user(uid)
+        if not w:
+            wallet_create(uid, name)
+            return wallet_get_by_user(uid)
+        return w
 
     def _do_recharge(self):
-        sid = self._staff_combo.currentData()
-        if sid is None:
-            QMessageBox.warning(self, "提示", "请先选择员工")
+        uid, name = self._get_current_user()
+        if not uid:
+            QMessageBox.warning(self, "提示", "请选择员工/用户或输入用户ID")
             return
         amount = self._recharge_spin.value()
         if amount <= 0:
             QMessageBox.warning(self, "提示", "请输入有效充值金额")
             return
-        name = self._staff_data.get(sid, "")
-        new_bal = wallet_recharge(sid, name, amount)
-        self._balance_label.setText(f"余额: ¥{new_bal:,.2f}")
+        self._ensure_wallet(uid, name)
+        r = wallet_recharge(uid, amount, f"管理员充值 ¥{amount}")
+        if r["ok"]:
+            self._balance_label.setText(f"余额: ¥{r['balance']:,.2f}")
+        else:
+            QMessageBox.warning(self, "充值失败", r["error"])
         self._refresh_stats()
         self._load_transactions()
         self._recharge_spin.setValue(100)
 
     def _do_withdraw(self):
-        sid = self._staff_combo.currentData()
-        if sid is None:
-            QMessageBox.warning(self, "提示", "请先选择员工")
+        uid, name = self._get_current_user()
+        if not uid:
+            QMessageBox.warning(self, "提示", "请选择员工/用户或输入用户ID")
             return
         amount = self._withdraw_spin.value()
         if amount <= 0:
             QMessageBox.warning(self, "提示", "请输入有效提现金额")
             return
-        name = self._staff_data.get(sid, "")
-        new_bal, err = wallet_withdraw(sid, name, amount)
-        if err:
-            QMessageBox.warning(self, "提现失败", err)
-            return
-        self._balance_label.setText(f"余额: ¥{new_bal:,.2f}")
+        self._ensure_wallet(uid, name)
+        r = wallet_withdraw_request(uid, amount, method="手动", note=f"提现申请 ¥{amount}")
+        if r["ok"]:
+            QMessageBox.information(self, "成功", r["message"])
+            self._on_user_changed()
+        else:
+            QMessageBox.warning(self, "提现失败", r["error"])
         self._refresh_stats()
         self._load_transactions()
-        self._withdraw_spin.setValue(50)
 
-
-# ═══════ 初始化数据库 ═══════
-try:
-    wallet_init_db()
-except Exception:
-    pass
+    def _open_audit(self):
+        dlg = WithdrawAuditDialog(self)
+        dlg.exec_()
+        self._refresh_stats()
+        self._load_transactions()

@@ -13,25 +13,30 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 # ── 路径 ──
+from core.data import PRODUCT_DB
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-PRODUCT_DB = os.path.join(BASE_DIR, "modules", "business", "product_db.sqlite")
 
 
 def _init_product_db():
     os.makedirs(os.path.dirname(PRODUCT_DB), exist_ok=True)
     conn = sqlite3.connect(PRODUCT_DB)
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS products (
+    c.execute('''CREATE TABLE IF NOT EXISTS product (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         product_no TEXT,
-        name TEXT,
-        category TEXT,
-        cost REAL,
-        price REAL,
-        stock INTEGER,
-        description TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        name TEXT NOT NULL,
+        category TEXT DEFAULT '',
+        price REAL DEFAULT 0,
+        cost REAL DEFAULT 0,
+        stock INTEGER DEFAULT 0,
+        unit TEXT DEFAULT '个',
+        description TEXT DEFAULT '',
+        status TEXT DEFAULT '在售',
+        created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
+    # 迁移：为已有 product 表补充业务字段
+    try: c.execute("ALTER TABLE product ADD COLUMN product_no TEXT")
+    except sqlite3.OperationalError: pass
     conn.commit()
     conn.close()
 
@@ -275,12 +280,12 @@ class ProductWindow(QDialog):
         conn = self._get_conn()
         c = conn.cursor()
         if search:
-            c.execute("""SELECT * FROM products
+            c.execute("""SELECT * FROM product
                 WHERE name LIKE ? OR category LIKE ? OR product_no LIKE ?
                 ORDER BY created_at DESC""",
                 (f"%{search}%", f"%{search}%", f"%{search}%"))
         else:
-            c.execute("SELECT * FROM products ORDER BY created_at DESC")
+            c.execute("SELECT * FROM product ORDER BY created_at DESC")
         rows = c.fetchall()
         conn.close()
 
@@ -319,7 +324,7 @@ class ProductWindow(QDialog):
 
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("""INSERT INTO products (product_no, name, category, cost, price, stock, description)
+        c.execute("""INSERT INTO product (product_no, name, category, cost, price, stock, description)
             VALUES (?,?,?,?,?,?,?)""",
             (product_no, data["name"], data["category"], data["cost"],
              data["price"], data["stock"], data["description"]))
@@ -336,7 +341,7 @@ class ProductWindow(QDialog):
 
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("SELECT * FROM products WHERE product_no = ?", (product_no,))
+        c.execute("SELECT * FROM product WHERE product_no = ?", (product_no,))
         row = c.fetchone()
         conn.close()
         if row is None:
@@ -350,7 +355,7 @@ class ProductWindow(QDialog):
 
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("""UPDATE products SET name=?, category=?, cost=?, price=?,
+        c.execute("""UPDATE product SET name=?, category=?, cost=?, price=?,
             stock=?, description=? WHERE product_no=?""",
             (new_data["name"], new_data["category"], new_data["cost"],
              new_data["price"], new_data["stock"], new_data["description"],
@@ -370,7 +375,7 @@ class ProductWindow(QDialog):
             return
         conn = self._get_conn()
         c = conn.cursor()
-        c.execute("DELETE FROM products WHERE product_no = ?", (product_no,))
+        c.execute("DELETE FROM product WHERE product_no = ?", (product_no,))
         conn.commit()
         conn.close()
         self._load_data(self.search_edit.text().strip())

@@ -2,6 +2,7 @@
 基础信息 · ENGINEERING DECK
 QDialog：公司信息配置表单，金属灰主题
 """
+import traceback
 import os, json
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout,
@@ -118,8 +119,11 @@ class BaseInfoWindow(QDialog):
     def _load(self):
         info_file = os.path.join(DATA_DIR, "company_info.json")
         if os.path.exists(info_file):
-            with open(info_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
+            try:
+                with open(info_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+            except (json.JSONDecodeError, IOError):
+                return  # 文件损坏，静默跳过
             self.edit_company.setText(data.get("company_name", ""))
             self.edit_contact.setText(data.get("contact", ""))
             self.edit_phone.setText(data.get("phone", ""))
@@ -141,8 +145,11 @@ class BaseInfoWindow(QDialog):
             "bank": self.edit_bank.text().strip(),
             "bank_account": self.edit_bank_acc.text().strip(),
         }
-        with open(info_file, 'w', encoding='utf-8') as f:
+        os.makedirs(os.path.dirname(info_file), exist_ok=True)
+        tmp_path = info_file + ".tmp"
+        with open(tmp_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, info_file)  # 原子替换
         self._log_op("基础信息", "保存", "公司信息已更新")
         QMessageBox.information(self, "提示", "基础信息已保存")
 
@@ -155,4 +162,4 @@ class BaseInfoWindow(QDialog):
                          (module, action, detail))
             conn.commit(); conn.close()
         except Exception:
-            pass
+            traceback.print_exc()

@@ -167,7 +167,7 @@ class TrendChart(QFrame):
         painter.end()
 
 
-class BiWindow(QDialog):
+class BIWindow(QDialog):
     """数据大屏 · OBSERVATORY"""
 
     def __init__(self, parent=None):

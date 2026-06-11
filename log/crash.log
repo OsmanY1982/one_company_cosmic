@@ -1,0 +1,521 @@
+2026-06-11 08:23:23,503 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/business_window.py", line 504, in _on_planet_clicked
+    self._product_win = ProductWindow(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/product_window.py", line 228, in __init__
+    self._load_data()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/product_window.py", line 288, in _load_data
+    c.execute("SELECT * FROM products ORDER BY created_at DESC")
+sqlite3.OperationalError: no such table: products
+
+2026-06-11 08:23:27,186 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/business_window.py", line 508, in _on_planet_clicked
+    self._customer_win = CustomerWindow(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/customer_window.py", line 235, in __init__
+    self._load_data()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/customer_window.py", line 318, in _load_data
+    c.execute(sql, params)
+sqlite3.OperationalError: no such table: customers
+
+2026-06-11 08:23:29,558 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/business_window.py", line 512, in _on_planet_clicked
+    self._finance_win = FinanceWindow(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/finance_window.py", line 313, in __init__
+    self._load_data()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/finance_window.py", line 414, in _load_data
+    c.execute("SELECT * FROM finances ORDER BY date DESC, created_at DESC")
+sqlite3.OperationalError: no such table: finances
+
+2026-06-11 08:23:47,265 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/data_center/report_window.py", line 133, in paintEvent
+    glow = QRadialGradient(cx, y, bar_w * 0.8)
+NameError: name 'QRadialGradient' is not defined
+
+2026-06-11 08:37:32,545 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/business_window.py", line 504, in _on_planet_clicked
+    self._product_win = ProductWindow(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/product_window.py", line 228, in __init__
+    self._load_data()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/product_window.py", line 288, in _load_data
+    c.execute("SELECT * FROM products ORDER BY created_at DESC")
+sqlite3.OperationalError: no such table: products
+
+2026-06-11 08:37:35,259 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/business_window.py", line 508, in _on_planet_clicked
+    self._customer_win = CustomerWindow(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/customer_window.py", line 235, in __init__
+    self._load_data()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/customer_window.py", line 318, in _load_data
+    c.execute(sql, params)
+sqlite3.OperationalError: no such table: customers
+
+2026-06-11 08:37:37,912 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/business_window.py", line 512, in _on_planet_clicked
+    self._finance_win = FinanceWindow(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/finance_window.py", line 313, in __init__
+    self._load_data()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/finance_window.py", line 414, in _load_data
+    c.execute("SELECT * FROM finances ORDER BY date DESC, created_at DESC")
+sqlite3.OperationalError: no such table: finances
+
+2026-06-11 12:26:02,606 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/data_center/report_window.py", line 133, in paintEvent
+    glow = QRadialGradient(cx, y, bar_w * 0.8)
+NameError: name 'QRadialGradient' is not defined
+
+2026-06-11 12:52:39,772 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 167, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 242, in _on_planet_clicked
+    from modules.intelligence.scan_window import ScanWindow
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/scan_window.py", line 18, in <module>
+    import qrcode
+ModuleNotFoundError: No module named 'qrcode'
+
+2026-06-11 12:53:22,701 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 167, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 242, in _on_planet_clicked
+    from modules.intelligence.scan_window import ScanWindow
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/scan_window.py", line 18, in <module>
+    import qrcode
+ModuleNotFoundError: No module named 'qrcode'
+
+2026-06-11 12:53:53,015 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/data_center/report_window.py", line 133, in paintEvent
+    glow = QRadialGradient(cx, y, bar_w * 0.8)
+NameError: name 'QRadialGradient' is not defined
+
+2026-06-11 12:54:57,743 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/business_window.py", line 512, in _on_planet_clicked
+    self._finance_win = FinanceWindow(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/finance_window.py", line 314, in __init__
+    self._update_summary()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/business/finance_window.py", line 435, in _update_summary
+    c.execute("SELECT COALESCE(SUM(CASE WHEN type='收入' THEN amount ELSE 0 END),0) FROM finances")
+sqlite3.OperationalError: no such table: finances
+
+2026-06-11 12:57:28,547 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 277, in _on_send
+    self._process_command(text)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 284, in _process_command
+    self._process_with_rules(text)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 292, in _process_with_rules
+    if intent.action == "open" and intent.target in dict(self.MODULES_LIST):
+ValueError: dictionary update sequence element #0 has length 3; 2 is required
+
+2026-06-11 13:07:57,292 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 277, in _on_send
+    self._process_command(text)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 284, in _process_command
+    self._process_with_rules(text)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 292, in _process_with_rules
+    if intent.action == "open" and intent.target in dict(self.MODULES_LIST):
+ValueError: dictionary update sequence element #0 has length 3; 2 is required
+
+2026-06-11 13:08:06,735 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/data_center/report_window.py", line 133, in paintEvent
+    glow = QRadialGradient(cx, y, bar_w * 0.8)
+NameError: name 'QRadialGradient' is not defined
+
+2026-06-11 13:47:40,373 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/tools_window.py", line 253, in _open_scan
+    from modules.intelligence.scan_window import ScanWindow
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/scan_window.py", line 18, in <module>
+    import qrcode
+ModuleNotFoundError: No module named 'qrcode'
+
+2026-06-11 13:55:29,068 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 167, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 242, in _on_planet_clicked
+    from modules.intelligence.scan_window import ScanWindow
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/scan_window.py", line 18, in <module>
+    import qrcode
+ModuleNotFoundError: No module named 'qrcode'
+
+2026-06-11 13:55:42,029 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/data_center/report_window.py", line 133, in paintEvent
+    glow = QRadialGradient(cx, y, bar_w * 0.8)
+NameError: name 'QRadialGradient' is not defined
+
+2026-06-11 13:59:00,852 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 424, in _on_voice_result
+    self._process_command(text)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 284, in _process_command
+    self._process_with_rules(text)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/dashboard/dashboard_window.py", line 292, in _process_with_rules
+    if intent.action == "open" and intent.target in dict(self.MODULES_LIST):
+ValueError: dictionary update sequence element #0 has length 3; 2 is required
+
+2026-06-11 15:02:40,277 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 280, in _on_planet_clicked
+    from modules.intelligence.scan_window import ScanWindow
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/scan_window.py", line 18, in <module>
+    import qrcode
+ModuleNotFoundError: No module named 'qrcode'
+
+2026-06-11 15:03:06,422 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 249, in _on_planet_clicked
+    dlg = VoiceWidget(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/voice_interface.py", line 187, in __init__
+    self._setup_ui()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/voice_interface.py", line 205, in _setup_ui
+    recognition_group = QGroupBox("语音识别")
+NameError: name 'QGroupBox' is not defined
+
+2026-06-11 15:05:12,863 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 246, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 15:24:49,919 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 242, in _on_planet_clicked
+    dlg = AIAssistantWindow(self, opcclaw_engine=self._opcclaw_engine)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 2046, in __init__
+    self._init_knowledge_base_tab()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 2508, in _init_knowledge_base_tab
+    self._knowledge_base = KnowledgeBase(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-11 15:24:53,992 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 242, in _on_planet_clicked
+    dlg = AIAssistantWindow(self, opcclaw_engine=self._opcclaw_engine)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 2046, in __init__
+    self._init_knowledge_base_tab()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 2508, in _init_knowledge_base_tab
+    self._knowledge_base = KnowledgeBase(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-11 15:27:48,311 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 247, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 15:27:51,062 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 250, in _on_planet_clicked
+    dlg = VoiceWidget(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/voice_interface.py", line 187, in __init__
+    self._setup_ui()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/voice_interface.py", line 205, in _setup_ui
+    recognition_group = QGroupBox("语音识别")
+NameError: name 'QGroupBox' is not defined
+
+2026-06-11 15:31:04,944 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 241, in _on_planet_clicked
+    from modules.intelligence.ai_assistant_window import AIAssistantWindow
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 2010, in <module>
+    {"id": "opcclaw_chat",       "name": "OPCclaw对话",  "color": QColor(100, 80, 255),   "orbit": 110, "size": 32},
+NameError: name 'QColor' is not defined
+
+2026-06-11 15:55:20,103 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 177, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 241, in _on_planet_clicked
+    from modules.intelligence.ai_assistant_window import AIAssistantWindow
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 2010, in <module>
+    {"id": "opcclaw_chat",       "name": "OPCclaw对话",  "color": QColor(100, 80, 255),   "orbit": 110, "size": 32},
+NameError: name 'QColor' is not defined
+
+2026-06-11 16:37:28,522 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/system/system_hub_window.py", line 68, in paintEvent
+    paint_orbit(p, w2, planet["orbit"], alpha=10)
+TypeError: paint_orbit() got an unexpected keyword argument 'alpha'
+
+2026-06-11 16:40:26,593 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 117, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/intelligence_window.py", line 192, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'AICenterWindow' object has no attribute 'exec_'
+
+2026-06-11 17:33:15,057 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 141, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 17:33:17,678 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 147, in _on_planet_clicked
+    dlg = KnowledgeBase(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-11 17:33:23,957 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 158, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'QuickActionsWidget' object has no attribute 'exec_'
+
+2026-06-11 17:34:21,620 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 194, in _on_planet_clicked
+    dlg = VoiceWidget(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/voice_interface.py", line 187, in __init__
+    self._setup_ui()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/voice_interface.py", line 205, in _setup_ui
+    recognition_group = QGroupBox("语音识别")
+NameError: name 'QGroupBox' is not defined
+
+2026-06-11 18:01:02,784 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 141, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 18:01:05,490 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 147, in _on_planet_clicked
+    dlg = KnowledgeBase(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-11 18:01:30,582 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 158, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'QuickActionsWidget' object has no attribute 'exec_'
+
+2026-06-11 18:07:06,399 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 158, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'QuickActionsWidget' object has no attribute 'exec_'
+
+2026-06-11 18:07:19,814 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 147, in _on_planet_clicked
+    dlg = KnowledgeBase(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-11 18:07:23,850 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 141, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 18:07:32,557 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 189, in _on_planet_clicked
+    dlg = BusinessAIDialog(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_shell_dialogs.py", line 98, in __init__
+    layout.addWidget(BusinessAIWidget(self))
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_ai_widgets.py", line 647, in __init__
+    from modules.intelligence.crm_tools import CRMTools
+ImportError: cannot import name 'CRMTools' from 'modules.intelligence.crm_tools' (/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/crm_tools.py)
+
+2026-06-11 18:16:34,593 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 158, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'QuickActionsWidget' object has no attribute 'exec_'
+
+2026-06-11 18:16:41,353 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 147, in _on_planet_clicked
+    dlg = KnowledgeBase(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-11 18:16:46,131 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 114, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 141, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 18:58:03,355 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/system/system_hub_window.py", line 68, in paintEvent
+    paint_orbit(p, w2, planet["orbit"], alpha=10)
+TypeError: paint_orbit() got an unexpected keyword argument 'alpha'
+
+2026-06-11 19:05:35,583 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 140, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 19:05:38,768 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 146, in _on_planet_clicked
+    dlg = KnowledgeBase(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-11 19:37:08,346 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 140, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 22:33:15,743 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 140, in _on_planet_clicked
+    dlg.exec_()
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-11 22:33:19,934 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 146, in _on_planet_clicked
+    dlg = KnowledgeBase(self)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-11 22:35:01,402 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 648, in _send
+    self._send_btn.setEnabled(False)
+AttributeError: '_ChatDialog' object has no attribute '_send_btn'
+
+2026-06-11 23:31:26,019 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 648, in _send
+    self._send_btn.setEnabled(False)
+AttributeError: '_ChatDialog' object has no attribute '_send_btn'
+
+2026-06-12 00:26:38,825 [Dummy-1] Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 00:41:58,294 [Dummy-1] Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 01:34:26,538 [Dummy-1] Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 01:49:59,126 [Dummy-1] Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 01:53:25,609 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 596, in eventFilter
+    self._send()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 648, in _send
+    self._send_btn.setEnabled(False)
+AttributeError: '_ChatDialog' object has no attribute '_send_btn'
+
+2026-06-12 02:01:25,969 [Dummy-1] Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 02:08:13,827 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 648, in _send
+    self._send_btn.setEnabled(False)
+AttributeError: '_ChatDialog' object has no attribute '_send_btn'
+
