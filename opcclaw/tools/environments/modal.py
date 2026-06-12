@@ -13,6 +13,7 @@ import tarfile
 import threading
 from pathlib import Path
 from typing import Any, Optional
+import traceback
 
 from hermes_constants import get_hermes_home
 from tools.environments.base import (
@@ -453,7 +454,7 @@ class ModalEnvironment(BaseEnvironment):
         try:
             self._worker.run_coroutine(self._sandbox.terminate.aio(), timeout=15)
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         finally:
             self._worker.stop()
             self._sandbox = None

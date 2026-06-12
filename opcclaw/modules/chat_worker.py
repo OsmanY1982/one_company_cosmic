@@ -3,6 +3,7 @@ OPCclaw - 后台 LLM 调用工作线程
 """
 
 from PyQt5.QtCore import QThread, pyqtSignal
+import traceback
 
 
 class ChatWorker(QThread):
@@ -27,7 +28,7 @@ class ChatWorker(QThread):
                         data = json.loads(chunk)
                         usage_info = data.get("usage", {})
                     except (json.JSONDecodeError, ValueError, AttributeError):
-                        pass  # usage 信息是可选的，解析失败不影响主功能
+                        import traceback; traceback.print_exc()
                 else:
                     self.text_chunk.emit(chunk)
             self.finished.emit("", usage_info)

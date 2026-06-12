@@ -21,6 +21,7 @@ Configuration in config.yaml:
 """
 
 from __future__ import annotations
+import traceback
 
 import asyncio
 import html
@@ -428,7 +429,7 @@ def _env_enablement() -> dict | None:
         try:
             seed["port"] = int(port)
         except ValueError:
-            pass
+            import traceback; traceback.print_exc()
     service_url = os.getenv("TEAMS_SERVICE_URL", "").strip()
     if service_url:
         seed["service_url"] = service_url
@@ -1008,7 +1009,7 @@ class TeamsAdapter(BasePlatformAdapter):
         try:
             await self._app.send(chat_id, TypingActivityInput())
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
 
     async def send_image(
         self,

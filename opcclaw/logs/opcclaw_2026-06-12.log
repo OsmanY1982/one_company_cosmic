@@ -3,3 +3,644 @@
 2026-06-12 01:34:26 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
 2026-06-12 01:49:59 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
 2026-06-12 02:01:25 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 02:16:40 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 02:26:39 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:02:39 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:02:39 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 03:04:16 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:07:09 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:07:09 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 03:07:25 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:41:01 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:50:15 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:50:15 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 03:50:29 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:59:26 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 03:59:26 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 04:07:06 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:07:06 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 04:11:03 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:11:03 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 04:11:15 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:11:15 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 04:14:53 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:14:53 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 04:15:29 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:20:38 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:20:38 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10070/runtime/python311/lib/python3.11/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10070/runtime/python311/lib/python3.11/urllib/request.py", line 525, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10070/runtime/python311/lib/python3.11/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10070/runtime/python311/lib/python3.11/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10070/runtime/python311/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10070/runtime/python311/lib/python3.11/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 04:24:00 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:24:00 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 04:25:50 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:25:50 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 04:46:33 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 04:46:33 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 05:00:44 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:00:44 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 05:00:50 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:00:50 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 298, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 05:09:24 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:09:24 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"invalid model name","type":"invalid_request_error","param":null,"code":null}}
+
+2026-06-12 05:10:21 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:21:44 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:23:12 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 05:24:59 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 05:25:54 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 05:27:08 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 05:27:24 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 05:28:30 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 05:29:37 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:30:59 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:36:16 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:37:06 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:39:38 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:41:25 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:43:17 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:43:46 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:43:54 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:44:00 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:44:58 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:45:57 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:47:44 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:48:15 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:48:38 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:49:03 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 05:49:19 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-12 20:11:34 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] 连接失败: unknown url type: ttps
+请检查: 1) 网络连接 2) base_url 是否正确 (ttps://dashscope.aliyuncs.com/compatible-mode/v1)
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 539, in _open
+    return self._call_chain(self.handle_open, 'unknown',
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1417, in unknown_open
+    raise URLError('unknown url type: %s' % type)
+urllib.error.URLError: <urlopen error unknown url type: ttps>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 369, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(
+RuntimeError: [自定义 OpenAI 兼容] 连接失败: unknown url type: ttps
+请检查: 1) 网络连接 2) base_url 是否正确 (ttps://dashscope.aliyuncs.com/compatible-mode/v1)
+2026-06-12 20:18:29 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] 连接失败: unknown url type: ttps
+请检查: 1) 网络连接 2) base_url 是否正确 (ttps://dashscope.aliyuncs.com/compatible-mode/v1)
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 539, in _open
+    return self._call_chain(self.handle_open, 'unknown',
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1417, in unknown_open
+    raise URLError('unknown url type: %s' % type)
+urllib.error.URLError: <urlopen error unknown url type: ttps>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 369, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(
+RuntimeError: [自定义 OpenAI 兼容] 连接失败: unknown url type: ttps
+请检查: 1) 网络连接 2) base_url 是否正确 (ttps://dashscope.aliyuncs.com/compatible-mode/v1)
+2026-06-12 20:24:07 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-46fc0290-5383-9681-b424-54c5f4bb8c12","request_id":"46fc0290-5383-9681-b424-54c5f4bb8c12"}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 369, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 261, in _make_request
+    raise RuntimeError(
+RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-46fc0290-5383-9681-b424-54c5f4bb8c12","request_id":"46fc0290-5383-9681-b424-54c5f4bb8c12"}
+2026-06-12 20:25:21 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-cc56a0a8-ca48-9055-be18-cfd730e545db","request_id":"cc56a0a8-ca48-9055-be18-cfd730e545db"}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 300, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 369, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 261, in _make_request
+    raise RuntimeError(
+RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-cc56a0a8-ca48-9055-be18-cfd730e545db","request_id":"cc56a0a8-ca48-9055-be18-cfd730e545db"}
+2026-06-12 20:33:15 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-644bb906-2eb3-964d-b64a-27d4a39f0c44","request_id":"644bb906-2eb3-964d-b64a-27d4a39f0c44"}
+2026-06-12 20:39:11 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-b1a1b42e-864b-91ca-b950-0fbc54ca7637","request_id":"b1a1b42e-864b-91ca-b950-0fbc54ca7637"}
+2026-06-12 20:41:13 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-dcd7c780-e5b1-99ef-8486-334b27d09f3f","request_id":"dcd7c780-e5b1-99ef-8486-334b27d09f3f"}
+2026-06-12 20:41:23 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-07e58bba-2841-966c-9887-138bce6ab0d9","request_id":"07e58bba-2841-966c-9887-138bce6ab0d9"}
+2026-06-12 20:41:33 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-b62eca08-e8d4-9018-ab09-18dca84d3efa","request_id":"b62eca08-e8d4-9018-ab09-18dca84d3efa"}
+2026-06-12 20:46:02 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-c57d6935-386a-9b39-8efa-6f29b83b4c7e","request_id":"c57d6935-386a-9b39-8efa-6f29b83b4c7e"}
+Traceback (most recent call last):
+  File "opcclaw/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 220, in chat
+    response = self.backend.chat(self.messages, tools)
+  File "opcclaw/core/llm_backend.py", line 369, in chat
+    data = self._make_request(payload)
+  File "opcclaw/core/llm_backend.py", line 261, in _make_request
+    raise RuntimeError(
+RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-c57d6935-386a-9b39-8efa-6f29b83b4c7e","request_id":"c57d6935-386a-9b39-8efa-6f29b83b4c7e"}
+2026-06-12 21:06:05 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-a813ccbd-1ccc-976b-bf9a-4f98398c1c7e","request_id":"a813ccbd-1ccc-976b-bf9a-4f98398c1c7e"}
+2026-06-12 21:06:38 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"This model only support stream mode, please enable the stream parameter to access the model. ","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-aae2360f-bf4a-92e2-84b2-a1fa4189ed26","request_id":"aae2360f-bf4a-92e2-84b2-a1fa4189ed26"}
+2026-06-12 21:57:49 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-12 22:10:35 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [Ollama] 请求异常: timed out
+2026-06-12 22:27:32 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-12 23:08:58 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying

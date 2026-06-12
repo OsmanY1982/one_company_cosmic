@@ -14,6 +14,7 @@ OPCclaw - AI Agent 对话窗口 (v3)
 import os, sys, json, sqlite3, hashlib, secrets, string
 from datetime import datetime
 from typing import Optional
+import traceback
 
 
 from PyQt5.QtWidgets import (
@@ -714,7 +715,7 @@ class ConfigManager:
                 # 从安全存储恢复 API Key
                 self._restore_api_keys()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
     
     def _restore_api_keys(self):
         """从安全存储恢复 API Key 到内存配置"""
@@ -2135,7 +2136,7 @@ class ChatWorker(QThread):
                         data = json.loads(chunk)
                         usage_info = data.get("usage", {})
                     except (json.JSONDecodeError, ValueError, AttributeError):
-                        pass  # usage 信息是可选的，解析失败不影响主功能
+                        import traceback; traceback.print_exc()
                 else:
                     self.text_chunk.emit(chunk)
             self.finished.emit("", usage_info)
@@ -2302,7 +2303,7 @@ class ChatWindow(QWidget):
         # ── UI 构建 ──
 
         except Exception:
-            pass  # SkillLoader API mismatch
+            import traceback; traceback.print_exc()
 
     def _get_skills_context(self):
         """安全获取技能上下文，避免 SkillLoader API 不匹配崩溃"""
@@ -2317,7 +2318,7 @@ class ChatWindow(QWidget):
                 names = self.skill_loader.list_skills()
                 return f"可用技能: {', '.join(names)}" if names else ""
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         return ""  # 降级：没有技能上下文
 
 
@@ -3492,7 +3493,7 @@ class ChatWindow(QWidget):
                     ):
                         return sid
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         return ""
 
     def _save_last_session(self, sid: str):
@@ -3502,7 +3503,7 @@ class ChatWindow(QWidget):
             with open(last_file, "w", encoding="utf-8") as f:
                 f.write(sid)
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
 
     def _refresh_sessions(self):
         """刷新会话下拉列表"""
@@ -3715,14 +3716,14 @@ class ChatWindow(QWidget):
                 self._voice_manager.stop_speaking()
                 self._voice_manager.stop_listening()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         # 2. 保存当前会话
         if self.engine and self.memory_store:
             try:
                 self.memory_store.save_session(self.engine.get_history(), self._session_id)
                 self._save_last_session(self._session_id)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         super().closeEvent(event)
 
     def showEvent(self, event):

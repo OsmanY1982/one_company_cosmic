@@ -7,6 +7,7 @@ import json
 import sys
 import re
 from urllib.parse import quote
+import traceback
 
 # 模拟数据（实际使用时调用浏览器或API）
 def get_stock_price(code):
@@ -119,7 +120,7 @@ def cmd_news(args):
             idx = args.index('--limit')
             limit = int(args[idx + 1]) if idx + 1 < len(args) else 10
         except:
-            pass
+            import traceback; traceback.print_exc()
     
     print(f"📰 新闻搜索: {keyword}\n")
     news_list = [
@@ -145,7 +146,7 @@ def cmd_url(args):
             idx = args.index('--selector')
             selector = args[idx + 1]
         except:
-            pass
+            import traceback; traceback.print_exc()
     
     print(f"🌐 抓取网页: {url}")
     if selector:

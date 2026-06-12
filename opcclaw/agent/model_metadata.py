@@ -12,6 +12,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
+import traceback
 
 import requests
 import yaml
@@ -336,7 +337,7 @@ try:
         if _host and _host not in _URL_TO_PROVIDER:
             _URL_TO_PROVIDER[_host] = _pp.name
 except Exception:
-    pass
+    import traceback; traceback.print_exc()
 
 
 def _infer_provider_from_url(base_url: str) -> Optional[str]:
@@ -393,7 +394,7 @@ def is_local_endpoint(base_url: str) -> bool:
         if isinstance(addr, ipaddress.IPv4Address) and addr in _TAILSCALE_CGNAT:
             return True
     except ValueError:
-        pass
+        import traceback; traceback.print_exc()
     # Bare IP that looks like a private range (e.g. 172.26.x.x for WSL)
     # or Tailscale CGNAT (100.64.x.x–100.127.x.x).
     parts = host.split(".")
@@ -409,7 +410,7 @@ def is_local_endpoint(base_url: str) -> bool:
             if first == 100 and 64 <= second <= 127:
                 return True
         except ValueError:
-            pass
+            import traceback; traceback.print_exc()
     return False
 
 
@@ -435,7 +436,7 @@ def detect_local_server_type(base_url: str, api_key: str = "") -> Optional[str]:
                 if r.status_code == 200:
                     return "lm-studio"
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             # Ollama exposes /api/tags and responds with {"models": [...]}
             # LM Studio returns {"error": "Unexpected endpoint"} with status 200
             # on this path, so we must verify the response contains "models".
@@ -447,9 +448,9 @@ def detect_local_server_type(base_url: str, api_key: str = "") -> Optional[str]:
                         if "models" in data:
                             return "ollama"
                     except Exception:
-                        pass
+                        import traceback; traceback.print_exc()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             # llama.cpp exposes /v1/props (older builds used /props without the /v1 prefix)
             try:
                 r = client.get(f"{server_url}/v1/props")
@@ -458,7 +459,7 @@ def detect_local_server_type(base_url: str, api_key: str = "") -> Optional[str]:
                 if r.status_code == 200 and "default_generation_settings" in r.text:
                     return "llamacpp"
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             # vLLM: /version
             try:
                 r = client.get(f"{server_url}/version")
@@ -467,9 +468,9 @@ def detect_local_server_type(base_url: str, api_key: str = "") -> Optional[str]:
                     if "version" in data:
                         return "vllm"
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     return None
 
@@ -713,7 +714,7 @@ def fetch_endpoint_model_metadata(
                         if n_ctx and model_alias and model_alias in cache:
                             cache[model_alias]["context_length"] = n_ctx
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
 
             _endpoint_model_metadata_cache[normalized] = cache
             _endpoint_model_metadata_cache_time[normalized] = time.time()
@@ -956,7 +957,7 @@ def query_ollama_num_ctx(model: str, base_url: str, api_key: str = "") -> Option
                             try:
                                 return int(parts[-1])
                             except ValueError:
-                                pass
+                                import traceback; traceback.print_exc()
 
             # Fall back to GGUF model_info context_length (training max)
             model_info = data.get("model_info", {})
@@ -964,7 +965,7 @@ def query_ollama_num_ctx(model: str, base_url: str, api_key: str = "") -> Option
                 if "context_length" in key and isinstance(value, (int, float)):
                     return int(value)
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return None
 
 
@@ -1010,7 +1011,7 @@ def _query_local_context_length(model: str, base_url: str, api_key: str = "") ->
                                     try:
                                         return int(parts[-1])
                                     except ValueError:
-                                        pass
+                                        import traceback; traceback.print_exc()
                     # Fall back to GGUF model_info context_length (training max)
                     model_info = data.get("model_info", {})
                     for key, value in model_info.items():
@@ -1057,7 +1058,7 @@ def _query_local_context_length(model: str, base_url: str, api_key: str = "") ->
                         if ctx and isinstance(ctx, (int, float)):
                             return int(ctx)
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     return None
 
@@ -1294,7 +1295,7 @@ def get_model_context_length(
             if cp_ctx:
                 return cp_ctx
         except Exception:
-            pass  # fall through to probing
+            import traceback; traceback.print_exc()
 
     # Normalise provider-prefixed model names (e.g. "local:model-name" →
     # "model-name") so cache lookups and server queries use the bare ID that
@@ -1342,7 +1343,7 @@ def get_model_context_length(
             from agent.bedrock_adapter import get_bedrock_context_length
             return get_bedrock_context_length(model)
         except ImportError:
-            pass  # boto3 not installed — fall through to generic resolution
+            import traceback; traceback.print_exc()
 
     # 2. Active endpoint metadata for truly custom/unknown endpoints.
     # Known providers (Copilot, OpenAI, Anthropic, etc.) skip this — their
@@ -1402,7 +1403,7 @@ def get_model_context_length(
             if ctx:
                 return ctx
         except Exception:
-            pass  # Fall through to models.dev
+            import traceback; traceback.print_exc()
 
     if effective_provider == "nous":
         ctx = _resolve_nous_context_length(model)

@@ -23,6 +23,7 @@ Lifecycle states:
 """
 
 from __future__ import annotations
+import traceback
 
 import json
 import logging
@@ -46,7 +47,7 @@ except ImportError:  # pragma: no cover - platform-specific fallback
     try:
         import msvcrt
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
 
 STATE_ACTIVE = "active"
@@ -92,7 +93,7 @@ def _usage_file_lock():
                 fd.seek(0)
                 msvcrt.locking(fd.fileno(), msvcrt.LK_UNLCK, 1)
             except (OSError, IOError):
-                pass
+                import traceback; traceback.print_exc()
         fd.close()
 
 
@@ -355,7 +356,7 @@ def save_usage(data: Dict[str, Dict[str, Any]]) -> None:
             try:
                 os.unlink(tmp_path)
             except OSError:
-                pass
+                import traceback; traceback.print_exc()
             raise
     except Exception as e:
         logger.debug("Failed to write %s: %s", path, e, exc_info=True)

@@ -15,6 +15,7 @@ Modal, Daytona, and SSH backends, the command runs inside the sandbox.
 
 Usage:
     from tools.process_registry import process_registry
+import traceback
 
     # Spawn a background process (called from terminal_tool)
     session = process_registry.spawn(env, "pytest -v", task_id="task_123")
@@ -442,7 +443,7 @@ class ProcessRegistry:
                 try:
                     child.terminate()
                 except psutil.NoSuchProcess:
-                    pass
+                    import traceback; traceback.print_exc()
             parent.terminate()
         except psutil.NoSuchProcess:
             return
@@ -450,7 +451,7 @@ class ProcessRegistry:
             try:
                 os.kill(pid, signal.SIGTERM)
             except (OSError, ProcessLookupError, PermissionError):
-                pass
+                import traceback; traceback.print_exc()
 
     # ----- Spawn -----
 
@@ -591,11 +592,11 @@ class ProcessRegistry:
                 else:
                     proc.kill()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             try:
                 proc.wait(timeout=5)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             raise
 
         return session
@@ -881,12 +882,12 @@ class ProcessRegistry:
                     if chunk:
                         drained = chunk if isinstance(chunk, str) else chunk.decode("utf-8", errors="replace")
                 except (BlockingIOError, OSError, ValueError):
-                    pass
+                    import traceback; traceback.print_exc()
                 finally:
                     try:
                         fcntl.fcntl(fd, fcntl.F_SETFL, flags)
                     except Exception:
-                        pass
+                        import traceback; traceback.print_exc()
             except Exception as e:
                 logger.debug("Non-blocking drain failed for %s: %s", session.id, e)
 
@@ -1077,10 +1078,10 @@ class ProcessRegistry:
                                 try:
                                     child.terminate()
                                 except psutil.NoSuchProcess:
-                                    pass
+                                    import traceback; traceback.print_exc()
                             parent.terminate()
                         except psutil.NoSuchProcess:
-                            pass
+                            import traceback; traceback.print_exc()
                 except (ProcessLookupError, PermissionError):
                     session.process.kill()
             elif session.env_ref and session.pid:

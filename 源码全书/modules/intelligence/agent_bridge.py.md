@@ -1,6 +1,6 @@
 # `modules/intelligence/agent_bridge.py`
 
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：1117
+> 路径：`modules/intelligence/agent_bridge.py` | 行数：1138
 
 
 ---
@@ -31,14 +31,11 @@ import traceback
 import time
 from typing import Optional, Callable, Dict, Any, List
 
-# ── 确保 opcclaw 在 path ──
-_opcclaw_parent = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
-    "one_company_desktop"
-)
-_opcclaw_pkg = os.path.join(_opcclaw_parent, "opcclaw")
-if _opcclaw_parent not in sys.path:
-    sys.path.insert(0, _opcclaw_parent)
+# ── opcclaw 引擎路径 ──
+_project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_opcclaw_pkg = os.path.join(_project_root, "opcclaw")
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
 if _opcclaw_pkg not in sys.path:
     sys.path.insert(0, _opcclaw_pkg)
 
@@ -244,22 +241,24 @@ class AgentBridge:
     # ═══════════════════════════════════════════
 
     # ── 统一配置路径 ──
-    @property
-    def _config_path(self) -> str:
+    @staticmethod
+    def _config_path() -> str:
         """opcclaw_config.json 的绝对路径"""
         return os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
             "data", "opcclaw_config.json"
         )
 
-    def _load_config(self) -> dict:
+    @staticmethod
+    def _load_config() -> dict:
         """加载 opcclaw_config.json"""
         try:
-            if os.path.exists(self._config_path):
-                with open(self._config_path, "r", encoding="utf-8") as f:
+            cfg_path = AgentBridge._config_path()
+            if os.path.exists(cfg_path):
+                with open(cfg_path, "r", encoding="utf-8") as f:
                     return json.load(f)
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         return {"cloud_providers": {}, "local_providers": {}}
 
     def get_model(self) -> str:
@@ -278,13 +277,14 @@ class AgentBridge:
             }
         return {}
 
-    def list_all_models(self) -> list:
+    @staticmethod
+    def list_all_models() -> list:
         """
         从 opcclaw_config.json 读取所有已配置的模型（云端+自定义+本地+Ollama动态发现）。
         返回: [{"provider_id": str, "provider_name": str, "model": str, "category": str, "base_url": str}, ...]
           category: "cloud" | "local"
         """
-        config = self._load_config()
+        config = AgentBridge._load_config()
         models = []
 
         # 云端供应商
@@ -309,7 +309,7 @@ class AgentBridge:
 
             # Ollama: 动态发现已安装模型
             if pid == "ollama":
-                discovered = self.discover_local_models()
+                discovered = AgentBridge.discover_local_models()
                 if discovered:
                     for m in discovered:
                         models.append({
@@ -333,7 +333,8 @@ class AgentBridge:
 
         return models
 
-    def discover_local_models(self) -> list:
+    @staticmethod
+    def discover_local_models() -> list:
         """自动发现本地 Ollama 已安装的模型（含大小）"""
         try:
             import urllib.request
@@ -355,7 +356,7 @@ class AgentBridge:
         if not hasattr(self.backend, "config"):
             return False
 
-        config = self._load_config()
+        config = AgentBridge._load_config()
         provider_data = (
             config.get("cloud_providers", {}).get(provider_id)
             or config.get("local_providers", {}).get(provider_id)
@@ -415,23 +416,43 @@ class AgentBridge:
             on_done: 流式完成后回调 on_done(full_text)
             on_tool: 工具调用时回调 on_tool(tool_name, status)
         """
+        # 终止前一次流式（如果还在运行），防止旧 finished 信号误杀新线程
+        self._abort_stream()
+
         self._stream_thread = QThread()
         self._stream_worker = _StreamWorker(self._engine, message)
         self._stream_worker.moveToThread(self._stream_thread)
 
         # 连接信号到回调（跨线程安全，回调在主线程执行）
+        from PyQt5.QtCore import Qt
         if on_chunk:
-            self._stream_worker.chunk_ready.connect(on_chunk)
+            self._stream_worker.chunk_ready.connect(on_chunk, Qt.QueuedConnection)
         if on_tool:
-            self._stream_worker.tool_event.connect(on_tool)
+            self._stream_worker.tool_event.connect(on_tool, Qt.QueuedConnection)
         if on_done:
-            self._stream_worker.stream_done.connect(on_done)
+            self._stream_worker.stream_done.connect(on_done, Qt.QueuedConnection)
 
         self._stream_thread.started.connect(self._stream_worker.run)
         self._stream_worker.finished.connect(self._stream_thread.quit)
         self._stream_worker.finished.connect(self._stream_worker.deleteLater)
         self._stream_thread.finished.connect(self._stream_thread.deleteLater)
         self._stream_thread.start()
+
+    def _abort_stream(self):
+        """安全终止当前正在运行的流式线程（清除旧引用防止信号串扰）"""
+        if hasattr(self, '_stream_worker') and self._stream_worker:
+            try:
+                self._stream_worker.finished.disconnect()
+            except Exception:
+                import traceback; traceback.print_exc()
+        if hasattr(self, '_stream_thread') and self._stream_thread:
+            try:
+                self._stream_thread.quit()
+                self._stream_thread.wait(200)
+            except Exception:
+                import traceback; traceback.print_exc()
+        self._stream_worker = None
+        self._stream_thread = None
 
     # ═══════════════════════════════════════════
     # 模式 1: 对话模式

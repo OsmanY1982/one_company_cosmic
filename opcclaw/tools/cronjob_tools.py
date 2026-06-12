@@ -12,6 +12,7 @@ import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
+import traceback
 
 from hermes_constants import display_hermes_home
 
@@ -172,7 +173,7 @@ def _resolve_model_override(model_obj: Optional[Dict[str, Any]]) -> tuple:
             if isinstance(model_cfg, dict):
                 provider_name = model_cfg.get("provider") or None
         except Exception:
-            pass  # Best-effort; provider stays None
+            import traceback; traceback.print_exc()
     return (provider_name, model_name)
 
 

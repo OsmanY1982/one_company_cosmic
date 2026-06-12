@@ -19,6 +19,7 @@ Design spec: ``website/docs/developer-guide/browser-supervisor.md``.
 """
 
 from __future__ import annotations
+import traceback
 
 import asyncio
 import json
@@ -365,16 +366,16 @@ class CDPSupervisor:
                     try:
                         await ws.close()
                     except Exception:
-                        pass
+                        import traceback; traceback.print_exc()
 
             try:
                 fut = asyncio.run_coroutine_threadsafe(_close_ws(), loop)
                 try:
                     fut.result(timeout=2.0)
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
             except RuntimeError:
-                pass  # loop already shutting down
+                import traceback; traceback.print_exc()
         if self._thread is not None:
             self._thread.join(timeout=timeout)
         with self._state_lock:
@@ -482,11 +483,11 @@ class CDPSupervisor:
                 if pending:
                     loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             try:
                 loop.close()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             with self._state_lock:
                 self._active = False
 
@@ -564,7 +565,7 @@ class CDPSupervisor:
                     try:
                         await reader_task
                     except (asyncio.CancelledError, Exception):
-                        pass
+                        import traceback; traceback.print_exc()
                 for handle in list(self._dialog_watchdogs.values()):
                     handle.cancel()
                 self._dialog_watchdogs.clear()
@@ -574,7 +575,7 @@ class CDPSupervisor:
                     try:
                         await ws.close()
                     except Exception:
-                        pass
+                        import traceback; traceback.print_exc()
 
             if self._stop_requested:
                 return
@@ -671,7 +672,7 @@ class CDPSupervisor:
                 timeout=3.0,
             )
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
 
     async def _cdp(
         self,
@@ -960,7 +961,7 @@ class CDPSupervisor:
                     session_id=session_id, timeout=3.0,
                 )
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             return
 
         # Parse query string for dialog metadata. Use urllib to be robust.

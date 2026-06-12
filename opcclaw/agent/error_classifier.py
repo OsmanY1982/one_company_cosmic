@@ -10,6 +10,7 @@ that the main retry loop in run_agent.py consults for every API failure.
 """
 
 from __future__ import annotations
+import traceback
 
 import enum
 import logging
@@ -413,7 +414,7 @@ def classify_api_error(
                             if isinstance(_inner_err, dict):
                                 _metadata_msg = str(_inner_err.get("message") or "").lower()
                     except (json.JSONDecodeError, TypeError):
-                        pass
+                        import traceback; traceback.print_exc()
         if not _body_msg:
             _body_msg = str(body.get("message") or "").lower()
     # Combine all message sources for pattern matching
@@ -1022,7 +1023,7 @@ def _extract_error_body(error: Exception) -> dict:
             if isinstance(json_body, dict):
                 return json_body
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
     return {}
 
 

@@ -29,6 +29,7 @@ from pathlib import Path
 from hermes_constants import get_hermes_home
 from typing import Dict, List, Tuple
 from utils import atomic_replace
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +105,7 @@ def _write_manifest(entries: Dict[str, str]):
             try:
                 os.unlink(tmp_path)
             except OSError:
-                pass
+                import traceback; traceback.print_exc()
             raise
     except Exception as e:
         logger.debug("Failed to write skills manifest %s: %s", MANIFEST_FILE, e, exc_info=True)
@@ -170,7 +171,7 @@ def _dir_hash(directory: Path) -> str:
                 hasher.update(str(rel).encode("utf-8"))
                 hasher.update(fpath.read_bytes())
     except (OSError, IOError):
-        pass
+        import traceback; traceback.print_exc()
     return hasher.hexdigest()
 
 

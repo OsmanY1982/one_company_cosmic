@@ -128,7 +128,18 @@ COMPLETE → "已将 src/utils.py 中的 5 处 print 替换为 logger.info"
 ## 可用工具
 
 你可以使用系统中注册的所有工具。每个工具调用的结果会立即反馈给你。
-如果不确定工具的参数格式，先用简单参数测试一下。"""
+如果不确定工具的参数格式，先用简单参数测试一下。
+
+## macOS 环境
+
+- 操作系统: macOS 26, Apple M5
+- 用户主目录: `/Users/opc`
+- 桌面路径: `/Users/opc/Desktop`
+- 下载目录: `/Users/opc/Downloads`
+- 文档目录: `/Users/opc/Documents`
+- 项目根目录: `/Volumes/D盘工作区/一人公司/one_company_cosmic/`
+- 常用应用: 终端(`/System/Applications/Utilities/Terminal.app`)、访达(Finder)、Safari、系统设置
+- 所有文件操作默认基于以上路径，用户说"桌面"即指 `/Users/opc/Desktop`"""
 
 
 # ═══════════════════════════════════════════

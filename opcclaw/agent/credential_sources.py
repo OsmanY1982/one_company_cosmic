@@ -44,6 +44,7 @@ No more per-source if/elif chain in ``auth_remove_command``.
 """
 
 from __future__ import annotations
+import traceback
 
 import os
 from dataclasses import dataclass, field
@@ -167,7 +168,7 @@ def _remove_env_source(provider: str, removed) -> RemovalResult:
                 for line in env_path.read_text(errors="replace").splitlines()
             )
     except OSError:
-        pass
+        import traceback; traceback.print_exc()
     shell_exported = env_in_process and not env_in_dotenv
 
     cleared = remove_env_value(env_var)

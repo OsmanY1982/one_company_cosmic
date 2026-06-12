@@ -1,6 +1,6 @@
 # `modules/intelligence/opcclaw_floating_planet.py`
 
-> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：740
+> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：744
 
 
 ---
@@ -13,6 +13,7 @@ opcclaw 悬浮星球 — 桌面常驻 AI 助理
 可拖拽、语音对话（Apple Speech 引擎）、右键菜单导航、双击对话
 """
 import sys, os, traceback, math
+from datetime import datetime
 from PyQt5.QtWidgets import (
     QWidget, QMenu, QAction, QApplication, QDialog,
     QVBoxLayout, QTextEdit, QPushButton, QHBoxLayout, QLabel,
@@ -355,15 +356,15 @@ class FloatingPlanet(QWidget):
         try:
             self._voice.recognition_result.disconnect(self._on_voice_result)
         except TypeError:
-            pass
+            import traceback; traceback.print_exc()
         try:
             self._voice.recognition_status.disconnect(self._on_voice_status)
         except TypeError:
-            pass
+            import traceback; traceback.print_exc()
         try:
             self._voice.error_occurred.disconnect(self._on_voice_error)
         except TypeError:
-            pass
+            import traceback; traceback.print_exc()
         self._voice_handlers_active = False
 
     def _enable_voice_handlers(self):
@@ -431,7 +432,7 @@ class FloatingPlanet(QWidget):
         try:
             self._voice.synthesis_done.disconnect(self._on_speak_done)
         except TypeError:
-            pass
+            import traceback; traceback.print_exc()
 
     def _on_voice_error(self, error: str):
         """语音错误处理"""
@@ -578,8 +579,8 @@ class _ChatDialog(QDialog):
             self._mic_btn.clicked.connect(self._toggle_voice_input)
             input_layout.addWidget(self._mic_btn)
 
-        send_btn = QPushButton("发送")
-        send_btn.setStyleSheet("""
+        self._send_btn = QPushButton("发送")
+        self._send_btn.setStyleSheet("""
             QPushButton {
                 background: rgba(60, 120, 255, 180);
                 color: white;
@@ -592,8 +593,8 @@ class _ChatDialog(QDialog):
                 background: rgba(80, 150, 255, 220);
             }
         """)
-        send_btn.clicked.connect(self._send)
-        input_layout.addWidget(send_btn)
+        self._send_btn.clicked.connect(self._send)
+        input_layout.addWidget(self._send_btn)
 
         layout.addLayout(input_layout)
 
@@ -632,7 +633,7 @@ class _ChatDialog(QDialog):
         try:
             self._voice.recognition_result.disconnect(self._on_voice_result)
         except TypeError:
-            pass
+            import traceback; traceback.print_exc()
         self._input.setText(text)
         self._mic_btn.setText("🎤")
         parent = self.parent()
@@ -666,68 +667,71 @@ class _ChatDialog(QDialog):
                 f'<span id="stream_cursor" style="color:#44ff88;">_</span></p>'
             )
             self._history_widget.append(placeholder)
-            cursor_pos = self._history_widget.toPlainText().rfind("opcclaw:")
             self._stream_accumulated = ""
-
-            def on_chunk(chunk: str):
-                self._stream_accumulated += chunk
-                # 替换最后一行的流式内容
-                html = self._history_widget.toHtml()
-                # 简易替换：移除旧占位，追加新内容
-                self._history_widget.moveCursor(
-                    self._history_widget.textCursor().End
-                )
-                # 简化处理：清掉最后一行的占位，重写
-                cursor = self._history_widget.textCursor()
-                cursor.movePosition(cursor.End)
-                cursor.select(cursor.BlockUnderCursor)
-                cursor.removeSelectedText()
-                display = self._stream_accumulated[-500:]  # 只显示最后500字符
-                self._history_widget.append(
-                    f'<p style="color:#c0ffc0;"><b>[{now}] opcclaw:</b> {display}'
-                    f'<span style="color:#44ff88;">_</span></p>'
-                )
-                # 滚动到底
-                sb = self._history_widget.verticalScrollBar()
-                sb.setValue(sb.maximum())
-
-            def on_done(full_text: str):
-                # 移除游标，写入最终文本
-                cursor = self._history_widget.textCursor()
-                cursor.movePosition(cursor.End)
-                cursor.select(cursor.BlockUnderCursor)
-                cursor.removeSelectedText()
-                final = full_text.replace('\n', '<br>')
-                self._history_widget.append(
-                    f'<p style="color:#c0ffc0;"><b>[{now}] opcclaw:</b> {final}</p>'
-                )
-                self._input.setEnabled(True)
-                self._send_btn.setEnabled(True)
-                self._input.setFocus()
-                # 语音朗读
-                if self._voice and len(full_text) < 300:
-                    self._voice.speak(full_text)
-
-            def on_tool(name: str, status: str):
-                icon = "OK" if status == "OK" else "FAIL" if status == "Failed" else "..."
-                cursor = self._history_widget.textCursor()
-                cursor.movePosition(cursor.End)
-                cursor.select(cursor.BlockUnderCursor)
-                cursor.removeSelectedText()
-                display = self._stream_accumulated[-400:] if self._stream_accumulated else ""
-                self._history_widget.append(
-                    f'<p style="color:#c0ffc0;"><b>[{now}] opcclaw:</b> {display}'
-                    f'<span style="color:#888888;">[{name}: {icon}]</span> '
-                    f'<span style="color:#44ff88;">_</span></p>'
-                )
+            self._stream_now = now
 
             try:
-                self._engine.chat_stream(text, on_chunk, on_done, on_tool)
+                self._engine.chat_stream(
+                    text,
+                    self._on_floating_chunk,
+                    self._on_floating_done,
+                    self._on_floating_tool,
+                )
                 return
             except Exception as e:
                 # 回退到同步模式
                 self._input.setEnabled(True)
                 self._send_btn.setEnabled(True)
+
+    # ═══ 流式回调（实例方法 — 确保 QueuedConnection 派发到主线程） ═══
+
+    def _on_floating_chunk(self, chunk: str):
+        self._stream_accumulated += chunk
+        cursor = self._history_widget.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.select(cursor.BlockUnderCursor)
+        cursor.removeSelectedText()
+        display = self._stream_accumulated[-500:]
+        self._history_widget.append(
+            f'<p style="color:#c0ffc0;"><b>[{self._stream_now}] opcclaw:</b> {display}'
+            f'<span style="color:#44ff88;">_</span></p>'
+        )
+        sb = self._history_widget.verticalScrollBar()
+        sb.setValue(sb.maximum())
+
+    def _on_floating_done(self, full_text: str):
+        cursor = self._history_widget.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.select(cursor.BlockUnderCursor)
+        cursor.removeSelectedText()
+        final = full_text.replace('\n', '<br>') if full_text else ''
+        if not final:
+            self._history_widget.append(
+                f'<p style="color:#c0ffc0;"><b>[{self._stream_now}] opcclaw:</b> '
+                f'<span style="color:#ff8888;">[响应为空，请重试]</span></p>'
+            )
+        else:
+            self._history_widget.append(
+                f'<p style="color:#c0ffc0;"><b>[{self._stream_now}] opcclaw:</b> {final}</p>'
+            )
+        self._input.setEnabled(True)
+        self._send_btn.setEnabled(True)
+        self._input.setFocus()
+        if self._voice and len(full_text) < 300:
+            self._voice.speak(full_text)
+
+    def _on_floating_tool(self, name: str, status: str):
+        icon = "OK" if status == "OK" else "FAIL" if status == "Failed" else "..."
+        cursor = self._history_widget.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.select(cursor.BlockUnderCursor)
+        cursor.removeSelectedText()
+        display = self._stream_accumulated[-400:] if self._stream_accumulated else ""
+        self._history_widget.append(
+            f'<p style="color:#c0ffc0;"><b>[{self._stream_now}] opcclaw:</b> {display}'
+            f'<span style="color:#888888;">[{name}: {icon}]</span> '
+            f'<span style="color:#44ff88;">_</span></p>'
+        )
 
         # 同步模式（回退）
         if self._engine:

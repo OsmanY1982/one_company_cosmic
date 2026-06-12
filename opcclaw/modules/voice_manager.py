@@ -11,6 +11,7 @@ import tempfile
 import threading
 import time
 from typing import Optional, Callable
+import traceback
 
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
@@ -94,14 +95,14 @@ class VoiceManager(QObject):
             import pyttsx3
             return True
         except ImportError:
-            pass
+            import traceback; traceback.print_exc()
 
         try:
             # 检查 edge-tts
             import edge_tts
             return True
         except ImportError:
-            pass
+            import traceback; traceback.print_exc()
 
         return False
 
@@ -112,14 +113,14 @@ class VoiceManager(QObject):
             import whisper
             return True
         except ImportError:
-            pass
+            import traceback; traceback.print_exc()
 
         try:
             # 检查 speech_recognition
             import speech_recognition as sr
             return True
         except ImportError:
-            pass
+            import traceback; traceback.print_exc()
 
         return False
 
@@ -238,36 +239,36 @@ def check_voice_dependencies() -> dict:
         import sounddevice
         deps["sounddevice"] = True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     try:
         import numpy
         deps["numpy"] = True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     try:
         import pyttsx3
         deps["pyttsx3"] = True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     try:
         import edge_tts
         deps["edge_tts"] = True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     try:
         import whisper
         deps["whisper"] = True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     try:
         import speech_recognition
         deps["speech_recognition"] = True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     return deps

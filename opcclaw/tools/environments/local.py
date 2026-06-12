@@ -10,6 +10,7 @@ import subprocess
 import tempfile
 import time
 from pathlib import Path
+import traceback
 
 from tools.environments.base import BaseEnvironment, _pipe_stdin
 
@@ -60,7 +61,7 @@ def _build_provider_env_blocklist() -> frozenset:
             if pconfig.base_url_env_var:
                 blocked.add(pconfig.base_url_env_var)
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     try:
         from hermes_cli.config import OPTIONAL_ENV_VARS
@@ -71,7 +72,7 @@ def _build_provider_env_blocklist() -> frozenset:
             elif category == "setting" and metadata.get("password"):
                 blocked.add(name)
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     blocked.update({
         "OPENAI_BASE_URL",
@@ -476,7 +477,7 @@ class LocalEnvironment(BaseEnvironment):
             try:
                 proc._hermes_pgid = os.getpgid(proc.pid)
             except ProcessLookupError:
-                pass
+                import traceback; traceback.print_exc()
 
         if stdin_data is not None:
             _pipe_stdin(proc, stdin_data)
@@ -505,14 +506,14 @@ class LocalEnvironment(BaseEnvironment):
                 try:
                     proc.poll()
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
                 if not _group_alive(pgid):
                     return True
                 time.sleep(0.05)
             try:
                 proc.poll()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             return not _group_alive(pgid)
 
         try:
@@ -546,12 +547,12 @@ class LocalEnvironment(BaseEnvironment):
                 try:
                     proc.wait(timeout=0.2)
                 except (subprocess.TimeoutExpired, OSError):
-                    pass
+                    import traceback; traceback.print_exc()
         except (ProcessLookupError, PermissionError, OSError):
             try:
                 proc.kill()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
     def _update_cwd(self, result: dict):
         """Read CWD from temp file (local-only, no round-trip needed).
@@ -567,7 +568,7 @@ class LocalEnvironment(BaseEnvironment):
             if cwd_path and os.path.isdir(cwd_path):
                 self.cwd = cwd_path
         except (OSError, FileNotFoundError):
-            pass
+            import traceback; traceback.print_exc()
 
         # Still strip the marker from output so it's not visible
         self._extract_cwd_from_output(result)
@@ -578,4 +579,4 @@ class LocalEnvironment(BaseEnvironment):
             try:
                 os.unlink(f)
             except OSError:
-                pass
+                import traceback; traceback.print_exc()

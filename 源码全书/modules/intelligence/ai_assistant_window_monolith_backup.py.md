@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_assistant_window_monolith_backup.py`
 
-> 路径：`modules/intelligence/ai_assistant_window_monolith_backup.py` | 行数：3148
+> 路径：`modules/intelligence/ai_assistant_window_monolith_backup.py` | 行数：3149
 
 
 ---
@@ -29,6 +29,7 @@ import json
 import urllib.request
 import urllib.error
 from typing import Optional, Dict, Any
+import traceback
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
@@ -543,7 +544,7 @@ class OllamaManager:
                         if progress_callback:
                             progress_callback(data)
                     except Exception:
-                        pass
+                        import traceback; traceback.print_exc()
             return True
         except Exception as e:
             print(f"[OllamaManager] 下载模型失败: {e}")

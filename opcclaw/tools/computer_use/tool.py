@@ -31,6 +31,7 @@ For captures / actions with `capture_after=True`:
 """
 
 from __future__ import annotations
+import traceback
 
 import json
 import logging
@@ -150,7 +151,7 @@ def reset_backend_for_tests() -> None:  # pragma: no cover
             try:
                 _backend.stop()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         _backend = None
     _session_auto_approve = False
     _always_allow = set()

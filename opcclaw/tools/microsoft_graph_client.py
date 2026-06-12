@@ -1,6 +1,7 @@
 """Reusable Microsoft Graph REST client helpers."""
 
 from __future__ import annotations
+import traceback
 
 import asyncio
 import os
@@ -362,7 +363,7 @@ class MicrosoftGraphClient:
                 try:
                     return max(0.0, float(retry_after))
                 except ValueError:
-                    pass
+                    import traceback; traceback.print_exc()
         return min(8.0, 0.5 * (2 ** attempt))
 
     @staticmethod

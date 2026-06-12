@@ -10,14 +10,21 @@ from PyQt5.QtWidgets import (
     QLabel, QLineEdit, QPushButton, QComboBox,
     QMessageBox, QCheckBox, QFrame, QApplication,
 )
-from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF, pyqtSignal
+from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF, QThread, QObject, pyqtSignal
 from PyQt5.QtGui import (
     QPainter, QColor, QRadialGradient, QPen, QBrush,
     QLinearGradient, QPainterPath, QFont,
 )
 
 from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPLE
+from core.planet_painter import PLANET_STYLES, paint_planet
 from core.deps import ensure
+
+try:
+    from modules.intelligence._model_manager import OllamaManager
+    _OLLAMA_AVAILABLE = True
+except ImportError:
+    _OLLAMA_AVAILABLE = False
 
 
 # ── 预设供应商模板（精简版，完整版在 opcclaw PROVIDER_TEMPLATES）──
@@ -49,7 +56,7 @@ LOCAL_SERVICES = [
 
 # ── 配置路径 ──
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DATA_DIR = os.path.join(PROJECT_ROOT, "data")
+DATA_DIR = os.path.join(PROJECT_ROOT, "opcclaw", "data")
 OPCCLAW_CONFIG_PATH = os.path.join(DATA_DIR, "opcclaw_config.json")
 
 
@@ -92,7 +99,7 @@ class SetupCosmicBackground(QWidget):
             })
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
-        self._timer.start(40)
+        self._timer.start(16)  # ~60fps (原 40ms)
 
     def _tick(self):
         self._t += 0.02
@@ -122,17 +129,14 @@ class SetupCosmicBackground(QWidget):
             painter.setBrush(Qt.NoBrush)
             painter.drawEllipse(QPointF(cx, cy), r, r * 0.6)
 
-        # 旋转光点
+        # 旋转光点 → 升级为微型真实纹理星球
+        planet_styles = ["neptune", "venus", "mars", "jupiter", "mercury", "uranus", "saturn", "moon"]
         for i in range(8):
             angle = self._t * 0.3 + i * 0.785
             px = cx + math.cos(angle) * 180
             py = cy + math.sin(angle) * 180 * 0.6
-            g = QRadialGradient(QPointF(px, py), 16)
-            g.setColorAt(0, QColor(80, 150, 255, 60))
-            g.setColorAt(1, QColor(0, 0, 0, 0))
-            painter.setBrush(QBrush(g))
-            painter.setPen(Qt.NoPen)
-            painter.drawEllipse(QPointF(px, py), 16, 16)
+            style = PLANET_STYLES.get(planet_styles[i], PLANET_STYLES["neptune"])
+            paint_planet(painter, QPointF(px, py), 20, style, anim_t=self._t)
 
         painter.end()
 
@@ -516,11 +520,24 @@ class ModelSetupWindow(QMainWindow):
         lbl3.setStyleSheet(LABEL_STYLE)
         v.addWidget(lbl3)
 
+        model_row = QHBoxLayout()
+        model_row.setSpacing(8)
+
         self._local_model = QComboBox()
         self._local_model.setStyleSheet(COMBO_STYLE)
         self._local_model.setEditable(True)
         self._local_model.setMinimumHeight(42)
-        v.addWidget(self._local_model)
+        model_row.addWidget(self._local_model, stretch=1)
+
+        self._refresh_btn = QPushButton("刷新模型")
+        self._refresh_btn.setStyleSheet(BTN_SECONDARY)
+        self._refresh_btn.setFixedWidth(100)
+        self._refresh_btn.setFixedHeight(42)
+        self._refresh_btn.setCursor(Qt.PointingHandCursor)
+        self._refresh_btn.clicked.connect(self._refresh_local_models)
+        model_row.addWidget(self._refresh_btn)
+
+        v.addLayout(model_row)
 
         v.addStretch()
 
@@ -553,8 +570,70 @@ class ModelSetupWindow(QMainWindow):
             return
         self._local_url.setText(svc["base_url"])
         self._local_model.clear()
-        for m in svc.get("models", ["default"]):
-            self._local_model.addItem(m, m)
+
+        # Ollama：动态获取已安装模型列表；其他服务用预设列表
+        if sid == "ollama" and _OLLAMA_AVAILABLE:
+            self._refresh_local_models()
+        else:
+            for m in svc.get("models", ["default"]):
+                self._local_model.addItem(m, m)
+
+    def _refresh_local_models(self):
+        """动态从 Ollama 获取已安装的模型列表并填充下拉框（后台线程，不阻塞 UI）"""
+        if not _OLLAMA_AVAILABLE:
+            return
+
+        self._local_model.clear()
+        self._refresh_btn.setEnabled(False)
+        self._refresh_btn.setText("获取中...")
+
+        class _RefreshWorker(QObject):
+            finished = pyqtSignal(list)  # list of (display_text, user_data)
+            def run(self):
+                results = []
+                try:
+                    running = OllamaManager.is_running()
+                    if not running and not OllamaManager.is_installed():
+                        results.append(("（Ollama 未安装）", ""))
+                        self.finished.emit(results)
+                        return
+                    if not running:
+                        results.append(("（Ollama 未启动，请先启动服务）", ""))
+                        self.finished.emit(results)
+                        return
+                    models = OllamaManager.list_models()
+                    if not models:
+                        results.append(("（暂无模型，请先下载）", ""))
+                        self.finished.emit(results)
+                        return
+                    for m in models:
+                        name = m.get("name", "")
+                        size = m.get("size", 0)
+                        size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
+                        results.append((f"{name}{size_str}", name))
+                except Exception as e:
+                    print(f"[ModelSetup] 获取本地模型失败: {e}")
+                    traceback.print_exc()
+                    results.append(("（获取失败，请检查网络/服务）", ""))
+                finally:
+                    self.finished.emit(results)
+
+        self._refresh_thread = QThread()
+        self._refresh_worker = _RefreshWorker()
+        self._refresh_worker.moveToThread(self._refresh_thread)
+        self._refresh_thread.started.connect(self._refresh_worker.run)
+        self._refresh_worker.finished.connect(self._on_local_models_ready)
+        self._refresh_worker.finished.connect(self._refresh_thread.quit)
+        self._refresh_thread.finished.connect(self._refresh_thread.deleteLater)
+        self._refresh_worker.finished.connect(self._refresh_worker.deleteLater)
+        self._refresh_thread.start()
+
+    def _on_local_models_ready(self, results: list):
+        """后台刷新完成后，把结果填入下拉框"""
+        for display_text, user_data in results:
+            self._local_model.addItem(display_text, user_data)
+        self._refresh_btn.setEnabled(True)
+        self._refresh_btn.setText("刷新模型")
 
     # ════════════════ 操作 ════════════════
 
@@ -606,7 +685,7 @@ class ModelSetupWindow(QMainWindow):
         elif active_tab == 2:  # 本地模式
             sid = self._local_service.currentData()
             url = self._local_url.text().strip()
-            model = self._local_model.currentText().strip() or self._local_model.currentData() or ""
+            model = self._local_model.currentData() or self._local_model.currentText().strip() or ""
             svc = next((s for s in LOCAL_SERVICES if s["id"] == sid), None)
             if not svc:
                 return None

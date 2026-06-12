@@ -1,6 +1,6 @@
 # `modules/auth/login_window.py`
 
-> 路径：`modules/auth/login_window.py` | 行数：573
+> 路径：`modules/auth/login_window.py` | 行数：578
 
 
 ---
@@ -42,7 +42,7 @@ def _load_remembered():
                 data["password"] = base64.b64decode(data["password"]).decode()
             return data
     except Exception:
-        pass  # gracefully degrade on I/O failure
+        import traceback; traceback.print_exc()
     return {}
 
 def _save_remembered(username, password):
@@ -52,7 +52,7 @@ def _save_remembered(username, password):
         with open(REMEMBERED_LOGIN, "w") as f:
             json.dump(data, f)
     except Exception:
-        pass  # gracefully degrade on I/O failure
+        import traceback; traceback.print_exc()
 
 def _clear_remembered():
     """清除记住的登录凭据"""
@@ -60,7 +60,7 @@ def _clear_remembered():
         if os.path.exists(REMEMBERED_LOGIN):
             os.remove(REMEMBERED_LOGIN)
     except Exception:
-        pass  # gracefully degrade on I/O failure
+        import traceback; traceback.print_exc()
 
 
 class EarthGlobe:
@@ -529,16 +529,21 @@ class LoginWindow(QMainWindow):
 
     def _open_model_setup(self, username: str, role: str):
         """登录成功后打开模型配置窗口"""
+        print(f"[_open_model_setup] username={username}, role={role}")
         membership_info = None
         if role == "member":
             membership_info = self._auth.get_membership_info(username)
 
+        print("[_open_model_setup] creating ModelSetupWindow...")
         self._setup = ModelSetupWindow(
             username=username, role=role, membership_info=membership_info
         )
+        print("[_open_model_setup] ModelSetupWindow created, connecting signal...")
         self._setup.setup_complete.connect(self._on_setup_complete)
+        print("[_open_model_setup] showing setup window, closing login...")
         self._setup.show()
         self.close()
+        print("[_open_model_setup] done")
 
     def _on_setup_complete(self, result: dict):
         """模型配置完成后打开主控面板 + 自动启动悬浮星球"""

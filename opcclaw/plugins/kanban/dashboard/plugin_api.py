@@ -25,6 +25,7 @@ reachable from the network. Don't do that on a shared host.
 """
 
 from __future__ import annotations
+import traceback
 
 import asyncio
 import hmac
@@ -541,7 +542,7 @@ def create_task(payload: CreateTaskBody, board: Optional[str] = Query(None)):
                     body["warning"] = message
             except Exception:
                 # Probe failure must never block the create itself.
-                pass
+                import traceback; traceback.print_exc()
         return body
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -1589,4 +1590,4 @@ async def stream_events(ws: WebSocket):
         try:
             await ws.close()
         except Exception:
-            pass
+            import traceback; traceback.print_exc()

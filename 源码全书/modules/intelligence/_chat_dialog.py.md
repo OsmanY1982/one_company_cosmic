@@ -1,6 +1,6 @@
 # `modules/intelligence/_chat_dialog.py`
 
-> 路径：`modules/intelligence/_chat_dialog.py` | 行数：259
+> 路径：`modules/intelligence/_chat_dialog.py` | 行数：284
 
 
 ---
@@ -29,6 +29,7 @@ import json
 import urllib.request
 import urllib.error
 from typing import Optional, Dict, Any
+import traceback
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
@@ -196,57 +197,81 @@ class OPCclawChatDialog(QDialog):
         if hasattr(self._opcclaw, 'chat_stream'):
             self._stream_accumulated = ""
             self._stream_header = f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
+            self._stream_chunks_received = False
 
-            def on_chunk(chunk: str):
-                self._stream_accumulated += chunk
-                # 移除最后一行流式内容，追加新的
-                cursor = self._chat_log.textCursor()
-                cursor.movePosition(cursor.End)
-                cursor.select(cursor.BlockUnderCursor)
-                cursor.removeSelectedText()
-                display = self._stream_accumulated[-600:].replace('\n', '<br>')
-                self._chat_log.append(
-                    f'{self._stream_header}'
-                    f'<p style="color:#ccaaff;">{display}'
-                    f'<span style="color:#88ff88;">_</span></p>'
-                )
-                sb = self._chat_log.verticalScrollBar()
-                sb.setValue(sb.maximum())
-
-            def on_done(full_text: str):
-                cursor = self._chat_log.textCursor()
-                cursor.movePosition(cursor.End)
-                cursor.select(cursor.BlockUnderCursor)
-                cursor.removeSelectedText()
-                final = full_text.replace('\n', '<br>')
-                self._chat_log.append(
-                    f'{self._stream_header}'
-                    f'<p style="color:#ccaaff;">{final}</p>'
-                )
-                self._chat_input.setEnabled(True)
-                self._chat_input.setFocus()
-                sb = self._chat_log.verticalScrollBar()
-                sb.setValue(sb.maximum())
-
-            def on_tool(name: str, status: str):
-                icon = "[OK]" if status == "OK" else "[FAIL]" if status == "Failed" else "[...]"
-                cursor = self._chat_log.textCursor()
-                cursor.movePosition(cursor.End)
-                cursor.select(cursor.BlockUnderCursor)
-                cursor.removeSelectedText()
-                display = (self._stream_accumulated[-400:] or "").replace('\n', '<br>')
-                self._chat_log.append(
-                    f'{self._stream_header}'
-                    f'<p style="color:#ccaaff;">{display}'
-                    f'<span style="color:#888888;"> {name} {icon}</span> '
-                    f'<span style="color:#88ff88;">_</span></p>'
-                )
+            # 先插入流式占位块，防止 on_chunk 第一帧误删用户消息
+            self._chat_log.append(
+                f'{self._stream_header}'
+                f'<p style="color:#ccaaff;">'
+                f'<span style="color:#88ff88;">_</span></p>'
+            )
 
             try:
-                self._opcclaw.chat_stream(text, on_chunk, on_done, on_tool)
+                self._opcclaw.chat_stream(
+                    text,
+                    self._on_stream_chunk,
+                    self._on_stream_done,
+                    self._on_stream_tool,
+                )
                 return
             except Exception:
-                pass  # 回退同步
+                import traceback; traceback.print_exc()
+
+    # ═══ 流式回调（实例方法 — 确保 QueuedConnection 派发到主线程） ═══
+
+    def _on_stream_chunk(self, chunk: str):
+        self._stream_accumulated += chunk
+        self._stream_chunks_received = True
+        # 移除最后一个块（占位块或上一次流式块）
+        cursor = self._chat_log.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.select(cursor.BlockUnderCursor)
+        cursor.removeSelectedText()
+        display = self._stream_accumulated[-600:].replace('\n', '<br>')
+        self._chat_log.append(
+            f'{self._stream_header}'
+            f'<p style="color:#ccaaff;">{display}'
+            f'<span style="color:#88ff88;">_</span></p>'
+        )
+        sb = self._chat_log.verticalScrollBar()
+        sb.setValue(sb.maximum())
+
+    def _on_stream_done(self, full_text: str):
+        # 移除最后一个块（流式占位或最后一块内容）
+        cursor = self._chat_log.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.select(cursor.BlockUnderCursor)
+        cursor.removeSelectedText()
+        final = full_text.replace('\n', '<br>') if full_text else ''
+        if not final and not self._stream_chunks_received:
+            # 流式完全没返回内容：显示错误提示
+            self._chat_log.append(
+                f'{self._stream_header}'
+                f'<p style="color:#ff8888;">[响应为空，请重试]</p>'
+            )
+        else:
+            self._chat_log.append(
+                f'{self._stream_header}'
+                f'<p style="color:#ccaaff;">{final}</p>'
+            )
+        self._chat_input.setEnabled(True)
+        self._chat_input.setFocus()
+        sb = self._chat_log.verticalScrollBar()
+        sb.setValue(sb.maximum())
+
+    def _on_stream_tool(self, name: str, status: str):
+        icon = "[OK]" if status == "OK" else "[FAIL]" if status == "Failed" else "[...]"
+        cursor = self._chat_log.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.select(cursor.BlockUnderCursor)
+        cursor.removeSelectedText()
+        display = (self._stream_accumulated[-400:] or "").replace('\n', '<br>')
+        self._chat_log.append(
+            f'{self._stream_header}'
+            f'<p style="color:#ccaaff;">{display}'
+            f'<span style="color:#888888;"> {name} {icon}</span> '
+            f'<span style="color:#88ff88;">_</span></p>'
+        )
 
         # 同步模式（回退）
         try:

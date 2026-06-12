@@ -10,6 +10,7 @@ so the parent agent loop can't block on it. We communicate via files only.
 """
 
 from __future__ import annotations
+import traceback
 
 import json
 import os
@@ -66,7 +67,7 @@ def _clear_active() -> None:
     try:
         _active_file().unlink()
     except FileNotFoundError:
-        pass
+        import traceback; traceback.print_exc()
 
 
 def _pid_alive(pid: int) -> bool:
@@ -130,7 +131,7 @@ def start(
             try:
                 f.unlink()
             except OSError:
-                pass
+                import traceback; traceback.print_exc()
 
     env = os.environ.copy()
     env["HERMES_MEET_URL"] = url
@@ -202,7 +203,7 @@ def status() -> Dict[str, Any]:
         try:
             bot_status = json.loads(status_path.read_text(encoding="utf-8"))
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
 
     return {
         "ok": True,
@@ -303,7 +304,7 @@ def stop(*, reason: str = "requested") -> Dict[str, Any]:
         try:
             os.kill(pid, signal.SIGTERM)
         except ProcessLookupError:
-            pass
+            import traceback; traceback.print_exc()
         for _ in range(20):
             if not _pid_alive(pid):
                 break
@@ -312,7 +313,7 @@ def stop(*, reason: str = "requested") -> Dict[str, Any]:
             try:
                 os.kill(pid, signal.SIGKILL)  # windows-footgun: ok — POSIX-only plugin (google_meet registers no-op on Windows; see __init__.py)
             except ProcessLookupError:
-                pass
+                import traceback; traceback.print_exc()
 
     _clear_active()
     return {

@@ -19,6 +19,7 @@ needs to remember to run commands.
 """
 
 from __future__ import annotations
+import traceback
 
 import logging
 import re
@@ -113,7 +114,7 @@ def _extract_paths_from_terminal(args: Dict[str, Any], result: str) -> Set[str]:
                 if tok.startswith(("/", "~")):
                     paths.add(tok)
         except ValueError:
-            pass
+            import traceback; traceback.print_exc()
     # Only scan the result text if it's a reasonable size (avoid 50KB dumps).
     if isinstance(result, str) and len(result) < 4096:
         for match in _TERMINAL_PATH_REGEX.findall(result):

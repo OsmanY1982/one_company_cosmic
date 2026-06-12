@@ -13,6 +13,7 @@ Stdlib-only by design (with optional `requests` upgrade if installed). Python 3.
 """
 
 from __future__ import annotations
+import traceback
 
 import json
 import os
@@ -517,7 +518,7 @@ if HAS_REQUESTS:
                             del headers[key]
             except Exception:
                 # Defensive: never let header stripping break a redirect.
-                pass
+                import traceback; traceback.print_exc()
 
 
 def _http_once(

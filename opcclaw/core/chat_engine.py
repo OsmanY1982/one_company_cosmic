@@ -288,7 +288,7 @@ class ChatEngine(QObject):
         self._save_counter += 1
         tools = self.registry.to_openai_tools() if self.registry.count() > 0 else None
         force_tools = self._should_force_tools(user_message)
-        
+
         for round_idx in range(self.MAX_TOOL_ROUNDS):
             if self.on_thinking:
                 self.on_thinking()
@@ -299,10 +299,30 @@ class ChatEngine(QObject):
                     else:
                         check_response = self.backend.chat(self.messages, tools)
                 except Exception as e:
-                    logger.error(f'LLM API failed: {e}', exc_info=True)
-                    self._maybe_save()
-                    yield '\nSorry, AI service unavailable: {}\n'.format(e)
-                    return
+                    if force_tools:
+                        logger.error(f'LLM API failed: {e}', exc_info=True)
+                        self._maybe_save()
+                        yield '\nSorry, AI service unavailable: {}\n'.format(e)
+                        return
+                    # 非流式工具检测失败（如模型仅支持流式），回退到纯流式路径
+                    logger.warning(f'Non-stream tool check failed, falling through to streaming: {e}')
+                    tools = None
+                    continue
+                # 强制工具模式但模型未调用工具：注入提醒后重试一次
+                if force_tools and not check_response.tool_calls:
+                    logger.warning(f'force_tools enabled but no tool_call returned; injecting reminder and retrying')
+                    reminder = (
+                        '你刚才没有调用任何工具。用户要求你执行操作，请立即调用合适的工具完成任务，不要只回复文字。'
+                    )
+                    self.messages.append({'role': 'user', 'content': reminder})
+                    try:
+                        check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+                    except Exception as e:
+                        logger.error(f'LLM API failed on retry: {e}', exc_info=True)
+                        self._maybe_save()
+                        yield '\nSorry, AI service unavailable: {}\n'.format(e)
+                        return
+
                 if check_response.tool_calls:
                     for tc in check_response.tool_calls:
                         self.on_tool_start.emit(tc.name, tc.arguments)

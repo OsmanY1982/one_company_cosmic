@@ -125,7 +125,7 @@ class CosmicBackground(QWidget):
 
         self._anim = QTimer(self)
         self._anim.timeout.connect(self._tick)
-        self._anim.start(50)
+        self._anim.start(16)  # ~60fps (原 50ms → 16ms)
 
     def _generate(self):
         random.seed(42)
@@ -219,7 +219,7 @@ class CosmicBackground(QWidget):
         self._shooting_stars = []
 
     def _tick(self):
-        self._t += 0.04
+        self._t += 0.0128  # 16ms步进，等效原 50ms@0.04
         w, h = self.width(), self.height()
 
         # 小星缓慢漂移
@@ -232,8 +232,8 @@ class CosmicBackground(QWidget):
             s['x'] = (s['x'] + s.get('drift_x', 0.00005)) % 1.0
             s['y'] = (s['y'] + s.get('drift_y', 0.00005)) % 1.0
 
-        # 流星
-        if random.random() < 0.03 and len(self._shooting_stars) < 2:
+        # 流星（概率适配 16ms 帧率，维持原 50ms 等效频率）
+        if random.random() < 0.0096 and len(self._shooting_stars) < 2:
             sx = random.uniform(0, w)
             sy = random.uniform(0, h * 0.4)
             angle = random.uniform(-0.6, -0.2)
@@ -248,7 +248,7 @@ class CosmicBackground(QWidget):
 
         survivors = []
         for s in self._shooting_stars:
-            s['age'] += 0.05
+            s['age'] += 0.016  # 16ms步进，等效原 50ms@0.05
             s['x'] += math.cos(s['angle']) * s['speed']
             s['y'] += math.sin(s['angle']) * s['speed']
             if s['age'] < s['life'] and 0 <= s['x'] <= w and 0 <= s['y'] <= h:

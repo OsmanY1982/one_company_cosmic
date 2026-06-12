@@ -16,6 +16,7 @@ VERSION` if you want reproducibility across an OS bump.
 """
 
 from __future__ import annotations
+import traceback
 
 import asyncio
 import base64
@@ -175,7 +176,7 @@ class _AsyncBridge:
                 try:
                     self._loop.close()
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
 
         self._thread = threading.Thread(target=_run, daemon=True, name="cua-driver-loop")
         self._thread.start()

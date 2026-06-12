@@ -7,6 +7,7 @@ import logging
 import os
 import threading
 from pathlib import Path
+import traceback
 
 from agent.file_safety import get_read_block_error
 from tools.binary_extensions import has_binary_extension
@@ -54,7 +55,7 @@ def _get_max_read_chars() -> int:
             _max_read_chars_cached = int(val)
             return _max_read_chars_cached
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     _max_read_chars_cached = _DEFAULT_MAX_READ_CHARS
     return _max_read_chars_cached
 
@@ -111,7 +112,7 @@ def _get_live_tracking_cwd(task_id: str = "default") -> str | None:
         if live_cwd:
             return live_cwd
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     return None
 
@@ -537,7 +538,7 @@ def read_file_tool(path: str, offset: int = 1, limit: int = 500, task_id: str = 
                         "content_returned": False,
                     }, ensure_ascii=False)
             except OSError:
-                pass  # stat failed — fall through to full read
+                import traceback; traceback.print_exc()
 
         # ── Perform the read ──────────────────────────────────────────
         file_ops = _get_file_ops(task_id)
@@ -614,7 +615,7 @@ def read_file_tool(path: str, offset: int = 1, limit: int = 500, task_id: str = 
                 task_data["dedup"][dedup_key] = _mtime_now
                 task_data.setdefault("read_timestamps", {})[resolved_str] = _mtime_now
             except OSError:
-                pass  # Can't stat — skip tracking for this entry
+                import traceback; traceback.print_exc()
 
             # Bound the per-task containers so a long CLI session doesn't
             # accumulate megabytes of dict/set state.  See _cap_read_tracker_data.

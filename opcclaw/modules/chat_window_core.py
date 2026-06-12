@@ -5,6 +5,7 @@ OPCclaw - ChatWindow 主类 (拆分自 chat_window.py)
 import os, sys, json
 from datetime import datetime
 from typing import Optional, Union
+import traceback
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton,
@@ -264,7 +265,7 @@ class ChatWindow(QWidget):
         # ── UI 构建 ──
 
         except Exception:
-            pass  # SkillLoader API mismatch
+            import traceback; traceback.print_exc()
 
     def _get_skills_context(self):
         """安全获取技能上下文，避免 SkillLoader API 不匹配崩溃"""
@@ -279,7 +280,7 @@ class ChatWindow(QWidget):
                 names = self.skill_loader.list_skills()
                 return f"可用技能: {', '.join(names)}" if names else ""
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         return ""  # 降级：没有技能上下文
 
 
@@ -710,7 +711,8 @@ class ChatWindow(QWidget):
 
         system_prompt = (
             "你是 OPCclaw, 一人公司管理系统中的 AI Agent 助手。\n"
-            "用中文回复, 保持简洁、专业、友好。主动使用工具完成任务。\n\n"
+            "用中文回复, 保持简洁、专业、友好。\n"
+            "核心规则：用户要求执行操作时（创建/读取/修改/删除文件、搜索、执行命令等），必须调用对应工具。不要只回复文字说「我可以帮你」，必须真的去调用工具完成。\n\n"
             f"[可用工具 {len(tool_names)} 个]\n{tool_summary}\n\n"
             f"{skills_ctx}"
         )
@@ -1403,7 +1405,7 @@ class ChatWindow(QWidget):
                     ):
                         return sid
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         return ""
 
     def _save_last_session(self, sid: str):
@@ -1413,7 +1415,7 @@ class ChatWindow(QWidget):
             with open(last_file, "w", encoding="utf-8") as f:
                 f.write(sid)
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
 
     def _refresh_sessions(self):
         """刷新会话下拉列表"""
@@ -1575,14 +1577,14 @@ class ChatWindow(QWidget):
                 self._voice_manager.stop_speaking()
                 self._voice_manager.stop_listening()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         # 2. 保存当前会话
         if self.engine and self.memory_store:
             try:
                 self.memory_store.save_session(self.engine.get_history(), self._session_id)
                 self._save_last_session(self._session_id)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         super().closeEvent(event)
 
     def showEvent(self, event):

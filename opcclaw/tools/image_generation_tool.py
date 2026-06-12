@@ -28,6 +28,7 @@ import threading
 import uuid
 from typing import Any, Dict, Optional, Union
 from urllib.parse import urlencode
+import traceback
 
 # fal_client is imported lazily — see _load_fal_client(). Pulling it
 # eagerly added ~64 ms to every CLI cold start because
@@ -826,7 +827,7 @@ def check_image_generation_requirements() -> bool:
             _load_fal_client()
             return True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     # Probe plugin providers. Discovery is idempotent and cheap.
     try:
@@ -841,7 +842,7 @@ def check_image_generation_requirements() -> bool:
             except Exception:
                 continue
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     return False
 

@@ -24,6 +24,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import traceback
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -940,7 +941,7 @@ def cmd_timezone(args):
                         utc_offset = f"{utc_offset}:{os_:02d}"
             timezone_src = "timeapi.io"
     except (RuntimeError, KeyError, TypeError):
-        pass  # API may be down; continue to fallback
+        import traceback; traceback.print_exc()
 
     # --- Strategy 2: longitude-based UTC offset approximation ---
     if not timezone_str:

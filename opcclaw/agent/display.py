@@ -12,6 +12,7 @@ import time
 from dataclasses import dataclass, field
 from difflib import unified_diff
 from pathlib import Path
+import traceback
 
 from utils import safe_json_loads
 
@@ -68,7 +69,7 @@ def _diff_ansi() -> dict[str, str]:
             or_, og, ob = int(ok_h[1:3], 16), int(ok_h[3:5], 16), int(ok_h[5:7], 16)
             plus = f"\033[38;2;255;255;255;48;2;{max(or_//4,10)};{max(og//2,20)};{max(ob//4,10)}m"
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     _diff_colors_cached = {
         "dim": dim, "file": file_c, "hunk": hunk,
@@ -153,7 +154,7 @@ def get_tool_emoji(tool_name: str, default: str = "⚡") -> str:
         if emoji:
             return emoji
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     # 3. Hardcoded fallback
     return default
 
@@ -612,7 +613,7 @@ class KawaiiSpinner:
                 if faces:
                     return faces
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         return cls.KAWAII_WAITING
 
     @classmethod
@@ -625,7 +626,7 @@ class KawaiiSpinner:
                 if faces:
                     return faces
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         return cls.KAWAII_THINKING
 
     @classmethod
@@ -638,7 +639,7 @@ class KawaiiSpinner:
                 if verbs:
                     return verbs
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         return cls.THINKING_VERBS
 
     def __init__(self, message: str = "", spinner_type: str = 'dots', print_fn=None):
@@ -667,14 +668,14 @@ class KawaiiSpinner:
             try:
                 self._print_fn(text)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             return
         try:
             self._out.write(text + end)
             if flush:
                 self._out.flush()
         except (ValueError, OSError):
-            pass
+            import traceback; traceback.print_exc()
 
     @property
     def _is_tty(self) -> bool:

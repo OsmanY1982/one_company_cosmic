@@ -20,11 +20,11 @@ from core.planet_painter import PLANET_STYLES, paint_planet, paint_orbit, paint_
 
 # ═══════════ 模块星球定义（真实纹理） ═══════════
 ALL_PLANETS = [
-    {"id": "business",     "name": "业务管理", "style": "earth",   "radius": 38, "orbit": 160},
-    {"id": "personnel",    "name": "人员管理", "style": "mars",    "radius": 32, "orbit": 205},
-    {"id": "intelligence", "name": "智能中心", "style": "jupiter", "radius": 42, "orbit": 142},
-    {"id": "data",         "name": "数据中心", "style": "neptune", "radius": 34, "orbit": 248},
-    {"id": "system",       "name": "系统设置", "style": "moon",    "radius": 28, "orbit": 288},
+    {"id": "business",     "name": "业务管理", "style": "venus",   "radius": 65, "orbit": 160},
+    {"id": "personnel",    "name": "人员管理", "style": "mars",    "radius": 54, "orbit": 205},
+    {"id": "intelligence", "name": "智能中心", "style": "jupiter", "radius": 71, "orbit": 142},
+    {"id": "data",         "name": "数据中心", "style": "neptune", "radius": 58, "orbit": 248},
+    {"id": "system",       "name": "系统设置", "style": "moon",    "radius": 48, "orbit": 288},
 ]
 
 # 会员可见模块（业务管理 + 智能中心）
@@ -85,6 +85,7 @@ class DashboardWindow(QMainWindow):
         self._t = 0
         self._hovered_planet = None
         self._modules_open = {}
+        self._orbits = []  # dynamic orbit radii
 
         self._build_ui()
 
@@ -93,7 +94,7 @@ class DashboardWindow(QMainWindow):
 
         self._anim = QTimer(self)
         self._anim.timeout.connect(self._tick)
-        self._anim.start(45)
+        self._anim.start(16)  # ~60fps (原 45ms)
 
         # 让 HUD 接收鼠标事件以检测星球 hover/click
         self._hud.setMouseTracking(True)
@@ -103,6 +104,7 @@ class DashboardWindow(QMainWindow):
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self._hud.setGeometry(0, 0, self.width(), self.height())
+        self._compute_orbits()
 
     # ════════════════ 布局 ════════════════
 
@@ -229,14 +231,30 @@ class DashboardWindow(QMainWindow):
         h = self._hud.height()
         return QPointF(w * 0.5, h * 0.52)
 
+    def _compute_orbits(self):
+        w = self._hud.width()
+        h = self._hud.height()
+        if w <= 0 or h <= 0 or not self._planets:
+            return
+        n = len(self._planets)
+        available_r = min(w, h) / 2 * 0.9
+        max_radius = max(p["radius"] for p in self._planets)
+        max_orbit = available_r - max_radius / 2
+        if n > 3:
+            base_r = max_orbit / (1 + (n - 1) * 0.4)
+            self._orbits = [base_r * (1 + i * 0.4) for i in range(n)]
+        else:
+            self._orbits = [max_orbit * (i + 1) / n for i in range(n)]
+
     def _get_planet_pos(self, planet: dict) -> QPointF:
         """计算星球当前位置（基于时间和轨道参数）"""
         cx = self._get_orbit_center()
         idx = self._planets.index(planet)
+        orbit = self._orbits[idx] if idx < len(self._orbits) else planet.get("orbit", 160)
         phase = idx * math.pi * 2 / len(self._planets)
         angle = phase + self._t * (0.15 + idx * 0.04)  # 不同速度
-        px = cx.x() + math.cos(angle) * planet["orbit"]
-        py = cx.y() + math.sin(angle) * planet["orbit"] * 0.55  # 椭圆效果
+        px = cx.x() + math.cos(angle) * orbit
+        py = cx.y() + math.sin(angle) * orbit * 0.55  # 椭圆效果
         return QPointF(px, py)
 
     def _planet_at_pos(self, pos: QPointF) -> dict:
@@ -291,14 +309,15 @@ class DashboardWindow(QMainWindow):
         painter.drawLine(QPointF(ex, ey), QPointF(sx, sy))
 
         # 轨道线
-        for p in self._planets:
-            paint_orbit(painter, cx, p["orbit"])
+        for i, p in enumerate(self._planets):
+            orbit = self._orbits[i] if i < len(self._orbits) else p.get("orbit", 160)
+            paint_orbit(painter, cx, orbit, anim_t=self._t)
 
         # ── 中央 AI 核心 · 地球 ──
         core_pulse = 0.5 + 0.5 * math.sin(self._t * 1.5)
-        core_r = 28 + core_pulse * 6
+        core_r = 48 + core_pulse * 10
         paint_planet(painter, cx, core_r, PLANET_STYLES["earth"],
-                     label="AI CORE", font_size=8)
+                     label="AI CORE", font_size=8, anim_t=self._t)
 
         # ── 星球 ──
         for p in self._planets:
@@ -306,7 +325,8 @@ class DashboardWindow(QMainWindow):
             style = PLANET_STYLES.get(p["style"], PLANET_STYLES["neptune"])
             is_hovered = p == self._hovered_planet
             paint_planet(painter, pp, p["radius"], style,
-                         hovered=is_hovered, label=p["name"], font_size=10)
+                         hovered=is_hovered, label=p["name"], font_size=10,
+                         anim_t=self._t)
 
         # ── 会员等级徽章（船员模式） ──
         if self._role == "member" and self._membership_info:

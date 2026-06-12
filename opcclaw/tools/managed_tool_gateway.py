@@ -1,6 +1,7 @@
 """Generic managed-tool gateway helpers for Nous-hosted vendor passthroughs."""
 
 from __future__ import annotations
+import traceback
 
 import json
 import logging
@@ -45,7 +46,7 @@ def _read_nous_provider_state() -> Optional[dict]:
         if isinstance(nous_provider, dict):
             return nous_provider
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return None
 
 

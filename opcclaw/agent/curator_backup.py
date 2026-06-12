@@ -36,6 +36,7 @@ we leave it alone.
 """
 
 from __future__ import annotations
+import traceback
 
 import json
 import logging
@@ -271,7 +272,7 @@ def snapshot_skills(reason: str = "manual") -> Optional[Path]:
         try:
             shutil.rmtree(dest, ignore_errors=True)
         except OSError:
-            pass
+            import traceback; traceback.print_exc()
         return None
 
     _prune_old(keep=get_keep())
@@ -590,11 +591,11 @@ def rollback(backup_id: Optional[str] = None) -> Tuple[bool, str, Optional[Path]
             try:
                 shutil.move(str(dest), str(orig))
             except OSError:
-                pass
+                import traceback; traceback.print_exc()
         try:
             shutil.rmtree(staged, ignore_errors=True)
         except OSError:
-            pass
+            import traceback; traceback.print_exc()
         return (False, f"failed to stage current skills: {e}", None)
 
     # Step 4: extract the snapshot into skills/
@@ -620,11 +621,11 @@ def rollback(backup_id: Optional[str] = None) -> Tuple[bool, str, Optional[Path]
             try:
                 shutil.move(str(dest), str(orig))
             except OSError:
-                pass
+                import traceback; traceback.print_exc()
         try:
             shutil.rmtree(staged, ignore_errors=True)
         except OSError:
-            pass
+            import traceback; traceback.print_exc()
         return (False, f"snapshot extract failed (state restored): {e}", None)
 
     # Extract succeeded — the staging dir has served its purpose. The
@@ -632,7 +633,7 @@ def rollback(backup_id: Optional[str] = None) -> Tuple[bool, str, Optional[Path]
     try:
         shutil.rmtree(staged, ignore_errors=True)
     except OSError:
-        pass
+        import traceback; traceback.print_exc()
 
     # Reconcile cron skill-links. Surgical: only the skills/skill fields
     # on jobs matched by id. Everything else in jobs.json is live state

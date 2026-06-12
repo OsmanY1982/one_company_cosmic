@@ -1,6 +1,6 @@
 # `modules/intelligence/enhanced_chat.py`
 
-> 路径：`modules/intelligence/enhanced_chat.py` | 行数：459
+> 路径：`modules/intelligence/enhanced_chat.py` | 行数：460
 
 
 ---
@@ -14,6 +14,7 @@
 
 import sys
 import os
+import traceback
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.."))
 
 from PyQt5.QtWidgets import (
@@ -361,7 +362,7 @@ class EnhancedChatWidget(QWidget):
                         tool_name = tools[0]
                         self._append_message("🧠 AI", f"智能选择工具: {tool_name}")
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
         # 如果没有智能选择，尝试直接匹配
         if not tool_name:

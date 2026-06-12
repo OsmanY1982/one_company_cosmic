@@ -24,6 +24,7 @@ plugin layout.
 Usage::
 
     from providers import get_provider_profile
+import traceback
     profile = get_provider_profile("nvidia")   # ProviderProfile or None
     profile = get_provider_profile("kimi")     # checks name + aliases
 """
@@ -188,4 +189,4 @@ def _discover_providers() -> None:
                     "Failed to import legacy provider module %s: %s", modname, exc
                 )
     except Exception:
-        pass
+        import traceback; traceback.print_exc()

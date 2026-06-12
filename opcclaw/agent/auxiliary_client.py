@@ -49,6 +49,7 @@ from pathlib import Path  # noqa: F401 — used by test mocks
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Tuple, TYPE_CHECKING
 from urllib.parse import urlparse, parse_qs, urlunparse
+import traceback
 
 # NOTE: `from openai import OpenAI` is deliberately NOT at module top — the
 # openai SDK pulls a large type tree (~240 ms cold, including responses/*,
@@ -251,7 +252,7 @@ def _get_aux_model_for_provider(provider_id: str) -> str:
         if _p and _p.default_aux_model:
             return _p.default_aux_model
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return _API_KEY_PROVIDER_AUX_MODELS_FALLBACK.get(provider_id, "")
 
 
@@ -440,7 +441,7 @@ def _codex_cloudflare_headers(access_token: str) -> Dict[str, str]:
         if isinstance(acct_id, str) and acct_id:
             headers["ChatGPT-Account-ID"] = acct_id
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return headers
 
 
@@ -720,7 +721,7 @@ class _CodexCompletionsAdapter:
             except Exception:
                 # Interrupt state is a best-effort UX hook; never make it a
                 # new failure mode for auxiliary calls.
-                pass
+                import traceback; traceback.print_exc()
 
         try:
             # Collect output items and text deltas during streaming —
@@ -1089,13 +1090,13 @@ def _maybe_wrap_anthropic(
         if _safe_isinstance(client_obj, GeminiNativeClient):
             return client_obj
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
     try:
         from agent.copilot_acp_client import CopilotACPClient
         if _safe_isinstance(client_obj, CopilotACPClient):
             return client_obj
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     # Explicit non-anthropic api_mode wins over URL heuristics.
     if api_mode and api_mode != "anthropic_messages":
@@ -1247,7 +1248,7 @@ def _read_codex_access_token() -> Optional[str]:
                 logger.debug("Codex access token expired (exp=%s), skipping", exp)
                 return None
         except Exception:
-            pass  # Non-JWT token or decode error — use as-is
+            import traceback; traceback.print_exc()
 
         return access_token.strip()
     except Exception as exc:
@@ -1279,7 +1280,7 @@ def _resolve_api_key_provider() -> Tuple[Optional[OpenAI], Optional[str]]:
                 if not is_provider_explicitly_configured("anthropic"):
                     continue
             except ImportError:
-                pass
+                import traceback; traceback.print_exc()
             return _try_anthropic()
 
         pool_present, entry = _select_pool_entry(provider_id)
@@ -1313,7 +1314,7 @@ def _resolve_api_key_provider() -> Tuple[Optional[OpenAI], Optional[str]]:
                     if _ph_aux and _ph_aux.default_headers:
                         extra["default_headers"] = dict(_ph_aux.default_headers)
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
             _client = OpenAI(api_key=api_key, base_url=base_url, **extra)
             _client = _maybe_wrap_anthropic(_client, model, api_key, raw_base_url)
             return _client, model
@@ -1348,7 +1349,7 @@ def _resolve_api_key_provider() -> Tuple[Optional[OpenAI], Optional[str]]:
                 if _ph_aux2 and _ph_aux2.default_headers:
                     extra["default_headers"] = dict(_ph_aux2.default_headers)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         _client = OpenAI(api_key=api_key, base_url=base_url, **extra)
         _client = _maybe_wrap_anthropic(_client, model, api_key, raw_base_url)
         return _client, model
@@ -1406,7 +1407,7 @@ def _try_nous(vision: bool = False) -> Tuple[Optional[OpenAI], Optional[str]]:
             )
             return None, None
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     nous = _read_nous_auth()
     runtime = _resolve_nous_runtime_api(force_refresh=False)
@@ -1484,7 +1485,7 @@ def _read_main_model() -> str:
             if isinstance(default, str) and default.strip():
                 return default.strip()
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return ""
 
 
@@ -1509,7 +1510,7 @@ def _read_main_provider() -> str:
             if isinstance(provider, str) and provider.strip():
                 return provider.strip().lower()
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return ""
 
 
@@ -1758,7 +1759,7 @@ def _try_anthropic(explicit_api_key: str = None) -> Tuple[Optional[Any], Optiona
                 if cfg_base_url:
                     base_url = cfg_base_url
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     from agent.anthropic_adapter import _is_oauth_token
     is_oauth = _is_oauth_token(token)
@@ -1886,7 +1887,7 @@ def _is_connection_error(exc: Exception) -> bool:
         if isinstance(exc, (APIConnectionError, APITimeoutError)):
             return True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
     # urllib3 / httpx / httpcore connection errors
     err_type = type(exc).__name__
     if any(kw in err_type for kw in ("Connection", "Timeout", "DNS", "SSL")):
@@ -1980,7 +1981,7 @@ def _evict_cached_clients(provider: str) -> None:
                     if callable(close_fn):
                         close_fn()
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
             _client_cache.pop(key, None)
 
 
@@ -2399,13 +2400,13 @@ def _to_async_client(sync_client, model: str, is_vision: bool = False):
         if isinstance(sync_client, GeminiNativeClient):
             return AsyncGeminiNativeClient(sync_client), model
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
     try:
         from agent.copilot_acp_client import CopilotACPClient
         if isinstance(sync_client, CopilotACPClient):
             return sync_client, model
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     async_kwargs = {
         "api_key": sync_client.api_key,
@@ -2435,7 +2436,7 @@ def _to_async_client(sync_client, model: str, is_vision: bool = False):
                 if _ph_async and _ph_async.default_headers:
                     async_kwargs["default_headers"] = dict(_ph_async.default_headers)
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
     return AsyncOpenAI(**async_kwargs), model
 
 
@@ -2672,7 +2673,7 @@ def resolve_provider_client(
                     if _ph_custom and _ph_custom.default_headers:
                         extra["default_headers"] = dict(_ph_custom.default_headers)
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
             client = OpenAI(api_key=custom_key, base_url=_clean_base, **extra)
             client = _wrap_if_needed(client, final_model, custom_base, custom_key)
             return (_to_async_client(client, final_model, is_vision=is_vision) if async_mode
@@ -2787,7 +2788,7 @@ def resolve_provider_client(
                 provider)
             return None, None
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     # ── API-key providers from PROVIDER_REGISTRY ─────────────────────
     try:
@@ -2872,7 +2873,7 @@ def resolve_provider_client(
                 if _ph_main and _ph_main.default_headers:
                     headers.update(_ph_main.default_headers)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         client = OpenAI(api_key=api_key, base_url=base_url,
                         **({"default_headers": headers} if headers else {}))
 
@@ -2890,7 +2891,7 @@ def resolve_provider_client(
                         final_model)
                     client = CodexAuxiliaryClient(client, final_model)
             except ImportError:
-                pass
+                import traceback; traceback.print_exc()
 
         # Honor api_mode for any API-key provider (e.g. direct OpenAI with
         # codex-family models).  The copilot-specific wrapping above handles
@@ -3328,7 +3329,7 @@ def _store_cached_client(cache_key: tuple, client: Any, default_model: Optional[
                 if callable(close_fn):
                     close_fn()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         _client_cache[cache_key] = (client, default_model, bound_loop)
 
 
@@ -3358,7 +3359,7 @@ def _refresh_nous_auxiliary_client(
             import asyncio as _aio
             current_loop = _aio.get_event_loop()
         except RuntimeError:
-            pass
+            import traceback; traceback.print_exc()
         client, final_model = _to_async_client(sync_client, final_model or "", is_vision=is_vision)
     else:
         client = sync_client
@@ -3406,7 +3407,7 @@ def neuter_async_httpx_del() -> None:
         from openai._base_client import AsyncHttpxClientWrapper
         AsyncHttpxClientWrapper.__del__ = lambda self: None  # type: ignore[assignment]
     except (ImportError, AttributeError):
-        pass  # Graceful degradation if the SDK changes its internals
+        import traceback; traceback.print_exc()
 
 
 def _force_close_async_httpx(client: Any) -> None:
@@ -3426,7 +3427,7 @@ def _force_close_async_httpx(client: Any) -> None:
         if inner is not None and not getattr(inner, "is_closed", True):
             inner._state = ClientState.CLOSED
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
 
 def shutdown_cached_clients() -> None:
@@ -3452,7 +3453,7 @@ def shutdown_cached_clients() -> None:
                 if close_fn and not inspect.iscoroutinefunction(close_fn):
                     close_fn()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         _client_cache.clear()
 
 
@@ -3535,7 +3536,7 @@ def _get_cached_client(
             import asyncio as _aio
             current_loop = _aio.get_event_loop()
         except RuntimeError:
-            pass
+            import traceback; traceback.print_exc()
     runtime = _normalize_main_runtime(main_runtime)
     cache_key = _client_cache_key(
         provider,
@@ -3682,7 +3683,7 @@ def _get_task_timeout(task: str, default: float = _DEFAULT_AUX_TIMEOUT) -> float
         try:
             return float(raw)
         except (ValueError, TypeError):
-            pass
+            import traceback; traceback.print_exc()
     return default
 
 

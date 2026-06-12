@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
-from core.llm_client import LLMClient, ModelConfig, PROVIDERS
+from opcclaw.core.provider_registry import ModelConfig, PROVIDERS, test_provider_connection
 from modules.intelligence.ai_chat_styles import INPUT_STYLE, BTN_SETTINGS, BTN_PRIMARY
 
 
@@ -217,8 +217,7 @@ class LLMConfigDialog(QDialog):
         )
         self.lbl_status.setText("测试中...")
         try:
-            client = LLMClient(cfg)
-            result = client.test_connection()
+            result = test_provider_connection(cfg)
             if result.get("ok"):
                 models = result.get("models", [])
                 model_info = f"，可用模型: {', '.join(models[:8])}" if models else ""

@@ -16,11 +16,11 @@ from core.planet_painter import (
 
 # ═══════ 5颗系统管理子星球 ═══════
 SYSTEM_PLANETS = [
-    {"id": "base_info",     "name": "系统设置",   "style": "uranus",  "orbit": 130, "size": 30},
-    {"id": "activation",    "name": "激活码",     "style": "sun",     "orbit": 200, "size": 32},
-    {"id": "cloud_server",  "name": "云端同步",   "style": "neptune", "orbit": 270, "size": 34},
-    {"id": "system_logs",   "name": "系统日志",   "style": "pluto",   "orbit": 340, "size": 30},
-    {"id": "update",        "name": "更新检测",   "style": "moon",    "orbit": 410, "size": 30},
+    {"id": "base_info",     "name": "系统设置",   "style": "uranus",  "orbit": 130, "size": 51},
+    {"id": "activation",    "name": "激活码",     "style": "jupiter",     "orbit": 200, "size": 54},
+    {"id": "cloud_server",  "name": "云端同步",   "style": "neptune", "orbit": 270, "size": 58},
+    {"id": "system_logs",   "name": "系统日志",   "style": "pluto",   "orbit": 340, "size": 51},
+    {"id": "update",        "name": "更新检测",   "style": "moon",    "orbit": 410, "size": 51},
 ]
 
 
@@ -36,27 +36,46 @@ class SystemHubHUD(QWidget):
         self._center = QPointF(0, 0)
         self._hovered_planet = None
         self._angle = 0.0
+        self._anim_t = 0.0
+        self._orbits = []
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
-        self._timer.start(50)
+        self._timer.start(16)  # ~60fps (原 50ms)
+
+    def _compute_orbits(self):
+        w, h = self.width(), self.height()
+        if w <= 0 or h <= 0:
+            return
+        n = len(SYSTEM_PLANETS)
+        available_r = min(w, h) / 2 * 0.9
+        max_size = max(p["size"] for p in SYSTEM_PLANETS)
+        max_orbit = available_r - max_size / 2
+        if n > 3:
+            base_r = max_orbit / (1 + (n - 1) * 0.4)
+            self._orbits = [base_r * (1 + i * 0.4) for i in range(n)]
+        else:
+            self._orbits = [max_orbit * (i + 1) / n for i in range(n)]
 
     def _tick(self):
         self._angle = (self._angle + 0.3) % 360.0
+        self._anim_t += 0.05
         self.update()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self._center = QPointF(self.width() / 2, self.height() / 2)
+        self._compute_orbits()
 
     def _planet_positions(self):
         w2 = self._center
         positions = []
         n = len(SYSTEM_PLANETS)
         for i, p in enumerate(SYSTEM_PLANETS):
+            orbit = self._orbits[i] if i < len(self._orbits) else p.get("orbit", 130)
             offset_angle = i * (360.0 / n)
             rad = math.radians(self._angle + offset_angle)
-            x = w2.x() + p["orbit"] * math.cos(rad)
-            y = w2.y() + p["orbit"] * math.sin(rad)
+            x = w2.x() + orbit * math.cos(rad)
+            y = w2.y() + orbit * math.sin(rad)
             positions.append((p, QPointF(x, y)))
         return positions
 
@@ -64,23 +83,26 @@ class SystemHubHUD(QWidget):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         w2 = self._center
+        anim_t = self._anim_t
 
-        for sp in SYSTEM_PLANETS:
-            paint_orbit(p, w2, sp["orbit"])
+        for i, sp in enumerate(SYSTEM_PLANETS):
+            orbit = self._orbits[i] if i < len(self._orbits) else sp.get("orbit", 130)
+            paint_orbit(p, w2, orbit, anim_t=anim_t)
 
         for _, pos in self._planet_positions():
-            paint_energy_line(p, w2, pos)
+            paint_energy_line(p, w2, pos, anim_t=anim_t)
 
         for sp, pos in self._planet_positions():
             style = PLANET_STYLES.get(sp["style"], PLANET_STYLES["neptune"])
             hovered = (self._hovered_planet == sp["id"])
             paint_planet(p, pos, sp["size"], style,
-                         hovered=hovered, label=sp["name"], font_size=9)
+                         hovered=hovered, label=sp["name"], font_size=9,
+                         anim_t=anim_t)
 
         # 中央核心：太阳
-        core_r = 42
+        core_r = 71
         paint_planet(p, w2, core_r, PLANET_STYLES["sun"],
-                     label="SOLAR", font_size=10)
+                     label="SOLAR", font_size=10, anim_t=anim_t)
 
         p.end()
 

@@ -26,6 +26,7 @@ documented nowhere public — we copy them from the reference implementations.
 """
 
 from __future__ import annotations
+import traceback
 
 import json
 import logging
@@ -162,7 +163,7 @@ def _post_json(
         try:
             detail = exc.read().decode("utf-8", errors="replace")
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         # Special case: VPC-SC violation should be distinguishable
         if _is_vpc_sc_violation(detail):
             raise CodeAssistError(

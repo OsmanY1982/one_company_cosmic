@@ -28,7 +28,7 @@ def _load_admin_remembered():
                 data["password"] = base64.b64decode(data["password"]).decode()
             return data
     except Exception:
-        pass  # gracefully degrade on I/O failure
+        import traceback; traceback.print_exc()
     return {}
 
 def _save_admin_remembered(username, password):
@@ -37,14 +37,14 @@ def _save_admin_remembered(username, password):
         with open(REMEMBERED_ADMIN, "w") as f:
             json.dump(data, f)
     except Exception:
-        pass  # gracefully degrade on I/O failure
+        import traceback; traceback.print_exc()
 
 def _clear_admin_remembered():
     try:
         if os.path.exists(REMEMBERED_ADMIN):
             os.remove(REMEMBERED_ADMIN)
     except Exception:
-        pass  # gracefully degrade on I/O failure
+        import traceback; traceback.print_exc()
 
 
 # ── 配色 ──

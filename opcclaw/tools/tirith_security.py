@@ -33,6 +33,7 @@ import tempfile
 import threading
 import time
 import urllib.request
+import traceback
 
 from hermes_constants import get_hermes_home
 
@@ -163,7 +164,7 @@ def _mark_install_failed(reason: str = ""):
         with open(p, "w", encoding="utf-8") as f:
             f.write(reason)
     except OSError:
-        pass
+        import traceback; traceback.print_exc()
 
 
 def _clear_install_failed():
@@ -171,7 +172,7 @@ def _clear_install_failed():
     try:
         os.unlink(_failure_marker_path())
     except OSError:
-        pass
+        import traceback; traceback.print_exc()
 
 
 def _hermes_bin_dir() -> str:
@@ -374,7 +375,7 @@ def _install_tirith(*, log_failures: bool = True) -> tuple[str | None, str]:
                 try:
                     os.unlink(dest)
                 except OSError:
-                    pass
+                    import traceback; traceback.print_exc()
                 return None, "cross_device_copy_failed"
         os.chmod(dest, os.stat(dest).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 

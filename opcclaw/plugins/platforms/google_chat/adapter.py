@@ -36,6 +36,7 @@ CARD_CLICKED is ACK'd only in v1 (follow-up PR implements interactivity).
 """
 
 from __future__ import annotations
+import traceback
 
 import asyncio
 import json
@@ -913,19 +914,19 @@ class GoogleChatAdapter(BasePlatformAdapter):
             try:
                 await asyncio.wait_for(self._supervisor_task, timeout=5.0)
             except (asyncio.CancelledError, asyncio.TimeoutError):
-                pass
+                import traceback; traceback.print_exc()
         if self._streaming_pull_future is not None:
             try:
                 self._streaming_pull_future.cancel()
                 await asyncio.to_thread(self._streaming_pull_future.result, 10.0)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             self._streaming_pull_future = None
         if self._subscriber is not None:
             try:
                 await asyncio.to_thread(self._subscriber.close)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             self._subscriber = None
         self._mark_disconnected()
         logger.info("[GoogleChat] Disconnected")
@@ -1246,7 +1247,7 @@ class GoogleChatAdapter(BasePlatformAdapter):
             try:
                 message.ack()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
     async def _dispatch_message(self, msg: Dict[str, Any], envelope: Dict[str, Any]) -> None:
         """Translate a Chat message payload to a MessageEvent and hand off.
@@ -2276,7 +2277,7 @@ class GoogleChatAdapter(BasePlatformAdapter):
                     timeout=5.0,
                 )
             except (asyncio.TimeoutError, KeyError):
-                pass
+                import traceback; traceback.print_exc()
             return
 
         thread_id = self._resolve_thread_id(

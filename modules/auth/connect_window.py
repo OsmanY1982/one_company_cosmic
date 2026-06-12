@@ -15,7 +15,8 @@ from PyQt5.QtGui import (
 )
 
 from core.cosmic import CosmicBackground, SPACE_VOID
-from core.llm_client import ModelConfig, LLMClient, PROVIDERS
+from core.planet_painter import PLANET_STYLES, paint_planet
+from opcclaw.core.provider_registry import ModelConfig, PROVIDERS, discover_ollama_models, test_provider_connection
 
 
 # ═══════════ 颜色 ═══════════
@@ -89,8 +90,7 @@ class ConnectionTestThread(QThread):
         self.config = config
 
     def run(self):
-        client = LLMClient(self.config)
-        result = client.test_connection()
+        result = test_provider_connection(self.config)
         self.result_ready.emit(result)
 
 
@@ -102,13 +102,15 @@ class EngineGlow(QWidget):
         self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self._angle = 0
         self._glow_intensity = 0.3
+        self._t = 0.0
 
         self._anim = QTimer(self)
         self._anim.timeout.connect(self._tick)
-        self._anim.start(40)
+        self._anim.start(16)  # ~60fps (原 40ms)
 
     def _tick(self):
         self._angle += 0.8
+        self._t += 0.05
         self.update()
 
     def set_glow(self, v: float):
@@ -140,19 +142,10 @@ class EngineGlow(QWidget):
             painter.setBrush(Qt.NoBrush)
             painter.drawEllipse(QPointF(cx, cy), r, r)
 
-        # 中心反应堆辉光
-        core_r = 50 + self._glow_intensity * 30
-        for layer in range(5, 0, -1):
-            lr = core_r + layer * 16
-            alpha = int((30 + self._glow_intensity * 60) * (1 - layer * 0.15))
-            g = QRadialGradient(QPointF(cx, cy), lr)
-            c = QColor(0, 140 + int(self._glow_intensity * 100), 255)
-            g.setColorAt(0, QColor(c.red(), c.green(), c.blue(), alpha))
-            g.setColorAt(0.5, QColor(c.red(), c.green(), c.blue(), alpha // 3))
-            g.setColorAt(1, QColor(0, 0, 0, 0))
-            painter.setPen(Qt.NoPen)
-            painter.setBrush(QBrush(g))
-            painter.drawEllipse(QPointF(cx, cy), lr, lr)
+        # 中心反应堆 → 升级为真实纹理太阳核心
+        core_r = 45 + int(self._glow_intensity * 25)
+        paint_planet(painter, QPointF(cx, cy), core_r, PLANET_STYLES["sun"],
+                     label="REACTOR", font_size=9, anim_t=self._t)
 
         painter.end()
 
@@ -274,7 +267,7 @@ class ConnectWindow(QMainWindow):
         ml.setStyleSheet("color: #8899bb; font-size: 12px; background: transparent;")
         am_row.addWidget(ml)
         self._model_input = QLineEdit()
-        self._model_input.setPlaceholderText("qwen2.5:7b")
+        self._model_input.setPlaceholderText("qwen2.5:7b-64k")
         self._model_input.setStyleSheet(INPUT_STYLE)
         am_row.addWidget(self._model_input, 2)
 
@@ -395,7 +388,7 @@ class ConnectWindow(QMainWindow):
         self._refresh_btn.setVisible(info.get("needs_model_list", False))
 
         defaults = {
-            "ollama": "qwen2.5:7b",
+            "ollama": "qwen2.5:7b-64k",
             "openai": "gpt-4o-mini",
             "deepseek": "deepseek-chat",
             "claude": "claude-3-5-sonnet-20241022",
@@ -456,10 +449,9 @@ class ConnectWindow(QMainWindow):
     def _refresh_ollama_models(self):
         config = self._build_config()
         try:
-            client = LLMClient(config)
-            models = client.fetch_ollama_models()
+            models = discover_ollama_models()
             if models:
-                self._model_input.setText(models[0])
+                self._model_input.setText(models[0]["name"] if isinstance(models[0], dict) else str(models[0]))
                 self._status_label.setText(f"已扫描到 {len(models)} 个本地引擎")
                 self._status_label.setStyleSheet("color: #00cc88; font-size: 12px; background: transparent;")
             else:
@@ -509,10 +501,12 @@ class ConnectWindow(QMainWindow):
 
     def _save_to_opcclaw(self, config):
         """将 connect_window 选中的配置写入 opcclaw_config.json"""
-        import json, os
+        import json, os, re
+        # 剔除模型名末尾的大小标注，如 "qwen2.5:7b-64k (4.4GB)" → "qwen2.5:7b-64k"
+        config.model_name = re.sub(r'\s*\([\d.]+GB\)$', '', config.model_name.strip())
         data_dir = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-            "data"
+            "opcclaw", "data"
         )
         os.makedirs(data_dir, exist_ok=True)
         cfg_path = os.path.join(data_dir, "opcclaw_config.json")

@@ -39,7 +39,7 @@ def init_engine():
         name="Ollama",
         provider_type="openai_compatible",
         base_url="http://localhost:11434/v1",
-        model="qwen2.5:7b",
+        model="qwen2.5:7b-64k",
         temperature=0.7,
         max_tokens=4096
     )

@@ -1,6 +1,7 @@
 """Persistent multi-credential pool for same-provider failover."""
 
 from __future__ import annotations
+import traceback
 
 import logging
 import os
@@ -1189,7 +1190,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
             if not is_provider_explicitly_configured("anthropic"):
                 return changed, active_sources
         except ImportError:
-            pass
+            import traceback; traceback.print_exc()
 
         from agent.anthropic_adapter import read_claude_code_credentials, read_hermes_oauth_credentials
 
@@ -1573,7 +1574,7 @@ def _seed_custom_pool(pool_key: str, entries: List[PooledCredential]) -> Tuple[b
                             },
                         )
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     return changed, active_sources
 

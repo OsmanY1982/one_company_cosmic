@@ -16,12 +16,12 @@ from core.planet_painter import (
 
 # ═══════ 6颗星球配置 ═══════
 PLANETS = [
-    {"id": "ai_chat",       "name": "AI对话",   "style": "neptune", "orbit": 120, "size": 30},
-    {"id": "digital_emp",   "name": "数字员工", "style": "mars",    "orbit": 195, "size": 32},
-    {"id": "ai_assistant",  "name": "AI助手",   "style": "jupiter", "orbit": 270, "size": 36},
-    {"id": "tools",         "name": "工具箱",   "style": "saturn",  "orbit": 345, "size": 32},
-    {"id": "scan",          "name": "扫码工具", "style": "mercury", "orbit": 420, "size": 30},
-    {"id": "system_mgmt",   "name": "系统管理", "style": "earth",   "orbit": 495, "size": 34},
+    {"id": "ai_chat",       "name": "AI对话",   "style": "neptune", "orbit": 120, "size": 51},
+    {"id": "digital_emp",   "name": "数字员工", "style": "mars",    "orbit": 195, "size": 54},
+    {"id": "ai_assistant",  "name": "AI助手",   "style": "jupiter", "orbit": 270, "size": 61},
+    {"id": "tools",         "name": "工具箱",   "style": "saturn",  "orbit": 345, "size": 54},
+    {"id": "scan",          "name": "扫码工具", "style": "mercury", "orbit": 420, "size": 51},
+    {"id": "system_mgmt",   "name": "系统管理", "style": "venus",   "orbit": 495, "size": 58},
 ]
 
 # ═══════ 导航 HUD 层 ═══════
@@ -37,27 +37,46 @@ class NavigationHUD(QWidget):
         self._center = QPointF(0, 0)
         self._hovered_planet = None
         self._angle = 0.0
+        self._anim_t = 0.0
+        self._orbits = []
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
-        self._timer.start(50)
+        self._timer.start(16)  # ~60fps (原 50ms)
+
+    def _compute_orbits(self):
+        w, h = self.width(), self.height()
+        if w <= 0 or h <= 0:
+            return
+        n = len(PLANETS)
+        available_r = min(w, h) / 2 * 0.9
+        max_size = max(p["size"] for p in PLANETS)
+        max_orbit = available_r - max_size / 2
+        if n > 3:
+            base_r = max_orbit / (1 + (n - 1) * 0.4)
+            self._orbits = [base_r * (1 + i * 0.4) for i in range(n)]
+        else:
+            self._orbits = [max_orbit * (i + 1) / n for i in range(n)]
 
     def _tick(self):
         self._angle = (self._angle + 0.25) % 360.0
+        self._anim_t += 0.05
         self.update()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self._center = QPointF(self.width() / 2, self.height() / 2)
+        self._compute_orbits()
 
     def _planet_positions(self):
         w2 = self._center
         positions = []
         n = len(PLANETS)
         for i, p in enumerate(PLANETS):
+            orbit = self._orbits[i] if i < len(self._orbits) else p.get("orbit", 120)
             offset_angle = i * (360.0 / n)
             rad = math.radians(self._angle + offset_angle)
-            x = w2.x() + p["orbit"] * math.cos(rad)
-            y = w2.y() + p["orbit"] * math.sin(rad)
+            x = w2.x() + orbit * math.cos(rad)
+            y = w2.y() + orbit * math.sin(rad)
             positions.append((p, QPointF(x, y)))
         return positions
 
@@ -65,29 +84,33 @@ class NavigationHUD(QWidget):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         w2 = self._center
+        anim_t = self._anim_t
 
         # ── 轨道线 ──
-        for planet in PLANETS:
-            paint_orbit(p, w2, planet["orbit"])
+        for i, planet in enumerate(PLANETS):
+            orbit = self._orbits[i] if i < len(self._orbits) else planet.get("orbit", 120)
+            paint_orbit(p, w2, orbit, anim_t=anim_t)
 
         # ── 能量连接线 ──
         for _, pos in self._planet_positions():
-            paint_energy_line(p, w2, pos)
+            paint_energy_line(p, w2, pos, anim_t=anim_t)
 
         # ── 行星 ──
         for planet_data, pos in self._planet_positions():
             style = PLANET_STYLES.get(planet_data["style"], PLANET_STYLES["neptune"])
             hovered = (self._hovered_planet == planet_data["id"])
             paint_planet(p, pos, planet_data["size"], style,
-                         hovered=hovered, label=planet_data["name"], font_size=9)
+                         hovered=hovered, label=planet_data["name"],
+                         font_size=9, anim_t=anim_t)
 
         # ── 中央核心地球 ──
-        core_r = 48
+        core_r = 82
         paint_planet(p, w2, core_r, PLANET_STYLES["earth"],
-                     label="NEURAL", font_size=10)
-        # 额外一层蓝色科技辉光
-        tech_glow = QPen(QColor(100, 180, 255, 30))
-        tech_glow.setWidth(1)
+                     label="NEURAL", font_size=10, anim_t=anim_t)
+        # 额外一层蓝色科技辉光（呼吸脉冲）
+        pulse = 0.7 + 0.3 * abs(math.sin(anim_t * 2.2))
+        tech_glow = QPen(QColor(100, 180, 255, int(50 * pulse)))
+        tech_glow.setWidthF(1.5)
         p.setPen(tech_glow)
         p.setBrush(Qt.NoBrush)
         p.drawEllipse(w2, core_r + 8, core_r + 8)

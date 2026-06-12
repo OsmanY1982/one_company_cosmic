@@ -589,23 +589,23 @@ from core.planet_painter import PLANET_STYLES, paint_planet, paint_orbit, paint_
 # ═══════ 13颗星球配置（真实纹理） ═══════
 PLANETS = [
     # ── 内核环（核心交互）──
-    {"id": "opcclaw_chat",       "name": "OPCclaw对话",  "style": "earth",    "orbit": 110, "size": 32},
+    {"id": "opcclaw_chat",       "name": "OPCclaw对话",  "style": "earth",    "orbit": 110, "size": 54},
     # ── 内环（智能引擎）──
-    {"id": "super_intelligence",  "name": "超级智能",     "style": "jupiter",  "orbit": 160, "size": 26},
-    {"id": "enhanced_chat",       "name": "增强对话",     "style": "venus",    "orbit": 200, "size": 26},
+    {"id": "super_intelligence",  "name": "超级智能",     "style": "jupiter",  "orbit": 160, "size": 44},
+    {"id": "enhanced_chat",       "name": "增强对话",     "style": "venus",    "orbit": 200, "size": 44},
     # ── 中内环（知识与管理）──
-    {"id": "knowledge_base",      "name": "知识库",       "style": "mercury",  "orbit": 250, "size": 28},
-    {"id": "system_monitor",      "name": "系统监控",     "style": "saturn",   "orbit": 295, "size": 28},
-    {"id": "quick_actions",       "name": "快捷操作",     "style": "mars",     "orbit": 340, "size": 28},
+    {"id": "knowledge_base",      "name": "知识库",       "style": "mercury",  "orbit": 250, "size": 48},
+    {"id": "system_monitor",      "name": "系统监控",     "style": "saturn",   "orbit": 295, "size": 48},
+    {"id": "quick_actions",       "name": "快捷操作",     "style": "mars",     "orbit": 340, "size": 48},
     # ── 中外环（分析与洞察）──
-    {"id": "ai_dashboard",        "name": "AI仪表板",     "style": "neptune",  "orbit": 390, "size": 28},
-    {"id": "anomaly_detector",    "name": "异常检测",     "style": "sun",      "orbit": 435, "size": 26},
-    {"id": "recommendation_engine","name": "推荐引擎",    "style": "uranus",   "orbit": 480, "size": 26},
+    {"id": "ai_dashboard",        "name": "AI仪表板",     "style": "neptune",  "orbit": 390, "size": 48},
+    {"id": "anomaly_detector",    "name": "异常检测",     "style": "sun",      "orbit": 435, "size": 44},
+    {"id": "recommendation_engine","name": "推荐引擎",    "style": "uranus",   "orbit": 480, "size": 44},
     # ── 外环（工具与扩展）──
-    {"id": "data_visualization",  "name": "数据可视化",   "style": "pluto",    "orbit": 530, "size": 28},
-    {"id": "smart_workflow",      "name": "智能工作流",   "style": "moon",     "orbit": 580, "size": 26},
-    {"id": "business_ai",         "name": "业务AI",       "style": "venus",    "orbit": 630, "size": 26},
-    {"id": "voice_interface",     "name": "语音接口",     "style": "mercury",  "orbit": 680, "size": 26},
+    {"id": "data_visualization",  "name": "数据可视化",   "style": "pluto",    "orbit": 530, "size": 48},
+    {"id": "smart_workflow",      "name": "智能工作流",   "style": "moon",     "orbit": 580, "size": 44},
+    {"id": "business_ai",         "name": "业务AI",       "style": "exoplanet",    "orbit": 630, "size": 44},
+    {"id": "voice_interface",     "name": "语音接口",     "style": "crystal",  "orbit": 680, "size": 44},
 ]
 
 

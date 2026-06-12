@@ -11,6 +11,7 @@ import argparse
 from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
+import traceback
 
 # 文件类型映射
 FILE_TYPES = {
@@ -53,7 +54,7 @@ def organize_by_type(source_dir, dry_run=True, move=False):
                 if rel.parts[0] in FILE_TYPES or rel.parts[0] == 'others':
                     continue
             except (ValueError, IndexError):
-                pass
+                import traceback; traceback.print_exc()
             category = get_file_category(file_path)
             files_by_type[category].append(file_path)
     
@@ -118,7 +119,7 @@ def organize_by_date(source_dir, date_format='year/month', dry_run=True, move=Fa
                 if len(rel.parts) > 1 and re.match(r'^\d{4}$', rel.parts[0]):
                     continue
             except (ValueError, IndexError):
-                pass
+                import traceback; traceback.print_exc()
             try:
                 mtime = file_path.stat().st_mtime
                 date = datetime.fromtimestamp(mtime)

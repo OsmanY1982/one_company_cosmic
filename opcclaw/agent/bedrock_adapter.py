@@ -33,6 +33,7 @@ import os
 import re
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Tuple
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -253,7 +254,7 @@ def resolve_aws_auth_env_var(env: Optional[Dict[str, str]] = None) -> Optional[s
             if resolved and resolved.access_key:
                 return "iam-role"
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return None
 
 
@@ -284,7 +285,7 @@ def has_aws_credentials(env: Optional[Dict[str, str]] = None) -> bool:
             if resolved and resolved.access_key:
                 return True
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return False
 
 
@@ -315,7 +316,7 @@ def resolve_bedrock_region(env: Optional[Dict[str, str]] = None) -> str:
         if region:
             return region
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return "us-east-1"
 
 
@@ -335,7 +336,7 @@ def bedrock_model_ids_or_none() -> Optional[List[str]]:
         if discovered:
             return [m["id"] for m in discovered]
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
     return None
 
 

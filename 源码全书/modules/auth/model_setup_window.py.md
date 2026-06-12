@@ -1,6 +1,6 @@
 # `modules/auth/model_setup_window.py`
 
-> 路径：`modules/auth/model_setup_window.py` | 行数：714
+> 路径：`modules/auth/model_setup_window.py` | 行数：769
 
 
 ---
@@ -27,6 +27,12 @@ from PyQt5.QtGui import (
 
 from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPLE
 from core.deps import ensure
+
+try:
+    from modules.intelligence._model_manager import OllamaManager
+    _OLLAMA_AVAILABLE = True
+except ImportError:
+    _OLLAMA_AVAILABLE = False
 
 
 # ── 预设供应商模板（精简版，完整版在 opcclaw PROVIDER_TEMPLATES）──
@@ -525,11 +531,24 @@ class ModelSetupWindow(QMainWindow):
         lbl3.setStyleSheet(LABEL_STYLE)
         v.addWidget(lbl3)
 
+        model_row = QHBoxLayout()
+        model_row.setSpacing(8)
+
         self._local_model = QComboBox()
         self._local_model.setStyleSheet(COMBO_STYLE)
         self._local_model.setEditable(True)
         self._local_model.setMinimumHeight(42)
-        v.addWidget(self._local_model)
+        model_row.addWidget(self._local_model, stretch=1)
+
+        self._refresh_btn = QPushButton("刷新模型")
+        self._refresh_btn.setStyleSheet(BTN_SECONDARY)
+        self._refresh_btn.setFixedWidth(100)
+        self._refresh_btn.setFixedHeight(42)
+        self._refresh_btn.setCursor(Qt.PointingHandCursor)
+        self._refresh_btn.clicked.connect(self._refresh_local_models)
+        model_row.addWidget(self._refresh_btn)
+
+        v.addLayout(model_row)
 
         v.addStretch()
 
@@ -562,8 +581,47 @@ class ModelSetupWindow(QMainWindow):
             return
         self._local_url.setText(svc["base_url"])
         self._local_model.clear()
-        for m in svc.get("models", ["default"]):
-            self._local_model.addItem(m, m)
+
+        # Ollama：动态获取已安装模型列表；其他服务用预设列表
+        if sid == "ollama" and _OLLAMA_AVAILABLE:
+            self._refresh_local_models()
+        else:
+            for m in svc.get("models", ["default"]):
+                self._local_model.addItem(m, m)
+
+    def _refresh_local_models(self):
+        """动态从 Ollama 获取已安装的模型列表并填充下拉框"""
+        if not _OLLAMA_AVAILABLE:
+            return
+
+        self._local_model.clear()
+        self._refresh_btn.setEnabled(False)
+        self._refresh_btn.setText("获取中...")
+
+        try:
+            running = OllamaManager.is_running()
+            if not running and not OllamaManager.is_installed():
+                self._local_model.addItem("（Ollama 未安装）", "")
+                return
+            if not running:
+                self._local_model.addItem("（Ollama 未启动，请先启动服务）", "")
+                return
+            models = OllamaManager.list_models()
+            if not models:
+                self._local_model.addItem("（暂无模型，请先下载）", "")
+                return
+            for m in models:
+                name = m.get("name", "")
+                size = m.get("size", 0)
+                size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
+                self._local_model.addItem(f"{name}{size_str}", name)
+        except Exception as e:
+            print(f"[ModelSetup] 获取本地模型失败: {e}")
+            traceback.print_exc()
+            self._local_model.addItem("（获取失败，请检查网络/服务）", "")
+        finally:
+            self._refresh_btn.setEnabled(True)
+            self._refresh_btn.setText("刷新模型")
 
     # ════════════════ 操作 ════════════════
 
@@ -672,11 +730,8 @@ class ModelSetupWindow(QMainWindow):
     def _init_opcclaw_engine(self, config: dict):
         """尝试初始化 opcclaw 引擎，失败返回 None"""
         # 添加 opcclaw 到 path
-        # PROJECT_ROOT = .../one_company_cosmic，上一级是 .../一人公司/，opcclaw 在同级 one_company_desktop 下
-        opcclaw_root = os.path.join(
-            os.path.dirname(PROJECT_ROOT),
-            "one_company_desktop", "opcclaw"
-        )
+        # opcclaw 位于项目根目录下
+        opcclaw_root = os.path.join(PROJECT_ROOT, "opcclaw")
         if not os.path.isdir(opcclaw_root):
             print(f"[ModelSetup] opcclaw not found at {opcclaw_root}")
             return None

@@ -22,6 +22,7 @@ Agent workflow:
 """
 
 from __future__ import annotations  # allow PEP 604 `X | None` on Python 3.9+
+import traceback
 
 import argparse
 import json
@@ -100,7 +101,7 @@ def install_deps():
         print("Dependencies already installed.")
         return True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     print("Installing Google API dependencies...")
     try:

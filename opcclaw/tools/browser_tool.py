@@ -38,6 +38,7 @@ Environment Variables:
 
 Usage:
     from tools.browser_tool import browser_navigate, browser_snapshot, browser_click
+import traceback
 
     # Navigate to a page
     result = browser_navigate("https://example.com", task_id="task_123")
@@ -136,7 +137,7 @@ def _discover_homebrew_node_dirs() -> tuple[str, ...]:
                 if os.path.isdir(bin_dir):
                     dirs.append(bin_dir)
     except OSError:
-        pass
+        import traceback; traceback.print_exc()
     return tuple(dirs)
 
 
@@ -819,7 +820,7 @@ def _run_chrome_fallback_command(
                 try:
                     os.unlink(pth)
                 except OSError:
-                    pass
+                    import traceback; traceback.print_exc()
         return {"success": False, "error": f"Chrome fallback '{cmd}' failed"}
 
     try:
@@ -837,7 +838,7 @@ def _run_chrome_fallback_command(
         try:
             _run_tmp("close", [])
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         # Clean up socket directory
         import shutil as _shutil
         _shutil.rmtree(task_socket_dir, ignore_errors=True)
@@ -914,7 +915,7 @@ def _url_is_private(url: str) -> bool:
                 or ip in ipaddress.ip_network("100.64.0.0/10")
             )
         except ValueError:
-            pass
+            import traceback; traceback.print_exc()
         # Hostname — must resolve to confirm it's private (bare "localhost"
         # resolves to 127.0.0.1 via /etc/hosts).  Short-circuit on obvious
         # names to avoid a DNS hop.
@@ -1276,7 +1277,7 @@ def _reap_orphaned_browser_sessions():
                         daemon_pid, session_name)
             reaped += 1
         except (ProcessLookupError, PermissionError, OSError):
-            pass
+            import traceback; traceback.print_exc()
 
         # Clean up the socket directory
         shutil.rmtree(socket_dir, ignore_errors=True)
@@ -1890,7 +1891,7 @@ def _run_browser_command(
                                 "injecting --no-sandbox"
                             )
                 except OSError:
-                    pass
+                    import traceback; traceback.print_exc()
             if _needs_sandbox_bypass:
                 browser_env["AGENT_BROWSER_CHROME_FLAGS"] = (
                     "--no-sandbox --disable-dev-shm-usage"
@@ -1956,7 +1957,7 @@ def _run_browser_command(
                 try:
                     os.unlink(p)
                 except OSError:
-                    pass
+                    import traceback; traceback.print_exc()
 
             # Log stderr for diagnostics — use warning level on failure so it's visible
             if stderr and stderr.strip():
@@ -2698,7 +2699,7 @@ def _browser_eval(expression: str, task_id: Optional[str] = None) -> str:
         try:
             parsed = json.loads(raw_result)
         except (json.JSONDecodeError, ValueError):
-            pass  # keep as string
+            import traceback; traceback.print_exc()
 
     response = {
         "success": True,
@@ -2723,7 +2724,7 @@ def _camofox_eval(expression: str, task_id: Optional[str] = None) -> str:
             try:
                 parsed = json.loads(raw_result)
             except (json.JSONDecodeError, ValueError):
-                pass
+                import traceback; traceback.print_exc()
 
         return json.dumps({
             "success": True,
@@ -3025,7 +3026,7 @@ def browser_vision(question: str, annotate: bool = False, task_id: Optional[str]
             if _vtemp is not None:
                 vision_temperature = float(_vtemp)
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
 
         call_kwargs = {
             "task": "vision",
@@ -3274,7 +3275,7 @@ def cleanup_all_browsers() -> None:
         from tools.browser_supervisor import SUPERVISOR_REGISTRY  # type: ignore[import-not-found]
         SUPERVISOR_REGISTRY.stop_all()
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     # Reset cached lookups so they are re-evaluated on next use.
     global _cached_agent_browser, _agent_browser_resolved

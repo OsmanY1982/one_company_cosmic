@@ -15,6 +15,7 @@ OpenAI-compat layer entirely.
 """
 
 from __future__ import annotations
+import traceback
 
 import asyncio
 import base64
@@ -839,7 +840,7 @@ class GeminiNativeClient:
         try:
             self._http.close()
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
 
     def __enter__(self):
         return self

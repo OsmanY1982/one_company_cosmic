@@ -1165,7 +1165,7 @@ def _create_environment(env_type: str, image: str, cwd: str, timeout: int,
                 if "ephemeral_disk" in inspect.signature(modal.Sandbox.create).parameters:
                     sandbox_kwargs["ephemeral_disk"] = disk
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
         modal_state = _get_modal_backend_state(cc.get("modal_mode"))
 
@@ -1260,7 +1260,7 @@ def _cleanup_inactive_envs(lifetime_seconds: int = 300):
             if process_registry.has_active_processes(task_id):
                 _last_activity[task_id] = current_time  # Keep sandbox alive
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     # Phase 1: collect stale entries and remove them from tracking dicts while
     # holding the lock.  Do NOT call env.cleanup() inside the lock -- Modal and
@@ -1290,7 +1290,7 @@ def _cleanup_inactive_envs(lifetime_seconds: int = 300):
             from tools.file_tools import clear_file_ops_cache
             clear_file_ops_cache(task_id)
         except ImportError:
-            pass
+            import traceback; traceback.print_exc()
 
         try:
             if hasattr(env, 'cleanup'):
@@ -1344,7 +1344,7 @@ def _stop_cleanup_thread():
         try:
             _cleanup_thread.join(timeout=5)
         except (SystemExit, KeyboardInterrupt):
-            pass
+            import traceback; traceback.print_exc()
 
 
 def get_active_env(task_id: str):
@@ -1419,7 +1419,7 @@ def cleanup_vm(task_id: str):
         from tools.file_tools import clear_file_ops_cache
         clear_file_ops_cache(task_id)
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     if env is None:
         return
@@ -2062,7 +2062,7 @@ def terminal_tool(
                         output = hook_result
                         break
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             
             # Truncate output if too long, keeping both head and tail
             from tools.tool_output_limits import get_max_bytes

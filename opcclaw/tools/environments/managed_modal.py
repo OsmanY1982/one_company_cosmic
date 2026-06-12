@@ -1,6 +1,7 @@
 """Managed Modal environment backed by tool-gateway."""
 
 from __future__ import annotations
+import traceback
 
 import json
 import logging
@@ -274,7 +275,7 @@ class ManagedModalEnvironment(BaseModalExecutionEnvironment):
                     return f"{prefix}: {message}"
                 return f"{prefix}: {json.dumps(payload, ensure_ascii=False)}"
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
 
         text = response.text.strip()
         if text:

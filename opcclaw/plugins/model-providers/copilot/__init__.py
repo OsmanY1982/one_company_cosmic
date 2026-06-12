@@ -11,6 +11,7 @@ Key quirks for the chat_completions subset:
 """
 
 from typing import Any
+import traceback
 
 from providers import register_provider
 from providers.base import ProviderProfile
@@ -43,7 +44,7 @@ class CopilotProfile(ProviderProfile):
                 elif supported_efforts:
                     extra_body["reasoning"] = {"effort": "medium"}
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         return extra_body, {}
 
 

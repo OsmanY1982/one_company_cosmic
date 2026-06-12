@@ -13,9 +13,9 @@ from PyQt5.QtWidgets import (
     QLabel, QPushButton, QTextEdit, QTableWidget, 
     QTableWidgetItem, QStackedWidget, QGroupBox, QGridLayout,
     QMessageBox, QHeaderView, QProgressBar, QComboBox,
-    QLineEdit, QSplitter, QFrame
+    QLineEdit, QSplitter, QFrame, QGraphicsOpacityEffect
 )
-from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QEasingCurve, QPropertyAnimation
 from PyQt5.QtGui import QFont, QColor
 
 import sqlite3
@@ -118,12 +118,34 @@ class AICenterWindow(QMainWindow):
         # 默认选中第一个
         self._tab_btns[0].setChecked(True)
         self._tab_stack.setCurrentIndex(0)
+
+        # ── 标签切换淡入动画 ──
+        self._tab_fade = QGraphicsOpacityEffect(self._tab_stack)
+        self._tab_fade.setOpacity(1.0)
+        self._tab_stack.setGraphicsEffect(self._tab_fade)
+        self._fade_in_anim = QPropertyAnimation(self._tab_fade, b"opacity")
+        self._fade_in_anim.setDuration(220)
+        self._fade_in_anim.setEasingCurve(QEasingCurve.InOutCubic)
     
     def _switch_tab(self, idx):
-        """切换轨道式标签页"""
-        self._tab_stack.setCurrentIndex(idx)
-        for i, btn in enumerate(self._tab_btns):
-            btn.setChecked(i == idx)
+        """切换轨道式标签页（带淡入过渡）"""
+        old_idx = self._tab_stack.currentIndex()
+        if old_idx == idx:
+            return
+        # 淡出 → 切换 → 淡入
+        self._fade_in_anim.stop()
+        self._fade_in_anim.setStartValue(1.0)
+        self._fade_in_anim.setEndValue(0.0)
+        def _on_faded_out():
+            self._fade_in_anim.finished.disconnect(_on_faded_out)
+            self._tab_stack.setCurrentIndex(idx)
+            for i, btn in enumerate(self._tab_btns):
+                btn.setChecked(i == idx)
+            self._fade_in_anim.setStartValue(0.0)
+            self._fade_in_anim.setEndValue(1.0)
+            self._fade_in_anim.start()
+        self._fade_in_anim.finished.connect(_on_faded_out)
+        self._fade_in_anim.start()
     
     def _create_overview_tab(self):
         """创建智能总览标签页"""

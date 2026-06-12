@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """环境检查模块。"""
 from __future__ import annotations
+import traceback
 
 import os
 import platform
@@ -37,7 +38,7 @@ def _try_restore_app_key() -> dict | None:
                             os.environ["SCRM_APP_KEY"] = value
                             return {"source": "registry", "app_key": value}
         except OSError:
-            pass
+            import traceback; traceback.print_exc()
         return None
 
     # Unix/macOS：从 shell profile 文件中提取

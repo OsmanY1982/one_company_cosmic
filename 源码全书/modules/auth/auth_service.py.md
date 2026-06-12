@@ -74,7 +74,7 @@ def _load_users() -> dict:
             os.rename(USER_DB, corrupted)
             print(f"[auth] users.json 损坏，已备份到 {corrupted}：{e}")
         except Exception:
-            pass  # gracefully degrade on I/O failure
+            import traceback; traceback.print_exc()
         users = {
             ADMIN_USERNAME: {
                 "password": ADMIN_PASSWORD,

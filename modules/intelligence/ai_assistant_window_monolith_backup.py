@@ -20,6 +20,7 @@ import json
 import urllib.request
 import urllib.error
 from typing import Optional, Dict, Any
+import traceback
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
@@ -534,7 +535,7 @@ class OllamaManager:
                         if progress_callback:
                             progress_callback(data)
                     except Exception:
-                        pass
+                        import traceback; traceback.print_exc()
             return True
         except Exception as e:
             print(f"[OllamaManager] 下载模型失败: {e}")
@@ -2044,7 +2045,7 @@ class NavigationHUD(QWidget):
         self._angle = 0.0
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
-        self._timer.start(50)
+        self._timer.start(16)  # ~60fps (原 50ms)
 
     def _tick(self):
         self._angle = (self._angle + 0.25) % 360.0

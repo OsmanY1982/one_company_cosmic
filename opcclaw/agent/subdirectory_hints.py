@@ -18,6 +18,7 @@ import os
 import shlex
 from pathlib import Path
 from typing import Dict, Any, Optional, Set
+import traceback
 
 from agent.prompt_builder import _scan_context_content
 
@@ -136,7 +137,7 @@ class SubdirectoryHintTracker:
                     break  # filesystem root
                 p = parent
         except (OSError, ValueError):
-            pass
+            import traceback; traceback.print_exc()
 
     def _extract_paths_from_command(self, cmd: str, candidates: Set[Path]):
         """Extract path-like tokens from a shell command string."""
@@ -200,7 +201,7 @@ class SubdirectoryHintTracker:
                         rel_path = str(hint_path.relative_to(Path.home()))
                         rel_path = "~/" + rel_path
                     except ValueError:
-                        pass  # keep absolute
+                        import traceback; traceback.print_exc()
                 found_hints.append((rel_path, content))
                 # First match wins per directory (like startup loading)
                 break

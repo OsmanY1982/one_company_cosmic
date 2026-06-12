@@ -13,6 +13,7 @@ import subprocess
 import sys
 import uuid
 from typing import Optional
+import traceback
 
 from tools.environments.base import BaseEnvironment, _popen_bash
 from tools.environments.local import _HERMES_PROVIDER_ENV_BLOCKLIST
@@ -534,7 +535,7 @@ class DockerEnvironment(BaseEnvironment):
             from tools.env_passthrough import get_all_passthrough
             passthrough_keys = set(get_all_passthrough())
         except Exception:
-            pass
+            import traceback; traceback.print_exc()
         # Explicit docker_forward_env entries are an intentional opt-in and must
         # win over the generic Hermes secret blocklist. Only implicit passthrough
         # keys are filtered.
@@ -636,7 +637,7 @@ class DockerEnvironment(BaseEnvironment):
                         shell=True,
                     )
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
             self._container_id = None
 
         if not self._persistent:

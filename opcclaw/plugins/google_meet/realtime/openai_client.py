@@ -12,6 +12,7 @@ is missing.
 """
 
 from __future__ import annotations
+import traceback
 
 import base64
 import json
@@ -108,7 +109,7 @@ class RealtimeSession:
             try:
                 self._ws.close()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
             self._ws = None
 
     # ── speaking ──────────────────────────────────────────────────────────

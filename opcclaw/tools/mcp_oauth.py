@@ -48,6 +48,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -144,7 +145,7 @@ def _can_open_browser() -> bool:
         if os.uname().sysname == "Darwin":
             return True
     except AttributeError:
-        pass
+        import traceback; traceback.print_exc()
     # Linux/other posix: need DISPLAY or WAYLAND_DISPLAY
     if os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"):
         return True
@@ -178,7 +179,7 @@ def _write_json(path: Path, data: dict) -> None:
     try:
         os.chmod(path.parent, 0o700)
     except OSError:
-        pass
+        import traceback; traceback.print_exc()
     # Per-process random suffix avoids collisions between concurrent
     # writers and stale leftovers from a prior crashed write.
     tmp = path.with_suffix(f".tmp.{os.getpid()}.{secrets.token_hex(4)}")
@@ -197,7 +198,7 @@ def _write_json(path: Path, data: dict) -> None:
         try:
             tmp.unlink(missing_ok=True)
         except OSError:
-            pass
+            import traceback; traceback.print_exc()
         raise
 
 
@@ -262,7 +263,7 @@ class HermesTokenStorage:
                     implied_expiry = file_mtime + int(data["expires_in"])
                     data["expires_in"] = int(max(implied_expiry - time.time(), 0))
                 except (TypeError, ValueError):
-                    pass
+                    import traceback; traceback.print_exc()
         try:
             return OAuthToken.model_validate(data)
         except (ValueError, TypeError, KeyError) as exc:
@@ -285,7 +286,7 @@ class HermesTokenStorage:
             except (TypeError, ValueError):
                 # Mock tokens or unusual shapes: skip the expires_at write
                 # rather than fail persistence.
-                pass
+                import traceback; traceback.print_exc()
         _write_json(self._tokens_path(), payload)
         logger.debug("OAuth tokens saved for %s", self._server_name)
 

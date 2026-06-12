@@ -12,6 +12,7 @@ trust-boundary decisions in their own modules.
 """
 
 from __future__ import annotations
+import traceback
 
 import shlex
 import time
@@ -116,7 +117,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 try:
                     self._cancel_modal_exec(start.handle)
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
                 return self._result(self._interrupt_output, 130)
 
             try:
@@ -131,7 +132,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 try:
                     self._cancel_modal_exec(start.handle)
                 except Exception:
-                    pass
+                    import traceback; traceback.print_exc()
                 return self._timeout_result_for_modal(prepared.timeout)
 
             # Periodic activity touch so the gateway knows we're alive
@@ -139,7 +140,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 from tools.environments.base import touch_activity_if_due
                 touch_activity_if_due(_activity_state, "modal command running")
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
             time.sleep(self._poll_interval_seconds)
 

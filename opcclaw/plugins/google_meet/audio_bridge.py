@@ -18,6 +18,7 @@ Windows: not supported in v2.
 """
 
 from __future__ import annotations
+import traceback
 
 import platform
 import subprocess
@@ -89,7 +90,7 @@ class AudioBridge:
                     )
                 except Exception:
                     # Best-effort teardown — never raise from here.
-                    pass
+                    import traceback; traceback.print_exc()
             self._module_ids = []
         self._torn_down = True
 

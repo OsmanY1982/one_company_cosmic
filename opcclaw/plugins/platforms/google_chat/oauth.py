@@ -55,6 +55,7 @@ Token storage layout
 """
 
 from __future__ import annotations
+import traceback
 
 import argparse
 import json
@@ -342,7 +343,7 @@ def install_deps() -> bool:
         print("Dependencies already installed.")
         return True
     except ImportError:
-        pass
+        import traceback; traceback.print_exc()
 
     print("Installing Google Chat OAuth dependencies...")
     try:

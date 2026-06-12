@@ -7,6 +7,7 @@ back into the minimal shape Hermes expects from an OpenAI client.
 """
 
 from __future__ import annotations
+import traceback
 
 import json
 import os
@@ -56,7 +57,7 @@ def _resolve_home_dir() -> str:
         if profile_home:
             return profile_home
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     home = os.environ.get("HOME", "").strip()
     if home:
@@ -73,7 +74,7 @@ def _resolve_home_dir() -> str:
         if resolved:
             return resolved
     except Exception:
-        pass
+        import traceback; traceback.print_exc()
 
     # Last resort: /tmp (writable on any POSIX system). Avoids crashing the
     # subprocess with no HOME; callers can set HERMES_HOME explicitly if they
@@ -351,7 +352,7 @@ class CopilotACPClient:
             try:
                 proc.kill()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
     def _create_chat_completion(
         self,

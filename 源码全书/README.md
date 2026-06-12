@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-12 00:26
-> 共 111 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-12 02:51
+> 共 543 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -134,6 +134,794 @@
 │   │   ├── system_window.py
 │   │   └── update_dialog.py
 │   └── __init__.py
+├── opcclaw/
+│   ├── agent/
+│   │   ├── transports/
+│   │   │   ├── __init__.py
+│   │   │   ├── anthropic.py
+│   │   │   ├── base.py
+│   │   │   ├── bedrock.py
+│   │   │   ├── chat_completions.py
+│   │   │   ├── codex.py
+│   │   │   └── types.py
+│   │   ├── __init__.py
+│   │   ├── account_usage.py
+│   │   ├── anthropic_adapter.py
+│   │   ├── auxiliary_client.py
+│   │   ├── bedrock_adapter.py
+│   │   ├── codex_responses_adapter.py
+│   │   ├── context_compressor.py
+│   │   ├── context_engine.py
+│   │   ├── context_references.py
+│   │   ├── copilot_acp_client.py
+│   │   ├── credential_pool.py
+│   │   ├── credential_sources.py
+│   │   ├── curator.py
+│   │   ├── curator_backup.py
+│   │   ├── display.py
+│   │   ├── error_classifier.py
+│   │   ├── file_safety.py
+│   │   ├── gemini_cloudcode_adapter.py
+│   │   ├── gemini_native_adapter.py
+│   │   ├── gemini_schema.py
+│   │   ├── google_code_assist.py
+│   │   ├── google_oauth.py
+│   │   ├── i18n.py
+│   │   ├── image_gen_provider.py
+│   │   ├── image_gen_registry.py
+│   │   ├── image_routing.py
+│   │   ├── insights.py
+│   │   ├── lmstudio_reasoning.py
+│   │   ├── manual_compression_feedback.py
+│   │   ├── memory_manager.py
+│   │   ├── memory_provider.py
+│   │   ├── model_metadata.py
+│   │   ├── models_dev.py
+│   │   ├── moonshot_schema.py
+│   │   ├── nous_rate_guard.py
+│   │   ├── onboarding.py
+│   │   ├── prompt_builder.py
+│   │   ├── prompt_caching.py
+│   │   ├── rate_limit_tracker.py
+│   │   ├── redact.py
+│   │   ├── retry_utils.py
+│   │   ├── shell_hooks.py
+│   │   ├── skill_commands.py
+│   │   ├── skill_preprocessing.py
+│   │   ├── skill_utils.py
+│   │   ├── subdirectory_hints.py
+│   │   ├── think_scrubber.py
+│   │   ├── title_generator.py
+│   │   ├── tool_guardrails.py
+│   │   ├── trajectory.py
+│   │   └── usage_pricing.py
+│   ├── ai_tools/
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── agent_delegate.py
+│   │   ├── agent_loop.py
+│   │   ├── chat_engine.py
+│   │   ├── clarify_system.py
+│   │   ├── cloud_sync.py
+│   │   ├── code_executor.py
+│   │   ├── code_intel.py
+│   │   ├── collaboration_client.py
+│   │   ├── config_validator.py
+│   │   ├── core_engine.py
+│   │   ├── enhanced_core.py
+│   │   ├── enhanced_hermes_bridge.py
+│   │   ├── git_ops.py
+│   │   ├── llm_backend.py
+│   │   ├── memory.py
+│   │   ├── memory_store.py
+│   │   ├── model_status.py
+│   │   ├── model_status_manager.py
+│   │   ├── multi_model.py
+│   │   ├── multi_model_chat_engine.py
+│   │   ├── opcclaw_logging.py
+│   │   ├── patch_engine.py
+│   │   ├── performance_monitor.py
+│   │   ├── process_manager.py
+│   │   ├── rag_context.py
+│   │   ├── secure_storage.py
+│   │   ├── semantic_search.py
+│   │   ├── session_search.py
+│   │   ├── skill_loader.py
+│   │   ├── skill_system.py
+│   │   ├── smart_memory.py
+│   │   ├── smart_memory_adapter.py
+│   │   ├── supabase_client.py
+│   │   ├── super_intelligence.py
+│   │   ├── sync_bridge.py
+│   │   ├── task_scheduler.py
+│   │   ├── test_phase2.py
+│   │   ├── todo_system.py
+│   │   ├── token_optimizer.py
+│   │   ├── token_saver.py
+│   │   ├── tool_registry.py
+│   │   ├── web_search.py
+│   │   └── workspace_indexer.py
+│   ├── data/
+│   │   ├── opcclaw/
+│   │   │   ├── exports/
+│   │   │   ├── memory/
+│   │   │   ├── metrics/
+│   │   │   ├── sessions/
+│   │   │   ├── smart_memory/
+│   │   │   │   ├── preferences/
+│   │   │   │   ├── session_state/
+│   │   │   │   ├── snapshots/
+│   │   ├── process_logs/
+│   │   ├── __init__.py
+│   ├── hermes_cli/
+│   │   ├── __init__.py
+│   │   └── config.py
+│   ├── logs/
+│   ├── modules/
+│   │   ├── __init__.py
+│   │   ├── _shared.py
+│   │   ├── animations.py
+│   │   ├── chat_window.py
+│   │   ├── chat_window_core.py
+│   │   ├── chat_window_monolith_backup.py
+│   │   ├── chat_worker.py
+│   │   ├── cloud_model_panel.py
+│   │   ├── config_manager.py
+│   │   ├── general_settings_panel.py
+│   │   ├── git_panel.py
+│   │   ├── local_model_panel.py
+│   │   ├── login_dialog.py
+│   │   ├── message_bubble.py
+│   │   ├── sidebar.py
+│   │   ├── sidebar_panel.py
+│   │   ├── skills_panel.py
+│   │   ├── styled_widgets.py
+│   │   ├── voice_manager.py
+│   │   └── widgets.py
+│   ├── plugins/
+│   │   ├── code_executor/
+│   │   │   └── __init__.py
+│   │   ├── context_engine/
+│   │   │   └── __init__.py
+│   │   ├── disk-cleanup/
+│   │   │   ├── __init__.py
+│   │   │   ├── disk_cleanup.py
+│   │   ├── example-dashboard/
+│   │   │   └── dashboard/
+│   │   │       └── plugin_api.py
+│   │   ├── file_handler/
+│   │   │   └── __init__.py
+│   │   ├── google_meet/
+│   │   │   ├── node/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── cli.py
+│   │   │   │   ├── client.py
+│   │   │   │   ├── protocol.py
+│   │   │   │   ├── registry.py
+│   │   │   │   └── server.py
+│   │   │   ├── realtime/
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── openai_client.py
+│   │   │   ├── __init__.py
+│   │   │   ├── audio_bridge.py
+│   │   │   ├── cli.py
+│   │   │   ├── meet_bot.py
+│   │   │   ├── process_manager.py
+│   │   │   └── tools.py
+│   │   ├── hermes-achievements/
+│   │   │   ├── dashboard/
+│   │   │   │   └── plugin_api.py
+│   │   │   ├── tests/
+│   │   │   │   └── test_achievement_engine.py
+│   │   ├── image_gen/
+│   │   │   ├── openai/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── openai-codex/
+│   │   │   │   ├── __init__.py
+│   │   │   └── xai/
+│   │   │       ├── __init__.py
+│   │   ├── image_vision/
+│   │   │   └── __init__.py
+│   │   ├── kanban/
+│   │   │   ├── dashboard/
+│   │   │   │   └── plugin_api.py
+│   │   │   └── systemd/
+│   │   ├── memory/
+│   │   │   ├── byterover/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── hindsight/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── holographic/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── holographic.py
+│   │   │   │   ├── retrieval.py
+│   │   │   │   └── store.py
+│   │   │   ├── honcho/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── cli.py
+│   │   │   │   ├── client.py
+│   │   │   │   └── session.py
+│   │   │   ├── mem0/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── openviking/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── retaindb/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── supermemory/
+│   │   │   │   ├── __init__.py
+│   │   │   └── __init__.py
+│   │   ├── model-providers/
+│   │   │   ├── ai-gateway/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── alibaba/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── alibaba-coding-plan/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── anthropic/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── arcee/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── azure-foundry/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── bedrock/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── copilot/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── copilot-acp/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── custom/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── deepseek/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── gemini/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── gmi/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── huggingface/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── kilocode/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── kimi-coding/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── minimax/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── nous/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── nvidia/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── ollama-cloud/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── openai-codex/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── opencode-zen/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── openrouter/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── qwen-oauth/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── stepfun/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── xai/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── xiaomi/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── zai/
+│   │   │   │   ├── __init__.py
+│   │   ├── multi_model/
+│   │   │   └── __init__.py
+│   │   ├── observability/
+│   │   │   └── langfuse/
+│   │   │       ├── __init__.py
+│   │   ├── platforms/
+│   │   │   ├── google_chat/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── adapter.py
+│   │   │   │   ├── oauth.py
+│   │   │   ├── irc/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── adapter.py
+│   │   │   └── teams/
+│   │   │       ├── __init__.py
+│   │   │       ├── adapter.py
+│   │   ├── spotify/
+│   │   │   ├── __init__.py
+│   │   │   ├── client.py
+│   │   │   └── tools.py
+│   │   ├── strike-freedom-cockpit/
+│   │   │   ├── dashboard/
+│   │   │   ├── theme/
+│   │   ├── teams_pipeline/
+│   │   │   ├── __init__.py
+│   │   │   ├── cli.py
+│   │   │   ├── meetings.py
+│   │   │   ├── models.py
+│   │   │   ├── pipeline.py
+│   │   │   ├── runtime.py
+│   │   │   ├── store.py
+│   │   │   └── subscriptions.py
+│   │   ├── web_search/
+│   │   │   └── __init__.py
+│   │   ├── __init__.py
+│   ├── providers/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   ├── skills/
+│   │   ├── apple/
+│   │   │   ├── apple-notes/
+│   │   │   ├── apple-reminders/
+│   │   │   ├── findmy/
+│   │   │   ├── imessage/
+│   │   │   ├── macos-computer-use/
+│   │   ├── autonomous-ai-agents/
+│   │   │   ├── claude-code/
+│   │   │   ├── codex/
+│   │   │   ├── hermes-agent/
+│   │   │   ├── opencode/
+│   │   ├── check-code-changes/
+│   │   ├── creative/
+│   │   │   ├── architecture-diagram/
+│   │   │   │   ├── templates/
+│   │   │   ├── ascii-art/
+│   │   │   ├── ascii-video/
+│   │   │   │   ├── references/
+│   │   │   ├── baoyu-comic/
+│   │   │   │   ├── references/
+│   │   │   │   │   ├── art-styles/
+│   │   │   │   │   ├── layouts/
+│   │   │   │   │   ├── presets/
+│   │   │   │   │   ├── tones/
+│   │   │   ├── baoyu-infographic/
+│   │   │   │   ├── references/
+│   │   │   │   │   ├── layouts/
+│   │   │   │   │   ├── styles/
+│   │   │   ├── claude-design/
+│   │   │   ├── comfyui/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   ├── _common.py
+│   │   │   │   │   ├── auto_fix_deps.py
+│   │   │   │   │   ├── check_deps.py
+│   │   │   │   │   ├── extract_schema.py
+│   │   │   │   │   ├── fetch_logs.py
+│   │   │   │   │   ├── hardware_check.py
+│   │   │   │   │   ├── health_check.py
+│   │   │   │   │   ├── run_batch.py
+│   │   │   │   │   ├── run_workflow.py
+│   │   │   │   │   └── ws_monitor.py
+│   │   │   │   ├── tests/
+│   │   │   │   │   ├── conftest.py
+│   │   │   │   │   ├── test_check_deps.py
+│   │   │   │   │   ├── test_cloud_integration.py
+│   │   │   │   │   ├── test_common.py
+│   │   │   │   │   ├── test_extract_schema.py
+│   │   │   │   │   └── test_run_workflow.py
+│   │   │   │   ├── workflows/
+│   │   │   ├── creative-ideation/
+│   │   │   │   ├── references/
+│   │   │   ├── design-md/
+│   │   │   │   ├── templates/
+│   │   │   ├── excalidraw/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── upload.py
+│   │   │   ├── humanizer/
+│   │   │   ├── manim-video/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   ├── p5js/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   ├── templates/
+│   │   │   ├── pixel-art/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── palettes.py
+│   │   │   │   │   ├── pixel_art.py
+│   │   │   │   │   └── pixel_art_video.py
+│   │   │   ├── popular-web-designs/
+│   │   │   │   ├── templates/
+│   │   │   ├── pretext/
+│   │   │   │   ├── references/
+│   │   │   │   ├── templates/
+│   │   │   ├── sketch/
+│   │   │   ├── songwriting-and-ai-music/
+│   │   │   ├── touchdesigner-mcp/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   ├── data-science/
+│   │   │   ├── jupyter-live-kernel/
+│   │   ├── devops/
+│   │   │   ├── kanban-orchestrator/
+│   │   │   ├── kanban-worker/
+│   │   │   └── webhook-subscriptions/
+│   │   ├── diagramming/
+│   │   ├── dogfood/
+│   │   │   ├── references/
+│   │   │   ├── templates/
+│   │   ├── domain/
+│   │   ├── email/
+│   │   │   ├── himalaya/
+│   │   │   │   ├── references/
+│   │   ├── flybook_bot/
+│   │   │   ├── config.py
+│   │   │   ├── flybook_skill.py
+│   │   │   ├── server.py
+│   │   │   ├── server_minimal.py
+│   │   │   ├── server_simple.py
+│   │   │   └── test_server.py
+│   │   ├── gaming/
+│   │   │   ├── minecraft-modpack-server/
+│   │   │   ├── pokemon-player/
+│   │   ├── gifs/
+│   │   ├── git-commit/
+│   │   ├── github/
+│   │   │   ├── codebase-inspection/
+│   │   │   ├── github-auth/
+│   │   │   │   ├── scripts/
+│   │   │   ├── github-code-review/
+│   │   │   │   ├── references/
+│   │   │   ├── github-issues/
+│   │   │   │   ├── templates/
+│   │   │   ├── github-pr-workflow/
+│   │   │   │   ├── references/
+│   │   │   │   ├── templates/
+│   │   │   ├── github-repo-management/
+│   │   │   │   ├── references/
+│   │   ├── index-cache/
+│   │   ├── inference-sh/
+│   │   ├── mcp/
+│   │   │   ├── native-mcp/
+│   │   ├── media/
+│   │   │   ├── gif-search/
+│   │   │   ├── heartmula/
+│   │   │   ├── songsee/
+│   │   │   ├── spotify/
+│   │   │   ├── youtube-content/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── fetch_transcript.py
+│   │   ├── mlops/
+│   │   │   ├── evaluation/
+│   │   │   │   ├── lm-evaluation-harness/
+│   │   │   │   │   ├── references/
+│   │   │   │   ├── weights-and-biases/
+│   │   │   │   │   ├── references/
+│   │   │   ├── huggingface-hub/
+│   │   │   ├── inference/
+│   │   │   │   ├── llama-cpp/
+│   │   │   │   │   ├── references/
+│   │   │   │   ├── obliteratus/
+│   │   │   │   │   ├── references/
+│   │   │   │   │   ├── templates/
+│   │   │   │   ├── vllm/
+│   │   │   │   │   ├── references/
+│   │   │   ├── models/
+│   │   │   │   ├── audiocraft/
+│   │   │   │   │   ├── references/
+│   │   │   │   ├── segment-anything/
+│   │   │   │   │   ├── references/
+│   │   │   ├── research/
+│   │   │   │   ├── dspy/
+│   │   │   │   │   ├── references/
+│   │   │   ├── training/
+│   │   │   ├── vector-databases/
+│   │   ├── model-switch-automation/
+│   │   ├── note-taking/
+│   │   │   ├── obsidian/
+│   │   ├── productivity/
+│   │   │   ├── airtable/
+│   │   │   ├── google-workspace/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   ├── _hermes_home.py
+│   │   │   │   │   ├── google_api.py
+│   │   │   │   │   ├── gws_bridge.py
+│   │   │   │   │   └── setup.py
+│   │   │   ├── linear/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── linear_api.py
+│   │   │   ├── maps/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── maps_client.py
+│   │   │   ├── nano-pdf/
+│   │   │   ├── notion/
+│   │   │   │   ├── references/
+│   │   │   ├── ocr-and-documents/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   ├── extract_marker.py
+│   │   │   │   │   └── extract_pymupdf.py
+│   │   │   ├── powerpoint/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   ├── office/
+│   │   │   │   │   │   ├── helpers/
+│   │   │   │   │   │   │   ├── __init__.py
+│   │   │   │   │   │   │   ├── merge_runs.py
+│   │   │   │   │   │   │   └── simplify_redlines.py
+│   │   │   │   │   │   ├── schemas/
+│   │   │   │   │   │   │   ├── ecma/
+│   │   │   │   │   │   │   │   └── fourth-edition/
+│   │   │   │   │   │   │   ├── ISO-IEC29500-4_2016/
+│   │   │   │   │   │   │   ├── mce/
+│   │   │   │   │   │   │   └── microsoft/
+│   │   │   │   │   │   └── pack.py
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── add_slide.py
+│   │   │   │   │   └── clean.py
+│   │   │   ├── teams-meeting-pipeline/
+│   │   ├── qclaw_skills/
+│   │   │   ├── aippt/
+│   │   │   │   ├── scripts/
+│   │   │   ├── baidu-search/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── search.py
+│   │   │   ├── file-manager/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   ├── batch_rename.py
+│   │   │   │   │   ├── deduplicate.py
+│   │   │   │   │   ├── organize.py
+│   │   │   │   │   ├── sync.py
+│   │   │   │   │   └── utils.py
+│   │   │   ├── git-workflow/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   ├── kdocs/
+│   │   │   │   ├── references/
+│   │   │   │   │   ├── aippt/
+│   │   │   │   │   ├── dbsheet/
+│   │   │   │   │   ├── drive/
+│   │   │   │   │   ├── kwiki/
+│   │   │   │   │   ├── otl/
+│   │   │   │   │   ├── pdf/
+│   │   │   │   │   ├── sheet/
+│   │   │   │   │   ├── workflows/
+│   │   │   │   │   ├── wpp/
+│   │   │   │   │   ├── wps/
+│   │   │   │   ├── scripts/
+│   │   │   ├── planning-with-files/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── session-catchup.py
+│   │   │   │   ├── templates/
+│   │   │   ├── video-image-file-analysis/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   ├── vision.py
+│   │   │   │   │   └── vision_manager.py
+│   │   │   ├── web-browsing/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── search_web.py
+│   │   │   ├── web-search/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── search.py
+│   │   │   ├── webscraper-v2/
+│   │   │   │   └── webscraper.py
+│   │   │   └── wecom-weisheng-scrm/
+│   │   │       ├── references/
+│   │   │       ├── scripts/
+│   │   │       │   ├── api_client.py
+│   │   │       │   ├── chat_mode.py
+│   │   │       │   ├── claw_client.py
+│   │   │       │   ├── environment.py
+│   │   │       │   ├── file_utils.py
+│   │   │       │   ├── get_access_token.py
+│   │   │       │   ├── identity_manager.py
+│   │   │       │   ├── raw_fetcher.py
+│   │   │       │   ├── scrm.py
+│   │   │       │   └── utils.py
+│   │   ├── red-teaming/
+│   │   │   └── godmode/
+│   │   │       ├── references/
+│   │   │       ├── scripts/
+│   │   │       │   ├── auto_jailbreak.py
+│   │   │       │   ├── godmode_race.py
+│   │   │       │   ├── load_godmode.py
+│   │   │       │   └── parseltongue.py
+│   │   │       ├── templates/
+│   │   ├── research/
+│   │   │   ├── arxiv/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── search_arxiv.py
+│   │   │   ├── blogwatcher/
+│   │   │   ├── llm-wiki/
+│   │   │   ├── polymarket/
+│   │   │   │   ├── references/
+│   │   │   │   ├── scripts/
+│   │   │   │   │   └── polymarket.py
+│   │   │   ├── research-paper-writing/
+│   │   │   │   ├── references/
+│   │   │   │   ├── templates/
+│   │   │   │   │   ├── aaai2026/
+│   │   │   │   │   ├── acl/
+│   │   │   │   │   ├── colm2025/
+│   │   │   │   │   ├── iclr2026/
+│   │   │   │   │   ├── icml2026/
+│   │   │   │   │   ├── neurips2025/
+│   │   ├── smart-home/
+│   │   │   ├── openhue/
+│   │   ├── smart_memory/
+│   │   │   ├── package_skill.py
+│   │   ├── social-media/
+│   │   │   ├── xurl/
+│   │   ├── software-development/
+│   │   │   ├── debugging-hermes-tui-commands/
+│   │   │   ├── hermes-agent-skill-authoring/
+│   │   │   ├── node-inspect-debugger/
+│   │   │   ├── plan/
+│   │   │   ├── python-debugpy/
+│   │   │   ├── requesting-code-review/
+│   │   │   ├── spike/
+│   │   │   ├── subagent-driven-development/
+│   │   │   │   ├── references/
+│   │   │   ├── systematic-debugging/
+│   │   │   ├── test-driven-development/
+│   │   │   └── writing-plans/
+│   │   ├── yuanbao/
+│   │   ├── __init__.py
+│   │   └── dual_ai.py
+│   ├── tests/
+│   │   ├── test_chat_data/
+│   │   │   ├── memory/
+│   │   │   ├── sessions/
+│   │   │   └── smart_memory/
+│   │   │       ├── preferences/
+│   │   │       ├── session_state/
+│   │   │       └── snapshots/
+│   │   ├── test_mem_data/
+│   │   │   ├── memory/
+│   │   │   ├── sessions/
+│   │   │   └── smart_memory/
+│   │   │       ├── preferences/
+│   │   │       ├── session_state/
+│   │   │       ├── snapshots/
+│   │   ├── __init__.py
+│   │   ├── conftest.py
+│   │   ├── test_core_modules.py
+│   │   └── test_scraper.py
+│   ├── tools/
+│   │   ├── browser_providers/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── browser_use.py
+│   │   │   ├── browserbase.py
+│   │   │   └── firecrawl.py
+│   │   ├── builtin/
+│   │   │   ├── __init__.py
+│   │   │   ├── code_tools.py
+│   │   │   ├── developer_tools.py
+│   │   │   ├── git_tools.py
+│   │   │   └── system_tools.py
+│   │   ├── computer_use/
+│   │   │   ├── __init__.py
+│   │   │   ├── backend.py
+│   │   │   ├── cua_backend.py
+│   │   │   ├── schema.py
+│   │   │   └── tool.py
+│   │   ├── environments/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── daytona.py
+│   │   │   ├── docker.py
+│   │   │   ├── file_sync.py
+│   │   │   ├── local.py
+│   │   │   ├── managed_modal.py
+│   │   │   ├── modal.py
+│   │   │   ├── modal_utils.py
+│   │   │   ├── singularity.py
+│   │   │   ├── ssh.py
+│   │   │   └── vercel_sandbox.py
+│   │   ├── neutts_samples/
+│   │   ├── web_providers/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── brave_free.py
+│   │   │   ├── ddgs.py
+│   │   │   └── searxng.py
+│   │   ├── __init__.py
+│   │   ├── alert_tools.py
+│   │   ├── analysis_tools.py
+│   │   ├── ansi_strip.py
+│   │   ├── approval.py
+│   │   ├── automation_tools.py
+│   │   ├── binary_extensions.py
+│   │   ├── browser_camofox.py
+│   │   ├── browser_camofox_state.py
+│   │   ├── browser_cdp_tool.py
+│   │   ├── browser_dialog_tool.py
+│   │   ├── browser_supervisor.py
+│   │   ├── browser_tool.py
+│   │   ├── budget_config.py
+│   │   ├── business_tools.py
+│   │   ├── checkpoint_manager.py
+│   │   ├── clarify_tool.py
+│   │   ├── code_execution_tool.py
+│   │   ├── computer_use_tool.py
+│   │   ├── credential_files.py
+│   │   ├── crm_tools.py
+│   │   ├── cronjob_tools.py
+│   │   ├── data_import_tools.py
+│   │   ├── debug_helpers.py
+│   │   ├── delegate_tool.py
+│   │   ├── discord_tool.py
+│   │   ├── doc_tools.py
+│   │   ├── env_passthrough.py
+│   │   ├── export_tools.py
+│   │   ├── feishu_doc_tool.py
+│   │   ├── feishu_drive_tool.py
+│   │   ├── file_operations.py
+│   │   ├── file_state.py
+│   │   ├── file_tools.py
+│   │   ├── finance_analysis_tools.py
+│   │   ├── fuzzy_match.py
+│   │   ├── homeassistant_tool.py
+│   │   ├── hr_tools.py
+│   │   ├── image_generation_tool.py
+│   │   ├── interrupt.py
+│   │   ├── inventory_tools.py
+│   │   ├── kanban_tools.py
+│   │   ├── local_dev_tools.py
+│   │   ├── managed_tool_gateway.py
+│   │   ├── marketing_tools.py
+│   │   ├── mcp_oauth.py
+│   │   ├── mcp_oauth_manager.py
+│   │   ├── mcp_tool.py
+│   │   ├── memory_tool.py
+│   │   ├── microsoft_graph_auth.py
+│   │   ├── microsoft_graph_client.py
+│   │   ├── mixture_of_agents_tool.py
+│   │   ├── neutts_synth.py
+│   │   ├── openrouter_client.py
+│   │   ├── osv_check.py
+│   │   ├── patch_parser.py
+│   │   ├── path_security.py
+│   │   ├── process_registry.py
+│   │   ├── procurement_tools.py
+│   │   ├── project_management.py
+│   │   ├── registry.py
+│   │   ├── rl_training_tool.py
+│   │   ├── scheduling_tools.py
+│   │   ├── schema_sanitizer.py
+│   │   ├── self_monitor.py
+│   │   ├── send_message_tool.py
+│   │   ├── session_search_tool.py
+│   │   ├── skill_manager_tool.py
+│   │   ├── skill_provenance.py
+│   │   ├── skill_usage.py
+│   │   ├── skills_guard.py
+│   │   ├── skills_hub.py
+│   │   ├── skills_sync.py
+│   │   ├── skills_tool.py
+│   │   ├── slash_confirm.py
+│   │   ├── smart_report_tools.py
+│   │   ├── template_tools.py
+│   │   ├── terminal_tool.py
+│   │   ├── tirith_security.py
+│   │   ├── todo_tool.py
+│   │   ├── tool_backend_helpers.py
+│   │   ├── tool_output_limits.py
+│   │   ├── tool_result_storage.py
+│   │   ├── transcription_tools.py
+│   │   ├── tts_tool.py
+│   │   ├── url_safety.py
+│   │   ├── vision_tools.py
+│   │   ├── voice_mode.py
+│   │   ├── web_search_tools.py
+│   │   ├── web_tools.py
+│   │   ├── website_policy.py
+│   │   ├── xai_http.py
+│   │   └── yuanbao_tools.py
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── gen_book.py
+│   ├── hermes_constants.py
+│   ├── init_db.py
+│   ├── main.py
+│   ├── start_opcclaw.py
+│   ├── test_opcclaw.py
+│   ├── utils.py
+│   ├── verify_sync.py
 ├── test_kb/
 ├── gen_book.py
 ├── main.py
@@ -254,4 +1042,436 @@
 - [`modules/system/system_hub_window.py`](./modules/system/system_hub_window.py.md)
 - [`modules/system/system_window.py`](./modules/system/system_window.py.md)
 - [`modules/system/update_dialog.py`](./modules/system/update_dialog.py.md)
+- [`opcclaw/__init__.py`](./opcclaw/__init__.py.md)
+- [`opcclaw/agent/__init__.py`](./opcclaw/agent/__init__.py.md)
+- [`opcclaw/agent/account_usage.py`](./opcclaw/agent/account_usage.py.md)
+- [`opcclaw/agent/anthropic_adapter.py`](./opcclaw/agent/anthropic_adapter.py.md)
+- [`opcclaw/agent/auxiliary_client.py`](./opcclaw/agent/auxiliary_client.py.md)
+- [`opcclaw/agent/bedrock_adapter.py`](./opcclaw/agent/bedrock_adapter.py.md)
+- [`opcclaw/agent/codex_responses_adapter.py`](./opcclaw/agent/codex_responses_adapter.py.md)
+- [`opcclaw/agent/context_compressor.py`](./opcclaw/agent/context_compressor.py.md)
+- [`opcclaw/agent/context_engine.py`](./opcclaw/agent/context_engine.py.md)
+- [`opcclaw/agent/context_references.py`](./opcclaw/agent/context_references.py.md)
+- [`opcclaw/agent/copilot_acp_client.py`](./opcclaw/agent/copilot_acp_client.py.md)
+- [`opcclaw/agent/credential_pool.py`](./opcclaw/agent/credential_pool.py.md)
+- [`opcclaw/agent/credential_sources.py`](./opcclaw/agent/credential_sources.py.md)
+- [`opcclaw/agent/curator.py`](./opcclaw/agent/curator.py.md)
+- [`opcclaw/agent/curator_backup.py`](./opcclaw/agent/curator_backup.py.md)
+- [`opcclaw/agent/display.py`](./opcclaw/agent/display.py.md)
+- [`opcclaw/agent/error_classifier.py`](./opcclaw/agent/error_classifier.py.md)
+- [`opcclaw/agent/file_safety.py`](./opcclaw/agent/file_safety.py.md)
+- [`opcclaw/agent/gemini_cloudcode_adapter.py`](./opcclaw/agent/gemini_cloudcode_adapter.py.md)
+- [`opcclaw/agent/gemini_native_adapter.py`](./opcclaw/agent/gemini_native_adapter.py.md)
+- [`opcclaw/agent/gemini_schema.py`](./opcclaw/agent/gemini_schema.py.md)
+- [`opcclaw/agent/google_code_assist.py`](./opcclaw/agent/google_code_assist.py.md)
+- [`opcclaw/agent/google_oauth.py`](./opcclaw/agent/google_oauth.py.md)
+- [`opcclaw/agent/i18n.py`](./opcclaw/agent/i18n.py.md)
+- [`opcclaw/agent/image_gen_provider.py`](./opcclaw/agent/image_gen_provider.py.md)
+- [`opcclaw/agent/image_gen_registry.py`](./opcclaw/agent/image_gen_registry.py.md)
+- [`opcclaw/agent/image_routing.py`](./opcclaw/agent/image_routing.py.md)
+- [`opcclaw/agent/insights.py`](./opcclaw/agent/insights.py.md)
+- [`opcclaw/agent/lmstudio_reasoning.py`](./opcclaw/agent/lmstudio_reasoning.py.md)
+- [`opcclaw/agent/manual_compression_feedback.py`](./opcclaw/agent/manual_compression_feedback.py.md)
+- [`opcclaw/agent/memory_manager.py`](./opcclaw/agent/memory_manager.py.md)
+- [`opcclaw/agent/memory_provider.py`](./opcclaw/agent/memory_provider.py.md)
+- [`opcclaw/agent/model_metadata.py`](./opcclaw/agent/model_metadata.py.md)
+- [`opcclaw/agent/models_dev.py`](./opcclaw/agent/models_dev.py.md)
+- [`opcclaw/agent/moonshot_schema.py`](./opcclaw/agent/moonshot_schema.py.md)
+- [`opcclaw/agent/nous_rate_guard.py`](./opcclaw/agent/nous_rate_guard.py.md)
+- [`opcclaw/agent/onboarding.py`](./opcclaw/agent/onboarding.py.md)
+- [`opcclaw/agent/prompt_builder.py`](./opcclaw/agent/prompt_builder.py.md)
+- [`opcclaw/agent/prompt_caching.py`](./opcclaw/agent/prompt_caching.py.md)
+- [`opcclaw/agent/rate_limit_tracker.py`](./opcclaw/agent/rate_limit_tracker.py.md)
+- [`opcclaw/agent/redact.py`](./opcclaw/agent/redact.py.md)
+- [`opcclaw/agent/retry_utils.py`](./opcclaw/agent/retry_utils.py.md)
+- [`opcclaw/agent/shell_hooks.py`](./opcclaw/agent/shell_hooks.py.md)
+- [`opcclaw/agent/skill_commands.py`](./opcclaw/agent/skill_commands.py.md)
+- [`opcclaw/agent/skill_preprocessing.py`](./opcclaw/agent/skill_preprocessing.py.md)
+- [`opcclaw/agent/skill_utils.py`](./opcclaw/agent/skill_utils.py.md)
+- [`opcclaw/agent/subdirectory_hints.py`](./opcclaw/agent/subdirectory_hints.py.md)
+- [`opcclaw/agent/think_scrubber.py`](./opcclaw/agent/think_scrubber.py.md)
+- [`opcclaw/agent/title_generator.py`](./opcclaw/agent/title_generator.py.md)
+- [`opcclaw/agent/tool_guardrails.py`](./opcclaw/agent/tool_guardrails.py.md)
+- [`opcclaw/agent/trajectory.py`](./opcclaw/agent/trajectory.py.md)
+- [`opcclaw/agent/transports/__init__.py`](./opcclaw/agent/transports/__init__.py.md)
+- [`opcclaw/agent/transports/anthropic.py`](./opcclaw/agent/transports/anthropic.py.md)
+- [`opcclaw/agent/transports/base.py`](./opcclaw/agent/transports/base.py.md)
+- [`opcclaw/agent/transports/bedrock.py`](./opcclaw/agent/transports/bedrock.py.md)
+- [`opcclaw/agent/transports/chat_completions.py`](./opcclaw/agent/transports/chat_completions.py.md)
+- [`opcclaw/agent/transports/codex.py`](./opcclaw/agent/transports/codex.py.md)
+- [`opcclaw/agent/transports/types.py`](./opcclaw/agent/transports/types.py.md)
+- [`opcclaw/agent/usage_pricing.py`](./opcclaw/agent/usage_pricing.py.md)
+- [`opcclaw/conftest.py`](./opcclaw/conftest.py.md)
+- [`opcclaw/core/__init__.py`](./opcclaw/core/__init__.py.md)
+- [`opcclaw/core/agent_delegate.py`](./opcclaw/core/agent_delegate.py.md)
+- [`opcclaw/core/agent_loop.py`](./opcclaw/core/agent_loop.py.md)
+- [`opcclaw/core/chat_engine.py`](./opcclaw/core/chat_engine.py.md)
+- [`opcclaw/core/clarify_system.py`](./opcclaw/core/clarify_system.py.md)
+- [`opcclaw/core/cloud_sync.py`](./opcclaw/core/cloud_sync.py.md)
+- [`opcclaw/core/code_executor.py`](./opcclaw/core/code_executor.py.md)
+- [`opcclaw/core/code_intel.py`](./opcclaw/core/code_intel.py.md)
+- [`opcclaw/core/collaboration_client.py`](./opcclaw/core/collaboration_client.py.md)
+- [`opcclaw/core/config_validator.py`](./opcclaw/core/config_validator.py.md)
+- [`opcclaw/core/core_engine.py`](./opcclaw/core/core_engine.py.md)
+- [`opcclaw/core/enhanced_core.py`](./opcclaw/core/enhanced_core.py.md)
+- [`opcclaw/core/enhanced_hermes_bridge.py`](./opcclaw/core/enhanced_hermes_bridge.py.md)
+- [`opcclaw/core/git_ops.py`](./opcclaw/core/git_ops.py.md)
+- [`opcclaw/core/llm_backend.py`](./opcclaw/core/llm_backend.py.md)
+- [`opcclaw/core/memory.py`](./opcclaw/core/memory.py.md)
+- [`opcclaw/core/memory_store.py`](./opcclaw/core/memory_store.py.md)
+- [`opcclaw/core/model_status.py`](./opcclaw/core/model_status.py.md)
+- [`opcclaw/core/model_status_manager.py`](./opcclaw/core/model_status_manager.py.md)
+- [`opcclaw/core/multi_model.py`](./opcclaw/core/multi_model.py.md)
+- [`opcclaw/core/multi_model_chat_engine.py`](./opcclaw/core/multi_model_chat_engine.py.md)
+- [`opcclaw/core/opcclaw_logging.py`](./opcclaw/core/opcclaw_logging.py.md)
+- [`opcclaw/core/patch_engine.py`](./opcclaw/core/patch_engine.py.md)
+- [`opcclaw/core/performance_monitor.py`](./opcclaw/core/performance_monitor.py.md)
+- [`opcclaw/core/process_manager.py`](./opcclaw/core/process_manager.py.md)
+- [`opcclaw/core/rag_context.py`](./opcclaw/core/rag_context.py.md)
+- [`opcclaw/core/secure_storage.py`](./opcclaw/core/secure_storage.py.md)
+- [`opcclaw/core/semantic_search.py`](./opcclaw/core/semantic_search.py.md)
+- [`opcclaw/core/session_search.py`](./opcclaw/core/session_search.py.md)
+- [`opcclaw/core/skill_loader.py`](./opcclaw/core/skill_loader.py.md)
+- [`opcclaw/core/skill_system.py`](./opcclaw/core/skill_system.py.md)
+- [`opcclaw/core/smart_memory.py`](./opcclaw/core/smart_memory.py.md)
+- [`opcclaw/core/smart_memory_adapter.py`](./opcclaw/core/smart_memory_adapter.py.md)
+- [`opcclaw/core/supabase_client.py`](./opcclaw/core/supabase_client.py.md)
+- [`opcclaw/core/super_intelligence.py`](./opcclaw/core/super_intelligence.py.md)
+- [`opcclaw/core/sync_bridge.py`](./opcclaw/core/sync_bridge.py.md)
+- [`opcclaw/core/task_scheduler.py`](./opcclaw/core/task_scheduler.py.md)
+- [`opcclaw/core/test_phase2.py`](./opcclaw/core/test_phase2.py.md)
+- [`opcclaw/core/todo_system.py`](./opcclaw/core/todo_system.py.md)
+- [`opcclaw/core/token_optimizer.py`](./opcclaw/core/token_optimizer.py.md)
+- [`opcclaw/core/token_saver.py`](./opcclaw/core/token_saver.py.md)
+- [`opcclaw/core/tool_registry.py`](./opcclaw/core/tool_registry.py.md)
+- [`opcclaw/core/web_search.py`](./opcclaw/core/web_search.py.md)
+- [`opcclaw/core/workspace_indexer.py`](./opcclaw/core/workspace_indexer.py.md)
+- [`opcclaw/data/__init__.py`](./opcclaw/data/__init__.py.md)
+- [`opcclaw/gen_book.py`](./opcclaw/gen_book.py.md)
+- [`opcclaw/hermes_cli/__init__.py`](./opcclaw/hermes_cli/__init__.py.md)
+- [`opcclaw/hermes_cli/config.py`](./opcclaw/hermes_cli/config.py.md)
+- [`opcclaw/hermes_constants.py`](./opcclaw/hermes_constants.py.md)
+- [`opcclaw/init_db.py`](./opcclaw/init_db.py.md)
+- [`opcclaw/main.py`](./opcclaw/main.py.md)
+- [`opcclaw/modules/__init__.py`](./opcclaw/modules/__init__.py.md)
+- [`opcclaw/modules/_shared.py`](./opcclaw/modules/_shared.py.md)
+- [`opcclaw/modules/animations.py`](./opcclaw/modules/animations.py.md)
+- [`opcclaw/modules/chat_window.py`](./opcclaw/modules/chat_window.py.md)
+- [`opcclaw/modules/chat_window_core.py`](./opcclaw/modules/chat_window_core.py.md)
+- [`opcclaw/modules/chat_window_monolith_backup.py`](./opcclaw/modules/chat_window_monolith_backup.py.md)
+- [`opcclaw/modules/chat_worker.py`](./opcclaw/modules/chat_worker.py.md)
+- [`opcclaw/modules/cloud_model_panel.py`](./opcclaw/modules/cloud_model_panel.py.md)
+- [`opcclaw/modules/config_manager.py`](./opcclaw/modules/config_manager.py.md)
+- [`opcclaw/modules/general_settings_panel.py`](./opcclaw/modules/general_settings_panel.py.md)
+- [`opcclaw/modules/git_panel.py`](./opcclaw/modules/git_panel.py.md)
+- [`opcclaw/modules/local_model_panel.py`](./opcclaw/modules/local_model_panel.py.md)
+- [`opcclaw/modules/login_dialog.py`](./opcclaw/modules/login_dialog.py.md)
+- [`opcclaw/modules/message_bubble.py`](./opcclaw/modules/message_bubble.py.md)
+- [`opcclaw/modules/sidebar.py`](./opcclaw/modules/sidebar.py.md)
+- [`opcclaw/modules/sidebar_panel.py`](./opcclaw/modules/sidebar_panel.py.md)
+- [`opcclaw/modules/skills_panel.py`](./opcclaw/modules/skills_panel.py.md)
+- [`opcclaw/modules/styled_widgets.py`](./opcclaw/modules/styled_widgets.py.md)
+- [`opcclaw/modules/voice_manager.py`](./opcclaw/modules/voice_manager.py.md)
+- [`opcclaw/modules/widgets.py`](./opcclaw/modules/widgets.py.md)
+- [`opcclaw/plugins/__init__.py`](./opcclaw/plugins/__init__.py.md)
+- [`opcclaw/plugins/code_executor/__init__.py`](./opcclaw/plugins/code_executor/__init__.py.md)
+- [`opcclaw/plugins/context_engine/__init__.py`](./opcclaw/plugins/context_engine/__init__.py.md)
+- [`opcclaw/plugins/disk-cleanup/__init__.py`](./opcclaw/plugins/disk-cleanup/__init__.py.md)
+- [`opcclaw/plugins/disk-cleanup/disk_cleanup.py`](./opcclaw/plugins/disk-cleanup/disk_cleanup.py.md)
+- [`opcclaw/plugins/example-dashboard/dashboard/plugin_api.py`](./opcclaw/plugins/example-dashboard/dashboard/plugin_api.py.md)
+- [`opcclaw/plugins/file_handler/__init__.py`](./opcclaw/plugins/file_handler/__init__.py.md)
+- [`opcclaw/plugins/google_meet/__init__.py`](./opcclaw/plugins/google_meet/__init__.py.md)
+- [`opcclaw/plugins/google_meet/audio_bridge.py`](./opcclaw/plugins/google_meet/audio_bridge.py.md)
+- [`opcclaw/plugins/google_meet/cli.py`](./opcclaw/plugins/google_meet/cli.py.md)
+- [`opcclaw/plugins/google_meet/meet_bot.py`](./opcclaw/plugins/google_meet/meet_bot.py.md)
+- [`opcclaw/plugins/google_meet/node/__init__.py`](./opcclaw/plugins/google_meet/node/__init__.py.md)
+- [`opcclaw/plugins/google_meet/node/cli.py`](./opcclaw/plugins/google_meet/node/cli.py.md)
+- [`opcclaw/plugins/google_meet/node/client.py`](./opcclaw/plugins/google_meet/node/client.py.md)
+- [`opcclaw/plugins/google_meet/node/protocol.py`](./opcclaw/plugins/google_meet/node/protocol.py.md)
+- [`opcclaw/plugins/google_meet/node/registry.py`](./opcclaw/plugins/google_meet/node/registry.py.md)
+- [`opcclaw/plugins/google_meet/node/server.py`](./opcclaw/plugins/google_meet/node/server.py.md)
+- [`opcclaw/plugins/google_meet/process_manager.py`](./opcclaw/plugins/google_meet/process_manager.py.md)
+- [`opcclaw/plugins/google_meet/realtime/__init__.py`](./opcclaw/plugins/google_meet/realtime/__init__.py.md)
+- [`opcclaw/plugins/google_meet/realtime/openai_client.py`](./opcclaw/plugins/google_meet/realtime/openai_client.py.md)
+- [`opcclaw/plugins/google_meet/tools.py`](./opcclaw/plugins/google_meet/tools.py.md)
+- [`opcclaw/plugins/hermes-achievements/dashboard/plugin_api.py`](./opcclaw/plugins/hermes-achievements/dashboard/plugin_api.py.md)
+- [`opcclaw/plugins/hermes-achievements/tests/test_achievement_engine.py`](./opcclaw/plugins/hermes-achievements/tests/test_achievement_engine.py.md)
+- [`opcclaw/plugins/image_gen/openai/__init__.py`](./opcclaw/plugins/image_gen/openai/__init__.py.md)
+- [`opcclaw/plugins/image_gen/openai-codex/__init__.py`](./opcclaw/plugins/image_gen/openai-codex/__init__.py.md)
+- [`opcclaw/plugins/image_gen/xai/__init__.py`](./opcclaw/plugins/image_gen/xai/__init__.py.md)
+- [`opcclaw/plugins/image_vision/__init__.py`](./opcclaw/plugins/image_vision/__init__.py.md)
+- [`opcclaw/plugins/kanban/dashboard/plugin_api.py`](./opcclaw/plugins/kanban/dashboard/plugin_api.py.md)
+- [`opcclaw/plugins/memory/__init__.py`](./opcclaw/plugins/memory/__init__.py.md)
+- [`opcclaw/plugins/memory/byterover/__init__.py`](./opcclaw/plugins/memory/byterover/__init__.py.md)
+- [`opcclaw/plugins/memory/hindsight/__init__.py`](./opcclaw/plugins/memory/hindsight/__init__.py.md)
+- [`opcclaw/plugins/memory/holographic/__init__.py`](./opcclaw/plugins/memory/holographic/__init__.py.md)
+- [`opcclaw/plugins/memory/holographic/holographic.py`](./opcclaw/plugins/memory/holographic/holographic.py.md)
+- [`opcclaw/plugins/memory/holographic/retrieval.py`](./opcclaw/plugins/memory/holographic/retrieval.py.md)
+- [`opcclaw/plugins/memory/holographic/store.py`](./opcclaw/plugins/memory/holographic/store.py.md)
+- [`opcclaw/plugins/memory/honcho/__init__.py`](./opcclaw/plugins/memory/honcho/__init__.py.md)
+- [`opcclaw/plugins/memory/honcho/cli.py`](./opcclaw/plugins/memory/honcho/cli.py.md)
+- [`opcclaw/plugins/memory/honcho/client.py`](./opcclaw/plugins/memory/honcho/client.py.md)
+- [`opcclaw/plugins/memory/honcho/session.py`](./opcclaw/plugins/memory/honcho/session.py.md)
+- [`opcclaw/plugins/memory/mem0/__init__.py`](./opcclaw/plugins/memory/mem0/__init__.py.md)
+- [`opcclaw/plugins/memory/openviking/__init__.py`](./opcclaw/plugins/memory/openviking/__init__.py.md)
+- [`opcclaw/plugins/memory/retaindb/__init__.py`](./opcclaw/plugins/memory/retaindb/__init__.py.md)
+- [`opcclaw/plugins/memory/supermemory/__init__.py`](./opcclaw/plugins/memory/supermemory/__init__.py.md)
+- [`opcclaw/plugins/model-providers/ai-gateway/__init__.py`](./opcclaw/plugins/model-providers/ai-gateway/__init__.py.md)
+- [`opcclaw/plugins/model-providers/alibaba/__init__.py`](./opcclaw/plugins/model-providers/alibaba/__init__.py.md)
+- [`opcclaw/plugins/model-providers/alibaba-coding-plan/__init__.py`](./opcclaw/plugins/model-providers/alibaba-coding-plan/__init__.py.md)
+- [`opcclaw/plugins/model-providers/anthropic/__init__.py`](./opcclaw/plugins/model-providers/anthropic/__init__.py.md)
+- [`opcclaw/plugins/model-providers/arcee/__init__.py`](./opcclaw/plugins/model-providers/arcee/__init__.py.md)
+- [`opcclaw/plugins/model-providers/azure-foundry/__init__.py`](./opcclaw/plugins/model-providers/azure-foundry/__init__.py.md)
+- [`opcclaw/plugins/model-providers/bedrock/__init__.py`](./opcclaw/plugins/model-providers/bedrock/__init__.py.md)
+- [`opcclaw/plugins/model-providers/copilot/__init__.py`](./opcclaw/plugins/model-providers/copilot/__init__.py.md)
+- [`opcclaw/plugins/model-providers/copilot-acp/__init__.py`](./opcclaw/plugins/model-providers/copilot-acp/__init__.py.md)
+- [`opcclaw/plugins/model-providers/custom/__init__.py`](./opcclaw/plugins/model-providers/custom/__init__.py.md)
+- [`opcclaw/plugins/model-providers/deepseek/__init__.py`](./opcclaw/plugins/model-providers/deepseek/__init__.py.md)
+- [`opcclaw/plugins/model-providers/gemini/__init__.py`](./opcclaw/plugins/model-providers/gemini/__init__.py.md)
+- [`opcclaw/plugins/model-providers/gmi/__init__.py`](./opcclaw/plugins/model-providers/gmi/__init__.py.md)
+- [`opcclaw/plugins/model-providers/huggingface/__init__.py`](./opcclaw/plugins/model-providers/huggingface/__init__.py.md)
+- [`opcclaw/plugins/model-providers/kilocode/__init__.py`](./opcclaw/plugins/model-providers/kilocode/__init__.py.md)
+- [`opcclaw/plugins/model-providers/kimi-coding/__init__.py`](./opcclaw/plugins/model-providers/kimi-coding/__init__.py.md)
+- [`opcclaw/plugins/model-providers/minimax/__init__.py`](./opcclaw/plugins/model-providers/minimax/__init__.py.md)
+- [`opcclaw/plugins/model-providers/nous/__init__.py`](./opcclaw/plugins/model-providers/nous/__init__.py.md)
+- [`opcclaw/plugins/model-providers/nvidia/__init__.py`](./opcclaw/plugins/model-providers/nvidia/__init__.py.md)
+- [`opcclaw/plugins/model-providers/ollama-cloud/__init__.py`](./opcclaw/plugins/model-providers/ollama-cloud/__init__.py.md)
+- [`opcclaw/plugins/model-providers/openai-codex/__init__.py`](./opcclaw/plugins/model-providers/openai-codex/__init__.py.md)
+- [`opcclaw/plugins/model-providers/opencode-zen/__init__.py`](./opcclaw/plugins/model-providers/opencode-zen/__init__.py.md)
+- [`opcclaw/plugins/model-providers/openrouter/__init__.py`](./opcclaw/plugins/model-providers/openrouter/__init__.py.md)
+- [`opcclaw/plugins/model-providers/qwen-oauth/__init__.py`](./opcclaw/plugins/model-providers/qwen-oauth/__init__.py.md)
+- [`opcclaw/plugins/model-providers/stepfun/__init__.py`](./opcclaw/plugins/model-providers/stepfun/__init__.py.md)
+- [`opcclaw/plugins/model-providers/xai/__init__.py`](./opcclaw/plugins/model-providers/xai/__init__.py.md)
+- [`opcclaw/plugins/model-providers/xiaomi/__init__.py`](./opcclaw/plugins/model-providers/xiaomi/__init__.py.md)
+- [`opcclaw/plugins/model-providers/zai/__init__.py`](./opcclaw/plugins/model-providers/zai/__init__.py.md)
+- [`opcclaw/plugins/multi_model/__init__.py`](./opcclaw/plugins/multi_model/__init__.py.md)
+- [`opcclaw/plugins/observability/langfuse/__init__.py`](./opcclaw/plugins/observability/langfuse/__init__.py.md)
+- [`opcclaw/plugins/platforms/google_chat/__init__.py`](./opcclaw/plugins/platforms/google_chat/__init__.py.md)
+- [`opcclaw/plugins/platforms/google_chat/adapter.py`](./opcclaw/plugins/platforms/google_chat/adapter.py.md)
+- [`opcclaw/plugins/platforms/google_chat/oauth.py`](./opcclaw/plugins/platforms/google_chat/oauth.py.md)
+- [`opcclaw/plugins/platforms/irc/__init__.py`](./opcclaw/plugins/platforms/irc/__init__.py.md)
+- [`opcclaw/plugins/platforms/irc/adapter.py`](./opcclaw/plugins/platforms/irc/adapter.py.md)
+- [`opcclaw/plugins/platforms/teams/__init__.py`](./opcclaw/plugins/platforms/teams/__init__.py.md)
+- [`opcclaw/plugins/platforms/teams/adapter.py`](./opcclaw/plugins/platforms/teams/adapter.py.md)
+- [`opcclaw/plugins/spotify/__init__.py`](./opcclaw/plugins/spotify/__init__.py.md)
+- [`opcclaw/plugins/spotify/client.py`](./opcclaw/plugins/spotify/client.py.md)
+- [`opcclaw/plugins/spotify/tools.py`](./opcclaw/plugins/spotify/tools.py.md)
+- [`opcclaw/plugins/teams_pipeline/__init__.py`](./opcclaw/plugins/teams_pipeline/__init__.py.md)
+- [`opcclaw/plugins/teams_pipeline/cli.py`](./opcclaw/plugins/teams_pipeline/cli.py.md)
+- [`opcclaw/plugins/teams_pipeline/meetings.py`](./opcclaw/plugins/teams_pipeline/meetings.py.md)
+- [`opcclaw/plugins/teams_pipeline/models.py`](./opcclaw/plugins/teams_pipeline/models.py.md)
+- [`opcclaw/plugins/teams_pipeline/pipeline.py`](./opcclaw/plugins/teams_pipeline/pipeline.py.md)
+- [`opcclaw/plugins/teams_pipeline/runtime.py`](./opcclaw/plugins/teams_pipeline/runtime.py.md)
+- [`opcclaw/plugins/teams_pipeline/store.py`](./opcclaw/plugins/teams_pipeline/store.py.md)
+- [`opcclaw/plugins/teams_pipeline/subscriptions.py`](./opcclaw/plugins/teams_pipeline/subscriptions.py.md)
+- [`opcclaw/plugins/web_search/__init__.py`](./opcclaw/plugins/web_search/__init__.py.md)
+- [`opcclaw/providers/__init__.py`](./opcclaw/providers/__init__.py.md)
+- [`opcclaw/providers/base.py`](./opcclaw/providers/base.py.md)
+- [`opcclaw/skills/__init__.py`](./opcclaw/skills/__init__.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/_common.py`](./opcclaw/skills/creative/comfyui/scripts/_common.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/auto_fix_deps.py`](./opcclaw/skills/creative/comfyui/scripts/auto_fix_deps.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/check_deps.py`](./opcclaw/skills/creative/comfyui/scripts/check_deps.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/extract_schema.py`](./opcclaw/skills/creative/comfyui/scripts/extract_schema.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/fetch_logs.py`](./opcclaw/skills/creative/comfyui/scripts/fetch_logs.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/hardware_check.py`](./opcclaw/skills/creative/comfyui/scripts/hardware_check.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/health_check.py`](./opcclaw/skills/creative/comfyui/scripts/health_check.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/run_batch.py`](./opcclaw/skills/creative/comfyui/scripts/run_batch.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/run_workflow.py`](./opcclaw/skills/creative/comfyui/scripts/run_workflow.py.md)
+- [`opcclaw/skills/creative/comfyui/scripts/ws_monitor.py`](./opcclaw/skills/creative/comfyui/scripts/ws_monitor.py.md)
+- [`opcclaw/skills/creative/comfyui/tests/conftest.py`](./opcclaw/skills/creative/comfyui/tests/conftest.py.md)
+- [`opcclaw/skills/creative/comfyui/tests/test_check_deps.py`](./opcclaw/skills/creative/comfyui/tests/test_check_deps.py.md)
+- [`opcclaw/skills/creative/comfyui/tests/test_cloud_integration.py`](./opcclaw/skills/creative/comfyui/tests/test_cloud_integration.py.md)
+- [`opcclaw/skills/creative/comfyui/tests/test_common.py`](./opcclaw/skills/creative/comfyui/tests/test_common.py.md)
+- [`opcclaw/skills/creative/comfyui/tests/test_extract_schema.py`](./opcclaw/skills/creative/comfyui/tests/test_extract_schema.py.md)
+- [`opcclaw/skills/creative/comfyui/tests/test_run_workflow.py`](./opcclaw/skills/creative/comfyui/tests/test_run_workflow.py.md)
+- [`opcclaw/skills/creative/excalidraw/scripts/upload.py`](./opcclaw/skills/creative/excalidraw/scripts/upload.py.md)
+- [`opcclaw/skills/creative/pixel-art/scripts/__init__.py`](./opcclaw/skills/creative/pixel-art/scripts/__init__.py.md)
+- [`opcclaw/skills/creative/pixel-art/scripts/palettes.py`](./opcclaw/skills/creative/pixel-art/scripts/palettes.py.md)
+- [`opcclaw/skills/creative/pixel-art/scripts/pixel_art.py`](./opcclaw/skills/creative/pixel-art/scripts/pixel_art.py.md)
+- [`opcclaw/skills/creative/pixel-art/scripts/pixel_art_video.py`](./opcclaw/skills/creative/pixel-art/scripts/pixel_art_video.py.md)
+- [`opcclaw/skills/dual_ai.py`](./opcclaw/skills/dual_ai.py.md)
+- [`opcclaw/skills/flybook_bot/config.py`](./opcclaw/skills/flybook_bot/config.py.md)
+- [`opcclaw/skills/flybook_bot/flybook_skill.py`](./opcclaw/skills/flybook_bot/flybook_skill.py.md)
+- [`opcclaw/skills/flybook_bot/server.py`](./opcclaw/skills/flybook_bot/server.py.md)
+- [`opcclaw/skills/flybook_bot/server_minimal.py`](./opcclaw/skills/flybook_bot/server_minimal.py.md)
+- [`opcclaw/skills/flybook_bot/server_simple.py`](./opcclaw/skills/flybook_bot/server_simple.py.md)
+- [`opcclaw/skills/flybook_bot/test_server.py`](./opcclaw/skills/flybook_bot/test_server.py.md)
+- [`opcclaw/skills/media/youtube-content/scripts/fetch_transcript.py`](./opcclaw/skills/media/youtube-content/scripts/fetch_transcript.py.md)
+- [`opcclaw/skills/productivity/google-workspace/scripts/_hermes_home.py`](./opcclaw/skills/productivity/google-workspace/scripts/_hermes_home.py.md)
+- [`opcclaw/skills/productivity/google-workspace/scripts/google_api.py`](./opcclaw/skills/productivity/google-workspace/scripts/google_api.py.md)
+- [`opcclaw/skills/productivity/google-workspace/scripts/gws_bridge.py`](./opcclaw/skills/productivity/google-workspace/scripts/gws_bridge.py.md)
+- [`opcclaw/skills/productivity/google-workspace/scripts/setup.py`](./opcclaw/skills/productivity/google-workspace/scripts/setup.py.md)
+- [`opcclaw/skills/productivity/linear/scripts/linear_api.py`](./opcclaw/skills/productivity/linear/scripts/linear_api.py.md)
+- [`opcclaw/skills/productivity/maps/scripts/maps_client.py`](./opcclaw/skills/productivity/maps/scripts/maps_client.py.md)
+- [`opcclaw/skills/productivity/ocr-and-documents/scripts/extract_marker.py`](./opcclaw/skills/productivity/ocr-and-documents/scripts/extract_marker.py.md)
+- [`opcclaw/skills/productivity/ocr-and-documents/scripts/extract_pymupdf.py`](./opcclaw/skills/productivity/ocr-and-documents/scripts/extract_pymupdf.py.md)
+- [`opcclaw/skills/productivity/powerpoint/scripts/__init__.py`](./opcclaw/skills/productivity/powerpoint/scripts/__init__.py.md)
+- [`opcclaw/skills/productivity/powerpoint/scripts/add_slide.py`](./opcclaw/skills/productivity/powerpoint/scripts/add_slide.py.md)
+- [`opcclaw/skills/productivity/powerpoint/scripts/clean.py`](./opcclaw/skills/productivity/powerpoint/scripts/clean.py.md)
+- [`opcclaw/skills/productivity/powerpoint/scripts/office/helpers/__init__.py`](./opcclaw/skills/productivity/powerpoint/scripts/office/helpers/__init__.py.md)
+- [`opcclaw/skills/productivity/powerpoint/scripts/office/helpers/merge_runs.py`](./opcclaw/skills/productivity/powerpoint/scripts/office/helpers/merge_runs.py.md)
+- [`opcclaw/skills/productivity/powerpoint/scripts/office/helpers/simplify_redlines.py`](./opcclaw/skills/productivity/powerpoint/scripts/office/helpers/simplify_redlines.py.md)
+- [`opcclaw/skills/productivity/powerpoint/scripts/office/pack.py`](./opcclaw/skills/productivity/powerpoint/scripts/office/pack.py.md)
+- [`opcclaw/skills/qclaw_skills/baidu-search/scripts/search.py`](./opcclaw/skills/qclaw_skills/baidu-search/scripts/search.py.md)
+- [`opcclaw/skills/qclaw_skills/file-manager/scripts/batch_rename.py`](./opcclaw/skills/qclaw_skills/file-manager/scripts/batch_rename.py.md)
+- [`opcclaw/skills/qclaw_skills/file-manager/scripts/deduplicate.py`](./opcclaw/skills/qclaw_skills/file-manager/scripts/deduplicate.py.md)
+- [`opcclaw/skills/qclaw_skills/file-manager/scripts/organize.py`](./opcclaw/skills/qclaw_skills/file-manager/scripts/organize.py.md)
+- [`opcclaw/skills/qclaw_skills/file-manager/scripts/sync.py`](./opcclaw/skills/qclaw_skills/file-manager/scripts/sync.py.md)
+- [`opcclaw/skills/qclaw_skills/file-manager/scripts/utils.py`](./opcclaw/skills/qclaw_skills/file-manager/scripts/utils.py.md)
+- [`opcclaw/skills/qclaw_skills/planning-with-files/scripts/session-catchup.py`](./opcclaw/skills/qclaw_skills/planning-with-files/scripts/session-catchup.py.md)
+- [`opcclaw/skills/qclaw_skills/video-image-file-analysis/scripts/vision.py`](./opcclaw/skills/qclaw_skills/video-image-file-analysis/scripts/vision.py.md)
+- [`opcclaw/skills/qclaw_skills/video-image-file-analysis/scripts/vision_manager.py`](./opcclaw/skills/qclaw_skills/video-image-file-analysis/scripts/vision_manager.py.md)
+- [`opcclaw/skills/qclaw_skills/web-browsing/scripts/search_web.py`](./opcclaw/skills/qclaw_skills/web-browsing/scripts/search_web.py.md)
+- [`opcclaw/skills/qclaw_skills/web-search/scripts/search.py`](./opcclaw/skills/qclaw_skills/web-search/scripts/search.py.md)
+- [`opcclaw/skills/qclaw_skills/webscraper-v2/webscraper.py`](./opcclaw/skills/qclaw_skills/webscraper-v2/webscraper.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/api_client.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/api_client.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/chat_mode.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/chat_mode.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/claw_client.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/claw_client.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/environment.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/environment.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/file_utils.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/file_utils.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/get_access_token.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/get_access_token.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/identity_manager.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/identity_manager.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/raw_fetcher.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/raw_fetcher.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/scrm.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/scrm.py.md)
+- [`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/utils.py`](./opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/utils.py.md)
+- [`opcclaw/skills/red-teaming/godmode/scripts/auto_jailbreak.py`](./opcclaw/skills/red-teaming/godmode/scripts/auto_jailbreak.py.md)
+- [`opcclaw/skills/red-teaming/godmode/scripts/godmode_race.py`](./opcclaw/skills/red-teaming/godmode/scripts/godmode_race.py.md)
+- [`opcclaw/skills/red-teaming/godmode/scripts/load_godmode.py`](./opcclaw/skills/red-teaming/godmode/scripts/load_godmode.py.md)
+- [`opcclaw/skills/red-teaming/godmode/scripts/parseltongue.py`](./opcclaw/skills/red-teaming/godmode/scripts/parseltongue.py.md)
+- [`opcclaw/skills/research/arxiv/scripts/search_arxiv.py`](./opcclaw/skills/research/arxiv/scripts/search_arxiv.py.md)
+- [`opcclaw/skills/research/polymarket/scripts/polymarket.py`](./opcclaw/skills/research/polymarket/scripts/polymarket.py.md)
+- [`opcclaw/skills/smart_memory/package_skill.py`](./opcclaw/skills/smart_memory/package_skill.py.md)
+- [`opcclaw/start_opcclaw.py`](./opcclaw/start_opcclaw.py.md)
+- [`opcclaw/test_opcclaw.py`](./opcclaw/test_opcclaw.py.md)
+- [`opcclaw/tests/__init__.py`](./opcclaw/tests/__init__.py.md)
+- [`opcclaw/tests/conftest.py`](./opcclaw/tests/conftest.py.md)
+- [`opcclaw/tests/test_core_modules.py`](./opcclaw/tests/test_core_modules.py.md)
+- [`opcclaw/tests/test_scraper.py`](./opcclaw/tests/test_scraper.py.md)
+- [`opcclaw/tools/__init__.py`](./opcclaw/tools/__init__.py.md)
+- [`opcclaw/tools/alert_tools.py`](./opcclaw/tools/alert_tools.py.md)
+- [`opcclaw/tools/analysis_tools.py`](./opcclaw/tools/analysis_tools.py.md)
+- [`opcclaw/tools/ansi_strip.py`](./opcclaw/tools/ansi_strip.py.md)
+- [`opcclaw/tools/approval.py`](./opcclaw/tools/approval.py.md)
+- [`opcclaw/tools/automation_tools.py`](./opcclaw/tools/automation_tools.py.md)
+- [`opcclaw/tools/binary_extensions.py`](./opcclaw/tools/binary_extensions.py.md)
+- [`opcclaw/tools/browser_camofox.py`](./opcclaw/tools/browser_camofox.py.md)
+- [`opcclaw/tools/browser_camofox_state.py`](./opcclaw/tools/browser_camofox_state.py.md)
+- [`opcclaw/tools/browser_cdp_tool.py`](./opcclaw/tools/browser_cdp_tool.py.md)
+- [`opcclaw/tools/browser_dialog_tool.py`](./opcclaw/tools/browser_dialog_tool.py.md)
+- [`opcclaw/tools/browser_providers/__init__.py`](./opcclaw/tools/browser_providers/__init__.py.md)
+- [`opcclaw/tools/browser_providers/base.py`](./opcclaw/tools/browser_providers/base.py.md)
+- [`opcclaw/tools/browser_providers/browser_use.py`](./opcclaw/tools/browser_providers/browser_use.py.md)
+- [`opcclaw/tools/browser_providers/browserbase.py`](./opcclaw/tools/browser_providers/browserbase.py.md)
+- [`opcclaw/tools/browser_providers/firecrawl.py`](./opcclaw/tools/browser_providers/firecrawl.py.md)
+- [`opcclaw/tools/browser_supervisor.py`](./opcclaw/tools/browser_supervisor.py.md)
+- [`opcclaw/tools/browser_tool.py`](./opcclaw/tools/browser_tool.py.md)
+- [`opcclaw/tools/budget_config.py`](./opcclaw/tools/budget_config.py.md)
+- [`opcclaw/tools/builtin/__init__.py`](./opcclaw/tools/builtin/__init__.py.md)
+- [`opcclaw/tools/builtin/code_tools.py`](./opcclaw/tools/builtin/code_tools.py.md)
+- [`opcclaw/tools/builtin/developer_tools.py`](./opcclaw/tools/builtin/developer_tools.py.md)
+- [`opcclaw/tools/builtin/git_tools.py`](./opcclaw/tools/builtin/git_tools.py.md)
+- [`opcclaw/tools/builtin/system_tools.py`](./opcclaw/tools/builtin/system_tools.py.md)
+- [`opcclaw/tools/business_tools.py`](./opcclaw/tools/business_tools.py.md)
+- [`opcclaw/tools/checkpoint_manager.py`](./opcclaw/tools/checkpoint_manager.py.md)
+- [`opcclaw/tools/clarify_tool.py`](./opcclaw/tools/clarify_tool.py.md)
+- [`opcclaw/tools/code_execution_tool.py`](./opcclaw/tools/code_execution_tool.py.md)
+- [`opcclaw/tools/computer_use/__init__.py`](./opcclaw/tools/computer_use/__init__.py.md)
+- [`opcclaw/tools/computer_use/backend.py`](./opcclaw/tools/computer_use/backend.py.md)
+- [`opcclaw/tools/computer_use/cua_backend.py`](./opcclaw/tools/computer_use/cua_backend.py.md)
+- [`opcclaw/tools/computer_use/schema.py`](./opcclaw/tools/computer_use/schema.py.md)
+- [`opcclaw/tools/computer_use/tool.py`](./opcclaw/tools/computer_use/tool.py.md)
+- [`opcclaw/tools/computer_use_tool.py`](./opcclaw/tools/computer_use_tool.py.md)
+- [`opcclaw/tools/credential_files.py`](./opcclaw/tools/credential_files.py.md)
+- [`opcclaw/tools/crm_tools.py`](./opcclaw/tools/crm_tools.py.md)
+- [`opcclaw/tools/cronjob_tools.py`](./opcclaw/tools/cronjob_tools.py.md)
+- [`opcclaw/tools/data_import_tools.py`](./opcclaw/tools/data_import_tools.py.md)
+- [`opcclaw/tools/debug_helpers.py`](./opcclaw/tools/debug_helpers.py.md)
+- [`opcclaw/tools/delegate_tool.py`](./opcclaw/tools/delegate_tool.py.md)
+- [`opcclaw/tools/discord_tool.py`](./opcclaw/tools/discord_tool.py.md)
+- [`opcclaw/tools/doc_tools.py`](./opcclaw/tools/doc_tools.py.md)
+- [`opcclaw/tools/env_passthrough.py`](./opcclaw/tools/env_passthrough.py.md)
+- [`opcclaw/tools/environments/__init__.py`](./opcclaw/tools/environments/__init__.py.md)
+- [`opcclaw/tools/environments/base.py`](./opcclaw/tools/environments/base.py.md)
+- [`opcclaw/tools/environments/daytona.py`](./opcclaw/tools/environments/daytona.py.md)
+- [`opcclaw/tools/environments/docker.py`](./opcclaw/tools/environments/docker.py.md)
+- [`opcclaw/tools/environments/file_sync.py`](./opcclaw/tools/environments/file_sync.py.md)
+- [`opcclaw/tools/environments/local.py`](./opcclaw/tools/environments/local.py.md)
+- [`opcclaw/tools/environments/managed_modal.py`](./opcclaw/tools/environments/managed_modal.py.md)
+- [`opcclaw/tools/environments/modal.py`](./opcclaw/tools/environments/modal.py.md)
+- [`opcclaw/tools/environments/modal_utils.py`](./opcclaw/tools/environments/modal_utils.py.md)
+- [`opcclaw/tools/environments/singularity.py`](./opcclaw/tools/environments/singularity.py.md)
+- [`opcclaw/tools/environments/ssh.py`](./opcclaw/tools/environments/ssh.py.md)
+- [`opcclaw/tools/environments/vercel_sandbox.py`](./opcclaw/tools/environments/vercel_sandbox.py.md)
+- [`opcclaw/tools/export_tools.py`](./opcclaw/tools/export_tools.py.md)
+- [`opcclaw/tools/feishu_doc_tool.py`](./opcclaw/tools/feishu_doc_tool.py.md)
+- [`opcclaw/tools/feishu_drive_tool.py`](./opcclaw/tools/feishu_drive_tool.py.md)
+- [`opcclaw/tools/file_operations.py`](./opcclaw/tools/file_operations.py.md)
+- [`opcclaw/tools/file_state.py`](./opcclaw/tools/file_state.py.md)
+- [`opcclaw/tools/file_tools.py`](./opcclaw/tools/file_tools.py.md)
+- [`opcclaw/tools/finance_analysis_tools.py`](./opcclaw/tools/finance_analysis_tools.py.md)
+- [`opcclaw/tools/fuzzy_match.py`](./opcclaw/tools/fuzzy_match.py.md)
+- [`opcclaw/tools/homeassistant_tool.py`](./opcclaw/tools/homeassistant_tool.py.md)
+- [`opcclaw/tools/hr_tools.py`](./opcclaw/tools/hr_tools.py.md)
+- [`opcclaw/tools/image_generation_tool.py`](./opcclaw/tools/image_generation_tool.py.md)
+- [`opcclaw/tools/interrupt.py`](./opcclaw/tools/interrupt.py.md)
+- [`opcclaw/tools/inventory_tools.py`](./opcclaw/tools/inventory_tools.py.md)
+- [`opcclaw/tools/kanban_tools.py`](./opcclaw/tools/kanban_tools.py.md)
+- [`opcclaw/tools/local_dev_tools.py`](./opcclaw/tools/local_dev_tools.py.md)
+- [`opcclaw/tools/managed_tool_gateway.py`](./opcclaw/tools/managed_tool_gateway.py.md)
+- [`opcclaw/tools/marketing_tools.py`](./opcclaw/tools/marketing_tools.py.md)
+- [`opcclaw/tools/mcp_oauth.py`](./opcclaw/tools/mcp_oauth.py.md)
+- [`opcclaw/tools/mcp_oauth_manager.py`](./opcclaw/tools/mcp_oauth_manager.py.md)
+- [`opcclaw/tools/mcp_tool.py`](./opcclaw/tools/mcp_tool.py.md)
+- [`opcclaw/tools/memory_tool.py`](./opcclaw/tools/memory_tool.py.md)
+- [`opcclaw/tools/microsoft_graph_auth.py`](./opcclaw/tools/microsoft_graph_auth.py.md)
+- [`opcclaw/tools/microsoft_graph_client.py`](./opcclaw/tools/microsoft_graph_client.py.md)
+- [`opcclaw/tools/mixture_of_agents_tool.py`](./opcclaw/tools/mixture_of_agents_tool.py.md)
+- [`opcclaw/tools/neutts_synth.py`](./opcclaw/tools/neutts_synth.py.md)
+- [`opcclaw/tools/openrouter_client.py`](./opcclaw/tools/openrouter_client.py.md)
+- [`opcclaw/tools/osv_check.py`](./opcclaw/tools/osv_check.py.md)
+- [`opcclaw/tools/patch_parser.py`](./opcclaw/tools/patch_parser.py.md)
+- [`opcclaw/tools/path_security.py`](./opcclaw/tools/path_security.py.md)
+- [`opcclaw/tools/process_registry.py`](./opcclaw/tools/process_registry.py.md)
+- [`opcclaw/tools/procurement_tools.py`](./opcclaw/tools/procurement_tools.py.md)
+- [`opcclaw/tools/project_management.py`](./opcclaw/tools/project_management.py.md)
+- [`opcclaw/tools/registry.py`](./opcclaw/tools/registry.py.md)
+- [`opcclaw/tools/rl_training_tool.py`](./opcclaw/tools/rl_training_tool.py.md)
+- [`opcclaw/tools/scheduling_tools.py`](./opcclaw/tools/scheduling_tools.py.md)
+- [`opcclaw/tools/schema_sanitizer.py`](./opcclaw/tools/schema_sanitizer.py.md)
+- [`opcclaw/tools/self_monitor.py`](./opcclaw/tools/self_monitor.py.md)
+- [`opcclaw/tools/send_message_tool.py`](./opcclaw/tools/send_message_tool.py.md)
+- [`opcclaw/tools/session_search_tool.py`](./opcclaw/tools/session_search_tool.py.md)
+- [`opcclaw/tools/skill_manager_tool.py`](./opcclaw/tools/skill_manager_tool.py.md)
+- [`opcclaw/tools/skill_provenance.py`](./opcclaw/tools/skill_provenance.py.md)
+- [`opcclaw/tools/skill_usage.py`](./opcclaw/tools/skill_usage.py.md)
+- [`opcclaw/tools/skills_guard.py`](./opcclaw/tools/skills_guard.py.md)
+- [`opcclaw/tools/skills_hub.py`](./opcclaw/tools/skills_hub.py.md)
+- [`opcclaw/tools/skills_sync.py`](./opcclaw/tools/skills_sync.py.md)
+- [`opcclaw/tools/skills_tool.py`](./opcclaw/tools/skills_tool.py.md)
+- [`opcclaw/tools/slash_confirm.py`](./opcclaw/tools/slash_confirm.py.md)
+- [`opcclaw/tools/smart_report_tools.py`](./opcclaw/tools/smart_report_tools.py.md)
+- [`opcclaw/tools/template_tools.py`](./opcclaw/tools/template_tools.py.md)
+- [`opcclaw/tools/terminal_tool.py`](./opcclaw/tools/terminal_tool.py.md)
+- [`opcclaw/tools/tirith_security.py`](./opcclaw/tools/tirith_security.py.md)
+- [`opcclaw/tools/todo_tool.py`](./opcclaw/tools/todo_tool.py.md)
+- [`opcclaw/tools/tool_backend_helpers.py`](./opcclaw/tools/tool_backend_helpers.py.md)
+- [`opcclaw/tools/tool_output_limits.py`](./opcclaw/tools/tool_output_limits.py.md)
+- [`opcclaw/tools/tool_result_storage.py`](./opcclaw/tools/tool_result_storage.py.md)
+- [`opcclaw/tools/transcription_tools.py`](./opcclaw/tools/transcription_tools.py.md)
+- [`opcclaw/tools/tts_tool.py`](./opcclaw/tools/tts_tool.py.md)
+- [`opcclaw/tools/url_safety.py`](./opcclaw/tools/url_safety.py.md)
+- [`opcclaw/tools/vision_tools.py`](./opcclaw/tools/vision_tools.py.md)
+- [`opcclaw/tools/voice_mode.py`](./opcclaw/tools/voice_mode.py.md)
+- [`opcclaw/tools/web_providers/__init__.py`](./opcclaw/tools/web_providers/__init__.py.md)
+- [`opcclaw/tools/web_providers/base.py`](./opcclaw/tools/web_providers/base.py.md)
+- [`opcclaw/tools/web_providers/brave_free.py`](./opcclaw/tools/web_providers/brave_free.py.md)
+- [`opcclaw/tools/web_providers/ddgs.py`](./opcclaw/tools/web_providers/ddgs.py.md)
+- [`opcclaw/tools/web_providers/searxng.py`](./opcclaw/tools/web_providers/searxng.py.md)
+- [`opcclaw/tools/web_search_tools.py`](./opcclaw/tools/web_search_tools.py.md)
+- [`opcclaw/tools/web_tools.py`](./opcclaw/tools/web_tools.py.md)
+- [`opcclaw/tools/website_policy.py`](./opcclaw/tools/website_policy.py.md)
+- [`opcclaw/tools/xai_http.py`](./opcclaw/tools/xai_http.py.md)
+- [`opcclaw/tools/yuanbao_tools.py`](./opcclaw/tools/yuanbao_tools.py.md)
+- [`opcclaw/utils.py`](./opcclaw/utils.py.md)
+- [`opcclaw/verify_sync.py`](./opcclaw/verify_sync.py.md)
 - [`rollback_control.py`](./rollback_control.py.md)
