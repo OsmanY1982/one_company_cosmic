@@ -1,6 +1,6 @@
 # `modules/intelligence/_chat_dialog.py`
 
-> 路径：`modules/intelligence/_chat_dialog.py` | 行数：284
+> 路径：`modules/intelligence/_chat_dialog.py` | 行数：283
 
 
 ---
@@ -29,7 +29,6 @@ import json
 import urllib.request
 import urllib.error
 from typing import Optional, Dict, Any
-import traceback
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
@@ -215,7 +214,7 @@ class OPCclawChatDialog(QDialog):
                 )
                 return
             except Exception:
-                import traceback; traceback.print_exc()
+                pass  # 回退同步
 
     # ═══ 流式回调（实例方法 — 确保 QueuedConnection 派发到主线程） ═══
 

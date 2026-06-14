@@ -1,6 +1,6 @@
 # `opcclaw/tools/feishu_drive_tool.py`
 
-> 路径：`opcclaw/tools/feishu_drive_tool.py` | 行数：432
+> 路径：`opcclaw/tools/feishu_drive_tool.py` | 行数：431
 
 
 ---
@@ -17,7 +17,6 @@ The lark client is injected per-thread by the comment event handler.
 import json
 import logging
 import threading
-import traceback
 
 from tools.registry import registry, tool_error, tool_result
 
@@ -85,7 +84,7 @@ def _do_request(client, method, uri, paths=None, queries=None, body=None):
             body_json = json.loads(raw.content)
             data = body_json.get("data", {})
         except (json.JSONDecodeError, AttributeError):
-            import traceback; traceback.print_exc()
+            pass
     if not data:
         resp_data = getattr(response, "data", None)
         if isinstance(resp_data, dict):

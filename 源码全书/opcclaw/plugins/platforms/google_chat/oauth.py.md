@@ -1,6 +1,6 @@
 # `opcclaw/plugins/platforms/google_chat/oauth.py`
 
-> 路径：`opcclaw/plugins/platforms/google_chat/oauth.py` | 行数：639
+> 路径：`opcclaw/plugins/platforms/google_chat/oauth.py` | 行数：638
 
 
 ---
@@ -64,7 +64,6 @@ Token storage layout
 """
 
 from __future__ import annotations
-import traceback
 
 import argparse
 import json
@@ -352,7 +351,7 @@ def install_deps() -> bool:
         print("Dependencies already installed.")
         return True
     except ImportError:
-        import traceback; traceback.print_exc()
+        pass
 
     print("Installing Google Chat OAuth dependencies...")
     try:

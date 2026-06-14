@@ -258,7 +258,7 @@ class AgentBridge:
                 with open(cfg_path, "r", encoding="utf-8") as f:
                     return json.load(f)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         return {"cloud_providers": {}, "local_providers": {}}
 
     def get_model(self) -> str:
@@ -444,13 +444,13 @@ class AgentBridge:
             try:
                 self._stream_worker.finished.disconnect()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         if hasattr(self, '_stream_thread') and self._stream_thread:
             try:
                 self._stream_thread.quit()
                 self._stream_thread.wait(200)
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         self._stream_worker = None
         self._stream_thread = None
 

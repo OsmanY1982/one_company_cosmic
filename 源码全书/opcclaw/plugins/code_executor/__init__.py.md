@@ -1,6 +1,6 @@
 # `opcclaw/plugins/code_executor/__init__.py`
 
-> 路径：`opcclaw/plugins/code_executor/__init__.py` | 行数：201
+> 路径：`opcclaw/plugins/code_executor/__init__.py` | 行数：200
 
 
 ---
@@ -18,7 +18,6 @@ import tempfile
 import json
 from typing import Dict, Any, Optional
 from pathlib import Path
-import traceback
 
 
 class CodeExecutorPlugin:
@@ -132,7 +131,7 @@ class CodeExecutorPlugin:
                 try:
                     os.remove(temp_file)
                 except:
-                    import traceback; traceback.print_exc()
+                    pass
     
     def validate_syntax(self, code: str, language: str = "python") -> Dict[str, Any]:
         """验证代码语法"""

@@ -7,7 +7,6 @@ import sys
 import time
 from pathlib import Path
 from typing import Any, Optional
-import traceback
 
 # 将 scripts 目录添加到 sys.path 以便导入模块
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -109,7 +108,7 @@ class TokenManager:
             with open(self.cache_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
         except OSError:
-            import traceback; traceback.print_exc()
+            pass  # 忽略写入失败，降级为不缓存
 
 
 def main():

@@ -402,7 +402,7 @@ RECOMMENDED_MODELS = [
     ("qwen2.5:3b", "通义千问 2.5 (3B) - 中文轻量", "1.9GB"),
     ("deepseek-r1:1.5b", "DeepSeek-R1 (1.5B) - 推理入门", "1.1GB"),
     # 大模型 - 高性能
-    ("qwen2.5:7b-64k", "通义千问 2.5 (7B) - 中文优秀", "4.5GB"),
+    ("qwen2.5:7b", "通义千问 2.5 (7B) - 中文优秀", "4.5GB"),
     ("deepseek-r1:7b", "DeepSeek-R1 (7B) - 推理能力强", "4.7GB"),
     ("mistral:7b", "Mistral (7B) - 通用推理", "4.4GB"),
     ("phi4:14b", "Phi-4 (14B) - 微软出品", "9.1GB"),

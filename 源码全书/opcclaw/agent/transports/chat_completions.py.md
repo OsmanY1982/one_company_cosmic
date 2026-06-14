@@ -1,6 +1,6 @@
 # `opcclaw/agent/transports/chat_completions.py`
 
-> 路径：`opcclaw/agent/transports/chat_completions.py` | 行数：615
+> 路径：`opcclaw/agent/transports/chat_completions.py` | 行数：614
 
 
 ---
@@ -20,7 +20,6 @@ reasoning configuration, temperature handling, and extra_body assembly.
 
 import copy
 from typing import Any, Dict, List, Optional
-import traceback
 
 from agent.lmstudio_reasoning import resolve_lmstudio_effort
 from agent.moonshot_schema import is_moonshot_model, sanitize_moonshot_tools
@@ -546,7 +545,7 @@ class ChatCompletionsTransport(ProviderTransport):
                         try:
                             extra = extra.model_dump()
                         except Exception:
-                            import traceback; traceback.print_exc()
+                            pass
                     tc_provider_data["extra_content"] = extra
                 tool_calls.append(
                     ToolCall(

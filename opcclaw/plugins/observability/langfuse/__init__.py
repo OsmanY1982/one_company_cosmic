@@ -21,7 +21,6 @@ Optional env vars:
   HERMES_LANGFUSE_DEBUG       - set to "true" for verbose logging
 """
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -364,7 +363,7 @@ def _serialize_tool_calls(tool_calls: Any) -> list[dict[str, Any]]:
             try:
                 arguments = json.loads(arguments)
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         serialized.append({
             "id": getattr(tool_call, "id", None),
             "name": name,
@@ -501,7 +500,7 @@ def _start_root_trace(task_key: str, *, task_id: str, session_id: str, platform:
     try:
         root_span.set_trace_io(input=trace_input)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
 
     _debug(f"started trace {trace_id} for {task_key}")
     return TraceState(trace_id=trace_id, root_ctx=root_ctx, root_span=root_span)
@@ -576,7 +575,7 @@ def _finish_trace(task_key: str, *, output: Any = None) -> None:
         try:
             client.flush()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
 
 def _assistant_has_tool_calls(message: Any) -> bool:
@@ -785,7 +784,7 @@ def on_post_llm_call(*, task_id: str = "", session_id: str = "", provider: str =
                 if _cost.amount_usd is not None:
                     cost_details["total"] = float(_cost.amount_usd)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
     else:
         usage_details, cost_details = {}, {}
 

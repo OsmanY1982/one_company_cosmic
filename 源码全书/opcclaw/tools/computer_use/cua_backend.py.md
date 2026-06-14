@@ -1,6 +1,6 @@
 # `opcclaw/tools/computer_use/cua_backend.py`
 
-> 路径：`opcclaw/tools/computer_use/cua_backend.py` | 行数：678
+> 路径：`opcclaw/tools/computer_use/cua_backend.py` | 行数：677
 
 
 ---
@@ -25,7 +25,6 @@ VERSION` if you want reproducibility across an OS bump.
 """
 
 from __future__ import annotations
-import traceback
 
 import asyncio
 import base64
@@ -185,7 +184,7 @@ class _AsyncBridge:
                 try:
                     self._loop.close()
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
 
         self._thread = threading.Thread(target=_run, daemon=True, name="cua-driver-loop")
         self._thread.start()

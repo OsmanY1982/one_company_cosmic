@@ -138,7 +138,7 @@ for i, fpath in enumerate(py_files, 1):
             instance.close()
             instance.deleteLater()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     except Exception as e:
         entry["create_status"] = "⚠️ create_fail"

@@ -23,7 +23,7 @@ def _get_version_path():
         import sys
         candidates.insert(0, os.path.join(sys._MEIPASS, "version.txt"))
     except Exception:
-        import traceback; traceback.print_exc()
+        pass  # gracefully degrade on I/O failure
     for p in candidates:
         if os.path.exists(p):
             return p

@@ -17,7 +17,6 @@ Required environment variables:
 
 Usage:
     from tools.rl_training_tool import (
-import traceback
         rl_list_environments,
         rl_select_environment,
         rl_get_current_config,
@@ -499,7 +498,7 @@ def _stop_training_run(run_state: RunState):
             try:
                 fh.close()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
             setattr(run_state, attr, None)
 
 

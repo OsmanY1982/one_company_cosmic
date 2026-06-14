@@ -1,6 +1,6 @@
 # `opcclaw/tools/computer_use/tool.py`
 
-> 路径：`opcclaw/tools/computer_use/tool.py` | 行数：522
+> 路径：`opcclaw/tools/computer_use/tool.py` | 行数：521
 
 
 ---
@@ -40,7 +40,6 @@ For captures / actions with `capture_after=True`:
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -160,7 +159,7 @@ def reset_backend_for_tests() -> None:  # pragma: no cover
             try:
                 _backend.stop()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         _backend = None
     _session_auto_approve = False
     _always_allow = set()

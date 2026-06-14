@@ -1,6 +1,6 @@
 # `opcclaw/tools/environments/modal_utils.py`
 
-> 路径：`opcclaw/tools/environments/modal_utils.py` | 行数：200
+> 路径：`opcclaw/tools/environments/modal_utils.py` | 行数：199
 
 
 ---
@@ -21,7 +21,6 @@ trust-boundary decisions in their own modules.
 """
 
 from __future__ import annotations
-import traceback
 
 import shlex
 import time
@@ -126,7 +125,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 try:
                     self._cancel_modal_exec(start.handle)
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
                 return self._result(self._interrupt_output, 130)
 
             try:
@@ -141,7 +140,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 try:
                     self._cancel_modal_exec(start.handle)
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
                 return self._timeout_result_for_modal(prepared.timeout)
 
             # Periodic activity touch so the gateway knows we're alive
@@ -149,7 +148,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 from tools.environments.base import touch_activity_if_due
                 touch_activity_if_due(_activity_state, "modal command running")
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
             time.sleep(self._poll_interval_seconds)
 

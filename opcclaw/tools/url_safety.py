@@ -28,7 +28,6 @@ import logging
 import os
 import socket
 from urllib.parse import urlparse
-import traceback
 
 from utils import is_truthy_value
 
@@ -124,7 +123,7 @@ def _global_allow_private_urls() -> bool:
             return _cached_allow_private
     except Exception:
         # Config unavailable (e.g. tests, early import) — keep default
-        import traceback; traceback.print_exc()
+        pass
 
     return _cached_allow_private
 

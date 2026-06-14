@@ -229,11 +229,6 @@ class OpenAICompatibleBackend(BaseLLMBackend):
         url = self._build_url()
         headers = self._build_headers()
         data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-        # DEBUG: 打印实际发送的模型名
-        try:
-            logger.info(f"[DEBUG] _make_request model={payload.get('model')} url={url}")
-        except Exception:
-            pass
 
         req = urllib.request.Request(url, data=data, headers=headers, method="POST")
 
@@ -359,80 +354,15 @@ class OpenAICompatibleBackend(BaseLLMBackend):
         token_saver_mode: str = "balanced",  # Token 节约模式
         tool_choice: Optional[str] = None,
     ) -> LLMResponse:
-        """聊天接口，可选 Token 优化和强制工具调用。
-        自动检测 stream-only 后端并透明降级为流式累积模式。"""
+        """聊天接口，可选 Token 优化和强制工具调用"""
         
         # 应用 Token 优化
         if token_saver_mode != "disabled":
             messages = optimize_messages(messages, mode=token_saver_mode)
         
-        # 如果已知后端仅支持流式模式，直接用流式累积路径
-        if getattr(self, '_stream_only', False):
-            return self._chat_via_stream_accumulate(messages, tools, tool_choice)
-        
         payload = self._build_payload(messages, tools, stream=False, tool_choice=tool_choice)
-        try:
-            data = self._make_request(payload)
-            return self._parse_response(data)
-        except RuntimeError as e:
-            err_str = str(e)
-            if "only support stream mode" in err_str or "stream" in err_str.lower():
-                # 后端仅支持流式模式，标记并透明降级
-                self._stream_only = True
-                logger.info(f"[{self.config.name}] Detected stream-only backend, switching to stream-accumulate mode")
-                return self._chat_via_stream_accumulate(messages, tools, tool_choice)
-            raise
-
-    def _chat_via_stream_accumulate(
-        self,
-        messages: list[dict],
-        tools: Optional[list[dict]] = None,
-        tool_choice: Optional[str] = None,
-    ) -> LLMResponse:
-        """通过流式 API 累积回复，用于 stream-only 后端。
-        注：流式模式通常不支持 tools 参数，工具调用需走其他路径。"""
-        payload = self._build_payload(messages, tools=None, stream=True)
-        url = self._build_url()
-        headers = self._build_headers()
-        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-        req = urllib.request.Request(url, data=data, headers=headers, method="POST")
-
-        accumulated = ""
-        usage = {}
-        finish_reason = "stop"
-        try:
-            with urllib.request.urlopen(req, context=self._ssl_context, timeout=300) as resp:
-                for line_bytes in resp:
-                    line = line_bytes.decode("utf-8", errors="replace").strip()
-                    if not line or not line.startswith("data: "):
-                        continue
-                    data_str = line[6:]
-                    if data_str == "[DONE]":
-                        break
-                    try:
-                        chunk = json.loads(data_str)
-                    except json.JSONDecodeError:
-                        continue
-                    choice = chunk.get("choices", [{}])[0]
-                    delta = choice.get("delta", {})
-                    if "content" in delta and delta["content"]:
-                        accumulated += delta["content"]
-                    if choice.get("finish_reason"):
-                        finish_reason = choice["finish_reason"]
-                    if chunk.get("usage"):
-                        usage = chunk["usage"]
-        except Exception as e:
-            logger.error(f"[{self.config.name}] stream-accumulate failed: {e}")
-            return LLMResponse(content=f"[连接错误: {e}]")
-
-        return LLMResponse(
-            content=accumulated or None,
-            tool_calls=None,
-            finish_reason=finish_reason,
-            model=self.config.model,
-            usage=usage,
-            is_tool_call=False,
-        )
+        data = self._make_request(payload)
+        return self._parse_response(data)
 
     def chat_stream(
         self,

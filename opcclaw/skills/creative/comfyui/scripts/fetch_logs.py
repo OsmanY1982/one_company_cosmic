@@ -13,7 +13,6 @@ Usage:
 """
 
 from __future__ import annotations
-import traceback
 
 import argparse
 import json
@@ -36,7 +35,7 @@ def fetch_history_entry(host: str, headers: dict, prompt_id: str, *, is_cloud: b
             try:
                 return {"ok": True, "entry": r.json(), "source": "/api/jobs"}
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         # Fallback to history_v2
         url = resolve_url(host, f"/history/{prompt_id}", is_cloud=True)
         r = http_get(url, headers=headers, retries=2, timeout=30)

@@ -23,7 +23,6 @@ Capabilities:
 """
 
 from __future__ import annotations
-import traceback
 
 import atexit
 import json
@@ -67,7 +66,7 @@ def _atexit_commit_sessions():
     try:
         provider.on_session_end([])
     except Exception:
-        import traceback; traceback.print_exc()
+        pass  # best-effort at shutdown time
 
 
 atexit.register(_atexit_commit_sessions)

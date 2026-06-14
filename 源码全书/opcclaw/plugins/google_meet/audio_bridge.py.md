@@ -1,6 +1,6 @@
 # `opcclaw/plugins/google_meet/audio_bridge.py`
 
-> 路径：`opcclaw/plugins/google_meet/audio_bridge.py` | 行数：245
+> 路径：`opcclaw/plugins/google_meet/audio_bridge.py` | 行数：244
 
 
 ---
@@ -27,7 +27,6 @@ Windows: not supported in v2.
 """
 
 from __future__ import annotations
-import traceback
 
 import platform
 import subprocess
@@ -99,7 +98,7 @@ class AudioBridge:
                     )
                 except Exception:
                     # Best-effort teardown — never raise from here.
-                    import traceback; traceback.print_exc()
+                    pass
             self._module_ids = []
         self._torn_down = True
 

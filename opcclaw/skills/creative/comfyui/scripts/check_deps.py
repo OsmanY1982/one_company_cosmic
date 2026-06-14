@@ -23,7 +23,6 @@ Stdlib-only. Python 3.10+.
 """
 
 from __future__ import annotations
-import traceback
 
 import argparse
 import json
@@ -132,7 +131,7 @@ def fetch_object_info(url: str, headers: dict) -> tuple[set[str] | None, dict | 
             if isinstance(data, dict):
                 return set(data.keys()), None
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         return None, {"http_status": 200, "reason": "non-dict response"}
     if r.status == 403:
         try:
@@ -225,7 +224,7 @@ def fetch_embeddings(base: str, headers: dict, *, is_cloud: bool) -> tuple[set[s
                         names.add(Path(n).stem)
                 return names, None
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
     return None, {"http_status": r.status, "reason": "unexpected"}
 
 

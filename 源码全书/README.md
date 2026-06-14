@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-12 02:51
-> 共 543 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-14 16:04
+> 共 593 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -8,8 +8,37 @@
 
 ```
 .
-├── backups/
 ├── core/
+│   ├── shapes/
+│   │   ├── __init__.py
+│   │   ├── alien.py
+│   │   ├── black_hole.py
+│   │   ├── classic.py
+│   │   ├── comet.py
+│   │   ├── crystal_alien.py
+│   │   ├── energy_being.py
+│   │   ├── gas_giant.py
+│   │   ├── ghost_alien.py
+│   │   ├── grey_alien.py
+│   │   ├── ice_giant.py
+│   │   ├── jellyfish_alien.py
+│   │   ├── lava_planet.py
+│   │   ├── mars.py
+│   │   ├── mercury.py
+│   │   ├── nebula.py
+│   │   ├── neutron_star.py
+│   │   ├── octopus_alien.py
+│   │   ├── pluto.py
+│   │   ├── pulsar.py
+│   │   ├── red_giant.py
+│   │   ├── reptilian.py
+│   │   ├── robot_alien.py
+│   │   ├── saturn.py
+│   │   ├── starship.py
+│   │   ├── uranus.py
+│   │   ├── venus.py
+│   │   ├── white_dwarf.py
+│   │   └── wormhole.py
 │   ├── __init__.py
 │   ├── agent.py
 │   ├── cosmic.py
@@ -17,9 +46,9 @@
 │   ├── deps.py
 │   ├── llm_client.py
 │   ├── planet_painter.py
+│   ├── planet_painter_20260614_151048_302.py
 │   └── voice.py
 ├── data/
-│   ├── metrics/
 ├── knowledge_base/
 ├── log/
 ├── modules/
@@ -30,7 +59,9 @@
 │   │   ├── change_password_dialog.py
 │   │   ├── connect_window.py
 │   │   ├── login_window.py
+│   │   ├── model_config_panel.py
 │   │   ├── model_setup_window.py
+│   │   ├── model_setup_window.py 14-25-19-598.py
 │   │   ├── upgrade_window.py
 │   ├── business/
 │   │   ├── __init__.py
@@ -52,8 +83,6 @@
 │   │   │   ├── __init__.py
 │   │   │   └── llm_backend.py
 │   │   ├── data/
-│   │   │   ├── learning/
-│   │   │   └── reflections/
 │   │   ├── __init__.py
 │   │   ├── _ai_shared.py
 │   │   ├── _ai_widgets.py
@@ -81,13 +110,18 @@
 │   │   ├── ai_features_sales_ai.py
 │   │   ├── analysis_tools.py
 │   │   ├── anomaly_detector.py
+│   │   ├── bridge_window.py
 │   │   ├── business_ai_assistant.py
 │   │   ├── business_tools.py
 │   │   ├── core_engine_star.py
 │   │   ├── crm_tools.py
 │   │   ├── data_import_tools.py
 │   │   ├── data_visualization.py
+│   │   ├── digital_display.py
 │   │   ├── digital_emp_window.py
+│   │   ├── digital_employee.py
+│   │   ├── digital_employee_panel.py
+│   │   ├── edge_tts_engine.py
 │   │   ├── editor_window.py
 │   │   ├── enhanced_chat.py
 │   │   ├── finance_analysis_tools.py
@@ -99,23 +133,29 @@
 │   │   ├── llm_config_dialog.py
 │   │   ├── marketing_tools.py
 │   │   ├── model_config.py
+│   │   ├── morning_briefing.py
 │   │   ├── offline_analyzer.py
+│   │   ├── opcclaw_employee.py
 │   │   ├── opcclaw_floating_planet.py
 │   │   ├── performance_monitor.py
 │   │   ├── quick_actions.py
+│   │   ├── rag_injector.py
 │   │   ├── recommendation_engine.py
 │   │   ├── report_generator.py
 │   │   ├── scan_window.py
 │   │   ├── self_monitor.py
 │   │   ├── smart_report_tools.py
 │   │   ├── smart_workflow.py
+│   │   ├── starship_painter.py
 │   │   ├── super_intelligence.py
 │   │   ├── super_intelligence_star.py
 │   │   ├── system_hub_window.py
 │   │   ├── system_monitor.py
+│   │   ├── tool_registry.py
 │   │   ├── tools_window.py
 │   │   ├── vault_window.py
 │   │   ├── voice_interface.py
+│   │   ├── whisper_recognizer.py
 │   │   └── workflow_engine.py
 │   ├── personnel/
 │   │   ├── __init__.py
@@ -195,7 +235,6 @@
 │   │   ├── tool_guardrails.py
 │   │   ├── trajectory.py
 │   │   └── usage_pricing.py
-│   ├── ai_tools/
 │   ├── core/
 │   │   ├── __init__.py
 │   │   ├── agent_delegate.py
@@ -222,6 +261,7 @@
 │   │   ├── patch_engine.py
 │   │   ├── performance_monitor.py
 │   │   ├── process_manager.py
+│   │   ├── provider_registry.py
 │   │   ├── rag_context.py
 │   │   ├── secure_storage.py
 │   │   ├── semantic_search.py
@@ -243,15 +283,11 @@
 │   │   └── workspace_indexer.py
 │   ├── data/
 │   │   ├── opcclaw/
-│   │   │   ├── exports/
 │   │   │   ├── memory/
-│   │   │   ├── metrics/
 │   │   │   ├── sessions/
 │   │   │   ├── smart_memory/
 │   │   │   │   ├── preferences/
-│   │   │   │   ├── session_state/
 │   │   │   │   ├── snapshots/
-│   │   ├── process_logs/
 │   │   ├── __init__.py
 │   ├── hermes_cli/
 │   │   ├── __init__.py
@@ -570,6 +606,7 @@
 │   │   │   │   ├── references/
 │   │   ├── index-cache/
 │   │   ├── inference-sh/
+│   │   ├── macos_system/
 │   │   ├── mcp/
 │   │   │   ├── native-mcp/
 │   │   ├── media/
@@ -609,6 +646,7 @@
 │   │   ├── model-switch-automation/
 │   │   ├── note-taking/
 │   │   │   ├── obsidian/
+│   │   ├── one_company/
 │   │   ├── productivity/
 │   │   │   ├── airtable/
 │   │   │   ├── google-workspace/
@@ -653,7 +691,6 @@
 │   │   │   ├── aippt/
 │   │   │   │   ├── scripts/
 │   │   │   ├── baidu-search/
-│   │   │   │   ├── references/
 │   │   │   │   ├── scripts/
 │   │   │   │   │   └── search.py
 │   │   │   ├── file-manager/
@@ -763,19 +800,11 @@
 │   │   └── dual_ai.py
 │   ├── tests/
 │   │   ├── test_chat_data/
-│   │   │   ├── memory/
-│   │   │   ├── sessions/
 │   │   │   └── smart_memory/
-│   │   │       ├── preferences/
-│   │   │       ├── session_state/
-│   │   │       └── snapshots/
+│   │   │       └── preferences/
 │   │   ├── test_mem_data/
-│   │   │   ├── memory/
-│   │   │   ├── sessions/
 │   │   │   └── smart_memory/
 │   │   │       ├── preferences/
-│   │   │       ├── session_state/
-│   │   │       ├── snapshots/
 │   │   ├── __init__.py
 │   │   ├── conftest.py
 │   │   ├── test_core_modules.py
@@ -845,6 +874,7 @@
 │   │   ├── debug_helpers.py
 │   │   ├── delegate_tool.py
 │   │   ├── discord_tool.py
+│   │   ├── dispatch_tool.py
 │   │   ├── doc_tools.py
 │   │   ├── env_passthrough.py
 │   │   ├── export_tools.py
@@ -895,6 +925,7 @@
 │   │   ├── skills_tool.py
 │   │   ├── slash_confirm.py
 │   │   ├── smart_report_tools.py
+│   │   ├── sub_agent.py
 │   │   ├── template_tools.py
 │   │   ├── terminal_tool.py
 │   │   ├── tirith_security.py
@@ -913,6 +944,7 @@
 │   │   ├── xai_http.py
 │   │   └── yuanbao_tools.py
 │   ├── __init__.py
+│   ├── __init___20260613_080428_724.py
 │   ├── conftest.py
 │   ├── gen_book.py
 │   ├── hermes_constants.py
@@ -922,10 +954,12 @@
 │   ├── test_opcclaw.py
 │   ├── utils.py
 │   ├── verify_sync.py
-├── test_kb/
 ├── gen_book.py
 ├── main.py
+├── planet_daemon.py
 ├── rollback_control.py
+├── siri_command_handler.py
+├── temp_test_stream.py
 ```
 
 ---
@@ -939,6 +973,36 @@
 - [`core/deps.py`](./core/deps.py.md)
 - [`core/llm_client.py`](./core/llm_client.py.md)
 - [`core/planet_painter.py`](./core/planet_painter.py.md)
+- [`core/planet_painter_20260614_151048_302.py`](./core/planet_painter_20260614_151048_302.py.md)
+- [`core/shapes/__init__.py`](./core/shapes/__init__.py.md)
+- [`core/shapes/alien.py`](./core/shapes/alien.py.md)
+- [`core/shapes/black_hole.py`](./core/shapes/black_hole.py.md)
+- [`core/shapes/classic.py`](./core/shapes/classic.py.md)
+- [`core/shapes/comet.py`](./core/shapes/comet.py.md)
+- [`core/shapes/crystal_alien.py`](./core/shapes/crystal_alien.py.md)
+- [`core/shapes/energy_being.py`](./core/shapes/energy_being.py.md)
+- [`core/shapes/gas_giant.py`](./core/shapes/gas_giant.py.md)
+- [`core/shapes/ghost_alien.py`](./core/shapes/ghost_alien.py.md)
+- [`core/shapes/grey_alien.py`](./core/shapes/grey_alien.py.md)
+- [`core/shapes/ice_giant.py`](./core/shapes/ice_giant.py.md)
+- [`core/shapes/jellyfish_alien.py`](./core/shapes/jellyfish_alien.py.md)
+- [`core/shapes/lava_planet.py`](./core/shapes/lava_planet.py.md)
+- [`core/shapes/mars.py`](./core/shapes/mars.py.md)
+- [`core/shapes/mercury.py`](./core/shapes/mercury.py.md)
+- [`core/shapes/nebula.py`](./core/shapes/nebula.py.md)
+- [`core/shapes/neutron_star.py`](./core/shapes/neutron_star.py.md)
+- [`core/shapes/octopus_alien.py`](./core/shapes/octopus_alien.py.md)
+- [`core/shapes/pluto.py`](./core/shapes/pluto.py.md)
+- [`core/shapes/pulsar.py`](./core/shapes/pulsar.py.md)
+- [`core/shapes/red_giant.py`](./core/shapes/red_giant.py.md)
+- [`core/shapes/reptilian.py`](./core/shapes/reptilian.py.md)
+- [`core/shapes/robot_alien.py`](./core/shapes/robot_alien.py.md)
+- [`core/shapes/saturn.py`](./core/shapes/saturn.py.md)
+- [`core/shapes/starship.py`](./core/shapes/starship.py.md)
+- [`core/shapes/uranus.py`](./core/shapes/uranus.py.md)
+- [`core/shapes/venus.py`](./core/shapes/venus.py.md)
+- [`core/shapes/white_dwarf.py`](./core/shapes/white_dwarf.py.md)
+- [`core/shapes/wormhole.py`](./core/shapes/wormhole.py.md)
 - [`core/voice.py`](./core/voice.py.md)
 - [`gen_book.py`](./gen_book.py.md)
 - [`main.py`](./main.py.md)
@@ -949,7 +1013,9 @@
 - [`modules/auth/change_password_dialog.py`](./modules/auth/change_password_dialog.py.md)
 - [`modules/auth/connect_window.py`](./modules/auth/connect_window.py.md)
 - [`modules/auth/login_window.py`](./modules/auth/login_window.py.md)
+- [`modules/auth/model_config_panel.py`](./modules/auth/model_config_panel.py.md)
 - [`modules/auth/model_setup_window.py`](./modules/auth/model_setup_window.py.md)
+- [`modules/auth/model_setup_window.py 14-25-19-598.py`](./modules/auth/model_setup_window.py 14-25-19-598.py.md)
 - [`modules/auth/upgrade_window.py`](./modules/auth/upgrade_window.py.md)
 - [`modules/business/__init__.py`](./modules/business/__init__.py.md)
 - [`modules/business/business_window.py`](./modules/business/business_window.py.md)
@@ -990,6 +1056,7 @@
 - [`modules/intelligence/ai_features_sales_ai.py`](./modules/intelligence/ai_features_sales_ai.py.md)
 - [`modules/intelligence/analysis_tools.py`](./modules/intelligence/analysis_tools.py.md)
 - [`modules/intelligence/anomaly_detector.py`](./modules/intelligence/anomaly_detector.py.md)
+- [`modules/intelligence/bridge_window.py`](./modules/intelligence/bridge_window.py.md)
 - [`modules/intelligence/business_ai_assistant.py`](./modules/intelligence/business_ai_assistant.py.md)
 - [`modules/intelligence/business_tools.py`](./modules/intelligence/business_tools.py.md)
 - [`modules/intelligence/core/__init__.py`](./modules/intelligence/core/__init__.py.md)
@@ -998,7 +1065,11 @@
 - [`modules/intelligence/crm_tools.py`](./modules/intelligence/crm_tools.py.md)
 - [`modules/intelligence/data_import_tools.py`](./modules/intelligence/data_import_tools.py.md)
 - [`modules/intelligence/data_visualization.py`](./modules/intelligence/data_visualization.py.md)
+- [`modules/intelligence/digital_display.py`](./modules/intelligence/digital_display.py.md)
 - [`modules/intelligence/digital_emp_window.py`](./modules/intelligence/digital_emp_window.py.md)
+- [`modules/intelligence/digital_employee.py`](./modules/intelligence/digital_employee.py.md)
+- [`modules/intelligence/digital_employee_panel.py`](./modules/intelligence/digital_employee_panel.py.md)
+- [`modules/intelligence/edge_tts_engine.py`](./modules/intelligence/edge_tts_engine.py.md)
 - [`modules/intelligence/editor_window.py`](./modules/intelligence/editor_window.py.md)
 - [`modules/intelligence/enhanced_chat.py`](./modules/intelligence/enhanced_chat.py.md)
 - [`modules/intelligence/finance_analysis_tools.py`](./modules/intelligence/finance_analysis_tools.py.md)
@@ -1010,23 +1081,29 @@
 - [`modules/intelligence/llm_config_dialog.py`](./modules/intelligence/llm_config_dialog.py.md)
 - [`modules/intelligence/marketing_tools.py`](./modules/intelligence/marketing_tools.py.md)
 - [`modules/intelligence/model_config.py`](./modules/intelligence/model_config.py.md)
+- [`modules/intelligence/morning_briefing.py`](./modules/intelligence/morning_briefing.py.md)
 - [`modules/intelligence/offline_analyzer.py`](./modules/intelligence/offline_analyzer.py.md)
+- [`modules/intelligence/opcclaw_employee.py`](./modules/intelligence/opcclaw_employee.py.md)
 - [`modules/intelligence/opcclaw_floating_planet.py`](./modules/intelligence/opcclaw_floating_planet.py.md)
 - [`modules/intelligence/performance_monitor.py`](./modules/intelligence/performance_monitor.py.md)
 - [`modules/intelligence/quick_actions.py`](./modules/intelligence/quick_actions.py.md)
+- [`modules/intelligence/rag_injector.py`](./modules/intelligence/rag_injector.py.md)
 - [`modules/intelligence/recommendation_engine.py`](./modules/intelligence/recommendation_engine.py.md)
 - [`modules/intelligence/report_generator.py`](./modules/intelligence/report_generator.py.md)
 - [`modules/intelligence/scan_window.py`](./modules/intelligence/scan_window.py.md)
 - [`modules/intelligence/self_monitor.py`](./modules/intelligence/self_monitor.py.md)
 - [`modules/intelligence/smart_report_tools.py`](./modules/intelligence/smart_report_tools.py.md)
 - [`modules/intelligence/smart_workflow.py`](./modules/intelligence/smart_workflow.py.md)
+- [`modules/intelligence/starship_painter.py`](./modules/intelligence/starship_painter.py.md)
 - [`modules/intelligence/super_intelligence.py`](./modules/intelligence/super_intelligence.py.md)
 - [`modules/intelligence/super_intelligence_star.py`](./modules/intelligence/super_intelligence_star.py.md)
 - [`modules/intelligence/system_hub_window.py`](./modules/intelligence/system_hub_window.py.md)
 - [`modules/intelligence/system_monitor.py`](./modules/intelligence/system_monitor.py.md)
+- [`modules/intelligence/tool_registry.py`](./modules/intelligence/tool_registry.py.md)
 - [`modules/intelligence/tools_window.py`](./modules/intelligence/tools_window.py.md)
 - [`modules/intelligence/vault_window.py`](./modules/intelligence/vault_window.py.md)
 - [`modules/intelligence/voice_interface.py`](./modules/intelligence/voice_interface.py.md)
+- [`modules/intelligence/whisper_recognizer.py`](./modules/intelligence/whisper_recognizer.py.md)
 - [`modules/intelligence/workflow_engine.py`](./modules/intelligence/workflow_engine.py.md)
 - [`modules/personnel/__init__.py`](./modules/personnel/__init__.py.md)
 - [`modules/personnel/distribution_window.py`](./modules/personnel/distribution_window.py.md)
@@ -1043,6 +1120,7 @@
 - [`modules/system/system_window.py`](./modules/system/system_window.py.md)
 - [`modules/system/update_dialog.py`](./modules/system/update_dialog.py.md)
 - [`opcclaw/__init__.py`](./opcclaw/__init__.py.md)
+- [`opcclaw/__init___20260613_080428_724.py`](./opcclaw/__init___20260613_080428_724.py.md)
 - [`opcclaw/agent/__init__.py`](./opcclaw/agent/__init__.py.md)
 - [`opcclaw/agent/account_usage.py`](./opcclaw/agent/account_usage.py.md)
 - [`opcclaw/agent/anthropic_adapter.py`](./opcclaw/agent/anthropic_adapter.py.md)
@@ -1127,6 +1205,7 @@
 - [`opcclaw/core/patch_engine.py`](./opcclaw/core/patch_engine.py.md)
 - [`opcclaw/core/performance_monitor.py`](./opcclaw/core/performance_monitor.py.md)
 - [`opcclaw/core/process_manager.py`](./opcclaw/core/process_manager.py.md)
+- [`opcclaw/core/provider_registry.py`](./opcclaw/core/provider_registry.py.md)
 - [`opcclaw/core/rag_context.py`](./opcclaw/core/rag_context.py.md)
 - [`opcclaw/core/secure_storage.py`](./opcclaw/core/secure_storage.py.md)
 - [`opcclaw/core/semantic_search.py`](./opcclaw/core/semantic_search.py.md)
@@ -1388,6 +1467,7 @@
 - [`opcclaw/tools/debug_helpers.py`](./opcclaw/tools/debug_helpers.py.md)
 - [`opcclaw/tools/delegate_tool.py`](./opcclaw/tools/delegate_tool.py.md)
 - [`opcclaw/tools/discord_tool.py`](./opcclaw/tools/discord_tool.py.md)
+- [`opcclaw/tools/dispatch_tool.py`](./opcclaw/tools/dispatch_tool.py.md)
 - [`opcclaw/tools/doc_tools.py`](./opcclaw/tools/doc_tools.py.md)
 - [`opcclaw/tools/env_passthrough.py`](./opcclaw/tools/env_passthrough.py.md)
 - [`opcclaw/tools/environments/__init__.py`](./opcclaw/tools/environments/__init__.py.md)
@@ -1450,6 +1530,7 @@
 - [`opcclaw/tools/skills_tool.py`](./opcclaw/tools/skills_tool.py.md)
 - [`opcclaw/tools/slash_confirm.py`](./opcclaw/tools/slash_confirm.py.md)
 - [`opcclaw/tools/smart_report_tools.py`](./opcclaw/tools/smart_report_tools.py.md)
+- [`opcclaw/tools/sub_agent.py`](./opcclaw/tools/sub_agent.py.md)
 - [`opcclaw/tools/template_tools.py`](./opcclaw/tools/template_tools.py.md)
 - [`opcclaw/tools/terminal_tool.py`](./opcclaw/tools/terminal_tool.py.md)
 - [`opcclaw/tools/tirith_security.py`](./opcclaw/tools/tirith_security.py.md)
@@ -1474,4 +1555,7 @@
 - [`opcclaw/tools/yuanbao_tools.py`](./opcclaw/tools/yuanbao_tools.py.md)
 - [`opcclaw/utils.py`](./opcclaw/utils.py.md)
 - [`opcclaw/verify_sync.py`](./opcclaw/verify_sync.py.md)
+- [`planet_daemon.py`](./planet_daemon.py.md)
 - [`rollback_control.py`](./rollback_control.py.md)
+- [`siri_command_handler.py`](./siri_command_handler.py.md)
+- [`temp_test_stream.py`](./temp_test_stream.py.md)

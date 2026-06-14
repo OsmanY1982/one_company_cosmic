@@ -1,6 +1,6 @@
 # `opcclaw/skills/productivity/powerpoint/scripts/clean.py`
 
-> 路径：`opcclaw/skills/productivity/powerpoint/scripts/clean.py` | 行数：287
+> 路径：`opcclaw/skills/productivity/powerpoint/scripts/clean.py` | 行数：286
 
 
 ---
@@ -26,7 +26,6 @@ This script removes:
 
 import sys
 from pathlib import Path
-import traceback
 
 import defusedxml.minidom
 
@@ -130,7 +129,7 @@ def get_slide_referenced_files(unpacked_dir: Path) -> set:
             try:
                 referenced.add(target_path.relative_to(unpacked_dir.resolve()))
             except ValueError:
-                import traceback; traceback.print_exc()
+                pass
 
     return referenced
 
@@ -173,7 +172,7 @@ def get_referenced_files(unpacked_dir: Path) -> set:
             try:
                 referenced.add(target_path.relative_to(unpacked_dir.resolve()))
             except ValueError:
-                import traceback; traceback.print_exc()
+                pass
 
     return referenced
 

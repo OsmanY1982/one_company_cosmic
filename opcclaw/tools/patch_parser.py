@@ -20,7 +20,6 @@ V4A Format:
 
 Usage:
     from tools.patch_parser import parse_v4a_patch, apply_v4a_operations
-import traceback
     
     operations, error = parse_v4a_patch(patch_content)
     if error:
@@ -299,7 +298,7 @@ def _validate_operations(
                         from tools.fuzzy_match import format_no_match_hint
                         msg += format_no_match_hint(match_error, count, search_pattern, simulated)
                     except Exception:
-                        import traceback; traceback.print_exc()
+                        pass
                     errors.append(msg)
                 else:
                     # Advance simulation so subsequent hunks validate correctly.
@@ -549,7 +548,7 @@ def _apply_update(op: PatchOperation, file_ops: Any) -> Tuple[bool, str]:
                         from tools.fuzzy_match import format_no_match_hint
                         err_msg += format_no_match_hint(error, 0, search_pattern, new_content)
                     except Exception:
-                        import traceback; traceback.print_exc()
+                        pass
                     return False, err_msg
         else:
             # Addition-only hunk (no context or removed lines).

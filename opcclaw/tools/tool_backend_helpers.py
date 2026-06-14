@@ -1,7 +1,6 @@
 """Shared helpers for tool backend selection."""
 
 from __future__ import annotations
-import traceback
 
 import os
 from pathlib import Path
@@ -120,7 +119,7 @@ def prefers_gateway(config_section: str) -> bool:
         if isinstance(section, dict):
             return is_truthy_value(section.get("use_gateway"), default=False)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
     return False
 
 

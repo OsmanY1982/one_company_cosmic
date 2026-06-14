@@ -5,18 +5,12 @@ OPCclaw - 本地模型配置面板 (Ollama / LM Studio)
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QLabel,
     QLineEdit, QComboBox, QListWidget, QListWidgetItem,
-    QGroupBox, QMessageBox, QApplication, QPushButton,
+    QGroupBox, QMessageBox, QApplication,
 )
-from PyQt5.QtCore import Qt, pyqtSignal, QThread, QTimer, QObject
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 
 from ._shared import COLORS, _styled_btn, _styled_input
-
-try:
-    from modules.intelligence._model_manager import OllamaManager
-    _OLLAMA_MGR = True
-except ImportError:
-    _OLLAMA_MGR = False
 
 
 class LocalModelPanel(QWidget):
@@ -27,7 +21,6 @@ class LocalModelPanel(QWidget):
     def __init__(self, config, parent=None):
         super().__init__(parent)
         self.config = config
-        self._ollama_model_data = {}
         self._build()
 
     def _build(self):
@@ -61,7 +54,9 @@ class LocalModelPanel(QWidget):
         ollama_row = QHBoxLayout()
         self.ollama_model = QComboBox()
         self.ollama_model.setEditable(True)
-        self.ollama_model.setMinimumWidth(220)
+        self.ollama_model.setMinimumWidth(200)
+        self.ollama_model.addItems(["qwen2.5:7b", "qwen2.5:14b", "deepseek-r1:8b",
+                                     "llama3.1:8b", "mistral:7b", "gemma2:9b"])
         ollama_row.addWidget(QLabel("模型:"))
         ollama_row.addWidget(self.ollama_model, stretch=1)
 
@@ -70,43 +65,11 @@ class LocalModelPanel(QWidget):
         ollama_row.addWidget(QLabel("地址:"))
         ollama_row.addWidget(self.ollama_url)
 
-        ollama_btn = _styled_btn("连接", COLORS["success"])
-        ollama_btn.setToolTip("添加当前选中的模型为独立本地服务")
+        ollama_btn = _styled_btn("连接 Ollama", COLORS["success"])
         ollama_btn.clicked.connect(self._connect_ollama)
         ollama_row.addWidget(ollama_btn)
-
-        refresh_btn = QPushButton("刷新")
-        refresh_btn.setCursor(Qt.PointingHandCursor)
-        refresh_btn.setStyleSheet(f"""
-            QPushButton {{
-                background: {COLORS['card']}; color: {COLORS['text']};
-                border: 1px solid {COLORS['border']}; border-radius: 6px;
-                padding: 6px 10px; font-size: 12px;
-            }}
-            QPushButton:hover {{ background: {COLORS['primary']}; color: white; }}
-        """)
-        refresh_btn.clicked.connect(self._refresh_ollama_models)
-        ollama_row.addWidget(refresh_btn)
         ollama_layout.addLayout(ollama_row)
-
-        # 一键添加全部
-        add_all_btn = QPushButton("一键添加全部模型")
-        add_all_btn.setCursor(Qt.PointingHandCursor)
-        add_all_btn.setStyleSheet(f"""
-            QPushButton {{
-                background: {COLORS['primary']}; color: white;
-                border: none; border-radius: 6px;
-                padding: 6px 12px; font-size: 12px;
-            }}
-            QPushButton:hover {{ opacity: 0.85; }}
-        """)
-        add_all_btn.clicked.connect(self._add_all_ollama_models)
-        ollama_layout.addWidget(add_all_btn)
-
         layout.addWidget(ollama_group)
-
-        # 动态拉取已安装的模型（异步，不阻塞 UI）
-        QTimer(self).singleShot(100, self._refresh_ollama_models)
 
         # 快捷添加: LM Studio
         lm_group = QGroupBox("LM Studio")
@@ -184,92 +147,6 @@ class LocalModelPanel(QWidget):
     def _connect_ollama(self):
         self._add_local("Ollama", self.ollama_url.text().strip(),
                         self.ollama_model.currentText().strip())
-
-    def _refresh_ollama_models(self):
-        """后台线程拉取 Ollama 已安装模型，填充下拉框（不阻塞 UI）"""
-        if not _OLLAMA_MGR:
-            self.ollama_model.clear()
-            self.ollama_model.addItem("（Ollama 管理模块不可用）")
-            return
-
-        self.ollama_model.clear()
-        self.ollama_model.addItem("（获取中...）")
-
-        class _FetchWorker(QObject):
-            finished = pyqtSignal(list)  # list of (display_text, model_name)
-
-            def run(self):
-                results = []
-                try:
-                    if not OllamaManager.is_running():
-                        results.append(("（Ollama 未启动）", ""))
-                        self.finished.emit(results)
-                        return
-                    models = OllamaManager.list_models()
-                    if not models:
-                        results.append(("（无已安装模型，请先 pull）", ""))
-                        self.finished.emit(results)
-                        return
-                    for m in models:
-                        name = m.get("name", "")
-                        size = m.get("size", 0)
-                        size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
-                        results.append((f"{name}{size_str}", name))
-                except Exception as e:
-                    results.append((f"（获取失败: {e}）", ""))
-                finally:
-                    self.finished.emit(results)
-
-        self._ollama_fetch_thread = QThread()
-        self._ollama_fetch_worker = _FetchWorker()
-        self._ollama_fetch_worker.moveToThread(self._ollama_fetch_thread)
-        self._ollama_fetch_thread.started.connect(self._ollama_fetch_worker.run)
-        self._ollama_fetch_worker.finished.connect(self._on_ollama_models_ready)
-        self._ollama_fetch_worker.finished.connect(self._ollama_fetch_thread.quit)
-        self._ollama_fetch_thread.finished.connect(self._ollama_fetch_thread.deleteLater)
-        self._ollama_fetch_worker.finished.connect(self._ollama_fetch_worker.deleteLater)
-        self._ollama_fetch_thread.start()
-
-    def _on_ollama_models_ready(self, results: list):
-        """后台拉取完成后填入下拉框"""
-        self.ollama_model.clear()
-        self._ollama_model_data = {}  # display_text -> model_name
-        for display_text, model_name in results:
-            self.ollama_model.addItem(display_text, model_name)
-            self._ollama_model_data[display_text] = model_name
-
-    def _add_all_ollama_models(self):
-        """一键将全部已安装的 Ollama 模型添加为独立本地服务"""
-        if not _OLLAMA_MGR:
-            QMessageBox.warning(self, "不可用", "Ollama 管理模块不可用")
-            return
-
-        base_url = self.ollama_url.text().strip()
-        model_names = []
-        for i in range(self.ollama_model.count()):
-            name = self.ollama_model.itemData(i)
-            if name and "（" not in str(name):
-                model_names.append(name)
-
-        if not model_names:
-            QMessageBox.warning(self, "提示", "未检测到已安装的模型，请先刷新")
-            return
-
-        added = 0
-        for model_name in model_names:
-            pid = "ollama_" + model_name.replace(":", "_").replace("-", "_").replace(".", "_")
-            self.config.add_provider("local", pid, {
-                "name": f"Ollama-{model_name}",
-                "provider_type": "openai_compatible",
-                "base_url": base_url,
-                "api_key": "local",
-                "model": model_name,
-            })
-            added += 1
-
-        self._refresh()
-        self.providers_changed.emit()
-        QMessageBox.information(self, "完成", f"已添加 {added} 个模型作为本地服务\n请在下方列表双击切换到想要使用的模型")
 
     def _connect_lm_studio(self):
         self._add_local("LM Studio", self.lm_url.text().strip(),

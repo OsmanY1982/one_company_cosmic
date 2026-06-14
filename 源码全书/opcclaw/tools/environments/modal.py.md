@@ -1,6 +1,6 @@
 # `opcclaw/tools/environments/modal.py`
 
-> 路径：`opcclaw/tools/environments/modal.py` | 行数：461
+> 路径：`opcclaw/tools/environments/modal.py` | 行数：460
 
 
 ---
@@ -22,7 +22,6 @@ import tarfile
 import threading
 from pathlib import Path
 from typing import Any, Optional
-import traceback
 
 from hermes_constants import get_hermes_home
 from tools.environments.base import (
@@ -463,7 +462,7 @@ class ModalEnvironment(BaseEnvironment):
         try:
             self._worker.run_coroutine(self._sandbox.terminate.aio(), timeout=15)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         finally:
             self._worker.stop()
             self._sandbox = None

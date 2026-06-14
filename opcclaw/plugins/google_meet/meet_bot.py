@@ -2,7 +2,6 @@
 
 Runs as a standalone subprocess spawned by ``process_manager.py``. Reads config
 from env vars, writes status + transcript to files under
-import traceback
 ``$HERMES_HOME/workspace/meetings/<meeting-id>/``. The main hermes process
 reads those files via the ``meet_*`` tools — no IPC beyond filesystem.
 
@@ -576,7 +575,7 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
                 page.evaluate(_enable_captions_js())
                 state.set(captions_enabled_attempted=True)
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
             try:
                 page.evaluate(_CAPTION_OBSERVER_JS)
             except Exception as e:
@@ -671,7 +670,7 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
                                         if cancelled:
                                             state.set(last_barge_in_at=now)
                                     except Exception:
-                                        import traceback; traceback.print_exc()
+                                        pass
                 except Exception:
                     # Meet reloaded or we got booted — try to detect and
                     # exit gracefully rather than spinning.
@@ -696,7 +695,7 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
                     " if (b) b.click(); }"
                 )
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
             context.close()
             browser.close()
@@ -705,22 +704,22 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
                 try:
                     rt["speaker_stop"]()
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
             if rt["speaker_thread"] is not None:
                 try:
                     rt["speaker_thread"].join(timeout=5.0)
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
             if rt["session"]:
                 try:
                     rt["session"].close()
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
             if rt["bridge"]:
                 try:
                     rt["bridge"].teardown()
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
             state.set(in_call=False, captioning=False, exited=True)
             return 0
 
@@ -737,7 +736,7 @@ def _try_guest_name(page, guest_name: str) -> None:
         if locator.count() and locator.is_visible():
             locator.fill(guest_name, timeout=2_000)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
 
 
 def _detect_admission(page) -> bool:

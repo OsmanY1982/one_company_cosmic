@@ -1,6 +1,6 @@
 # `opcclaw/agent/nous_rate_guard.py`
 
-> 路径：`opcclaw/agent/nous_rate_guard.py` | 行数：326
+> 路径：`opcclaw/agent/nous_rate_guard.py` | 行数：325
 
 
 ---
@@ -20,7 +20,6 @@ it before subsequent attempts, we eliminate the amplification effect.
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -73,7 +72,7 @@ def _parse_reset_seconds(headers: Optional[Mapping[str, str]]) -> Optional[float
                 if val > 0:
                     return val
             except (TypeError, ValueError):
-                import traceback; traceback.print_exc()
+                pass
 
     return None
 
@@ -135,7 +134,7 @@ def record_nous_rate_limit(
             try:
                 os.unlink(tmp_path)
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
             raise
 
         logger.info(
@@ -164,7 +163,7 @@ def nous_rate_limit_remaining() -> Optional[float]:
         try:
             os.unlink(path)
         except OSError:
-            import traceback; traceback.print_exc()
+            pass
         return None
     except (FileNotFoundError, json.JSONDecodeError, KeyError, TypeError):
         return None
@@ -175,7 +174,7 @@ def clear_nous_rate_limit() -> None:
     try:
         os.unlink(_state_path())
     except FileNotFoundError:
-        import traceback; traceback.print_exc()
+        pass
     except OSError as exc:
         logger.debug("Failed to clear Nous rate limit state: %s", exc)
 

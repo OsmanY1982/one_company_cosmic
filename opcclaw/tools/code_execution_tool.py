@@ -43,7 +43,6 @@ import tempfile
 import threading
 import time
 import uuid
-import traceback
 
 _IS_WINDOWS = platform.system() == "Windows"
 from typing import Any, Dict, List, Optional
@@ -416,7 +415,7 @@ def _call(tool_name, args):
     try:
         os.unlink(res_file)
     except OSError:
-        import traceback; traceback.print_exc()
+        pass
 
     result = json.loads(raw)
     if isinstance(result, str):
@@ -1297,7 +1296,7 @@ def execute_code(
                         oldest = tail_buf.popleft()
                         tail_collected -= len(oldest)
             except (ValueError, OSError):
-                import traceback; traceback.print_exc()
+                pass
             # Transfer final tail to output list
             tail_chunks.extend(tail_buf)
 
@@ -1336,7 +1335,7 @@ def execute_code(
                 from tools.environments.base import touch_activity_if_due
                 touch_activity_if_due(_activity_state, "execute_code running")
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
             time.sleep(0.2)
 
         # Wait for readers to finish draining
@@ -1447,7 +1446,7 @@ def execute_code(
             if sock_path:
                 os.unlink(sock_path)
         except OSError:
-            import traceback; traceback.print_exc()
+            pass  # already cleaned up or never created
 
 
 def _kill_process_group(proc, escalate: bool = False):
@@ -1460,13 +1459,13 @@ def _kill_process_group(proc, escalate: bool = False):
             try:
                 child.terminate()
             except psutil.NoSuchProcess:
-                import traceback; traceback.print_exc()
+                pass
         try:
             parent.terminate()
         except psutil.NoSuchProcess:
-            import traceback; traceback.print_exc()
+            pass
     except psutil.NoSuchProcess:
-        import traceback; traceback.print_exc()
+        pass
     except (PermissionError, OSError) as e:
         logger.debug("Could not terminate process tree: %s", e, exc_info=True)
         try:
@@ -1485,13 +1484,13 @@ def _kill_process_group(proc, escalate: bool = False):
                     try:
                         child.kill()
                     except psutil.NoSuchProcess:
-                        import traceback; traceback.print_exc()
+                        pass
                 try:
                     parent.kill()
                 except psutil.NoSuchProcess:
-                    import traceback; traceback.print_exc()
+                    pass
             except psutil.NoSuchProcess:
-                import traceback; traceback.print_exc()
+                pass
             except (PermissionError, OSError) as e:
                 logger.debug("Could not kill process tree: %s", e, exc_info=True)
                 try:

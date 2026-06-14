@@ -16,7 +16,6 @@ from PyQt5.QtGui import (
     QLinearGradient, QFont, QPainterPath
 )
 from core.cosmic import CosmicBackground
-from core.planet_painter import paint_planet, paint_planet_at_angle, paint_orbit, PLANET_STYLES
 
 # ═══════ 天体身份 ═══════
 PLANET_COLOR = QColor(255, 102, 68)
@@ -26,10 +25,10 @@ os.makedirs(DATA_DIR, exist_ok=True)
 
 # ═══════ 星球配置 ═══════
 PLANETS = [
-    {"id": "staff",   "name": "员工",   "angle": -90, "color": (255, 120, 70),  "icon": "§", "style": "mars"},
-    {"id": "member",  "name": "会员",   "angle": 0,    "color": (255, 160, 90),  "icon": "✦", "style": "jupiter"},
-    {"id": "wallet",  "name": "钱包",   "angle": 90,   "color": (255, 200, 120), "icon": "◎", "style": "venus"},
-    {"id": "dist",    "name": "分销",   "angle": 180,  "color": (255, 140, 100), "icon": "◈", "style": "neptune"},
+    {"id": "staff",   "name": "员工",   "angle": -90, "color": (255, 120, 70),  "icon": "§"},
+    {"id": "member",  "name": "会员",   "angle": 0,    "color": (255, 160, 90),  "icon": "✦"},
+    {"id": "wallet",  "name": "钱包",   "angle": 90,   "color": (255, 200, 120), "icon": "◎"},
+    {"id": "dist",    "name": "分销",   "angle": 180,  "color": (255, 140, 100), "icon": "◈"},
 ]
 
 
@@ -507,7 +506,7 @@ class PlanetHUD(QWidget):
         # 开启动画
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._animate)
-        self._timer.start(16)  # ~60fps (原 50ms)
+        self._timer.start(50)
 
     def _animate(self):
         self._animation_phase += 0.02
@@ -531,8 +530,27 @@ class PlanetHUD(QWidget):
 
         # ── 中心光球 ──
         sun_r = min(w, h) * 0.12
-        paint_planet(painter, QPointF(cx, cy), sun_r, PLANET_STYLES["earth"],
-                     anim_t=self._animation_phase)
+        glow_r = sun_r * 2.5
+
+        # 外层辉光
+        glow = QRadialGradient(cx, cy, glow_r)
+        glow.setColorAt(0, QColor(255, 140, 80, 50))
+        glow.setColorAt(0.4, QColor(255, 100, 60, 20))
+        glow.setColorAt(0.7, QColor(255, 80, 40, 5))
+        glow.setColorAt(1, QColor(0, 0, 0, 0))
+        painter.setBrush(QBrush(glow))
+        painter.setPen(Qt.NoPen)
+        painter.drawEllipse(QPointF(cx, cy), glow_r, glow_r)
+
+        # 主体光球
+        body = QRadialGradient(cx - sun_r * 0.15, cy - sun_r * 0.15, sun_r * 0.9)
+        body.setColorAt(0, QColor(255, 220, 180))
+        body.setColorAt(0.3, QColor(255, 160, 100))
+        body.setColorAt(0.7, QColor(255, 100, 50))
+        body.setColorAt(1, QColor(180, 40, 10))
+        painter.setBrush(QBrush(body))
+        painter.setPen(Qt.NoPen)
+        painter.drawEllipse(QPointF(cx, cy), sun_r, sun_r)
 
         # 中心文字
         painter.setPen(QColor(255, 240, 220))
@@ -545,23 +563,61 @@ class PlanetHUD(QWidget):
 
         # ── 轨道环 ──
         orbit_r = min(w, h) * 0.30
-        paint_orbit(painter, QPointF(cx, cy), orbit_r, anim_t=self._animation_phase)
+        painter.setPen(QPen(QColor(255, 100, 60, 50), 1, Qt.DashLine))
+        painter.setBrush(Qt.NoBrush)
+        painter.drawEllipse(QPointF(cx, cy), orbit_r, orbit_r)
 
-        # 第二轨道
+        # 第二轨道（虚线，更远）
         orbit2_r = min(w, h) * 0.38
-        paint_orbit(painter, QPointF(cx, cy), orbit2_r, anim_t=self._animation_phase)
+        painter.setPen(QPen(QColor(255, 80, 50, 25), 1, Qt.DotLine))
+        painter.drawEllipse(QPointF(cx, cy), orbit2_r, orbit2_r)
 
         # ── 小星球 ──
+        positions = self._planet_positions(cx, cy, orbit_r)
         planet_r = max(18, min(w, h) * 0.04)
 
-        for pdata in PLANETS:
+        for px, py, pdata in positions:
             is_hover = (self._hover_planet == pdata["id"])
-            angle_rad = math.radians(pdata["angle"] + self._animation_phase * 10)
-            paint_planet_at_angle(painter, QPointF(cx, cy), orbit_r, angle_rad,
-                                  planet_r, PLANET_STYLES[pdata["style"]],
-                                  hovered=is_hover, label=pdata["name"],
-                                  font_size=max(8, int(planet_r * 0.5)),
-                                  anim_t=self._animation_phase)
+
+            # 光晕
+            halo_r = planet_r * 1.8 if is_hover else planet_r * 1.4
+            halo = QRadialGradient(px, py, halo_r)
+            alpha = 80 if is_hover else 30
+            halo.setColorAt(0, QColor(*pdata["color"], alpha))
+            halo.setColorAt(1, QColor(0, 0, 0, 0))
+            painter.setBrush(QBrush(halo))
+            painter.setPen(Qt.NoPen)
+            painter.drawEllipse(QPointF(px, py), halo_r, halo_r)
+
+            # 行星体
+            pr = planet_r * 1.15 if is_hover else planet_r
+            pg = QRadialGradient(px - pr * 0.2, py - pr * 0.2, pr)
+            r, g, b = pdata["color"]
+            pg.setColorAt(0, QColor(min(r + 80, 255), min(g + 80, 255), min(b + 60, 255)))
+            pg.setColorAt(0.6, QColor(r, g, b))
+            pg.setColorAt(1, QColor(max(r - 80, 0), max(g - 60, 0), max(b - 40, 0)))
+            painter.setBrush(QBrush(pg))
+            painter.setPen(QPen(QColor(r, g, b, 120), 1))
+            painter.drawEllipse(QPointF(px, py), pr, pr)
+
+            # 图标符号
+            painter.setPen(QColor(255, 240, 220))
+            icon_font = QFont("sans-serif", max(9, int(pr * 0.75)), QFont.Bold)
+            painter.setFont(icon_font)
+            painter.drawText(
+                QPointF(px, py + pr * 0.28),
+                pdata["icon"]
+            )
+
+            # 名称标签
+            label_font = QFont("sans-serif", max(8, int(pr * 0.5)))
+            painter.setFont(label_font)
+            painter.setPen(QColor(255, 200, 170, 200 if not is_hover else 255))
+            label_y = py + pr + 16
+            painter.drawText(
+                QPointF(px, label_y),
+                pdata["name"]
+            )
 
         painter.end()
 

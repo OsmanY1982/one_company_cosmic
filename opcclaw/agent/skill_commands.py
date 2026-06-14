@@ -10,7 +10,6 @@ import os
 import re
 from pathlib import Path
 from typing import Any, Dict, Optional
-import traceback
 
 from hermes_constants import display_hermes_home
 from agent.skill_preprocessing import (
@@ -133,7 +132,7 @@ def _inject_skill_config(loaded_skill: dict[str, Any], parts: list[str]) -> None
         lines.append("]")
         parts.extend(lines)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass  # Non-critical — skill still loads without config injection
 
 
 def _build_skill_message(
@@ -301,7 +300,7 @@ def scan_skill_commands() -> Dict[str, Dict[str, Any]]:
                 except Exception:
                     continue
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
     return _skill_commands
 
 
@@ -435,7 +434,7 @@ def build_skill_invocation_message(
         from tools.skill_usage import bump_use
         bump_use(skill_name)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass  # Non-critical — skill invocation proceeds regardless
 
     activation_note = (
         f'[IMPORTANT: The user has invoked the "{skill_name}" skill, indicating they want '
@@ -482,7 +481,7 @@ def build_preloaded_skills_prompt(
             from tools.skill_usage import bump_use
             bump_use(skill_name)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass  # Non-critical
 
         activation_note = (
             f'[IMPORTANT: The user launched this CLI session with the "{skill_name}" skill '

@@ -1,6 +1,6 @@
 # `opcclaw/plugins/google_meet/realtime/openai_client.py`
 
-> 路径：`opcclaw/plugins/google_meet/realtime/openai_client.py` | 行数：333
+> 路径：`opcclaw/plugins/google_meet/realtime/openai_client.py` | 行数：332
 
 
 ---
@@ -21,7 +21,6 @@ is missing.
 """
 
 from __future__ import annotations
-import traceback
 
 import base64
 import json
@@ -118,7 +117,7 @@ class RealtimeSession:
             try:
                 self._ws.close()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
             self._ws = None
 
     # ── speaking ──────────────────────────────────────────────────────────

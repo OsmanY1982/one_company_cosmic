@@ -1,6 +1,6 @@
 # `opcclaw/skills/creative/comfyui/scripts/hardware_check.py`
 
-> 路径：`opcclaw/skills/creative/comfyui/scripts/hardware_check.py` | 行数：498
+> 路径：`opcclaw/skills/creative/comfyui/scripts/hardware_check.py` | 行数：497
 
 
 ---
@@ -31,7 +31,6 @@ Usage:
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import os
@@ -165,7 +164,7 @@ def detect_rocm() -> dict | None:
                     best["all_gpus"] = cards
                 return best
         except json.JSONDecodeError:
-            import traceback; traceback.print_exc()
+            pass
     # Fall back to text parsing
     out = _run(["rocm-smi", "--showproductname", "--showmeminfo", "vram"])
     if not out.strip():
@@ -193,7 +192,7 @@ def detect_apple_silicon() -> dict | None:
     try:
         mem_bytes = int(_run(["sysctl", "-n", "hw.memsize"]).strip() or 0)
     except ValueError:
-        import traceback; traceback.print_exc()
+        pass
     ram_gb = round(mem_bytes / (1024**3), 1) if mem_bytes else 0.0
 
     # Detect chip variant ("Pro", "Max", "Ultra") — affects performance even at same gen

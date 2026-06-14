@@ -656,7 +656,7 @@ class OPCclawCoreEngine:
                 name="Ollama",
                 provider_type="openai_compatible",
                 base_url="http://localhost:11434/v1",
-                model="qwen2.5:7b-64k",
+                model="qwen2.5:7b",
                 temperature=0.7,
                 max_tokens=4096
             )
@@ -819,7 +819,7 @@ class OPCclawCoreEngine:
 # 快捷函数
 # ═══════════════════════════════════════════
 
-def create_engine(model: str = "qwen2.5:7b-64k", base_url: str = "http://localhost:11434/v1") -> OPCclawCoreEngine:
+def create_engine(model: str = "qwen2.5:7b", base_url: str = "http://localhost:11434/v1") -> OPCclawCoreEngine:
     """创建引擎实例"""
     config = ProviderConfig(
         name="Ollama",
@@ -832,7 +832,7 @@ def create_engine(model: str = "qwen2.5:7b-64k", base_url: str = "http://localho
     return OPCclawCoreEngine(config)
 
 
-def quick_chat(question: str, model: str = "qwen2.5:7b-64k") -> str:
+def quick_chat(question: str, model: str = "qwen2.5:7b") -> str:
     """快速对话（无状态）"""
     engine = create_engine(model=model)
     return engine.chat(question)

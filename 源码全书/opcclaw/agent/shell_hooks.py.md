@@ -1,6 +1,6 @@
 # `opcclaw/agent/shell_hooks.py`
 
-> 路径：`opcclaw/agent/shell_hooks.py` | 行数：837
+> 路径：`opcclaw/agent/shell_hooks.py` | 行数：836
 
 
 ---
@@ -61,7 +61,6 @@ Wire protocol
 """
 
 from __future__ import annotations
-import traceback
 
 import difflib
 import json
@@ -584,7 +583,7 @@ def save_allowlist(data: Dict[str, Any]) -> None:
             try:
                 os.unlink(tmp_path)
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
             raise
     except OSError as exc:
         logger.warning(

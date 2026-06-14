@@ -7,7 +7,6 @@ new sandboxes from those snapshots on later task reuse.
 """
 
 from __future__ import annotations
-import traceback
 
 from functools import cache
 from dataclasses import dataclass
@@ -403,7 +402,7 @@ class VercelSandboxEnvironment(BaseEnvironment):
         try:
             sandbox.client.close()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     def _stop_sandbox(self, sandbox: Sandbox | None) -> None:
         if sandbox is None:
@@ -418,9 +417,9 @@ class VercelSandboxEnvironment(BaseEnvironment):
             try:
                 sandbox.stop()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     def _snapshot_sandbox(self, sandbox: Sandbox) -> str | None:
         if not self._persistent or not self._task_id:
@@ -563,7 +562,7 @@ class VercelSandboxEnvironment(BaseEnvironment):
                     cwd=self._workspace_root,
                 )
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
     def _before_execute(self) -> None:
         with self._lock:

@@ -1,6 +1,6 @@
 # `opcclaw/tools/skill_usage.py`
 
-> 路径：`opcclaw/tools/skill_usage.py` | 行数：610
+> 路径：`opcclaw/tools/skill_usage.py` | 行数：609
 
 
 ---
@@ -32,7 +32,6 @@ Lifecycle states:
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -56,7 +55,7 @@ except ImportError:  # pragma: no cover - platform-specific fallback
     try:
         import msvcrt
     except ImportError:
-        import traceback; traceback.print_exc()
+        pass
 
 
 STATE_ACTIVE = "active"
@@ -102,7 +101,7 @@ def _usage_file_lock():
                 fd.seek(0)
                 msvcrt.locking(fd.fileno(), msvcrt.LK_UNLCK, 1)
             except (OSError, IOError):
-                import traceback; traceback.print_exc()
+                pass
         fd.close()
 
 
@@ -365,7 +364,7 @@ def save_usage(data: Dict[str, Dict[str, Any]]) -> None:
             try:
                 os.unlink(tmp_path)
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
             raise
     except Exception as e:
         logger.debug("Failed to write %s: %s", path, e, exc_info=True)

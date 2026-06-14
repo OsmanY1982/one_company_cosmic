@@ -1,6 +1,6 @@
 # `opcclaw/tools/environments/docker.py`
 
-> 路径：`opcclaw/tools/environments/docker.py` | 行数：646
+> 路径：`opcclaw/tools/environments/docker.py` | 行数：645
 
 
 ---
@@ -22,7 +22,6 @@ import subprocess
 import sys
 import uuid
 from typing import Optional
-import traceback
 
 from tools.environments.base import BaseEnvironment, _popen_bash
 from tools.environments.local import _HERMES_PROVIDER_ENV_BLOCKLIST
@@ -544,7 +543,7 @@ class DockerEnvironment(BaseEnvironment):
             from tools.env_passthrough import get_all_passthrough
             passthrough_keys = set(get_all_passthrough())
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         # Explicit docker_forward_env entries are an intentional opt-in and must
         # win over the generic Hermes secret blocklist. Only implicit passthrough
         # keys are filtered.
@@ -646,7 +645,7 @@ class DockerEnvironment(BaseEnvironment):
                         shell=True,
                     )
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
             self._container_id = None
 
         if not self._persistent:

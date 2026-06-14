@@ -25,6 +25,8 @@ from PyQt5.QtGui import (
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from core.planet_painter import PLANET_STYLES, paint_planet
+from core.shapes import alien, robot_alien, ghost_alien, jellyfish_alien
+from core.shapes import SHAPE_PAINTERS, SHAPE_MODE_LIST, SHAPE_MODES
 from .voice_interface import VoiceInterface
 
 
@@ -131,8 +133,18 @@ class FloatingPlanet(QWidget):
         self._exit_words = ["退出", "关闭", "再见", "拜拜", "睡觉", "休息", "退下"]
         self._whisper_wake_recognizer = None  # Whisper 唤醒模式专用识别器
 
-        # 星球样式 —— 用地球纹理
+        # 星球样式（默认地球）
         self._style = PLANET_STYLES.get("earth", PLANET_STYLES["neptune"])
+
+        # shapes 形态系统 —— 28 种形态（新 shapes 模块渲染）
+        self._shape_mode = None  # None=使用旧 planet_painter；"classic"/etc=使用 shapes
+        self._shape_keys = SHAPE_MODE_LIST.copy()  # 28 个形态 key
+        self._current_shape_idx = 0
+
+        # ── 外星人装饰 ──
+        self._aliens = self._spawn_aliens()  # [(type, x, y, vx, vy, phase, size), ...]
+        self._mouse_x = 0
+        self._mouse_y = 0
 
         # 窗口配置 — 无边框置顶独立窗口
         self.setWindowFlags(
@@ -274,6 +286,10 @@ class FloatingPlanet(QWidget):
 
         # 动画相位（16ms帧率校准）
         self._anim_t += 0.0133
+
+        # ── 外星人漂移动画 ──
+        self._tick_aliens()
+
         self.update()
 
     def _center_on_current_pos(self):
@@ -330,6 +346,15 @@ class FloatingPlanet(QWidget):
 
     def mousePressEvent(self, event: QMouseEvent):
         if event.button() == Qt.LeftButton:
+            # 优先检测外星人点击
+            pos = event.pos()
+            cx, cy = self.width() / 2, self.height() / 2
+            radius = self._current_size / 2
+            hit_alien = self._check_alien_click(cx, cy, radius, pos.x(), pos.y())
+            if hit_alien is not None:
+                self._alien_click_animation(hit_alien)
+                event.accept()
+                return
             self._dragging = True
             self._drag_start = event.globalPos() - self.frameGeometry().topLeft()
             self._drag_trail = [(event.globalPos(), datetime.now())]
@@ -340,6 +365,9 @@ class FloatingPlanet(QWidget):
             event.accept()
 
     def mouseMoveEvent(self, event: QMouseEvent):
+        # 追踪鼠标窗口内坐标（外星人 hover 检测用）
+        self._mouse_x = event.pos().x()
+        self._mouse_y = event.pos().y()
         if self._dragging and event.buttons() & Qt.LeftButton:
             # 移动距离足够才开始拖动（防止误触）
             delta = event.globalPos() - (self.frameGeometry().topLeft() + self._drag_start)
@@ -389,6 +417,12 @@ class FloatingPlanet(QWidget):
         self._open_chat()
         event.accept()
 
+    def wheelEvent(self, event):
+        """滚轮切换形态"""
+        delta = event.angleDelta().y()
+        self._cycle_shape(1 if delta > 0 else -1)
+        event.accept()
+
     def enterEvent(self, event):
         self._hover = True
         # 平滑缩放过渡
@@ -430,6 +464,28 @@ class FloatingPlanet(QWidget):
 
         chat_action = menu.addAction("AI 对话")
         chat_action.triggered.connect(self._open_chat)
+
+        menu.addSeparator()
+
+        # ── 形态切换子菜单 ──
+        shape_menu = menu.addMenu("切换形态")
+        shape_menu.setStyleSheet(menu.styleSheet())
+        shape_icons = {
+            k: v.get("name", k) for k, v in SHAPE_MODES.items()
+        }
+        for key in self._shape_keys:
+            label = shape_icons.get(key, key)
+            action = shape_menu.addAction(label)
+            action.setData(key)
+            action.triggered.connect(
+                lambda checked, k=key: self._switch_to_shape(k)
+            )
+
+        menu.addSeparator()
+
+        # 模型设置入口
+        model_action = menu.addAction("模型设置")
+        model_action.triggered.connect(self._open_model_config)
 
         menu.addSeparator()
 
@@ -499,6 +555,146 @@ class FloatingPlanet(QWidget):
             win.show()
         except Exception as e:
             print(f"[FloatingPlanet] Failed to open module {module_id}: {e}")
+            traceback.print_exc()
+
+    # ── shapes 形态切换 ──
+
+    def _switch_to_shape(self, key: str):
+        """切换到 shapes 系统的指定形态"""
+        if key in self._shape_keys:
+            self._current_shape_idx = self._shape_keys.index(key)
+            self._shape_mode = key
+            name = SHAPE_MODES.get(key, {}).get("name", key)
+            self._tooltip.setText(f"opcclaw · {name}")
+            print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+
+    def _cycle_shape(self, direction: int):
+        """按方向循环切换 shapes 形态（+1 下一个, -1 上一个）"""
+        count = len(self._shape_keys)
+        self._current_shape_idx = (self._current_shape_idx + direction) % count
+        key = self._shape_keys[self._current_shape_idx]
+        self._switch_to_shape(key)
+
+    # ── 外星人装饰 ──
+
+    def _spawn_aliens(self):
+        """生成 2-3 个随机外星人，初始分布在星球周围"""
+        import random
+        alien_types = [alien, robot_alien, ghost_alien, jellyfish_alien]
+        count = random.randint(2, 3)
+        aliens = []
+        for i in range(count):
+            angle = i * (2 * math.pi / count) + random.uniform(-0.3, 0.3)
+            dist = random.uniform(1.4, 2.2)  # 初始距离（以星球半径为单位）
+            aliens.append([
+                random.choice(alien_types),   # type
+                math.cos(angle) * dist,        # x (相对于中心的归一化坐标)
+                math.sin(angle) * dist,        # y
+                random.uniform(-0.3, 0.3),     # vx
+                random.uniform(-0.3, 0.3),     # vy
+                random.uniform(0, 2 * math.pi),# phase
+                random.uniform(12, 18),        # size (px)
+            ])
+        return aliens
+
+    def _tick_aliens(self):
+        """更新外星人位置（柔和漂浮环绕）"""
+        import random
+        rng = random.Random(int(self._anim_t * 1000) % 100000 + 42)
+        for a in self._aliens:
+            # 缓动朝向环绕轨道
+            x, y = a[1], a[2]
+            dist = math.hypot(x, y)
+            angle = math.atan2(y, x)
+            # 目标轨道距离 1.5-2.5
+            target_dist = 1.6 + a[6] * 0.03
+            # 径向弹簧力
+            radial_force = (target_dist - dist) * 0.003
+            # 切向旋转力
+            orbital_speed = 0.15 + a[6] * 0.004
+            # 施加力
+            a[3] += math.cos(angle) * radial_force - math.sin(angle) * orbital_speed
+            a[4] += math.sin(angle) * radial_force + math.cos(angle) * orbital_speed
+            # 随机微扰
+            a[3] += rng.uniform(-0.02, 0.02)
+            a[4] += rng.uniform(-0.02, 0.02)
+            # 阻尼
+            a[3] *= 0.99
+            a[4] *= 0.99
+            # 速度限制
+            speed = math.hypot(a[3], a[4])
+            max_speed = 0.8
+            if speed > max_speed:
+                a[3] *= max_speed / speed
+                a[4] *= max_speed / speed
+            # 更新位置
+            a[1] += a[3]
+            a[2] += a[4]
+            # 相位
+            a[5] += 0.033
+
+    def _draw_aliens(self, painter, cx, cy, radius):
+        """绘制所有外星人"""
+        planet_r = radius * 0.82  # 星球可见半径（留边距给光环）
+        for a in self._aliens:
+            atype = a[0]
+            # 归一化坐标转像素坐标，限制在星球外环一定范围
+            ax = cx + a[1] * planet_r
+            ay = cy + a[2] * planet_r
+            asize = a[6]
+            # 外星人半径限制在星球外围 1.2-3.0 倍半径
+            draw_center = QPointF(ax, ay)
+            # 探测 hover：鼠标与外星人中心距离
+            dist_to_mouse = math.hypot(
+                self._mouse_x - ax, self._mouse_y - ay
+            )
+            hovered = dist_to_mouse < asize * 1.5
+            try:
+                atype.paint(painter, draw_center, asize,
+                           a[5], hovered, 0.85)
+            except Exception:
+                pass  # 外星人绘制失败不阻断整体渲染
+
+    def _check_alien_click(self, cx, cy, radius, click_x, click_y):
+        """检测点击是否命中外星人，返回命中类型或 None"""
+        planet_r = radius * 0.82
+        for a in self._aliens:
+            ax = cx + a[1] * planet_r
+            ay = cy + a[2] * planet_r
+            dist = math.hypot(click_x - ax, click_y - ay)
+            if dist < a[6] * 1.5:
+                return a[0]
+        return None
+
+    def _alien_click_animation(self, alien_type):
+        """点击外星人后触发简短动画/对话"""
+        # 获取外星人类型名用于提示
+        type_names = {
+            alien: "小绿外星人",
+            robot_alien: "机器外星人",
+            ghost_alien: "幽灵外星人",
+            jellyfish_alien: "水母外星人",
+        }
+        name = type_names.get(alien_type, "外星来客")
+        # 触发脉冲动画视觉反馈
+        self._trigger_click_pulse()
+        # 可选的语音提示
+        if self._voice:
+            try:
+                self._voice.speak(f"你好，我是{name}")
+            except Exception:
+                pass
+
+    # ── 模型设置入口 ──
+
+    def _open_model_config(self):
+        """打开模型配置面板"""
+        try:
+            from modules.auth.model_config_panel import ModelConfigDialog
+            dlg = ModelConfigDialog(parent=self, bridge=self._engine)
+            dlg.exec_()
+        except Exception as e:
+            print(f"[FloatingPlanet] Failed to open model config: {e}")
             traceback.print_exc()
 
     # ── AI 对话 ──
@@ -947,9 +1143,18 @@ class FloatingPlanet(QWidget):
             p.setPen(Qt.NoPen)
             p.drawEllipse(center, pulse_ring_r, pulse_ring_r)
 
-        # 使用 planet_painter 绘制星球（传入动画时间，缩放半径）
-        paint_planet(p, center, scaled_r, self._style, hovered=self._hover,
-                     anim_t=self._anim_t)
+        # 渲染形态：优先 shapes 系统，否则回退 planet_painter
+        if self._shape_mode and self._shape_mode in SHAPE_PAINTERS:
+            painter_fn = SHAPE_PAINTERS[self._shape_mode]
+            if self._shape_mode == "classic":
+                mode_name = SHAPE_MODES.get(self._shape_mode, {}).get("name", self._shape_mode)
+                painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0,
+                           style=self._style, label=mode_name)
+            else:
+                painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0)
+        else:
+            paint_planet(p, center, scaled_r, self._style, hovered=self._hover,
+                         anim_t=self._anim_t)
 
         # 休眠态覆盖半透明暗层
         if self._state == self.SLEEP:
@@ -957,6 +1162,9 @@ class FloatingPlanet(QWidget):
             p.setBrush(overlay)
             p.setPen(Qt.NoPen)
             p.drawEllipse(center, int(r), int(r))
+
+        # ── 外星人装饰 ──
+        self._draw_aliens(p, center.x(), center.y(), scaled_r)
 
         p.end()
 

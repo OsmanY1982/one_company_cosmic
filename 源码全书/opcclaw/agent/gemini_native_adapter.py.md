@@ -1,6 +1,6 @@
 # `opcclaw/agent/gemini_native_adapter.py`
 
-> 路径：`opcclaw/agent/gemini_native_adapter.py` | 行数：966
+> 路径：`opcclaw/agent/gemini_native_adapter.py` | 行数：965
 
 
 ---
@@ -24,7 +24,6 @@ OpenAI-compat layer entirely.
 """
 
 from __future__ import annotations
-import traceback
 
 import asyncio
 import base64
@@ -849,7 +848,7 @@ class GeminiNativeClient:
         try:
             self._http.close()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     def __enter__(self):
         return self

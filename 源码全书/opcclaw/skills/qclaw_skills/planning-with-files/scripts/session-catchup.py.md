@@ -1,6 +1,6 @@
 # `opcclaw/skills/qclaw_skills/planning-with-files/scripts/session-catchup.py`
 
-> 路径：`opcclaw/skills/qclaw_skills/planning-with-files/scripts/session-catchup.py` | 行数：439
+> 路径：`opcclaw/skills/qclaw_skills/planning-with-files/scripts/session-catchup.py` | 行数：438
 
 
 ---
@@ -22,7 +22,6 @@ import sys
 import os
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
-import traceback
 
 try:
     import orjson
@@ -74,7 +73,7 @@ def normalize_path(project_path: str) -> str:
         if os.name == 'nt' or '\\' in resolved:
             p = resolved
     except (OSError, ValueError):
-        import traceback; traceback.print_exc()
+        pass
 
     return p
 

@@ -1,6 +1,6 @@
 # `opcclaw/tools/url_safety.py`
 
-> 路径：`opcclaw/tools/url_safety.py` | 行数：328
+> 路径：`opcclaw/tools/url_safety.py` | 行数：327
 
 
 ---
@@ -37,7 +37,6 @@ import logging
 import os
 import socket
 from urllib.parse import urlparse
-import traceback
 
 from utils import is_truthy_value
 
@@ -133,7 +132,7 @@ def _global_allow_private_urls() -> bool:
             return _cached_allow_private
     except Exception:
         # Config unavailable (e.g. tests, early import) — keep default
-        import traceback; traceback.print_exc()
+        pass
 
     return _cached_allow_private
 

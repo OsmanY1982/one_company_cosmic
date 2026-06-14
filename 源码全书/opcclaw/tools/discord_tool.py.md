@@ -1,6 +1,6 @@
 # `opcclaw/tools/discord_tool.py`
 
-> 路径：`opcclaw/tools/discord_tool.py` | 行数：960
+> 路径：`opcclaw/tools/discord_tool.py` | 行数：959
 
 
 ---
@@ -41,7 +41,6 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional, Tuple
-import traceback
 
 from tools.registry import registry
 
@@ -103,7 +102,7 @@ def _discord_request(
         try:
             error_body = e.read().decode("utf-8", errors="replace")
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         raise DiscordAPIError(e.code, error_body) from e
 
 

@@ -1,6 +1,6 @@
 # `opcclaw/skills/creative/comfyui/scripts/_common.py`
 
-> 路径：`opcclaw/skills/creative/comfyui/scripts/_common.py` | 行数：836
+> 路径：`opcclaw/skills/creative/comfyui/scripts/_common.py` | 行数：835
 
 
 ---
@@ -22,7 +22,6 @@ Stdlib-only by design (with optional `requests` upgrade if installed). Python 3.
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import os
@@ -527,7 +526,7 @@ if HAS_REQUESTS:
                             del headers[key]
             except Exception:
                 # Defensive: never let header stripping break a redirect.
-                import traceback; traceback.print_exc()
+                pass
 
 
 def _http_once(

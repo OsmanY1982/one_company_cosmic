@@ -1,6 +1,6 @@
 # `opcclaw/agent/anthropic_adapter.py`
 
-> 路径：`opcclaw/agent/anthropic_adapter.py` | 行数：2065
+> 路径：`opcclaw/agent/anthropic_adapter.py` | 行数：2064
 
 
 ---
@@ -26,7 +26,6 @@ import os
 import platform
 import subprocess
 from pathlib import Path
-import traceback
 
 from hermes_constants import get_hermes_home
 from typing import Any, Dict, List, Optional, Tuple
@@ -308,7 +307,7 @@ def _detect_claude_code_version() -> str:
                 if version and version[0].isdigit():
                     return version
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
     return _CLAUDE_CODE_VERSION_FALLBACK
 
 
@@ -1096,7 +1095,7 @@ def run_hermes_oauth_login_pure() -> Optional[Dict[str, Any]]:
         webbrowser.open(auth_url)
         print("  (Browser opened automatically)")
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
 
     print()
     print("After authorizing, you'll see a code. Paste it below.")

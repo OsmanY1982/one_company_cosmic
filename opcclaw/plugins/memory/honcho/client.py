@@ -12,7 +12,6 @@ Resolution order for host-specific settings:
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import os
@@ -50,7 +49,7 @@ def resolve_active_host() -> str:
         if profile and profile not in ("default", "custom"):
             return f"{HOST}.{profile}"
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
     return HOST
 
 
@@ -107,7 +106,7 @@ def _parse_context_tokens(host_val, root_val) -> int | None:
             try:
                 return int(val)
             except (ValueError, TypeError):
-                import traceback; traceback.print_exc()
+                pass
     return None
 
 
@@ -118,7 +117,7 @@ def _parse_int_config(host_val, root_val, default: int) -> int:
             try:
                 return int(val)
             except (ValueError, TypeError):
-                import traceback; traceback.print_exc()
+                pass
     return default
 
 
@@ -129,7 +128,7 @@ def _parse_dialectic_depth(host_val, root_val) -> int:
             try:
                 return max(1, min(int(val), 3))
             except (ValueError, TypeError):
-                import traceback; traceback.print_exc()
+                pass
     return 1
 
 
@@ -557,7 +556,7 @@ class HonchoClientConfig:
             if root.returncode == 0:
                 return Path(root.stdout.strip()).name
         except (OSError, subprocess.TimeoutExpired):
-            import traceback; traceback.print_exc()
+            pass
         return None
 
     # Honcho enforces a 100-char limit on session IDs. Long gateway session keys
@@ -715,7 +714,7 @@ def get_honcho_client(config: HonchoClientConfig | None = None) -> Honcho:
                         honcho_cfg.get("request_timeout"),
                     )
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     # Fall back to the default so an unconfigured install cannot hang
     # indefinitely on a stalled Honcho request.

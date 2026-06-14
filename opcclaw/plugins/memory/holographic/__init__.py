@@ -16,7 +16,6 @@ Config in $HERMES_HOME/config.yaml (profile-scoped):
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -144,7 +143,7 @@ class HolographicMemoryProvider(MemoryProvider):
             with open(config_path, "w", encoding="utf-8") as f:
                 yaml.dump(existing, f, default_flow_style=False)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     def get_config_schema(self):
         from hermes_constants import display_hermes_home
@@ -382,7 +381,7 @@ class HolographicMemoryProvider(MemoryProvider):
                         self._store.add_fact(content[:400], category="user_pref")
                         extracted += 1
                     except Exception:
-                        import traceback; traceback.print_exc()
+                        pass
                     break
 
             for pattern in _DECISION_PATTERNS:
@@ -391,7 +390,7 @@ class HolographicMemoryProvider(MemoryProvider):
                         self._store.add_fact(content[:400], category="project")
                         extracted += 1
                     except Exception:
-                        import traceback; traceback.print_exc()
+                        pass
                     break
 
         if extracted:

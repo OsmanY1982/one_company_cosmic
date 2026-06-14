@@ -31,12 +31,7 @@ def _global_excepthook(exc_type, exc_value, exc_tb):
     tb_str = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
     logging.error(f"未捕获异常:\n{tb_str}")
 
-    # 仅主线程弹窗，避免 NSWindow thread 崩溃
-    import threading as _th
-    if _th.current_thread() is not _th.main_thread():
-        print(f"[crash] non-main thread exception: {exc_value}", file=sys.stderr)
-        return
-
+    # 仅在 QApplication 已初始化时弹窗
     from PyQt5.QtWidgets import QApplication, QMessageBox
     app = QApplication.instance()
     if app:

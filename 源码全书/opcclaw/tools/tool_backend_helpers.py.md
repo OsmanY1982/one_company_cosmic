@@ -1,6 +1,6 @@
 # `opcclaw/tools/tool_backend_helpers.py`
 
-> 路径：`opcclaw/tools/tool_backend_helpers.py` | 行数：145
+> 路径：`opcclaw/tools/tool_backend_helpers.py` | 行数：144
 
 
 ---
@@ -10,7 +10,6 @@
 """Shared helpers for tool backend selection."""
 
 from __future__ import annotations
-import traceback
 
 import os
 from pathlib import Path
@@ -129,7 +128,7 @@ def prefers_gateway(config_section: str) -> bool:
         if isinstance(section, dict):
             return is_truthy_value(section.get("use_gateway"), default=False)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
     return False
 
 

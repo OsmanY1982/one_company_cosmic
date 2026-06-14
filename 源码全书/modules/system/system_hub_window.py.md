@@ -74,7 +74,7 @@ class NavigationHUD(QWidget):
         w2 = self._center
 
         for planet in PLANETS:
-            paint_orbit(p, w2, planet["orbit"])
+            paint_orbit(p, w2, planet["orbit"], alpha=10)
 
         for planet_data, pos in self._planet_positions():
             paint_energy_line(p, w2, pos, alpha=15)

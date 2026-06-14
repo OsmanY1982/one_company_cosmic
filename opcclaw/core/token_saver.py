@@ -102,7 +102,7 @@ class TokenOptimizer:
         # 截断旧消息
         truncated = []
         for msg in older:
-            content = msg.get("content", "") or ""
+            content = msg.get("content", "")
             if len(content) > 500:
                 msg = msg.copy()
                 msg["content"] = content[:300] + "\n...[已截断]...\n" + content[-150:]
@@ -132,7 +132,7 @@ class TokenOptimizer:
         result = []
         
         for msg in messages:
-            content = msg.get("content", "") or ""
+            content = msg.get("content", "")
             # 归一化
             normalized = re.sub(r'\s+', ' ', content.lower().strip())
             content_hash = hashlib.md5(normalized.encode()).hexdigest()
@@ -147,7 +147,7 @@ class TokenOptimizer:
         """空白优化"""
         result = []
         for msg in messages:
-            content = msg.get("content", "") or ""
+            content = msg.get("content", "")
             # 压缩连续空白
             optimized = re.sub(r'\n{3,}', '\n\n', content)
             optimized = re.sub(r' {2,}', ' ', optimized)

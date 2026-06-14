@@ -4,7 +4,6 @@ Handles: hermes honcho setup | status | sessions | map | peer
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import os
@@ -261,7 +260,7 @@ def _read_config() -> dict:
         try:
             return json.loads(path.read_text(encoding="utf-8"))
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
     return {}
 
 
@@ -331,7 +330,7 @@ def _ensure_sdk_installed() -> bool:
         import honcho  # noqa: F401
         return True
     except ImportError:
-        import traceback; traceback.print_exc()
+        pass
 
     print("  honcho-ai is not installed.")
     answer = _prompt("Install it now? (honcho-ai>=2.0.1)", default="y")
@@ -488,7 +487,7 @@ def cmd_setup(args) -> None:
             if val >= 0:
                 hermes_host["contextTokens"] = val
         except (ValueError, TypeError):
-            import traceback; traceback.print_exc()
+            pass  # keep current
 
     # --- 7b. Dialectic cadence ---
     current_dialectic = str(hermes_host.get("dialecticCadence") or cfg.get("dialecticCadence") or "2")

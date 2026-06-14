@@ -1,6 +1,6 @@
 # `opcclaw/agent/credential_pool.py`
 
-> 路径：`opcclaw/agent/credential_pool.py` | 行数：1604
+> 路径：`opcclaw/agent/credential_pool.py` | 行数：1603
 
 
 ---
@@ -10,7 +10,6 @@
 """Persistent multi-credential pool for same-provider failover."""
 
 from __future__ import annotations
-import traceback
 
 import logging
 import os
@@ -1199,7 +1198,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
             if not is_provider_explicitly_configured("anthropic"):
                 return changed, active_sources
         except ImportError:
-            import traceback; traceback.print_exc()
+            pass
 
         from agent.anthropic_adapter import read_claude_code_credentials, read_hermes_oauth_credentials
 
@@ -1583,7 +1582,7 @@ def _seed_custom_pool(pool_key: str, entries: List[PooledCredential]) -> Tuple[b
                             },
                         )
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
 
     return changed, active_sources
 

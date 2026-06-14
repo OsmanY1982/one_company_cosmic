@@ -62,9 +62,8 @@ class AgentBridge:
         "4. 桌面：打开应用、控制系统设置\n"
         "5. 网络：搜索、抓取网页\n"
         "\n"
-        "执行原则（严格遵守）：\n"
-        "- 工具优先：用户要求读写文件、执行命令、搜索等操作时，必须调用对应工具，禁止只回复文字说「我可以帮你」\n"
-        "- 创建文件必须调用 write_file，读取文件必须调用 read_file，编辑文件必须调用 edit_file\n"
+        "执行原则：\n"
+        "- 永远优先用工具完成任务，不要只给建议\n"
         "- 每次只做一步，观察结果后再继续\n"
         "- 出错后分析原因，尝试替代方案\n"
         "- 关键操作（删除/覆盖）前确认安全性\n"
@@ -99,7 +98,6 @@ class AgentBridge:
 
         # ── 工具注册表 ──
         self.registry = ToolRegistry(enable_metrics=False)
-        # 始终注册工具；Ollama+qwen2.5:7b 等本地模型已支持 OpenAI 兼容的 tool_calls
         self._register_tools()
 
         # ── ChatEngine（对话模式，开启 auto_save）──
@@ -172,41 +170,27 @@ class AgentBridge:
         self._project_context = ctx
 
     def _build_system_prompt(self, base_prompt: str) -> str:
-        """将项目上下文和 macOS 环境注入 System Prompt"""
+        """将项目上下文注入 System Prompt"""
         base = base_prompt or self.DEFAULT_SYSTEM_PROMPT
         ctx = self._project_context
 
-        lines = [base, ""]
+        if not ctx or not ctx.get("cwd"):
+            return base
 
-        # ── macOS 环境（始终注入，确保 AgentLoop 知道路径）──
-        lines.append("## macOS 环境")
-        lines.append("- 操作系统: macOS 26, Apple M5")
-        lines.append("- 用户主目录: `/Users/opc`")
-        lines.append("- 桌面路径: `/Users/opc/Desktop`")
-        lines.append("- 下载目录: `/Users/opc/Downloads`")
-        lines.append("- 文档目录: `/Users/opc/Documents`")
-        lines.append("- 项目根目录: `/Volumes/D盘工作区/一人公司/one_company_cosmic/`")
-        lines.append("- 常用应用: 终端(`/System/Applications/Utilities/Terminal.app`)、访达(Finder)、Safari、系统设置")
-        lines.append("")
+        lines = [base, "", "## 当前项目环境"]
+        lines.append(f"- 工作目录: `{ctx['cwd']}`")
 
-        # ── 当前项目环境 ──
-        if ctx and ctx.get("cwd"):
-            lines.append("## 当前项目环境")
-            lines.append(f"- 工作目录: `{ctx['cwd']}`")
-
-            if ctx.get("has_git"):
-                lines.append("- Git 仓库: 是")
-            if ctx.get("package_managers"):
-                lines.append(f"- 技术栈: {', '.join(ctx['package_managers'])}")
-            if ctx.get("top_files"):
-                top = ctx["top_files"][:15]
-                lines.append(f"- 顶层文件: {', '.join(top)}")
-
-            lines.append("")
+        if ctx.get("has_git"):
+            lines.append("- Git 仓库: 是")
+        if ctx.get("package_managers"):
+            lines.append(f"- 技术栈: {', '.join(ctx['package_managers'])}")
+        if ctx.get("top_files"):
+            top = ctx["top_files"][:15]
+            lines.append(f"- 顶层文件: {', '.join(top)}")
 
         lines.append(
-            '所有文件操作默认基于以上路径。用户说"桌面"即指 `/Users/opc/Desktop`，'
-            '说"下载"即指 `/Users/opc/Downloads`。如需访问其他目录，请使用绝对路径。'
+            "\n所有文件操作默认基于以上工作目录。"
+            "如需访问其他目录，请使用绝对路径。"
         )
         return "\n".join(lines)
 
@@ -236,10 +220,6 @@ class AgentBridge:
         except Exception:
             return 0
 
-    def get_history(self) -> list:
-        """获取当前对话历史（用于 UI 展示）"""
-        return self._engine.get_history()
-
     def list_sessions(self) -> List[Dict[str, Any]]:
         """列出所有已保存的会话"""
         try:
@@ -257,7 +237,7 @@ class AgentBridge:
         """opcclaw_config.json 的绝对路径"""
         return os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-            "opcclaw", "data", "opcclaw_config.json"
+            "data", "opcclaw_config.json"
         )
 
     @staticmethod
@@ -269,7 +249,7 @@ class AgentBridge:
                 with open(cfg_path, "r", encoding="utf-8") as f:
                     return json.load(f)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         return {"cloud_providers": {}, "local_providers": {}}
 
     def get_model(self) -> str:
@@ -411,11 +391,6 @@ class AgentBridge:
     # 流式输出（打字机效果，对标 Codex）
     # ═══════════════════════════════════════════
 
-    def chat_stream_generator(self, message: str):
-        """返回 ChatEngine.chat_stream() 的原始生成器。不做线程包装。
-        调用方自行负责线程管理（适用于已有 QThread 的场景）。"""
-        return self._engine.chat_stream(message)
-
     def chat_stream(
         self,
         message: str,
@@ -460,13 +435,13 @@ class AgentBridge:
             try:
                 self._stream_worker.finished.disconnect()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         if hasattr(self, '_stream_thread') and self._stream_thread:
             try:
                 self._stream_thread.quit()
                 self._stream_thread.wait(200)
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         self._stream_worker = None
         self._stream_thread = None
 
@@ -564,22 +539,6 @@ class AgentBridge:
         """同步执行多步自主任务（会阻塞 UI，仅用于测试）"""
         return self._agent_loop.run(message)
 
-    def stream_task(self, message: str):
-        """
-        流式执行自主任务，以生成器形式逐步骤返回 AgentEvent。
-
-        用法:
-            for event in bridge.stream_task("帮我在桌面创建一个 test.txt"):
-                # event: AgentEvent 对象
-                # event.type: THINK / PLAN / ACT / OBSERVE / REFLECT / COMPLETE / ERROR
-                # event.message: 人类可读的阶段描述
-                # event.data: 附加数据（工具调用结果等）
-                yield event
-
-        可用于 UI 实时展示 AgentLoop 的五阶段执行过程。
-        """
-        return self._agent_loop.run_stream(message)
-
     def cancel_task(self):
         """取消正在执行的自主任务"""
         if self._agent_loop:
@@ -602,12 +561,6 @@ class AgentBridge:
         # ── 系统工具 ──
         self._reg_execute_shell()
         self._reg_desktop_control()
-        self._reg_system_control()
-        self._reg_open_application()
-        self._reg_window_control()
-        self._reg_clipboard_read()
-        self._reg_clipboard_write()
-        self._reg_take_screenshot()
         # ── Git ──
         self._reg_git_operation()
         # ── 网络 ──
@@ -946,197 +899,7 @@ class AgentBridge:
             category="system",
         )(handler)
 
-    # ── 10. system_control（macOS 系统控制）──
-    def _reg_system_control(self):
-        """执行 macOS 系统操作：锁屏/静音/取消静音/打开系统设置等"""
-        def handler(action: str) -> dict:
-            try:
-                action_map = {
-                    "lock_screen": 'tell application "System Events" to keystroke "q" using {command down, control down}',
-                    "mute": "set volume with output muted",
-                    "unmute": "set volume without output muted",
-                    "open_system_settings": 'tell application "System Settings" to activate',
-                    "open_system_preferences": 'tell application "System Preferences" to activate',
-                    "show_desktop": 'tell application "System Events" to keystroke "d" using {command down, option down}',
-                    "empty_trash": 'tell application "Finder" to empty the trash',
-                }
-                if action not in action_map:
-                    return {"error": f"不支持的系统操作: {action}。可用: {list(action_map.keys())}"}
-                script = action_map[action]
-                result = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=10)
-                if result.returncode != 0:
-                    return {"error": result.stderr.strip()}
-                return {"success": True, "action": action, "output": result.stdout.strip()}
-            except Exception as e:
-                return {"error": str(e)}
-
-        self.registry.register(
-            name="system_control",
-            description="执行 macOS 系统操作：锁屏(lock_screen)、静音(mute)、取消静音(unmute)、打开系统设置(open_system_settings)、显示桌面(show_desktop)、清空废纸篓(empty_trash)",
-            parameters={
-                "type": "object",
-                "properties": {
-                    "action": {"type": "string", "description": "系统操作: lock_screen/mute/unmute/open_system_settings/open_system_preferences/show_desktop/empty_trash"},
-                },
-                "required": ["action"],
-            },
-            category="system",
-        )(handler)
-
-    # ── 11. open_application（启动 macOS 应用）──
-    def _reg_open_application(self):
-        """按应用名启动 macOS 应用"""
-        def handler(app_name: str) -> dict:
-            try:
-                script = f'tell application "{app_name}" to activate'
-                result = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=10)
-                if result.returncode != 0:
-                    # 尝试通过 open 命令启动
-                    try:
-                        subprocess.run(["open", "-a", app_name], capture_output=True, text=True, timeout=10, check=True)
-                        return {"success": True, "app_name": app_name, "method": "open -a"}
-                    except Exception:
-                        return {"error": f"无法启动应用: {app_name}。请确认应用名称是否正确。"}
-                return {"success": True, "app_name": app_name}
-            except Exception as e:
-                return {"error": str(e)}
-
-        self.registry.register(
-            name="open_application",
-            description="按应用名启动 macOS 应用。常用名: Safari/Finder/终端/Terminal/微信/企业微信/飞书/钉钉/Chrome/VSCode/Notes",
-            parameters={
-                "type": "object",
-                "properties": {
-                    "app_name": {"type": "string", "description": "应用名称（如 Safari、微信、终端）"},
-                },
-                "required": ["app_name"],
-            },
-            category="system",
-        )(handler)
-
-    # ── 12. window_control（窗口操作）──
-    def _reg_window_control(self):
-        """窗口操作：最小化/关闭/切换"""
-        def handler(app_name: str, action: str = "switch") -> dict:
-            try:
-                actions = {
-                    "switch": f'tell application "{app_name}" to activate',
-                    "minimize": f'tell application "System Events" to tell process "{app_name}" to set value of attribute "AXMinimized" of window 1 to true',
-                    "close": f'tell application "{app_name}" to close window 1',
-                    "hide": f'tell application "System Events" to tell process "{app_name}" to set visible to false',
-                }
-                if action not in actions:
-                    return {"error": f"不支持的窗口操作: {action}。可用: {list(actions.keys())}"}
-                script = actions[action]
-                result = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=10)
-                if result.returncode != 0:
-                    return {"error": result.stderr.strip()}
-                return {"success": True, "app_name": app_name, "action": action}
-            except Exception as e:
-                return {"error": str(e)}
-
-        self.registry.register(
-            name="window_control",
-            description="窗口操作：切换(switch)、最小化(minimize)、关闭(close)、隐藏(hide)指定应用的窗口",
-            parameters={
-                "type": "object",
-                "properties": {
-                    "app_name": {"type": "string", "description": "应用进程名（如 Safari、微信）"},
-                    "action": {"type": "string", "description": "窗口操作: switch/minimize/close/hide", "default": "switch"},
-                },
-                "required": ["app_name"],
-            },
-            category="system",
-        )(handler)
-
-    # ── 13. clipboard_read（读取剪贴板）──
-    def _reg_clipboard_read(self):
-        """读取 macOS 剪贴板内容"""
-        def handler() -> dict:
-            try:
-                result = subprocess.run(["pbpaste"], capture_output=True, text=True, timeout=5)
-                content = result.stdout
-                return {"success": True, "content": content[:5000], "length": len(content)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        self.registry.register(
-            name="clipboard_read",
-            description="读取 macOS 剪贴板文本内容",
-            parameters={
-                "type": "object",
-                "properties": {},
-                "required": [],
-            },
-            category="system",
-        )(handler)
-
-    # ── 14. clipboard_write（写入剪贴板）──
-    def _reg_clipboard_write(self):
-        """写入 macOS 剪贴板"""
-        def handler(text: str) -> dict:
-            try:
-                proc = subprocess.run(["pbcopy"], input=text, capture_output=True, text=True, timeout=5)
-                if proc.returncode != 0:
-                    return {"error": proc.stderr.strip()}
-                return {"success": True, "length": len(text)}
-            except Exception as e:
-                return {"error": str(e)}
-
-        self.registry.register(
-            name="clipboard_write",
-            description="写入文本到 macOS 剪贴板",
-            parameters={
-                "type": "object",
-                "properties": {
-                    "text": {"type": "string", "description": "要写入剪贴板的文本内容"},
-                },
-                "required": ["text"],
-            },
-            category="system",
-        )(handler)
-
-    # ── 15. take_screenshot（截取屏幕截图）──
-    def _reg_take_screenshot(self):
-        """截取屏幕截图并保存"""
-        def handler(mode: str = "full", save_path: str = "") -> dict:
-            try:
-                import time
-                timestamp = int(time.time())
-                if not save_path:
-                    save_path = os.path.join(os.path.expanduser("~"), "Desktop", f"screenshot_{timestamp}.png")
-                os.makedirs(os.path.dirname(save_path), exist_ok=True)
-
-                if mode == "selection":
-                    cmd = ["screencapture", "-i", save_path]
-                elif mode == "window":
-                    cmd = ["screencapture", "-w", save_path]
-                else:
-                    cmd = ["screencapture", save_path]
-
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-                if not os.path.exists(save_path):
-                    return {"error": "截图失败或被用户取消", "mode": mode}
-                size = os.path.getsize(save_path)
-                return {"success": True, "path": save_path, "mode": mode, "size_bytes": size}
-            except Exception as e:
-                return {"error": str(e)}
-
-        self.registry.register(
-            name="take_screenshot",
-            description="截取 macOS 屏幕截图并保存。模式: full(全屏)/selection(选区)/window(窗口)",
-            parameters={
-                "type": "object",
-                "properties": {
-                    "mode": {"type": "string", "description": "截图模式: full/selection/window", "default": "full"},
-                    "save_path": {"type": "string", "description": "保存路径（默认桌面）", "default": ""},
-                },
-                "required": [],
-            },
-            category="system",
-        )(handler)
-
-    # ── 16. git_operation ──
+    # ── 10. git_operation ──
     def _reg_git_operation(self):
         def handler(operation: str, repo_path: str = ".", args: str = "") -> dict:
             try:

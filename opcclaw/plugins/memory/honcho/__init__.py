@@ -14,7 +14,6 @@ Config: Uses the existing Honcho config chain:
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -257,7 +256,7 @@ class HonchoMemoryProvider(MemoryProvider):
             try:
                 existing = json.loads(config_path.read_text())
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         existing.update(values)
         config_path.write_text(json.dumps(existing, indent=2))
 
@@ -1317,7 +1316,7 @@ class HonchoMemoryProvider(MemoryProvider):
             try:
                 self._manager.flush_all()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
 
 # ---------------------------------------------------------------------------

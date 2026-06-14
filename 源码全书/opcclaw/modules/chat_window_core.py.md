@@ -1,6 +1,6 @@
 # `opcclaw/modules/chat_window_core.py`
 
-> 路径：`opcclaw/modules/chat_window_core.py` | 行数：1594
+> 路径：`opcclaw/modules/chat_window_core.py` | 行数：1593
 
 
 ---
@@ -14,7 +14,6 @@ OPCclaw - ChatWindow 主类 (拆分自 chat_window.py)
 import os, sys, json
 from datetime import datetime
 from typing import Optional, Union
-import traceback
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton,
@@ -274,7 +273,7 @@ class ChatWindow(QWidget):
         # ── UI 构建 ──
 
         except Exception:
-            import traceback; traceback.print_exc()
+            pass  # SkillLoader API mismatch
 
     def _get_skills_context(self):
         """安全获取技能上下文，避免 SkillLoader API 不匹配崩溃"""
@@ -289,7 +288,7 @@ class ChatWindow(QWidget):
                 names = self.skill_loader.list_skills()
                 return f"可用技能: {', '.join(names)}" if names else ""
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         return ""  # 降级：没有技能上下文
 
 
@@ -1413,7 +1412,7 @@ class ChatWindow(QWidget):
                     ):
                         return sid
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         return ""
 
     def _save_last_session(self, sid: str):
@@ -1423,7 +1422,7 @@ class ChatWindow(QWidget):
             with open(last_file, "w", encoding="utf-8") as f:
                 f.write(sid)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     def _refresh_sessions(self):
         """刷新会话下拉列表"""
@@ -1585,14 +1584,14 @@ class ChatWindow(QWidget):
                 self._voice_manager.stop_speaking()
                 self._voice_manager.stop_listening()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         # 2. 保存当前会话
         if self.engine and self.memory_store:
             try:
                 self.memory_store.save_session(self.engine.get_history(), self._session_id)
                 self._save_last_session(self._session_id)
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         super().closeEvent(event)
 
     def showEvent(self, event):

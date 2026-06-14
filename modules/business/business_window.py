@@ -13,7 +13,6 @@ from PyQt5.QtWidgets import (
     QComboBox, QTextEdit, QSpinBox, QDoubleSpinBox, QGroupBox
 )
 from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF, QPropertyAnimation, pyqtProperty, pyqtSignal
-from core.planet_painter import PLANET_STYLES, paint_planet
 from PyQt5.QtGui import (
     QPainter, QColor, QRadialGradient, QPen, QBrush,
     QLinearGradient, QFont, QPainterPath, QConicalGradient
@@ -275,110 +274,134 @@ class PlanetNavHUD(QWidget):
         self._planet_angles = {key: 0.0 for key in PLANET_DATA}
         self._hovered = None
         self._planet_positions = {}  # key -> (px, py)
-        self._anim_t = 0.0  # 全局动画时间
-        self._orbits = {}  # key -> dynamic orbit radius
 
         self.setMouseTracking(True)
 
         self._anim = QTimer(self)
         self._anim.timeout.connect(self._tick)
-        self._anim.start(16)  # ~60fps (原 40ms)
-
-    def _compute_orbits(self):
-        w, h = self.width(), self.height()
-        if w <= 0 or h <= 0:
-            return
-        keys = list(PLANET_DATA.keys())
-        n = len(keys)
-        available_r = min(w, h) / 2 * 0.9
-        planet_r = 31  # from paintEvent
-        max_orbit = available_r - planet_r / 2
-        if n > 3:
-            base_r = max_orbit / (1 + (n - 1) * 0.4)
-            orbit_vals = [base_r * (1 + i * 0.4) for i in range(n)]
-        else:
-            orbit_vals = [max_orbit * (i + 1) / n for i in range(n)]
-        self._orbits = {keys[i]: orbit_vals[i] for i in range(n)}
+        self._anim.start(40)
 
     def _tick(self):
-        self._anim_t += 0.04
         for key, data in PLANET_DATA.items():
             self._planet_angles[key] += 0.008 * data["speed"]
         self.update()
 
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        self._compute_orbits()
-
     def _planet_angle(self, planet_key):
         """每个星球按其固定轨道起始角 + 独立公转角度"""
-        orbit = self._orbits.get(planet_key, PLANET_DATA[planet_key].get("orbit", 130))
-        return math.radians(orbit) + self._planet_angles[planet_key]
+        base_orbit = PLANET_DATA[planet_key]["orbit"]
+        return math.radians(base_orbit) + self._planet_angles[planet_key]
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         w, h = self.width(), self.height()
         cx, cy = w // 2, h // 2
-        anim_t = self._anim_t
 
-        # ── 中央核心星球（真实纹理，与其他子模块一致）──
-        core_r = 82
-        paint_planet(painter, QPointF(cx, cy), core_r, PLANET_STYLES["earth"],
-                     label="BUSINESS", font_size=10, anim_t=anim_t)
+        # ── 核心光球 ──
+        core_radius = 48
+        # 外层辉光（3层）
+        for i in range(4, 0, -1):
+            alpha = int(40 * (1 - i * 0.22))
+            r = core_radius * (1 + i * 0.6)
+            g = QRadialGradient(QPointF(cx, cy), r)
+            g.setColorAt(0, QColor(CORE_COLOR.red(), CORE_COLOR.green(),
+                                   CORE_COLOR.blue(), alpha))
+            g.setColorAt(1, QColor(0, 0, 0, 0))
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(QBrush(g))
+            painter.drawEllipse(QPointF(cx, cy), r, r)
+
+        # 核心球体（渐变）
+        core_g = QRadialGradient(QPointF(cx - 8, cy - 12), core_radius * 1.3)
+        core_g.setColorAt(0, QColor(160, 200, 255))
+        core_g.setColorAt(0.35, CORE_COLOR)
+        core_g.setColorAt(0.7, QColor(20, 50, 140))
+        core_g.setColorAt(1, QColor(5, 15, 50))
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(QBrush(core_g))
+        painter.drawEllipse(QPointF(cx, cy), core_radius, core_radius)
+
+        # 核心光环
+        ring_g = QRadialGradient(QPointF(cx, cy), core_radius + 6)
+        ring_g.setColorAt(0.85, QColor(0, 0, 0, 0))
+        ring_g.setColorAt(0.92, QColor(CORE_COLOR.red(), CORE_COLOR.green(),
+                                        CORE_COLOR.blue(), 120))
+        ring_g.setColorAt(1, QColor(0, 0, 0, 0))
+        painter.setBrush(QBrush(ring_g))
+        painter.drawEllipse(QPointF(cx, cy), core_radius + 6, core_radius + 6)
 
         # ── 轨道环 ──
         painter.setPen(Qt.NoPen)
         for key, data in PLANET_DATA.items():
             orbit_r = data["orbit"]
             orbit_color = data["color"]
+            # 轨道虚线（用扇形渐变模拟）
             pen = QPen(QColor(orbit_color.red(), orbit_color.green(),
-                              orbit_color.blue(), 35), 1, Qt.DotLine)
+                              orbit_color.blue(), 30), 1, Qt.DotLine)
             painter.setPen(pen)
             painter.setBrush(Qt.NoBrush)
             painter.drawEllipse(QPointF(cx, cy), orbit_r, orbit_r)
 
-        # ── 星球（使用增强版 paint_planet）──
+        # ── 星球 ──
         self._planet_positions.clear()
         font = QFont("Arial", 10, QFont.Bold)
+        label_font = QFont("Arial", 9)
 
         for key, data in PLANET_DATA.items():
-            orbit_r = self._orbits.get(key, data.get("orbit", 130))
+            orbit_r = data["orbit"]
+            planet_color = data["color"]
             icon_text = data["icon"]
             angle = self._planet_angle(key)
             px = cx + math.cos(angle) * orbit_r
             py = cy + math.sin(angle) * orbit_r
-            planet_r = 31
+            planet_r = 18
 
             self._planet_positions[key] = (px, py)
 
-            # 星球风格映射
-            style_map = {
-                "order": "jupiter",
-                "product": "venus",
-                "customer": "neptune",
-                "finance": "mars",
-            }
-            style_name = style_map.get(key, "neptune")
-            style = PLANET_STYLES.get(style_name, PLANET_STYLES["neptune"])
-            is_hovered = (self._hovered == key)
+            # 星球辉光
+            glow_r = planet_r + 10
+            glow = QRadialGradient(QPointF(px, py), glow_r)
+            glow.setColorAt(0, QColor(planet_color.red(), planet_color.green(),
+                                       planet_color.blue(), 70))
+            glow.setColorAt(1, QColor(0, 0, 0, 0))
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(QBrush(glow))
+            painter.drawEllipse(QPointF(px, py), glow_r, glow_r)
 
-            paint_planet(painter, QPointF(px, py), planet_r, style,
-                         hovered=is_hovered, label="", font_size=9, anim_t=anim_t)
+            # 星球球体
+            planet_g = QRadialGradient(QPointF(px - 3, py - 5), planet_r * 1.2)
+            planet_g.setColorAt(0, QColor(
+                min(255, planet_color.red() + 80),
+                min(255, planet_color.green() + 80),
+                min(255, planet_color.blue() + 80)))
+            planet_g.setColorAt(0.5, planet_color)
+            planet_g.setColorAt(1, QColor(
+                max(0, planet_color.red() - 60),
+                max(0, planet_color.green() - 60),
+                max(0, planet_color.blue() - 60)))
+            painter.setBrush(QBrush(planet_g))
+            painter.drawEllipse(QPointF(px, py), planet_r, planet_r)
+
+            # 高亮（hover 时增强辉光）
+            if self._hovered == key:
+                hover_glow = QRadialGradient(QPointF(px, py), planet_r + 16)
+                hover_glow.setColorAt(0, QColor(255, 255, 255, 60))
+                hover_glow.setColorAt(1, QColor(0, 0, 0, 0))
+                painter.setBrush(QBrush(hover_glow))
+                painter.drawEllipse(QPointF(px, py), planet_r + 16, planet_r + 16)
 
             # 图标文字
-            painter.setPen(QColor(255, 255, 255, 230))
+            painter.setPen(QColor(255, 255, 255))
             painter.setFont(font)
             painter.drawText(QRectF(px - planet_r, py - planet_r, planet_r * 2, planet_r * 2),
                              Qt.AlignCenter, icon_text)
 
             # 标签
             label_y = py + planet_r + 14
-            painter.setPen(QColor(data["color"].red(), data["color"].green(),
-                                  data["color"].blue(), 200))
-            label_font = QFont("Arial", 9)
+            painter.setPen(QColor(planet_color.red(), planet_color.green(),
+                                  planet_color.blue(), 180))
             painter.setFont(label_font)
-            painter.drawText(QRectF(px - 35, label_y, 70, 20),
+            painter.drawText(QRectF(px - 30, label_y, 60, 18),
                              Qt.AlignHCenter | Qt.AlignTop, data["label"])
 
         painter.end()

@@ -14,7 +14,6 @@ Or via $HERMES_HOME/mem0.json.
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -62,7 +61,7 @@ def _load_config() -> dict:
             config.update({k: v for k, v in file_cfg.items()
                            if v is not None and v != ""})
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     return config
 
@@ -154,7 +153,7 @@ class Mem0MemoryProvider(MemoryProvider):
             try:
                 existing = json.loads(config_path.read_text())
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         existing.update(values)
         config_path.write_text(json.dumps(existing, indent=2))
 

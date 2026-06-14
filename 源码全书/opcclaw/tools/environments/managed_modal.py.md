@@ -1,6 +1,6 @@
 # `opcclaw/tools/environments/managed_modal.py`
 
-> 路径：`opcclaw/tools/environments/managed_modal.py` | 行数：283
+> 路径：`opcclaw/tools/environments/managed_modal.py` | 行数：282
 
 
 ---
@@ -10,7 +10,6 @@
 """Managed Modal environment backed by tool-gateway."""
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -284,7 +283,7 @@ class ManagedModalEnvironment(BaseModalExecutionEnvironment):
                     return f"{prefix}: {message}"
                 return f"{prefix}: {json.dumps(payload, ensure_ascii=False)}"
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
         text = response.text.strip()
         if text:

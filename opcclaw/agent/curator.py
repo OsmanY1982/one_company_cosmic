@@ -20,7 +20,6 @@ Strict invariants:
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -110,7 +109,7 @@ def save_state(data: Dict[str, Any]) -> None:
             try:
                 os.unlink(tmp)
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
             raise
     except Exception as e:
         logger.debug("Failed to save curator state: %s", e, exc_info=True)
@@ -1402,7 +1401,7 @@ def run_curator_review(
                 try:
                     on_summary(f"curator: snapshot created ({snap.name})")
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
         except Exception as e:
             logger.debug("Curator pre-run snapshot failed: %s", e, exc_info=True)
         counts = apply_automatic_transitions(now=start)
@@ -1526,7 +1525,7 @@ def run_curator_review(
             try:
                 on_summary(f"curator: {final_summary}")
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
     if synchronous:
         _llm_pass()
@@ -1739,7 +1738,7 @@ def _run_llm_review(prompt: str) -> Dict[str, Any]:
             try:
                 review_agent.close()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
     return result_meta
 
 

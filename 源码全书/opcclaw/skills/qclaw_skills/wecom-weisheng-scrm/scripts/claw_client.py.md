@@ -1,6 +1,6 @@
 # `opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/claw_client.py`
 
-> 路径：`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/claw_client.py` | 行数：315
+> 路径：`opcclaw/skills/qclaw_skills/wecom-weisheng-scrm/scripts/claw_client.py` | 行数：314
 
 
 ---
@@ -21,7 +21,6 @@
 @date 2026-04-02 17:11
 """
 from __future__ import annotations
-import traceback
 
 import json
 import re
@@ -321,6 +320,6 @@ class ClawClient:
             with open(CACHE_FILE, "w", encoding="utf-8") as f:
                 json.dump(cache_data, f, indent=2, ensure_ascii=False)
         except OSError:
-            import traceback; traceback.print_exc()
+            pass  # 写入失败时降级，下次重新请求
 
 ```

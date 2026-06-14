@@ -8,7 +8,6 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-import traceback
 
 from tools.environments.base import BaseEnvironment, _popen_bash
 from tools.environments.file_sync import (
@@ -120,7 +119,7 @@ class SSHEnvironment(BaseEnvironment):
                 logger.debug("SSH: remote home = %s", home)
                 return home
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         if self.user == "root":
             return "/root"
         return f"/home/{self.user}"
@@ -289,8 +288,8 @@ class SSHEnvironment(BaseEnvironment):
                        "-O", "exit", f"{self.user}@{self.host}"]
                 subprocess.run(cmd, capture_output=True, timeout=5)
             except (OSError, subprocess.SubprocessError):
-                import traceback; traceback.print_exc()
+                pass
             try:
                 self.control_socket.unlink()
             except OSError:
-                import traceback; traceback.print_exc()
+                pass

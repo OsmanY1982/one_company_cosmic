@@ -8,7 +8,7 @@ PLIST_LABEL="com.opcclaw.planet-daemon"
 PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_LABEL}.plist"
 LOG_FILE="/tmp/planet_daemon.log"
 PROJECT_DIR="/Volumes/D盘工作区/一人公司/one_company_cosmic"
-PYTHON="/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3"
+PYTHON="/usr/bin/python3"
 
 cd "$PROJECT_DIR" || { echo "项目目录不存在"; read -n 1 -s; exit 1; }
 

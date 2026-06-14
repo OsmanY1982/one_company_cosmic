@@ -21,7 +21,6 @@ import threading
 import time
 import wave
 from typing import Any, Dict, List, Optional
-import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +122,7 @@ def detect_audio_environment() -> dict:
                         "  3. Verify with: arecord -d 3 /tmp/test.wav && aplay /tmp/test.wav"
                     )
     except (FileNotFoundError, PermissionError, OSError):
-        import traceback; traceback.print_exc()
+        pass
 
     # Check audio libraries
     try:
@@ -336,13 +335,13 @@ class TermuxAudioRecorder:
             try:
                 os.unlink(path)
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
             return None
         if os.path.getsize(path) <= 0:
             try:
                 os.unlink(path)
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
             return None
         logger.info("Termux voice recording stopped: %s", path)
         return path
@@ -356,12 +355,12 @@ class TermuxAudioRecorder:
         try:
             self._stop_termux_recording()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         if path and os.path.isfile(path):
             try:
                 os.unlink(path)
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
         logger.info("Termux voice recording cancelled")
 
     def shutdown(self) -> None:
@@ -557,7 +556,7 @@ class AudioRecorder:
                 try:
                     stream.close()
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
             raise RuntimeError(
                 f"Failed to open audio input stream: {e}. "
                 "Check that a microphone is connected and accessible."
@@ -623,7 +622,7 @@ class AudioRecorder:
                 stream.stop()
                 stream.close()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
         t = threading.Thread(target=_do_close, daemon=True)
         t.start()
@@ -832,13 +831,13 @@ def stop_playback() -> None:
             proc.terminate()
             logger.info("Audio playback interrupted")
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
     # Also stop sounddevice playback if active
     try:
         sd, _ = _import_audio()
         sd.stop()
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
 
 
 def play_audio_file(file_path: str) -> bool:
@@ -879,7 +878,7 @@ def play_audio_file(file_path: str) -> bool:
             sd.stop()
             return True
         except (ImportError, OSError):
-            import traceback; traceback.print_exc()
+            pass  # audio libs not available, fall through to system players
         except Exception as e:
             logger.debug("sounddevice playback failed: %s", e)
 
@@ -1011,7 +1010,7 @@ def cleanup_temp_recordings(max_age_seconds: int = 3600) -> int:
                     os.unlink(entry.path)
                     deleted += 1
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
 
     if deleted:
         logger.debug("Cleaned up %d old voice recordings", deleted)

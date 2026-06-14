@@ -11,7 +11,6 @@ import re
 import threading
 from collections import OrderedDict
 from pathlib import Path
-import traceback
 
 from hermes_constants import get_hermes_home, get_skills_dir, is_wsl
 from typing import Optional
@@ -767,7 +766,7 @@ def build_environment_hints() -> str:
         try:
             host_lines.append(f"Current working directory: {os.getcwd()}")
         except OSError:
-            import traceback; traceback.print_exc()
+            pass
 
         if sys.platform == "win32" and not is_wsl():
             host_lines.append(
@@ -1336,7 +1335,7 @@ def _load_hermes_md(cwd_path: Path) -> str:
         try:
             rel = str(hermes_md_path.relative_to(cwd_path))
         except ValueError:
-            import traceback; traceback.print_exc()
+            pass
         content = _scan_context_content(content, rel)
         result = f"## {rel}\n\n{content}"
         return _truncate_content(result, ".hermes.md")

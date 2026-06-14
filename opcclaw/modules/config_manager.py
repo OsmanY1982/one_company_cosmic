@@ -12,7 +12,6 @@ import json
 import secrets
 import string
 from typing import Optional
-import traceback
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, 
     QHBoxLayout, QApplication, QFont
@@ -164,7 +163,7 @@ class ConfigManager:
                 # 从安全存储恢复 API Key
                 self._restore_api_keys()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
     
     def _restore_api_keys(self):
         """从安全存储恢复 API Key 到内存配置"""

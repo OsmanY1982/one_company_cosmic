@@ -1,6 +1,6 @@
 # `modules/intelligence/voice_interface.py`
 
-> 路径：`modules/intelligence/voice_interface.py` | 行数：251
+> 路径：`modules/intelligence/voice_interface.py` | 行数：258
 
 
 ---
@@ -44,9 +44,10 @@ class AppleSpeechRecognizer(QThread):
             import AVFoundation
 
             # 权限检查
+            # pyobjc 12.x: authorizationStatus() 返回 int
+            # 3 = Authorized, 0 = NotDetermined, 1 = Denied, 2 = Restricted
             status = SFSpeechRecognizer.authorizationStatus()
-            expected = SFSpeechRecognizerAuthorizationStatus.Authorized.value
-            if status != expected:
+            if status != 3:
                 self.error_occurred.emit("语音识别权限未授权，请在系统设置中开启")
                 return
 
@@ -182,14 +183,20 @@ class VoiceInterface(QObject):
         ("Reed",    185),    # 男声
     ]
 
-    def __init__(self):
+    def __init__(self, stt_engine: str = "apple", tts_engine: str = "apple"):
         super().__init__()
         self._recognizer: Optional[AppleSpeechRecognizer] = None
         self._synthesizer: Optional[AppleSpeechSynthesizer] = None
         self._is_listening = False
         self._voice_index = 0
+        self.stt_engine = stt_engine
+        self.tts_engine = tts_engine
 
     # ── 识别 ──
+
+    def start_apple_listening(self, timeout: float = 8.0, locale: str = "zh_CN"):
+        """Apple Speech 语音识别（唤醒模式入口）"""
+        self.start_listening(timeout=timeout, locale=locale)
 
     def start_listening(self, timeout: float = 8.0, locale: str = "zh_CN"):
         """开始语音识别"""

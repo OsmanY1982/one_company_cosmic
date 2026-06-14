@@ -1,6 +1,6 @@
 # `opcclaw/plugins/google_meet/cli.py`
 
-> 路径：`opcclaw/plugins/google_meet/cli.py` | 行数：479
+> 路径：`opcclaw/plugins/google_meet/cli.py` | 行数：478
 
 
 ---
@@ -19,7 +19,6 @@ Wires ``hermes meet <subcommand>``:
 """
 
 from __future__ import annotations
-import traceback
 
 import argparse
 import json
@@ -308,7 +307,7 @@ def _cmd_install(*, realtime: bool, assume_yes: bool) -> int:
                 out = _sp.check_output(["system_profiler", "SPAudioDataType"], text=True)
                 have_bh = "BlackHole" in out
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
             have_ffmpeg = bool(_shutil.which("ffmpeg"))
             needs = []
             if not have_bh:
@@ -369,7 +368,7 @@ def _cmd_auth() -> int:
             try:
                 input("press Enter after you've signed in ... ")
             except EOFError:
-                import traceback; traceback.print_exc()
+                pass
             context.storage_state(path=str(path))
             browser.close()
     except Exception as e:

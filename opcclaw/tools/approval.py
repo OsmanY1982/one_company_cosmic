@@ -18,7 +18,6 @@ import time
 import unicodedata
 from typing import Optional
 from hermes_cli.config import cfg_get
-import traceback
 
 from utils import is_truthy_value
 
@@ -656,7 +655,7 @@ def prompt_dangerous_approval(command: str, description: str,
         # prompt_toolkit not installed, or detection failed -- fall through
         # to the legacy input() path (safe in non-TUI contexts: scripts,
         # tests, sshd, etc.).
-        import traceback; traceback.print_exc()
+        pass
 
     os.environ["HERMES_SPINNER_PAUSE"] = "1"
     try:
@@ -1011,7 +1010,7 @@ def check_all_command_guards(command: str, env_type: str,
         from tools.tirith_security import check_command_security
         tirith_result = check_command_security(command)
     except ImportError:
-        import traceback; traceback.print_exc()
+        pass  # tirith module not installed — allow
 
     # Dangerous command check (detection only, no approval)
     is_dangerous, pattern_key, description = detect_dangerous_command(command)

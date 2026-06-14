@@ -1,6 +1,6 @@
 # `modules/auth/model_setup_window.py`
 
-> 路径：`modules/auth/model_setup_window.py` | 行数：769
+> 路径：`modules/auth/model_setup_window.py` | 行数：764
 
 
 ---
@@ -19,20 +19,17 @@ from PyQt5.QtWidgets import (
     QLabel, QLineEdit, QPushButton, QComboBox,
     QMessageBox, QCheckBox, QFrame, QApplication,
 )
-from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF, pyqtSignal
+from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF, QThread, QObject, pyqtSignal
 from PyQt5.QtGui import (
     QPainter, QColor, QRadialGradient, QPen, QBrush,
     QLinearGradient, QPainterPath, QFont,
 )
 
 from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPLE
+from core.planet_painter import PLANET_STYLES, paint_planet
 from core.deps import ensure
 
-try:
-    from modules.intelligence._model_manager import OllamaManager
-    _OLLAMA_AVAILABLE = True
-except ImportError:
-    _OLLAMA_AVAILABLE = False
+# 模型列表统一走 AgentBridge.list_all_models() 静态方法（数据源：opcclaw_config.json + Ollama 动态发现）
 
 
 # ── 预设供应商模板（精简版，完整版在 opcclaw PROVIDER_TEMPLATES）──
@@ -64,7 +61,7 @@ LOCAL_SERVICES = [
 
 # ── 配置路径 ──
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DATA_DIR = os.path.join(PROJECT_ROOT, "data")
+DATA_DIR = os.path.join(PROJECT_ROOT, "opcclaw", "data")
 OPCCLAW_CONFIG_PATH = os.path.join(DATA_DIR, "opcclaw_config.json")
 
 
@@ -107,7 +104,7 @@ class SetupCosmicBackground(QWidget):
             })
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
-        self._timer.start(40)
+        self._timer.start(16)  # ~60fps (原 40ms)
 
     def _tick(self):
         self._t += 0.02
@@ -137,17 +134,14 @@ class SetupCosmicBackground(QWidget):
             painter.setBrush(Qt.NoBrush)
             painter.drawEllipse(QPointF(cx, cy), r, r * 0.6)
 
-        # 旋转光点
+        # 旋转光点 → 升级为微型真实纹理星球
+        planet_styles = ["neptune", "venus", "mars", "jupiter", "mercury", "uranus", "saturn", "moon"]
         for i in range(8):
             angle = self._t * 0.3 + i * 0.785
             px = cx + math.cos(angle) * 180
             py = cy + math.sin(angle) * 180 * 0.6
-            g = QRadialGradient(QPointF(px, py), 16)
-            g.setColorAt(0, QColor(80, 150, 255, 60))
-            g.setColorAt(1, QColor(0, 0, 0, 0))
-            painter.setBrush(QBrush(g))
-            painter.setPen(Qt.NoPen)
-            painter.drawEllipse(QPointF(px, py), 16, 16)
+            style = PLANET_STYLES.get(planet_styles[i], PLANET_STYLES["neptune"])
+            paint_planet(painter, QPointF(px, py), 20, style, anim_t=self._t)
 
         painter.end()
 
@@ -582,46 +576,40 @@ class ModelSetupWindow(QMainWindow):
         self._local_url.setText(svc["base_url"])
         self._local_model.clear()
 
-        # Ollama：动态获取已安装模型列表；其他服务用预设列表
-        if sid == "ollama" and _OLLAMA_AVAILABLE:
+        # 统一通过 AgentBridge.list_all_models() 获取模型列表
+        if sid == "ollama":
             self._refresh_local_models()
         else:
             for m in svc.get("models", ["default"]):
                 self._local_model.addItem(m, m)
 
     def _refresh_local_models(self):
-        """动态从 Ollama 获取已安装的模型列表并填充下拉框"""
-        if not _OLLAMA_AVAILABLE:
-            return
+        """通过 AgentBridge.list_all_models() 获取已配置的本地模型并填充下拉框"""
+        from modules.intelligence.agent_bridge import AgentBridge
 
         self._local_model.clear()
         self._refresh_btn.setEnabled(False)
         self._refresh_btn.setText("获取中...")
 
         try:
-            running = OllamaManager.is_running()
-            if not running and not OllamaManager.is_installed():
-                self._local_model.addItem("（Ollama 未安装）", "")
-                return
-            if not running:
-                self._local_model.addItem("（Ollama 未启动，请先启动服务）", "")
-                return
-            models = OllamaManager.list_models()
-            if not models:
-                self._local_model.addItem("（暂无模型，请先下载）", "")
-                return
-            for m in models:
-                name = m.get("name", "")
+            all_models = AgentBridge.list_all_models()
+            local_models = [m for m in all_models if m.get("category") == "local"]
+        except Exception as e:
+            print(f"[ModelSetup] agent_bridge 获取模型列表失败: {e}")
+            traceback.print_exc()
+            local_models = []
+
+        if not local_models:
+            self._local_model.addItem("（暂无本地模型，请先配置或启动 Ollama）", "")
+        else:
+            for m in local_models:
+                name = m.get("model", "")
                 size = m.get("size", 0)
                 size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
                 self._local_model.addItem(f"{name}{size_str}", name)
-        except Exception as e:
-            print(f"[ModelSetup] 获取本地模型失败: {e}")
-            traceback.print_exc()
-            self._local_model.addItem("（获取失败，请检查网络/服务）", "")
-        finally:
-            self._refresh_btn.setEnabled(True)
-            self._refresh_btn.setText("刷新模型")
+
+        self._refresh_btn.setEnabled(True)
+        self._refresh_btn.setText("刷新模型")
 
     # ════════════════ 操作 ════════════════
 
@@ -673,7 +661,7 @@ class ModelSetupWindow(QMainWindow):
         elif active_tab == 2:  # 本地模式
             sid = self._local_service.currentData()
             url = self._local_url.text().strip()
-            model = self._local_model.currentText().strip() or self._local_model.currentData() or ""
+            model = self._local_model.currentData() or self._local_model.currentText().strip() or ""
             svc = next((s for s in LOCAL_SERVICES if s["id"] == sid), None)
             if not svc:
                 return None
@@ -742,6 +730,13 @@ class ModelSetupWindow(QMainWindow):
 
         try:
             from opcclaw.core.llm_backend import BackendFactory, ProviderConfig
+
+            # opcclaw/core/__init__.py 会将自身路径插入 sys.path[0]，可能遮蔽 modules/
+            if PROJECT_ROOT not in sys.path:
+                sys.path.insert(0, PROJECT_ROOT)
+            elif sys.path[0] != PROJECT_ROOT:
+                sys.path.remove(PROJECT_ROOT)
+                sys.path.insert(0, PROJECT_ROOT)
 
             provider_id = config.get("active_provider_id", "")
             provider_type = config.get("active_provider_type", "")

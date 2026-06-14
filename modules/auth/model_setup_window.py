@@ -20,11 +20,7 @@ from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPL
 from core.planet_painter import PLANET_STYLES, paint_planet
 from core.deps import ensure
 
-try:
-    from modules.intelligence._model_manager import OllamaManager
-    _OLLAMA_AVAILABLE = True
-except ImportError:
-    _OLLAMA_AVAILABLE = False
+# 模型列表统一走 AgentBridge.list_all_models() 静态方法（数据源：opcclaw_config.json + Ollama 动态发现）
 
 
 # ── 预设供应商模板（精简版，完整版在 opcclaw PROVIDER_TEMPLATES）──
@@ -571,67 +567,38 @@ class ModelSetupWindow(QMainWindow):
         self._local_url.setText(svc["base_url"])
         self._local_model.clear()
 
-        # Ollama：动态获取已安装模型列表；其他服务用预设列表
-        if sid == "ollama" and _OLLAMA_AVAILABLE:
+        # 统一通过 AgentBridge.list_all_models() 获取模型列表
+        if sid == "ollama":
             self._refresh_local_models()
         else:
             for m in svc.get("models", ["default"]):
                 self._local_model.addItem(m, m)
 
     def _refresh_local_models(self):
-        """动态从 Ollama 获取已安装的模型列表并填充下拉框（后台线程，不阻塞 UI）"""
-        if not _OLLAMA_AVAILABLE:
-            return
+        """通过 AgentBridge.list_all_models() 获取已配置的本地模型并填充下拉框"""
+        from modules.intelligence.agent_bridge import AgentBridge
 
         self._local_model.clear()
         self._refresh_btn.setEnabled(False)
         self._refresh_btn.setText("获取中...")
 
-        class _RefreshWorker(QObject):
-            finished = pyqtSignal(list)  # list of (display_text, user_data)
-            def run(self):
-                results = []
-                try:
-                    running = OllamaManager.is_running()
-                    if not running and not OllamaManager.is_installed():
-                        results.append(("（Ollama 未安装）", ""))
-                        self.finished.emit(results)
-                        return
-                    if not running:
-                        results.append(("（Ollama 未启动，请先启动服务）", ""))
-                        self.finished.emit(results)
-                        return
-                    models = OllamaManager.list_models()
-                    if not models:
-                        results.append(("（暂无模型，请先下载）", ""))
-                        self.finished.emit(results)
-                        return
-                    for m in models:
-                        name = m.get("name", "")
-                        size = m.get("size", 0)
-                        size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
-                        results.append((f"{name}{size_str}", name))
-                except Exception as e:
-                    print(f"[ModelSetup] 获取本地模型失败: {e}")
-                    traceback.print_exc()
-                    results.append(("（获取失败，请检查网络/服务）", ""))
-                finally:
-                    self.finished.emit(results)
+        try:
+            all_models = AgentBridge.list_all_models()
+            local_models = [m for m in all_models if m.get("category") == "local"]
+        except Exception as e:
+            print(f"[ModelSetup] agent_bridge 获取模型列表失败: {e}")
+            traceback.print_exc()
+            local_models = []
 
-        self._refresh_thread = QThread()
-        self._refresh_worker = _RefreshWorker()
-        self._refresh_worker.moveToThread(self._refresh_thread)
-        self._refresh_thread.started.connect(self._refresh_worker.run)
-        self._refresh_worker.finished.connect(self._on_local_models_ready)
-        self._refresh_worker.finished.connect(self._refresh_thread.quit)
-        self._refresh_thread.finished.connect(self._refresh_thread.deleteLater)
-        self._refresh_worker.finished.connect(self._refresh_worker.deleteLater)
-        self._refresh_thread.start()
+        if not local_models:
+            self._local_model.addItem("（暂无本地模型，请先配置或启动 Ollama）", "")
+        else:
+            for m in local_models:
+                name = m.get("model", "")
+                size = m.get("size", 0)
+                size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
+                self._local_model.addItem(f"{name}{size_str}", name)
 
-    def _on_local_models_ready(self, results: list):
-        """后台刷新完成后，把结果填入下拉框"""
-        for display_text, user_data in results:
-            self._local_model.addItem(display_text, user_data)
         self._refresh_btn.setEnabled(True)
         self._refresh_btn.setText("刷新模型")
 
@@ -754,6 +721,13 @@ class ModelSetupWindow(QMainWindow):
 
         try:
             from opcclaw.core.llm_backend import BackendFactory, ProviderConfig
+
+            # opcclaw/core/__init__.py 会将自身路径插入 sys.path[0]，可能遮蔽 modules/
+            if PROJECT_ROOT not in sys.path:
+                sys.path.insert(0, PROJECT_ROOT)
+            elif sys.path[0] != PROJECT_ROOT:
+                sys.path.remove(PROJECT_ROOT)
+                sys.path.insert(0, PROJECT_ROOT)
 
             provider_id = config.get("active_provider_id", "")
             provider_type = config.get("active_provider_type", "")

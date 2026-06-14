@@ -47,7 +47,6 @@ if installed for nicer behavior.
 """
 
 from __future__ import annotations
-import traceback
 
 import argparse
 import copy
@@ -334,7 +333,7 @@ class ComfyRunner:
             try:
                 ws.close()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
         if error_payload is not None:
             return {"status": "error", "data": error_payload}
@@ -351,7 +350,7 @@ class ComfyRunner:
                 try:
                     return (r.json() or {}).get("outputs", {}) or {}
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
             # Fallback
             r = http_get(self._url(f"/history/{prompt_id}"), headers=self.headers, retries=2)
             if r.status == 200:
@@ -418,7 +417,7 @@ class ComfyRunner:
                 if out_path.exists():
                     out_path.unlink()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
             raise WorkflowRunError(
                 "download_failed",
                 f"Download of {filename} failed: HTTP {r.status}",

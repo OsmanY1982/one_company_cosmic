@@ -1,6 +1,6 @@
 # `opcclaw/plugins/platforms/teams/adapter.py`
 
-> 路径：`opcclaw/plugins/platforms/teams/adapter.py` | 行数：1189
+> 路径：`opcclaw/plugins/platforms/teams/adapter.py` | 行数：1188
 
 
 ---
@@ -30,7 +30,6 @@ Configuration in config.yaml:
 """
 
 from __future__ import annotations
-import traceback
 
 import asyncio
 import html
@@ -438,7 +437,7 @@ def _env_enablement() -> dict | None:
         try:
             seed["port"] = int(port)
         except ValueError:
-            import traceback; traceback.print_exc()
+            pass
     service_url = os.getenv("TEAMS_SERVICE_URL", "").strip()
     if service_url:
         seed["service_url"] = service_url
@@ -1018,7 +1017,7 @@ class TeamsAdapter(BasePlatformAdapter):
         try:
             await self._app.send(chat_id, TypingActivityInput())
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     async def send_image(
         self,

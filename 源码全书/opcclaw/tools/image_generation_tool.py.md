@@ -1,6 +1,6 @@
 # `opcclaw/tools/image_generation_tool.py`
 
-> 路径：`opcclaw/tools/image_generation_tool.py` | 行数：1059
+> 路径：`opcclaw/tools/image_generation_tool.py` | 行数：1058
 
 
 ---
@@ -37,7 +37,6 @@ import threading
 import uuid
 from typing import Any, Dict, Optional, Union
 from urllib.parse import urlencode
-import traceback
 
 # fal_client is imported lazily — see _load_fal_client(). Pulling it
 # eagerly added ~64 ms to every CLI cold start because
@@ -836,7 +835,7 @@ def check_image_generation_requirements() -> bool:
             _load_fal_client()
             return True
     except ImportError:
-        import traceback; traceback.print_exc()
+        pass
 
     # Probe plugin providers. Discovery is idempotent and cheap.
     try:
@@ -851,7 +850,7 @@ def check_image_generation_requirements() -> bool:
             except Exception:
                 continue
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
 
     return False
 

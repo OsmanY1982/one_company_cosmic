@@ -16,11 +16,11 @@ from core.planet_painter import (
 
 # ═══════ 5颗子星球配置 ═══════
 PLANETS = [
-    {"id": "system_settings", "name": "系统设置", "style": "uranus",  "orbit": 140, "size": 51},
-    {"id": "activation",      "name": "激活码",   "style": "venus",     "orbit": 210, "size": 51},
-    {"id": "cloud_sync",      "name": "云端同步", "style": "neptune", "orbit": 280, "size": 51},
-    {"id": "system_logs",     "name": "系统日志", "style": "pluto",   "orbit": 350, "size": 51},
-    {"id": "update_check",    "name": "更新检测", "style": "moon",    "orbit": 420, "size": 51},
+    {"id": "system_settings", "name": "系统设置", "style": "uranus",  "orbit": 140, "size": 30},
+    {"id": "activation",      "name": "激活码",   "style": "sun",     "orbit": 210, "size": 30},
+    {"id": "cloud_sync",      "name": "云端同步", "style": "neptune", "orbit": 280, "size": 30},
+    {"id": "system_logs",     "name": "系统日志", "style": "pluto",   "orbit": 350, "size": 30},
+    {"id": "update_check",    "name": "更新检测", "style": "moon",    "orbit": 420, "size": 30},
 ]
 
 
@@ -36,45 +36,26 @@ class NavigationHUD(QWidget):
         self._center = QPointF(0, 0)
         self._hovered_planet = None
         self._angle = 0.0
-        self._anim_t = 0.0
-        self._orbits = []
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
-        self._timer.start(16)  # ~60fps (原 50ms)
-
-    def _compute_orbits(self):
-        w, h = self.width(), self.height()
-        if w <= 0 or h <= 0:
-            return
-        n = len(PLANETS)
-        available_r = min(w, h) / 2 * 0.9
-        max_size = max(p["size"] for p in PLANETS)
-        max_orbit = available_r - max_size / 2
-        if n > 3:
-            base_r = max_orbit / (1 + (n - 1) * 0.4)
-            self._orbits = [base_r * (1 + i * 0.4) for i in range(n)]
-        else:
-            self._orbits = [max_orbit * (i + 1) / n for i in range(n)]
+        self._timer.start(50)
 
     def _tick(self):
         self._angle = (self._angle + 0.3) % 360.0
-        self._anim_t += 0.05
         self.update()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self._center = QPointF(self.width() / 2, self.height() / 2)
-        self._compute_orbits()
 
     def _planet_positions(self):
         w2 = self._center
         positions = []
         for i, p in enumerate(PLANETS):
-            orbit = self._orbits[i] if i < len(self._orbits) else p.get("orbit", 140)
             offset_angle = i * (360.0 / len(PLANETS))
             rad = math.radians(self._angle + offset_angle)
-            x = w2.x() + orbit * math.cos(rad)
-            y = w2.y() + orbit * math.sin(rad)
+            x = w2.x() + p["orbit"] * math.cos(rad)
+            y = w2.y() + p["orbit"] * math.sin(rad)
             positions.append((p, QPointF(x, y)))
         return positions
 
@@ -82,25 +63,21 @@ class NavigationHUD(QWidget):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         w2 = self._center
-        anim_t = self._anim_t
 
-        for i, planet in enumerate(PLANETS):
-            orbit = self._orbits[i] if i < len(self._orbits) else planet.get("orbit", 140)
-            paint_orbit(p, w2, orbit, anim_t=anim_t)
+        for planet in PLANETS:
+            paint_orbit(p, w2, planet["orbit"], alpha=10)
 
         for planet_data, pos in self._planet_positions():
-            paint_energy_line(p, w2, pos, alpha=15, anim_t=anim_t)
+            paint_energy_line(p, w2, pos, alpha=15)
 
         for planet_data, pos in self._planet_positions():
             style = PLANET_STYLES.get(planet_data.get("style"), PLANET_STYLES["neptune"])
             is_hovered = (self._hovered_planet == planet_data["id"])
             paint_planet(p, pos, planet_data["size"], style,
-                         hovered=is_hovered, label=planet_data["name"],
-                         font_size=9, anim_t=anim_t)
+                         hovered=is_hovered, label=planet_data["name"], font_size=9)
 
         # 中央核心 · 太阳
-        paint_planet(p, w2, 65, PLANET_STYLES["sun"], label="SYS",
-                     font_size=10, anim_t=anim_t)
+        paint_planet(p, w2, 38, PLANET_STYLES["sun"], label="SYS", font_size=10)
 
         p.end()
 

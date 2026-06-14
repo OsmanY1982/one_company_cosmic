@@ -1,6 +1,6 @@
 # `opcclaw/modules/chat_worker.py`
 
-> 路径：`opcclaw/modules/chat_worker.py` | 行数：36
+> 路径：`opcclaw/modules/chat_worker.py` | 行数：35
 
 
 ---
@@ -12,7 +12,6 @@ OPCclaw - 后台 LLM 调用工作线程
 """
 
 from PyQt5.QtCore import QThread, pyqtSignal
-import traceback
 
 
 class ChatWorker(QThread):
@@ -37,7 +36,7 @@ class ChatWorker(QThread):
                         data = json.loads(chunk)
                         usage_info = data.get("usage", {})
                     except (json.JSONDecodeError, ValueError, AttributeError):
-                        import traceback; traceback.print_exc()
+                        pass  # usage 信息是可选的，解析失败不影响主功能
                 else:
                     self.text_chunk.emit(chunk)
             self.finished.emit("", usage_info)

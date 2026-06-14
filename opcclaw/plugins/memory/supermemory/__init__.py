@@ -5,7 +5,6 @@ explicit memory tools, cleaned turn capture, and session-end conversation ingest
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -235,7 +234,7 @@ def _format_prefetch_context(static_facts: list, dynamic_facts: list, search_res
                 try:
                     prefix_bits.append(f"[{round(float(similarity) * 100)}%]")
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
             prefix = " ".join(prefix_bits)
             lines.append(f"- {prefix} {memory}".strip())
         if lines:
@@ -724,7 +723,7 @@ class SupermemoryMemoryProvider(MemoryProvider):
                     try:
                         entry["similarity"] = round(float(item["similarity"]) * 100)
                     except Exception:
-                        import traceback; traceback.print_exc()
+                        pass
                 formatted.append(entry)
             resp: dict[str, Any] = {"results": formatted, "count": len(formatted)}
             if tag:

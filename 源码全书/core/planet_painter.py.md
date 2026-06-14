@@ -1,6 +1,6 @@
 # `core/planet_painter.py`
 
-> 路径：`core/planet_painter.py` | 行数：327
+> 路径：`core/planet_painter.py` | 行数：328
 
 
 ---
@@ -87,7 +87,8 @@ PLANET_STYLES = {
 # ═══════════════════════════════════════════
 
 def paint_planet(painter: QPainter, center: QPointF, radius: float, style: dict,
-                  hovered: bool = False, label: str = "", font_size: int = 9):
+                  hovered: bool = False, label: str = "", font_size: int = 9,
+                  anim_t: float = 0.0):
     """
     绘制一颗真实风格星球。
     

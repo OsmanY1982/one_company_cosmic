@@ -1,6 +1,6 @@
 # `opcclaw/skills/creative/comfyui/scripts/ws_monitor.py`
 
-> 路径：`opcclaw/skills/creative/comfyui/scripts/ws_monitor.py` | 行数：268
+> 路径：`opcclaw/skills/creative/comfyui/scripts/ws_monitor.py` | 行数：267
 
 
 ---
@@ -35,7 +35,6 @@ Falls back to a clear error message when not installed.
 """
 
 from __future__ import annotations
-import traceback
 
 import argparse
 import json
@@ -270,7 +269,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             ws.close()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 """Thin Spotify Web API helper used by Hermes native tools."""
 
 from __future__ import annotations
-import traceback
 
 import json
 from typing import Any, Dict, Iterable, Optional
@@ -333,7 +332,7 @@ def _extract_spotify_error_detail(response: httpx.Response, *, fallback: str) ->
             elif isinstance(error_obj, str):
                 detail = error_obj
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
     return detail.strip()
 
 

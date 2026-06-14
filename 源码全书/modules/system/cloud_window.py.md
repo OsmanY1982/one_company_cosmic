@@ -191,7 +191,7 @@ class CloudWindow(QDialog):
                 try:
                     total_size += os.path.getsize(fp)
                 except OSError:
-                    import traceback; traceback.print_exc()
+                    pass
                 if f.endswith(".db"):
                     db_count += 1
         if total_size < 1024:

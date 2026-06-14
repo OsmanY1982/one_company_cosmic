@@ -1,6 +1,6 @@
 # `opcclaw/plugins/kanban/dashboard/plugin_api.py`
 
-> 路径：`opcclaw/plugins/kanban/dashboard/plugin_api.py` | 行数：1593
+> 路径：`opcclaw/plugins/kanban/dashboard/plugin_api.py` | 行数：1592
 
 
 ---
@@ -34,7 +34,6 @@ reachable from the network. Don't do that on a shared host.
 """
 
 from __future__ import annotations
-import traceback
 
 import asyncio
 import hmac
@@ -551,7 +550,7 @@ def create_task(payload: CreateTaskBody, board: Optional[str] = Query(None)):
                     body["warning"] = message
             except Exception:
                 # Probe failure must never block the create itself.
-                import traceback; traceback.print_exc()
+                pass
         return body
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -1599,6 +1598,6 @@ async def stream_events(ws: WebSocket):
         try:
             await ws.close()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
 ```

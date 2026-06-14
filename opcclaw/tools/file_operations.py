@@ -11,7 +11,6 @@ so we wrap the terminal backend's execute() interface to provide a unified file 
 Usage:
     from tools.file_operations import ShellFileOperations
     from tools.terminal_tool import _active_environments
-import traceback
     
     # Get file operations for a terminal environment
     file_ops = ShellFileOperations(terminal_env)
@@ -951,7 +950,7 @@ class ShellFileOperations(FileOperations):
                 from tools.fuzzy_match import format_no_match_hint
                 err_msg += format_no_match_hint(err_msg, match_count, old_string, content)
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
             return PatchResult(error=err_msg)
         # Write back
         write_result = self.write_file(path, new_content)
@@ -1430,7 +1429,7 @@ class ShellFileOperations(FileOperations):
                         try:
                             counts[parts[0]] = int(parts[1])
                         except ValueError:
-                            import traceback; traceback.print_exc()
+                            pass
             return SearchResult(counts=counts, total_count=sum(counts.values()))
         
         else:
@@ -1529,7 +1528,7 @@ class ShellFileOperations(FileOperations):
                         try:
                             counts[parts[0]] = int(parts[1])
                         except ValueError:
-                            import traceback; traceback.print_exc()
+                            pass
             return SearchResult(counts=counts, total_count=sum(counts.values()))
         
         else:

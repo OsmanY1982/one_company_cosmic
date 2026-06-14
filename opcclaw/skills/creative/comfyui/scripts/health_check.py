@@ -17,7 +17,6 @@ Usage:
 """
 
 from __future__ import annotations
-import traceback
 
 import argparse
 import json
@@ -129,7 +128,7 @@ def smoke_test(host: str, headers: dict, ckpt_name: str | None) -> dict:
     try:
         cancelled = runner.cancel(pid)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
 
     return {
         "ran": True, "submitted": True, "prompt_id": pid,

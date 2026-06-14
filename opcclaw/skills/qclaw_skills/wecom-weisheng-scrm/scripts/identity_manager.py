@@ -8,7 +8,6 @@
 @date 2026-04-02 17:11
 """
 from __future__ import annotations
-import traceback
 
 import json
 import time
@@ -104,7 +103,7 @@ class IdentityManager:
             with open(CACHE_FILE, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
         except OSError:
-            import traceback; traceback.print_exc()
+            pass  # 写入失败时降级，下次重新请求
 
     def _refresh(self) -> dict[str, Any]:
         """调用 /auth/check_super_user 刷新身份信息。

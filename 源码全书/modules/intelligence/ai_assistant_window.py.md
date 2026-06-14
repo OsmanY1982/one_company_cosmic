@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_assistant_window.py`
 
-> 路径：`modules/intelligence/ai_assistant_window.py` | 行数：211
+> 路径：`modules/intelligence/ai_assistant_window.py` | 行数：206
 
 
 ---
@@ -146,18 +146,13 @@ class AIAssistantWindow(QMainWindow):
             try:
                 from modules.intelligence.enhanced_chat import EnhancedChatWidget
                 dlg = EnhancedChatWidget(self)
-                dlg.show()
+                dlg.exec_()
             except ImportError as e:
                 QMessageBox.warning(self, "错误", f"增强对话模块加载失败: {e}")
         elif planet_id == "knowledge_base":
             try:
                 from modules.intelligence.knowledge_base import KnowledgeBase
-                dlg = QDialog(self)
-                dlg.setWindowTitle("知识库")
-                dlg.setMinimumSize(600, 450)
-                kb = KnowledgeBase()
-                layout = QVBoxLayout(dlg)
-                layout.addWidget(QLabel("知识库管理", dlg))
+                dlg = KnowledgeBase(self)
                 dlg.exec_()
             except ImportError as e:
                 QMessageBox.warning(self, "错误", f"知识库模块加载失败: {e}")
@@ -168,7 +163,7 @@ class AIAssistantWindow(QMainWindow):
             try:
                 from modules.intelligence.quick_actions import QuickActionsWidget
                 dlg = QuickActionsWidget(self)
-                dlg.show()
+                dlg.exec_()
             except ImportError as e:
                 QMessageBox.warning(self, "错误", f"快捷操作模块加载失败: {e}")
         elif planet_id == "ai_dashboard":

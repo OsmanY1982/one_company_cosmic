@@ -11,7 +11,6 @@ import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
-import traceback
 
 from hermes_constants import get_config_path, get_skills_dir
 
@@ -439,7 +438,7 @@ def resolve_skill_config_values(
             if isinstance(parsed, dict):
                 config = parsed
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     resolved: Dict[str, Any] = {}
     for var in config_vars:

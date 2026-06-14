@@ -1,6 +1,6 @@
 # `opcclaw/plugins/teams_pipeline/meetings.py`
 
-> 路径：`opcclaw/plugins/teams_pipeline/meetings.py` | 行数：334
+> 路径：`opcclaw/plugins/teams_pipeline/meetings.py` | 行数：333
 
 
 ---
@@ -10,7 +10,6 @@
 """Graph-backed Teams meeting helpers for the plugin runtime."""
 
 from __future__ import annotations
-import traceback
 
 import tempfile
 from pathlib import Path
@@ -225,7 +224,7 @@ async def download_transcript_text(
         try:
             destination.unlink(missing_ok=True)
         except OSError:
-            import traceback; traceback.print_exc()
+            pass
 
     if not text:
         raise TeamsMeetingArtifactNotFoundError(

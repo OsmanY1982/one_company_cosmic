@@ -23,7 +23,6 @@ actually host a node.
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import secrets
@@ -69,7 +68,7 @@ class NodeServer:
                     self._token = tok
                     return tok
             except (OSError, json.JSONDecodeError):
-                import traceback; traceback.print_exc()
+                pass
         tok = secrets.token_hex(16)  # 32 hex chars
         self.token_path.parent.mkdir(parents=True, exist_ok=True)
         tmp = self.token_path.with_suffix(".json.tmp")
@@ -83,7 +82,7 @@ class NodeServer:
             tmp.chmod(0o600)
         except (OSError, NotImplementedError):
             # Best-effort on non-POSIX filesystems; mode is set on POSIX.
-            import traceback; traceback.print_exc()
+            pass
         tmp.replace(self.token_path)
         self._token = tok
         return tok

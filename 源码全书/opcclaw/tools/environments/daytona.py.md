@@ -1,6 +1,6 @@
 # `opcclaw/tools/environments/daytona.py`
 
-> 路径：`opcclaw/tools/environments/daytona.py` | 行数：260
+> 路径：`opcclaw/tools/environments/daytona.py` | 行数：259
 
 
 ---
@@ -20,7 +20,6 @@ import os
 import shlex
 import threading
 from pathlib import Path
-import traceback
 
 from tools.environments.base import (
     BaseEnvironment,
@@ -137,7 +136,7 @@ class DaytonaEnvironment(BaseEnvironment):
                 if requested_cwd in ("~", "/home/daytona"):
                     self.cwd = home
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         logger.info("Daytona: resolved home to %s, cwd to %s", self._remote_home, self.cwd)
 
         self._sync_manager = FileSyncManager(
@@ -192,7 +191,7 @@ class DaytonaEnvironment(BaseEnvironment):
         try:
             self._sandbox.process.exec(f"rm -f {shlex.quote(remote_tar)}")
         except Exception:
-            import traceback; traceback.print_exc()
+            pass  # best-effort cleanup
 
     def _daytona_delete(self, remote_paths: list[str]) -> None:
         """Batch-delete remote files via SDK exec."""
@@ -227,7 +226,7 @@ class DaytonaEnvironment(BaseEnvironment):
                 try:
                     sandbox.stop()
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
 
         if login:
             shell_cmd = f"bash -l -c {shlex.quote(cmd_string)}"

@@ -1,6 +1,6 @@
 # `opcclaw/plugins/context_engine/__init__.py`
 
-> 路径：`opcclaw/plugins/context_engine/__init__.py` | 行数：220
+> 路径：`opcclaw/plugins/context_engine/__init__.py` | 行数：219
 
 
 ---
@@ -20,7 +20,6 @@ The default engine is ``"compressor"`` (the built-in ContextCompressor).
 
 Usage:
     from plugins.context_engine import discover_context_engines, load_context_engine
-import traceback
 
     available = discover_context_engines()   # [(name, desc, available), ...]
     engine = load_context_engine("lcm")      # ContextEngine instance
@@ -68,7 +67,7 @@ def discover_context_engines() -> List[Tuple[str, str, bool]]:
                     meta = yaml.safe_load(f) or {}
                 desc = meta.get("description", "")
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
         # Quick availability check — try loading and calling is_available()
         available = True
@@ -144,7 +143,7 @@ def _load_engine_from_dir(engine_dir: Path) -> Optional["ContextEngine"]:
                         try:
                             spec.loader.exec_module(parent_mod)
                         except Exception:
-                            import traceback; traceback.print_exc()
+                            pass
 
         # Now load the engine module
         spec = importlib.util.spec_from_file_location(
@@ -201,7 +200,7 @@ def _load_engine_from_dir(engine_dir: Path) -> Optional["ContextEngine"]:
             try:
                 return attr()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
     return None
 

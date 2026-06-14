@@ -1,6 +1,6 @@
 # `opcclaw/tools/feishu_doc_tool.py`
 
-> 路径：`opcclaw/tools/feishu_doc_tool.py` | 行数：139
+> 路径：`opcclaw/tools/feishu_doc_tool.py` | 行数：138
 
 
 ---
@@ -16,7 +16,6 @@ Uses the same lazy-import + BaseRequest pattern as feishu_comment.py.
 import json
 import logging
 import threading
-import traceback
 
 from tools.registry import registry, tool_error, tool_result
 
@@ -117,7 +116,7 @@ def _handle_feishu_doc_read(args: dict, **kwargs) -> str:
             content = body.get("data", {}).get("content", "")
             return tool_result(success=True, content=content)
         except (json.JSONDecodeError, AttributeError):
-            import traceback; traceback.print_exc()
+            pass
 
     # Fallback: try response.data
     data = getattr(response, "data", None)

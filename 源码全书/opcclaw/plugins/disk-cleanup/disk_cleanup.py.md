@@ -1,6 +1,6 @@
 # `opcclaw/plugins/disk-cleanup/disk_cleanup.py`
 
-> 路径：`opcclaw/plugins/disk-cleanup/disk_cleanup.py` | 行数：497
+> 路径：`opcclaw/plugins/disk-cleanup/disk_cleanup.py` | 行数：496
 
 
 ---
@@ -29,7 +29,6 @@ Never touches: ~/.hermes/logs/ or any system directory.
 """
 
 from __future__ import annotations
-import traceback
 
 import json
 import logging
@@ -83,7 +82,7 @@ def is_safe_path(path: Path) -> bool:
         path.resolve().relative_to(hermes_home)
         return True
     except (ValueError, OSError):
-        import traceback; traceback.print_exc()
+        pass
     # Allow /tmp/hermes-* explicitly
     parts = path.parts
     if len(parts) >= 3 and parts[1] == "tmp" and parts[2].startswith("hermes-"):
@@ -104,7 +103,7 @@ def _log(message: str) -> None:
             f.write(f"[{ts}] {message}\n")
     except OSError:
         # Never let the audit log break the agent loop.
-        import traceback; traceback.print_exc()
+        pass
 
 
 # ---------------------------------------------------------------------------
@@ -129,7 +128,7 @@ def load_tracked() -> List[Dict[str, Any]]:
                 _log("WARN: tracked.json corrupted — restored from .bak")
                 return data
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
         _log("WARN: tracked.json corrupted, no backup — starting fresh")
         return []
 
@@ -328,9 +327,9 @@ def quick() -> Dict[str, Any]:
                     empty_removed += 1
                     _log(f"DELETED: {dirpath} (empty dir)")
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
     except OSError:
-        import traceback; traceback.print_exc()
+        pass
 
     save_tracked(new_tracked)
     _log(
@@ -496,7 +495,7 @@ def guess_category(path: Path) -> Optional[str]:
             return "temp"
     except ValueError:
         # Path isn't under HERMES_HOME (e.g. /tmp/hermes-*) — fall through.
-        import traceback; traceback.print_exc()
+        pass
 
     name = path.name
     if name.startswith(_TEST_PATTERNS):

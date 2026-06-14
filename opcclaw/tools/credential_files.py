@@ -19,7 +19,6 @@ creation time and before each command (for resync on Modal).
 """
 
 from __future__ import annotations
-import traceback
 
 import logging
 import os
@@ -240,7 +239,7 @@ def get_skills_directory_mount(
                     "container_path": f"{container_base.rstrip('/')}/external_skills/{idx}",
                 })
     except ImportError:
-        import traceback; traceback.print_exc()
+        pass
 
     return mounts
 
@@ -332,7 +331,7 @@ def iter_skills_files(
                     "container_path": f"{container_root}/{rel}",
                 })
     except ImportError:
-        import traceback; traceback.print_exc()
+        pass
 
     return result
 

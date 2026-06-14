@@ -33,7 +33,7 @@ def _load_remembered():
                 data["password"] = base64.b64decode(data["password"]).decode()
             return data
     except Exception:
-        import traceback; traceback.print_exc()
+        pass  # gracefully degrade on I/O failure
     return {}
 
 def _save_remembered(username, password):
@@ -43,7 +43,7 @@ def _save_remembered(username, password):
         with open(REMEMBERED_LOGIN, "w") as f:
             json.dump(data, f)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass  # gracefully degrade on I/O failure
 
 def _clear_remembered():
     """清除记住的登录凭据"""
@@ -51,7 +51,7 @@ def _clear_remembered():
         if os.path.exists(REMEMBERED_LOGIN):
             os.remove(REMEMBERED_LOGIN)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass  # gracefully degrade on I/O failure
 
 
 class EarthGlobe:
@@ -85,13 +85,12 @@ class EarthGlobe:
             painter.setBrush(QBrush(g))
             painter.drawEllipse(QPointF(cx, cy), lr, lr)
 
-        # 球体基础（5阶径向渐变 → 升级）
+        # 球体基础
         body = QRadialGradient(QPointF(cx - r * 0.25, cy - r * 0.25), r * 1.6)
-        body.setColorAt(0.0, QColor(120, 200, 255))   # 核心高光
-        body.setColorAt(0.25, QColor(60, 140, 230))   # 浅海
-        body.setColorAt(0.50, QColor(25, 80, 180))    # 深海
-        body.setColorAt(0.75, QColor(10, 40, 120))    # 深水
-        body.setColorAt(1.0, QColor(4, 16, 60))       # 暗面
+        body.setColorAt(0.3, QColor(60, 140, 230))
+        body.setColorAt(0.55, QColor(25, 80, 180))
+        body.setColorAt(0.8, QColor(10, 40, 120))
+        body.setColorAt(1, QColor(4, 16, 60))
         painter.setPen(QPen(QColor(30, 70, 150, 80), 1))
         painter.setBrush(QBrush(body))
         painter.drawEllipse(QPointF(cx, cy), r, r)
@@ -194,7 +193,7 @@ class LoginWindow(QMainWindow):
 
         self._anim = QTimer(self)
         self._anim.timeout.connect(self._tick)
-        self._anim.start(16)  # ~60fps (原 35ms)
+        self._anim.start(35)
 
     def _build_ui(self):
         self._hud.paintEvent = self._paint_hud
@@ -521,21 +520,16 @@ class LoginWindow(QMainWindow):
 
     def _open_model_setup(self, username: str, role: str):
         """登录成功后打开模型配置窗口"""
-        print(f"[_open_model_setup] username={username}, role={role}")
         membership_info = None
         if role == "member":
             membership_info = self._auth.get_membership_info(username)
 
-        print("[_open_model_setup] creating ModelSetupWindow...")
         self._setup = ModelSetupWindow(
             username=username, role=role, membership_info=membership_info
         )
-        print("[_open_model_setup] ModelSetupWindow created, connecting signal...")
         self._setup.setup_complete.connect(self._on_setup_complete)
-        print("[_open_model_setup] showing setup window, closing login...")
         self._setup.show()
         self.close()
-        print("[_open_model_setup] done")
 
     def _on_setup_complete(self, result: dict):
         """模型配置完成后打开主控面板 + 自动启动悬浮星球"""
@@ -556,43 +550,16 @@ class LoginWindow(QMainWindow):
         )
         self._dash.show()
 
-        # 自动启动悬浮星球（单实例检查）
-        LOCK_FILE = "/tmp/opcclaw_floating_planet.pid"
-        import atexit as _atexit
-        _my_pid = os.getpid()
-        if os.path.exists(LOCK_FILE):
-            try:
-                with open(LOCK_FILE, "r") as _f:
-                    _old_pid = int(_f.read().strip())
-                os.kill(_old_pid, 0)
-                print(f"[Login] 悬浮球已在运行 (PID={_old_pid})，跳过创建")
-            except (OSError, ValueError):
-                print("[Login] 旧锁文件无效，覆盖创建悬浮球")
-                with open(LOCK_FILE, "w") as _f:
-                    _f.write(str(_my_pid))
-                _atexit.register(lambda: os.path.exists(LOCK_FILE) and os.remove(LOCK_FILE))
-        else:
-            with open(LOCK_FILE, "w") as _f:
-                _f.write(str(_my_pid))
-            _atexit.register(lambda: os.path.exists(LOCK_FILE) and os.remove(LOCK_FILE))
-
-        if os.path.exists(LOCK_FILE) and int(open(LOCK_FILE).read()) == _my_pid:
-            try:
-                self._floating = FloatingPlanet(
-                    opcclaw_engine=engine,
-                    role=role,
-                    membership_info=membership_info,
-                    config=config,
-                )
-                self._floating.show()
-                self._floating.raise_()
-            except Exception as e:
-                print(f"[Login] FloatingPlanet launch failed: {e}")
-                traceback.print_exc()
-                QMessageBox.warning(
-                    self._dash, "悬浮球启动失败",
-                    f"悬浮星球未能启动：{e}\n可通过主控面板重新打开。"
-                )
+        # 自动启动悬浮星球
+        try:
+            self._floating = FloatingPlanet(
+                opcclaw_engine=engine,
+                role=role,
+                membership_info=membership_info,
+                config=config,
+            )
+            self._floating.show()
+            self._floating.raise_()
         except Exception as e:
             print(f"[Login] FloatingPlanet launch failed: {e}")
             traceback.print_exc()

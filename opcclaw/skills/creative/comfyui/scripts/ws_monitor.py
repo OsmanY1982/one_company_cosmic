@@ -26,7 +26,6 @@ Falls back to a clear error message when not installed.
 """
 
 from __future__ import annotations
-import traceback
 
 import argparse
 import json
@@ -261,7 +260,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             ws.close()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
 
 if __name__ == "__main__":

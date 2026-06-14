@@ -15,16 +15,15 @@ from PyQt5.QtGui import (
     QLinearGradient, QFont, QMouseEvent
 )
 from core.cosmic import CosmicBackground
-from core.planet_painter import PLANET_STYLES, paint_planet
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
 
-# ═══════ 小星球定义（真实纹理） ═══════
+# ═══════ 小星球定义 ═══════
 ENGINE_PLANETS = [
-    {"id": "base_info",  "name": "基础信息", "style": "saturn",  "orbit": 140, "radius": 42},
-    {"id": "activation", "name": "激活码",   "style": "venus",    "orbit": 210, "radius": 46},
-    {"id": "cloud",      "name": "云端同步", "style": "neptune",  "orbit": 280, "radius": 40},
-    {"id": "logs",       "name": "系统日志", "style": "pluto",    "orbit": 350, "radius": 38},
+    {"id": "base_info",  "name": "基础信息", "color": QColor(100, 120, 140), "orbit": 140, "radius": 28},
+    {"id": "activation", "name": "激活码",   "color": QColor(200, 170, 60),  "orbit": 210, "radius": 30},
+    {"id": "cloud",      "name": "云端同步", "color": QColor(100, 160, 220), "orbit": 280, "radius": 26},
+    {"id": "logs",       "name": "系统日志", "color": QColor(140, 100, 180), "orbit": 350, "radius": 24},
 ]
 
 CORE_COLOR = QColor(136, 153, 170)  # 金属灰 #8899aa
@@ -87,7 +86,7 @@ class SystemWindow(QMainWindow):
 
         self._anim = QTimer(self)
         self._anim.timeout.connect(self._tick)
-        self._anim.start(16)  # ~60fps (原 50ms)
+        self._anim.start(50)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -197,12 +196,10 @@ class SystemWindow(QMainWindow):
         cx = self._get_orbit_center()
 
         # ── 轨道环 ──
-        orbit_colors = {"mercury": QColor(100, 120, 140), "venus": QColor(200, 170, 60),
-                        "neptune": QColor(100, 160, 220), "pluto": QColor(140, 100, 180)}
         for p in ENGINE_PLANETS:
             r = p["orbit"]
             alpha = 20 if p == self._hovered_planet else 10
-            c = orbit_colors.get(p["style"], QColor(100, 120, 140))
+            c = p["color"]
             painter.setPen(QPen(QColor(c.red(), c.green(), c.blue(), alpha), 0.8))
             painter.setBrush(Qt.NoBrush)
             painter.drawEllipse(cx, r, r * 0.55)
@@ -223,19 +220,85 @@ class SystemWindow(QMainWindow):
         painter.setPen(QPen(QBrush(sg), 1.5))
         painter.drawLine(s_start, s_end)
 
-        # ── 中心工程舱核心（升级为真实纹理）──
-        core_r = 42
-        paint_planet(painter, cx, core_r, PLANET_STYLES["mercury"],
-                     label="ENGINE CORE", font_size=9, anim_t=self._t)
+        # ── 中心工程舱核心 ──
+        core_pulse = 0.5 + 0.5 * math.sin(self._t * 1.1)
+        core_r = 22 + core_pulse * 8
 
-        # ── 小星球（真实纹理）──
+        for layer in range(4, 0, -1):
+            lr = core_r + layer * 14
+            alpha = int((30 + layer * 15) * (1 - layer * 0.18))
+            g = QRadialGradient(cx, lr)
+            g.setColorAt(0, QColor(150, 165, 185, alpha))
+            g.setColorAt(0.5, QColor(100, 115, 135, alpha // 3))
+            g.setColorAt(1, QColor(0, 0, 0, 0))
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(QBrush(g))
+            painter.drawEllipse(cx, lr, lr)
+
+        painter.setBrush(QBrush(QColor(200, 210, 225)))
+        painter.drawEllipse(cx, core_r, core_r)
+
+        painter.setPen(QPen(QColor(130, 145, 165, 160)))
+        painter.setFont(QFont("Menlo", 8))
+        painter.drawText(QRectF(cx.x() - 50, cx.y() + core_r + 14, 100, 16),
+                         Qt.AlignCenter, "ENGINE CORE")
+
+        # ── 小星球 ──
         for p in ENGINE_PLANETS:
             pp = self._get_planet_pos(p)
-            style = PLANET_STYLES.get(p["style"], PLANET_STYLES["neptune"])
+            c = p["color"]
             is_hovered = p == self._hovered_planet
-            paint_planet(painter, pp, p["radius"], style,
-                         hovered=is_hovered, label=p["name"],
-                         font_size=9, anim_t=self._t)
+            r = p["radius"]
+
+            glow_r = r + (14 if is_hovered else 7)
+            for layer in range(3, 0, -1):
+                lr = glow_r + layer * 7
+                a = int((45 - layer * 10) * (1.3 if is_hovered else 1.0))
+                g = QRadialGradient(pp, lr)
+                g.setColorAt(0, QColor(c.red(), c.green(), c.blue(), a))
+                g.setColorAt(0.6, QColor(c.red(), c.green(), c.blue(), a // 4))
+                g.setColorAt(1, QColor(0, 0, 0, 0))
+                painter.setPen(Qt.NoPen)
+                painter.setBrush(QBrush(g))
+                painter.drawEllipse(pp, lr, lr)
+
+            body_g = QRadialGradient(
+                QPointF(pp.x() - r * 0.25, pp.y() - r * 0.25), r * 1.2
+            )
+            body_g.setColorAt(0, QColor(
+                min(c.red() + 50, 255),
+                min(c.green() + 50, 255),
+                min(c.blue() + 50, 255),
+            ))
+            body_g.setColorAt(0.6, c)
+            body_g.setColorAt(1, QColor(
+                max(c.red() - 35, 0),
+                max(c.green() - 35, 0),
+                max(c.blue() - 35, 0),
+            ))
+            painter.setBrush(QBrush(body_g))
+            painter.setPen(QPen(QColor(c.red(), c.green(), c.blue(), 80), 1.5))
+            painter.drawEllipse(pp, r, r)
+
+            if is_hovered:
+                ring_r = r + 5
+                ring_g = QRadialGradient(pp, ring_r + 3)
+                ring_g.setColorAt(0.7, QColor(0, 0, 0, 0))
+                ring_g.setColorAt(0.8, QColor(c.red(), c.green(), c.blue(), 160))
+                ring_g.setColorAt(1, QColor(0, 0, 0, 0))
+                painter.setPen(QPen(QBrush(ring_g), 2))
+                painter.setBrush(Qt.NoBrush)
+                painter.drawEllipse(pp, ring_r, ring_r)
+
+            painter.setPen(QPen(QColor(
+                min(c.red() + 70, 255),
+                min(c.green() + 70, 255),
+                min(c.blue() + 70, 255),
+                200 if is_hovered else 100
+            )))
+            painter.setFont(QFont("PingFang SC", 10, QFont.Bold if is_hovered else QFont.Normal))
+            painter.drawText(QRectF(pp.x() - 55, pp.y() + r + 6, 110, 20),
+                             Qt.AlignCenter, p["name"])
 
         painter.setPen(QPen(QColor(60, 70, 85, 80)))
         painter.setFont(QFont("Menlo", 9))

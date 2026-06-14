@@ -9,7 +9,6 @@
 避免每次调用时重复询问。
 """
 from __future__ import annotations
-import traceback
 
 import json
 from pathlib import Path
@@ -45,7 +44,7 @@ def save_chat_mode(mode: str) -> None:
         with open(CHAT_MODE_FILE, "w", encoding="utf-8") as f:
             json.dump({"mode": mode}, f, indent=2)
     except OSError:
-        import traceback; traceback.print_exc()
+        pass  # 写入失败时降级，下次重新提示
 
 
 def require_chat_mode(expected: str) -> None:

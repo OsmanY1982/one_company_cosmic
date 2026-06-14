@@ -1,6 +1,6 @@
 # `opcclaw/tools/skills_sync.py`
 
-> 路径：`opcclaw/tools/skills_sync.py` | 行数：432
+> 路径：`opcclaw/tools/skills_sync.py` | 行数：431
 
 
 ---
@@ -38,7 +38,6 @@ from pathlib import Path
 from hermes_constants import get_hermes_home
 from typing import Dict, List, Tuple
 from utils import atomic_replace
-import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +113,7 @@ def _write_manifest(entries: Dict[str, str]):
             try:
                 os.unlink(tmp_path)
             except OSError:
-                import traceback; traceback.print_exc()
+                pass
             raise
     except Exception as e:
         logger.debug("Failed to write skills manifest %s: %s", MANIFEST_FILE, e, exc_info=True)
@@ -180,7 +179,7 @@ def _dir_hash(directory: Path) -> str:
                 hasher.update(str(rel).encode("utf-8"))
                 hasher.update(fpath.read_bytes())
     except (OSError, IOError):
-        import traceback; traceback.print_exc()
+        pass
     return hasher.hexdigest()
 
 

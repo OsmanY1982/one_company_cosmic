@@ -29,7 +29,6 @@ Debug Mode:
 
 Usage:
     from web_tools import web_search_tool, web_extract_tool, web_crawl_tool
-import traceback
     
     # Search the web
     results = web_search_tool("Python machine learning libraries", limit=3)
@@ -482,13 +481,13 @@ def _to_plain_object(value: Any) -> Any:
         try:
             return value.model_dump()
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     if hasattr(value, "__dict__"):
         try:
             return {k: v for k, v in value.__dict__.items() if not k.startswith("_")}
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     return value
 

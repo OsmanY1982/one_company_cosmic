@@ -1,6 +1,6 @@
 # `opcclaw/tools/skill_manager_tool.py`
 
-> 路径：`opcclaw/tools/skill_manager_tool.py` | 行数：932
+> 路径：`opcclaw/tools/skill_manager_tool.py` | 行数：931
 
 
 ---
@@ -50,7 +50,6 @@ import tempfile
 from pathlib import Path
 from hermes_constants import get_hermes_home, display_hermes_home
 from typing import Dict, Any, Optional, Tuple
-import traceback
 
 from utils import atomic_replace, is_truthy_value
 from hermes_cli.config import cfg_get
@@ -527,7 +526,7 @@ def _patch_skill(
             from tools.fuzzy_match import format_no_match_hint
             err_msg += format_no_match_hint(match_error, match_count, old_string, content)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         return {
             "success": False,
             "error": err_msg,
@@ -777,7 +776,7 @@ def skill_manage(
             from agent.prompt_builder import clear_skills_system_prompt_cache
             clear_skills_system_prompt_cache(clear_snapshot=True)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         # Curator telemetry: bump patch_count on edit/patch/write_file (the actions
         # that mutate an existing skill's guidance), drop the record on delete.
         # Only mark a skill as agent-created when the background self-improvement
@@ -795,7 +794,7 @@ def skill_manage(
             elif action == "delete":
                 forget(name)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
     return json.dumps(result, ensure_ascii=False)
 

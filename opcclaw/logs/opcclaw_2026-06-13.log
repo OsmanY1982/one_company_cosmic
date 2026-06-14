@@ -1,168 +1,22 @@
-2026-06-13 00:41:07 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-e98cb3ca-907f-934d-aca5-a6b94a1111c5","request_id":"e98cb3ca-907f-934d-aca5-a6b94a1111c5"}
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
-    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
-    return opener.open(url, data, timeout)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
-    response = meth(req, response)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
-    response = self.parent.error(
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
-    return self._call_chain(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
-    result = func(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 298, in chat_stream
-    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 375, in chat
-    data = self._make_request(payload)
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 261, in _make_request
-    raise RuntimeError(
-RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-e98cb3ca-907f-934d-aca5-a6b94a1111c5","request_id":"e98cb3ca-907f-934d-aca5-a6b94a1111c5"}
-2026-06-13 00:45:52 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-40adbe99-3dc3-9a40-affa-4bc6461babe0","request_id":"40adbe99-3dc3-9a40-affa-4bc6461babe0"}
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
-    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
-    return opener.open(url, data, timeout)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
-    response = meth(req, response)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
-    response = self.parent.error(
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
-    return self._call_chain(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
-    result = func(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 298, in chat_stream
-    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 375, in chat
-    data = self._make_request(payload)
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 261, in _make_request
-    raise RuntimeError(
-RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-40adbe99-3dc3-9a40-affa-4bc6461babe0","request_id":"40adbe99-3dc3-9a40-affa-4bc6461babe0"}
-2026-06-13 01:18:16 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-f2709df6-a786-9be1-8622-5248b6ab4697","request_id":"f2709df6-a786-9be1-8622-5248b6ab4697"}
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
-    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
-    return opener.open(url, data, timeout)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
-    response = meth(req, response)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
-    response = self.parent.error(
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
-    return self._call_chain(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
-    result = func(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 298, in chat_stream
-    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 375, in chat
-    data = self._make_request(payload)
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 261, in _make_request
-    raise RuntimeError(
-RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-f2709df6-a786-9be1-8622-5248b6ab4697","request_id":"f2709df6-a786-9be1-8622-5248b6ab4697"}
-2026-06-13 01:18:36 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-65ca5b4d-44ec-9a82-bfc0-7fc2c2627133","request_id":"65ca5b4d-44ec-9a82-bfc0-7fc2c2627133"}
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
-    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
-    return opener.open(url, data, timeout)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
-    response = meth(req, response)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
-    response = self.parent.error(
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
-    return self._call_chain(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
-    result = func(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 298, in chat_stream
-    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 375, in chat
-    data = self._make_request(payload)
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 261, in _make_request
-    raise RuntimeError(
-RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-65ca5b4d-44ec-9a82-bfc0-7fc2c2627133","request_id":"65ca5b4d-44ec-9a82-bfc0-7fc2c2627133"}
-2026-06-13 01:23:36 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-21f0482c-e612-96ba-81b2-af55799be9b7","request_id":"21f0482c-e612-96ba-81b2-af55799be9b7"}
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
-    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
-    return opener.open(url, data, timeout)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
-    response = meth(req, response)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
-    response = self.parent.error(
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
-    return self._call_chain(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
-    result = func(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 298, in chat_stream
-    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 375, in chat
-    data = self._make_request(payload)
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 261, in _make_request
-    raise RuntimeError(
-RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-21f0482c-e612-96ba-81b2-af55799be9b7","request_id":"21f0482c-e612-96ba-81b2-af55799be9b7"}
-2026-06-13 01:26:00 [ERROR] opcclaw: LLM API failed: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-acd52eda-90ce-9495-bfc1-505e4d5b80c9","request_id":"acd52eda-90ce-9495-bfc1-505e4d5b80c9"}
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 241, in _make_request
-    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
-    return opener.open(url, data, timeout)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
-    response = meth(req, response)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
-    response = self.parent.error(
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
-    return self._call_chain(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
-    result = func(*args)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 298, in chat_stream
-    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 375, in chat
-    data = self._make_request(payload)
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 261, in _make_request
-    raise RuntimeError(
-RuntimeError: [自定义 OpenAI 兼容] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-acd52eda-90ce-9495-bfc1-505e4d5b80c9","request_id":"acd52eda-90ce-9495-bfc1-505e4d5b80c9"}
+2026-06-13 08:19:01 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:37:22 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:39:22 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:39:25 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:39:30 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:44:26 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:50:05 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:50:13 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:53:42 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:59:08 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [SiliconFlow] API error 500: {"code":50507,"message":"Request failed: Unknown error.","data":null}
+2026-06-13 09:24:39 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 09:54:18 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 09:54:41 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 11:32:13 [INFO] opcclaw.tools.dispatch_tool: 派发子任务 → code_agent: 你是“数字人A：对话同步官”。请只修改 /Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/...
+2026-06-13 11:32:30 [INFO] opcclaw.tools.dispatch_tool: 派发子任务 → code_agent: 你是“数字人B：悬浮球导航官”。请只修改 /Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence...
+2026-06-13 11:32:54 [INFO] opcclaw.tools.dispatch_tool: 派发子任务 → file_agent: 你是“数字人C：工作台接线员”。请只读取和搜索 /Volumes/D盘工作区/一人公司/one_company_cosmic 中 digital_emp_win...
+2026-06-13 11:49:16 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 11:49:30 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 11:55:50 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 11:57:17 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 11:57:53 [WARNING] opcclaw: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 23:09:51 [WARNING] opcclaw: force_tools enabled but no tool_call returned; injecting reminder and retrying

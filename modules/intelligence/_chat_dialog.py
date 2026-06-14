@@ -20,7 +20,6 @@ import json
 import urllib.request
 import urllib.error
 from typing import Optional, Dict, Any
-import traceback
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
@@ -184,88 +183,29 @@ class OPCclawChatDialog(QDialog):
             self._chat_input.setFocus()
             return
 
-        # 流式输出（打字机效果）— 后台线程，不阻塞 UI
+        # 流式输出（打字机效果）
         if hasattr(self._opcclaw, 'chat_stream'):
             self._stream_accumulated = ""
             self._stream_header = f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
             self._stream_chunks_received = False
-            self._stream_fallback_text = text      # 保存，供 error 回调回退使用
-            self._stream_fallback_now = now
 
-            # 先插入流式占位块
+            # 先插入流式占位块，防止 on_chunk 第一帧误删用户消息
             self._chat_log.append(
                 f'{self._stream_header}'
                 f'<p style="color:#ccaaff;">'
                 f'<span style="color:#88ff88;">_</span></p>'
             )
 
-            class _StreamWorker(QObject):
-                chunk_signal = pyqtSignal(str)
-                done_signal = pyqtSignal(str)
-                tool_signal = pyqtSignal(str, str)
-                error_signal = pyqtSignal()
-                def __init__(self, engine, text):
-                    super().__init__(None)
-                    self._engine = engine
-                    self._text = text
-                def run(self):
-                    accumulated = ""
-                    try:
-                        # 直接用生成器迭代，不走 AgentBridge.chat_stream() 的二次线程包装
-                        gen = self._engine.chat_stream_generator(self._text)
-                        for chunk in gen:
-                            # 工具调用标记
-                            if "Calling tool:" in chunk:
-                                name = chunk.split("Calling tool:")[1].split("...")[0].strip()
-                                self.tool_signal.emit(name, "running")
-                            elif ": OK]" in chunk and not chunk.startswith('{"'):
-                                name = chunk[1:].split(":")[0].strip()
-                                self.tool_signal.emit(name, "OK")
-                            elif ": Failed]" in chunk and not chunk.startswith('{"'):
-                                name = chunk[1:].split(":")[0].strip()
-                                self.tool_signal.emit(name, "Failed")
-
-                            # 跳过 usage JSON
-                            if chunk.startswith('{"usage"'):
-                                continue
-
-                            accumulated += chunk
-                            self.chunk_signal.emit(chunk)
-
-                        self.done_signal.emit(accumulated)
-                    except Exception:
-                        import traceback; traceback.print_exc()
-                        self.error_signal.emit()
-
-            self._stream_worker = _StreamWorker(self._opcclaw, text)
-            self._stream_thread = QThread()
-            self._stream_worker.moveToThread(self._stream_thread)
-            self._stream_thread.started.connect(self._stream_worker.run)
-            self._stream_worker.chunk_signal.connect(self._on_stream_chunk, Qt.QueuedConnection)
-            self._stream_worker.done_signal.connect(self._on_stream_done, Qt.QueuedConnection)
-            self._stream_worker.tool_signal.connect(self._on_stream_tool, Qt.QueuedConnection)
-            self._stream_worker.error_signal.connect(self._on_stream_error, Qt.QueuedConnection)
-            self._stream_worker.done_signal.connect(self._stream_thread.quit)
-            self._stream_worker.error_signal.connect(self._stream_thread.quit)
-            self._stream_thread.finished.connect(self._stream_thread.deleteLater)
-            self._stream_thread.finished.connect(self._stream_worker.deleteLater)
-            self._stream_thread.start()
-            return
-
-        # ═══ 同步模式 / 流式失败回退 ═══
-        try:
-            reply = self._opcclaw.chat(text)
-        except Exception as e:
-            reply = f"OPCclaw 异常: {e}"
-
-        self._chat_log.append(
-            f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
-            f'<p style="color:#ccaaff;">{reply}</p>'
-        )
-        self._chat_input.setEnabled(True)
-        self._chat_input.setFocus()
-        sb = self._chat_log.verticalScrollBar()
-        sb.setValue(sb.maximum())
+            try:
+                self._opcclaw.chat_stream(
+                    text,
+                    self._on_stream_chunk,
+                    self._on_stream_done,
+                    self._on_stream_tool,
+                )
+                return
+            except Exception:
+                pass  # 回退同步
 
     # ═══ 流式回调（实例方法 — 确保 QueuedConnection 派发到主线程） ═══
 
@@ -323,18 +263,14 @@ class OPCclawChatDialog(QDialog):
             f'<span style="color:#88ff88;">_</span></p>'
         )
 
-    def _on_stream_error(self):
-        """流式调用失败 → 移除占位块，回退到同步 chat"""
-        cursor = self._chat_log.textCursor()
-        cursor.movePosition(cursor.End)
-        cursor.select(cursor.BlockUnderCursor)
-        cursor.removeSelectedText()
+        # 同步模式（回退）
         try:
-            reply = self._opcclaw.chat(self._stream_fallback_text)
+            reply = self._opcclaw.chat(text)
         except Exception as e:
             reply = f"OPCclaw 异常: {e}"
+
         self._chat_log.append(
-            f'{self._stream_header}'
+            f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
             f'<p style="color:#ccaaff;">{reply}</p>'
         )
         self._chat_input.setEnabled(True)

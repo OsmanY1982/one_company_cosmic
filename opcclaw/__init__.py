@@ -17,7 +17,6 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
-import traceback
 
 import requests
 from bs4 import BeautifulSoup
@@ -142,7 +141,7 @@ class SeleniumRenderer:
             try:
                 self._driver.quit()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
             finally:
                 self._driver = None
 

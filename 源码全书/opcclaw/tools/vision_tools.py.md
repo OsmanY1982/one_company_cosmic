@@ -1,6 +1,6 @@
 # `opcclaw/tools/vision_tools.py`
 
-> 路径：`opcclaw/tools/vision_tools.py` | 行数：1421
+> 路径：`opcclaw/tools/vision_tools.py` | 行数：1420
 
 
 ---
@@ -29,7 +29,6 @@ Features:
 Usage:
     from vision_tools import vision_analyze_tool
     import asyncio
-import traceback
     
     # Analyze an image
     result = await vision_analyze_tool(
@@ -65,7 +64,7 @@ def _resolve_download_timeout() -> float:
         try:
             return float(env_val)
         except ValueError:
-            import traceback; traceback.print_exc()
+            pass
     try:
         from hermes_cli.config import cfg_get, load_config
         cfg = load_config()
@@ -73,7 +72,7 @@ def _resolve_download_timeout() -> float:
         if val is not None:
             return float(val)
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
     return 30.0
 
 _VISION_DOWNLOAD_TIMEOUT = _resolve_download_timeout()
@@ -636,7 +635,7 @@ async def _vision_analyze_native(
                 if temp_image_path.exists():
                     temp_image_path.unlink()
             except Exception:
-                import traceback; traceback.print_exc()
+                pass
 
 
 async def vision_analyze_tool(
@@ -804,7 +803,7 @@ async def vision_analyze_tool(
             if _vtemp is not None:
                 vision_temperature = float(_vtemp)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
         call_kwargs = {
             "task": "vision",
             "messages": messages,
@@ -1286,7 +1285,7 @@ async def video_analyze_tool(
             if _vtemp is not None:
                 vision_temperature = float(_vtemp)
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
         call_kwargs = {
             "task": "vision",

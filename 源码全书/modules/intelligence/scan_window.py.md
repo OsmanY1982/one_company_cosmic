@@ -1,6 +1,6 @@
 # `modules/intelligence/scan_window.py`
 
-> 路径：`modules/intelligence/scan_window.py` | 行数：232
+> 路径：`modules/intelligence/scan_window.py` | 行数：223
 
 
 ---
@@ -14,7 +14,6 @@
 import os
 from io import BytesIO
 from datetime import datetime
-import traceback
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
     QPushButton, QLabel, QHeaderView, QTextEdit, QLineEdit,
@@ -24,13 +23,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 # 懒安装
 from core.deps import ensure
-_QRCODE_AVAILABLE = False
-try:
-    ensure("qrcode")
-    import qrcode
-    _QRCODE_AVAILABLE = True
-except Exception:
-    import traceback; traceback.print_exc()
+ensure("qrcode")
+import qrcode
 
 TABLE_STYLE = """
     QTableWidget {
@@ -176,9 +170,6 @@ class ScanWindow(QDialog):
     def _qr_generate(self):
         text = self._qr_input.text().strip()
         if not text:
-            return
-        if not _QRCODE_AVAILABLE:
-            QMessageBox.warning(self, "模块缺失", "二维码生成需要 qrcode 模块，请执行: pip install qrcode")
             return
         try:
             qr = qrcode.QRCode(version=1, box_size=8, border=2)

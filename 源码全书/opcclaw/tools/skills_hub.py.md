@@ -1,6 +1,6 @@
 # `opcclaw/tools/skills_hub.py`
 
-> 路径：`opcclaw/tools/skills_hub.py` | 行数：3262
+> 路径：`opcclaw/tools/skills_hub.py` | 行数：3261
 
 
 ---
@@ -37,7 +37,6 @@ from pathlib import Path, PurePosixPath
 from hermes_constants import get_hermes_home
 from typing import Any, Dict, List, Optional, Tuple, Union
 from urllib.parse import urljoin, urlparse, urlunparse
-import traceback
 
 import httpx
 import yaml
@@ -1441,7 +1440,7 @@ class SkillsShSource(SkillSource):
                             if self._matches_skill_tokens(meta, tokens):
                                 return meta.identifier
         except Exception:
-            import traceback; traceback.print_exc()
+            pass
 
         return None
 
@@ -2561,7 +2560,7 @@ def _write_index_cache(key: str, data: Any) -> None:
         try:
             ignore_file.write_text("# Exclude hub internals from search tools\n*\n")
         except OSError:
-            import traceback; traceback.print_exc()
+            pass
     cache_file = INDEX_CACHE_DIR / f"{key}.json"
     try:
         cache_file.write_text(json.dumps(data, ensure_ascii=False, default=str))
@@ -2794,7 +2793,7 @@ def install_from_quarantine(
                     f"{skill_size:,}",
                 )
         except OSError:
-            import traceback; traceback.print_exc()
+            pass
 
     install_dir.parent.mkdir(parents=True, exist_ok=True)
     shutil.move(str(quarantine_path), str(install_dir))
@@ -2938,7 +2937,7 @@ def _load_hermes_index() -> Optional[dict]:
             if age < HERMES_INDEX_TTL:
                 return json.loads(HERMES_INDEX_CACHE_FILE.read_text())
         except (OSError, json.JSONDecodeError):
-            import traceback; traceback.print_exc()
+            pass
 
     # Fetch from docs site
     try:
@@ -2960,7 +2959,7 @@ def _load_hermes_index() -> Optional[dict]:
         HERMES_INDEX_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
         HERMES_INDEX_CACHE_FILE.write_text(json.dumps(data))
     except OSError:
-        import traceback; traceback.print_exc()
+        pass
 
     return data
 
@@ -2971,7 +2970,7 @@ def _load_stale_index_cache() -> Optional[dict]:
         try:
             return json.loads(HERMES_INDEX_CACHE_FILE.read_text())
         except (OSError, json.JSONDecodeError):
-            import traceback; traceback.print_exc()
+            pass
     return None
 
 
@@ -3234,7 +3233,7 @@ def parallel_search_sources(
                     if on_source_done:
                         on_source_done(sid, len(results))
                 except Exception:
-                    import traceback; traceback.print_exc()
+                    pass
         except TimeoutError:
             timed_out_ids = [
                 futures[f] for f in futures if not f.done()
