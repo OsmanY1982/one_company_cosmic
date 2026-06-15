@@ -1,3 +1,12 @@
+# `modules/intelligence/backup_p02/intelligence_window.py`
+
+> 路径：`modules/intelligence/backup_p02/intelligence_window.py` | 行数：204
+
+
+---
+
+
+```python
 # -*- coding: utf-8 -*-
 """
 智能中心 · NEURAL NEXUS（真实星球导航模式）
@@ -13,7 +22,6 @@ from PyQt5.QtGui import QColor, QFont, QPainter, QPen, QFontMetrics
 from core.planet_painter import (
     PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line,
 )
-from .session_context import session_ctx
 
 # ═══════ 6颗星球配置 ═══════
 PLANETS = [
@@ -180,23 +188,8 @@ class IntelligenceWindow(QMainWindow):
 
     def _on_planet_clicked(self, planet_id):
         if planet_id == "ai_chat":
-            # 使用全局会话上下文
-            session_ctx.set_agent_bridge(self._opcclaw_engine)
-
-            if session_ctx._active_window is not None:
-                try:
-                    session_ctx._active_window.raise_()
-                    session_ctx._active_window.activateWindow()
-                    return
-                except RuntimeError:
-                    session_ctx._active_window = None
-
-            from .ai_chat_window import AIChatWindow
-            dlg = AIChatWindow(
-                self,
-                opcclaw_engine=self._opcclaw_engine,
-                session_id=session_ctx.current_session_id,
-            )
+            from modules.intelligence.ai_chat_window import AIChatWindow
+            dlg = AIChatWindow(self, opcclaw_engine=self._opcclaw_engine)
             dlg.show()
         elif planet_id == "digital_emp":
             from modules.intelligence.digital_emp_window import DigitalEmpWindow
@@ -218,3 +211,5 @@ class IntelligenceWindow(QMainWindow):
             from modules.system.system_hub_window import SystemHubWindow
             dlg = SystemHubWindow(self)
             dlg.show()
+
+```

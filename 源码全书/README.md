@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-15 16:50
-> 共 607 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-15 17:07
+> 共 612 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -99,6 +99,11 @@
 │   │   ├── data_window.py
 │   │   └── report_window.py
 │   ├── intelligence/
+│   │   ├── backup_p02/
+│   │   │   ├── agent_bridge.py
+│   │   │   ├── ai_chat_window.py
+│   │   │   ├── intelligence_window.py
+│   │   │   └── opcclaw_floating_planet.py
 │   │   ├── core/
 │   │   │   ├── __init__.py
 │   │   │   └── llm_backend.py
@@ -172,6 +177,7 @@
 │   │   ├── report_generator.py
 │   │   ├── scan_window.py
 │   │   ├── self_monitor.py
+│   │   ├── session_context.py
 │   │   ├── smart_report_tools.py
 │   │   ├── smart_workflow.py
 │   │   ├── starship_painter.py
@@ -1097,6 +1103,10 @@
 - [`modules/intelligence/ai_features_sales_ai.py`](./modules/intelligence/ai_features_sales_ai.py.md)
 - [`modules/intelligence/analysis_tools.py`](./modules/intelligence/analysis_tools.py.md)
 - [`modules/intelligence/anomaly_detector.py`](./modules/intelligence/anomaly_detector.py.md)
+- [`modules/intelligence/backup_p02/agent_bridge.py`](./modules/intelligence/backup_p02/agent_bridge.py.md)
+- [`modules/intelligence/backup_p02/ai_chat_window.py`](./modules/intelligence/backup_p02/ai_chat_window.py.md)
+- [`modules/intelligence/backup_p02/intelligence_window.py`](./modules/intelligence/backup_p02/intelligence_window.py.md)
+- [`modules/intelligence/backup_p02/opcclaw_floating_planet.py`](./modules/intelligence/backup_p02/opcclaw_floating_planet.py.md)
 - [`modules/intelligence/bridge_window.py`](./modules/intelligence/bridge_window.py.md)
 - [`modules/intelligence/business_ai_assistant.py`](./modules/intelligence/business_ai_assistant.py.md)
 - [`modules/intelligence/business_tools.py`](./modules/intelligence/business_tools.py.md)
@@ -1137,6 +1147,7 @@
 - [`modules/intelligence/report_generator.py`](./modules/intelligence/report_generator.py.md)
 - [`modules/intelligence/scan_window.py`](./modules/intelligence/scan_window.py.md)
 - [`modules/intelligence/self_monitor.py`](./modules/intelligence/self_monitor.py.md)
+- [`modules/intelligence/session_context.py`](./modules/intelligence/session_context.py.md)
 - [`modules/intelligence/smart_report_tools.py`](./modules/intelligence/smart_report_tools.py.md)
 - [`modules/intelligence/smart_workflow.py`](./modules/intelligence/smart_workflow.py.md)
 - [`modules/intelligence/starship_painter.py`](./modules/intelligence/starship_painter.py.md)

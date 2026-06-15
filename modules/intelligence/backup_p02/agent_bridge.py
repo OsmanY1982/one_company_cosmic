@@ -1,12 +1,3 @@
-# `modules/intelligence/agent_bridge.py`
-
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：1867
-
-
----
-
-
-```python
 """
 AgentBridge v2 — opcclaw 自主 Agent 引擎（对标 Codex / Claude Code）
 
@@ -31,8 +22,6 @@ import fnmatch
 import traceback
 import time
 from typing import Optional, Callable, Dict, Any, List
-
-from modules.intelligence.session_context import session_ctx
 
 # ── opcclaw 引擎路径 ──
 _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -242,12 +231,10 @@ class AgentBridge:
         self,
         backend: BaseLLMBackend,
         system_prompt: str = "",
-        session_id: str = None,
+        session_id: str = "floating_planet",
         persistence_dir: str = "",
     ):
         self.backend = backend
-        if session_id is None:
-            session_id = session_ctx.current_session_id
         self.session_id = session_id
 
         # ── 对话持久化存储 ──
@@ -1874,5 +1861,3 @@ class _StreamWorker(QObject):
 
         self.finished.emit()
 
-
-```

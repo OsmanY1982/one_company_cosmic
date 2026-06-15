@@ -28,6 +28,7 @@ from core.planet_painter import PLANET_STYLES, paint_planet
 from core.shapes import alien, robot_alien, ghost_alien, jellyfish_alien
 from core.shapes import SHAPE_PAINTERS, SHAPE_MODE_LIST, SHAPE_MODES, SHAPE_PLANETS, SHAPE_ALIENS, SHAPE_STARSHIPS
 from .voice_interface import VoiceInterface
+from .session_context import session_ctx
 
 
 # ═══════════ 悬浮星球主窗口 ═══════════
@@ -824,19 +825,22 @@ class FloatingPlanet(QWidget):
         try:
             from modules.intelligence.ai_chat_window import AIChatWindow
 
-            # 如果已有对话窗口，则聚焦
-            if hasattr(self, '_standalone_chat') and self._standalone_chat is not None:
+            # 注入 AgentBridge 到全局上下文
+            session_ctx.set_agent_bridge(self._engine)
+
+            # 如果已有活跃窗口，激活它
+            if session_ctx._active_window is not None:
                 try:
-                    if self._standalone_chat.isVisible():
-                        self._standalone_chat.raise_()
-                        self._standalone_chat.activateWindow()
-                        return
+                    session_ctx._active_window.raise_()
+                    session_ctx._active_window.activateWindow()
+                    return
                 except RuntimeError:
-                    pass  # 已销毁，重新创建
+                    session_ctx._active_window = None
 
             self._standalone_chat = AIChatWindow(
                 opcclaw_engine=self._engine,
                 embedded=False,
+                session_id=session_ctx.current_session_id,
             )
             self._standalone_chat.setAttribute(Qt.WA_DeleteOnClose)
             self._standalone_chat.show()
@@ -1021,7 +1025,20 @@ class FloatingPlanet(QWidget):
                 prompt = f"{text}\n\n[语音模式：口语化回复，控制在150字以内]"
             else:
                 prompt = text
+
+            # 语音对话写入全局会话
+            session_ctx.set_agent_bridge(self._engine)
+            try:
+                session_ctx.agent_bridge.append_message("user", text, session_ctx.current_session_id)
+            except Exception as e:
+                print(f"[FloatingPlanet] append_message(user) 失败: {e}")
+
             reply = self._engine.chat(prompt)
+
+            try:
+                session_ctx.agent_bridge.append_message("assistant", reply, session_ctx.current_session_id)
+            except Exception as e:
+                print(f"[FloatingPlanet] append_message(assistant) 失败: {e}")
         except Exception as e:
             traceback.print_exc()
             reply = f"出错了: {e}"

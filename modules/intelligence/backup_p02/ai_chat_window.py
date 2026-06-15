@@ -20,7 +20,6 @@ from modules.intelligence.ai_chat_styles import (
 )
 from modules.intelligence.chat_session_manager import ChatSessionManager
 from modules.intelligence.offline_analyzer import gather_context, offline_analysis
-from modules.intelligence.session_context import session_ctx
 from modules.auth.model_config_panel import (
     PRESET_PROVIDERS, LOCAL_SERVICES, PROVIDER_MODELS, ModelConfigDialog,
 )
@@ -65,7 +64,7 @@ class AIChatWindow(QWidget):
 
     chat_close_requested = pyqtSignal()
 
-    def __init__(self, parent=None, opcclaw_engine=None, floating_mode=False, voice=None, embedded=False, session_id=None):
+    def __init__(self, parent=None, opcclaw_engine=None, floating_mode=False, voice=None, embedded=False):
         super().__init__(parent)
         self._embedded = embedded
 
@@ -85,16 +84,8 @@ class AIChatWindow(QWidget):
         self._stream_buffer = ""
 
         # ── 对话会话管理 ──
-        # 使用全局会话ID或传入的ID
-        if session_id is None:
-            session_id = session_ctx.current_session_id
-        self._current_session_id = session_id
-        self._current_title = session_ctx.current_title
-
-        # 注册到全局上下文
-        session_ctx.register_window(self)
-        if self._bridge:
-            session_ctx.set_agent_bridge(self._bridge)
+        self._current_session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self._current_title = "新对话"
         self._messages = []       # [{role, content}, ...] 当前会话消息缓存
 
         self._all_models = []  # 全量模型列表（云端+本地）
@@ -289,8 +280,6 @@ class AIChatWindow(QWidget):
                 self._session_manager._load_sessions()
             except Exception:
                 pass
-        # 注销全局上下文
-        session_ctx.unregister_window(self)
         super().closeEvent(event)
 
     # ─── 会话切换 ───
@@ -320,10 +309,6 @@ class AIChatWindow(QWidget):
         # 切换
         self._current_session_id = session_id
         self._current_title = title
-
-        # 通知全局上下文
-        session_ctx.switch_session(session_id, title)
-
         self.ai_chat.clear()
         self._messages = []
 
