@@ -29,11 +29,11 @@ from core.planet_painter import PLANET_STYLES, paint_planet, paint_orbit, paint_
 
 # ═══════════ 模块星球定义（真实纹理） ═══════════
 ALL_PLANETS = [
-    {"id": "business",     "name": "业务管理", "style": "earth",   "radius": 38, "orbit": 160},
-    {"id": "personnel",    "name": "人员管理", "style": "mars",    "radius": 32, "orbit": 205},
-    {"id": "intelligence", "name": "智能中心", "style": "jupiter", "radius": 42, "orbit": 142},
-    {"id": "data",         "name": "数据中心", "style": "neptune", "radius": 34, "orbit": 248},
-    {"id": "system",       "name": "系统设置", "style": "moon",    "radius": 28, "orbit": 288},
+    {"id": "business",     "name": "业务管理", "style": "earth",   "radius": 56, "orbit": 160},
+    {"id": "personnel",    "name": "人员管理", "style": "mars",    "radius": 48, "orbit": 205},
+    {"id": "intelligence", "name": "智能中心", "style": "jupiter", "radius": 60, "orbit": 142},
+    {"id": "data",         "name": "数据中心", "style": "neptune", "radius": 50, "orbit": 248},
+    {"id": "system",       "name": "系统设置", "style": "moon",    "radius": 44, "orbit": 288},
 ]
 
 # 会员可见模块（业务管理 + 智能中心）
@@ -305,9 +305,9 @@ class DashboardWindow(QMainWindow):
 
         # ── 中央 AI 核心 · 地球 ──
         core_pulse = 0.5 + 0.5 * math.sin(self._t * 1.5)
-        core_r = 28 + core_pulse * 6
+        core_r = 45 + core_pulse * 10
         paint_planet(painter, cx, core_r, PLANET_STYLES["earth"],
-                     label="AI CORE", font_size=8)
+                     label="AI CORE", font_size=10)
 
         # ── 星球 ──
         for p in self._planets:
@@ -315,7 +315,7 @@ class DashboardWindow(QMainWindow):
             style = PLANET_STYLES.get(p["style"], PLANET_STYLES["neptune"])
             is_hovered = p == self._hovered_planet
             paint_planet(painter, pp, p["radius"], style,
-                         hovered=is_hovered, label=p["name"], font_size=10)
+                         hovered=is_hovered, label=p["name"], font_size=11)
 
         # ── 会员等级徽章（船员模式） ──
         if self._role == "member" and self._membership_info:

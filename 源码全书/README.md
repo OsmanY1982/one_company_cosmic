@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-14 16:04
-> 共 593 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-15 10:15
+> 共 587 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -14,16 +14,21 @@
 │   │   ├── alien.py
 │   │   ├── black_hole.py
 │   │   ├── classic.py
+│   │   ├── classic_20260614_184255_598.py
 │   │   ├── comet.py
 │   │   ├── crystal_alien.py
 │   │   ├── energy_being.py
 │   │   ├── gas_giant.py
+│   │   ├── gas_giant_20260614_184255_426.py
 │   │   ├── ghost_alien.py
 │   │   ├── grey_alien.py
 │   │   ├── ice_giant.py
+│   │   ├── ice_giant_20260614_184255_207.py
 │   │   ├── jellyfish_alien.py
 │   │   ├── lava_planet.py
+│   │   ├── lava_planet_20260614_184255_101.py
 │   │   ├── mars.py
+│   │   ├── mars_20260614_184255_257.py
 │   │   ├── mercury.py
 │   │   ├── nebula.py
 │   │   ├── neutron_star.py
@@ -48,7 +53,13 @@
 │   ├── planet_painter.py
 │   ├── planet_painter_20260614_151048_302.py
 │   └── voice.py
+├── D:/
+│   └── one_company_desktop/
+│       └── data/
+│           ├── sync/
 ├── data/
+│   ├── enhanced/
+│   ├── metrics/
 ├── knowledge_base/
 ├── log/
 ├── modules/
@@ -73,6 +84,8 @@
 │   ├── dashboard/
 │   │   ├── __init__.py
 │   │   └── dashboard_window.py
+│   ├── data/
+│   │   └── smart_memory/
 │   ├── data_center/
 │   │   ├── __init__.py
 │   │   ├── bi_window.py
@@ -83,6 +96,11 @@
 │   │   │   ├── __init__.py
 │   │   │   └── llm_backend.py
 │   │   ├── data/
+│   │   │   ├── learning/
+│   │   │   └── reflections/
+│   │   ├── enhanced/
+│   │   │   ├── __init__.py
+│   │   │   └── enhanced_tools.py
 │   │   ├── __init__.py
 │   │   ├── _ai_shared.py
 │   │   ├── _ai_widgets.py
@@ -126,6 +144,7 @@
 │   │   ├── enhanced_chat.py
 │   │   ├── finance_analysis_tools.py
 │   │   ├── hr_tools.py
+│   │   ├── intelligence_integration.py
 │   │   ├── intelligence_window.py
 │   │   ├── inventory_tools.py
 │   │   ├── key_manager.py
@@ -274,7 +293,6 @@
 │   │   ├── super_intelligence.py
 │   │   ├── sync_bridge.py
 │   │   ├── task_scheduler.py
-│   │   ├── test_phase2.py
 │   │   ├── todo_system.py
 │   │   ├── token_optimizer.py
 │   │   ├── token_saver.py
@@ -284,10 +302,12 @@
 │   ├── data/
 │   │   ├── opcclaw/
 │   │   │   ├── memory/
+│   │   │   ├── metrics/
 │   │   │   ├── sessions/
 │   │   │   ├── smart_memory/
 │   │   │   │   ├── preferences/
 │   │   │   │   ├── snapshots/
+│   │   ├── process_logs/
 │   │   ├── __init__.py
 │   ├── hermes_cli/
 │   │   ├── __init__.py
@@ -348,7 +368,6 @@
 │   │   │   ├── dashboard/
 │   │   │   │   └── plugin_api.py
 │   │   │   ├── tests/
-│   │   │   │   └── test_achievement_engine.py
 │   │   ├── image_gen/
 │   │   │   ├── openai/
 │   │   │   │   ├── __init__.py
@@ -526,11 +545,6 @@
 │   │   │   │   │   └── ws_monitor.py
 │   │   │   │   ├── tests/
 │   │   │   │   │   ├── conftest.py
-│   │   │   │   │   ├── test_check_deps.py
-│   │   │   │   │   ├── test_cloud_integration.py
-│   │   │   │   │   ├── test_common.py
-│   │   │   │   │   ├── test_extract_schema.py
-│   │   │   │   │   └── test_run_workflow.py
 │   │   │   │   ├── workflows/
 │   │   │   ├── creative-ideation/
 │   │   │   │   ├── references/
@@ -584,8 +598,7 @@
 │   │   │   ├── flybook_skill.py
 │   │   │   ├── server.py
 │   │   │   ├── server_minimal.py
-│   │   │   ├── server_simple.py
-│   │   │   └── test_server.py
+│   │   │   └── server_simple.py
 │   │   ├── gaming/
 │   │   │   ├── minecraft-modpack-server/
 │   │   │   ├── pokemon-player/
@@ -798,17 +811,6 @@
 │   │   ├── yuanbao/
 │   │   ├── __init__.py
 │   │   └── dual_ai.py
-│   ├── tests/
-│   │   ├── test_chat_data/
-│   │   │   └── smart_memory/
-│   │   │       └── preferences/
-│   │   ├── test_mem_data/
-│   │   │   └── smart_memory/
-│   │   │       ├── preferences/
-│   │   ├── __init__.py
-│   │   ├── conftest.py
-│   │   ├── test_core_modules.py
-│   │   └── test_scraper.py
 │   ├── tools/
 │   │   ├── browser_providers/
 │   │   │   ├── __init__.py
@@ -946,12 +948,10 @@
 │   ├── __init__.py
 │   ├── __init___20260613_080428_724.py
 │   ├── conftest.py
-│   ├── gen_book.py
 │   ├── hermes_constants.py
 │   ├── init_db.py
 │   ├── main.py
 │   ├── start_opcclaw.py
-│   ├── test_opcclaw.py
 │   ├── utils.py
 │   ├── verify_sync.py
 ├── gen_book.py
@@ -978,16 +978,21 @@
 - [`core/shapes/alien.py`](./core/shapes/alien.py.md)
 - [`core/shapes/black_hole.py`](./core/shapes/black_hole.py.md)
 - [`core/shapes/classic.py`](./core/shapes/classic.py.md)
+- [`core/shapes/classic_20260614_184255_598.py`](./core/shapes/classic_20260614_184255_598.py.md)
 - [`core/shapes/comet.py`](./core/shapes/comet.py.md)
 - [`core/shapes/crystal_alien.py`](./core/shapes/crystal_alien.py.md)
 - [`core/shapes/energy_being.py`](./core/shapes/energy_being.py.md)
 - [`core/shapes/gas_giant.py`](./core/shapes/gas_giant.py.md)
+- [`core/shapes/gas_giant_20260614_184255_426.py`](./core/shapes/gas_giant_20260614_184255_426.py.md)
 - [`core/shapes/ghost_alien.py`](./core/shapes/ghost_alien.py.md)
 - [`core/shapes/grey_alien.py`](./core/shapes/grey_alien.py.md)
 - [`core/shapes/ice_giant.py`](./core/shapes/ice_giant.py.md)
+- [`core/shapes/ice_giant_20260614_184255_207.py`](./core/shapes/ice_giant_20260614_184255_207.py.md)
 - [`core/shapes/jellyfish_alien.py`](./core/shapes/jellyfish_alien.py.md)
 - [`core/shapes/lava_planet.py`](./core/shapes/lava_planet.py.md)
+- [`core/shapes/lava_planet_20260614_184255_101.py`](./core/shapes/lava_planet_20260614_184255_101.py.md)
 - [`core/shapes/mars.py`](./core/shapes/mars.py.md)
+- [`core/shapes/mars_20260614_184255_257.py`](./core/shapes/mars_20260614_184255_257.py.md)
 - [`core/shapes/mercury.py`](./core/shapes/mercury.py.md)
 - [`core/shapes/nebula.py`](./core/shapes/nebula.py.md)
 - [`core/shapes/neutron_star.py`](./core/shapes/neutron_star.py.md)
@@ -1071,9 +1076,12 @@
 - [`modules/intelligence/digital_employee_panel.py`](./modules/intelligence/digital_employee_panel.py.md)
 - [`modules/intelligence/edge_tts_engine.py`](./modules/intelligence/edge_tts_engine.py.md)
 - [`modules/intelligence/editor_window.py`](./modules/intelligence/editor_window.py.md)
+- [`modules/intelligence/enhanced/__init__.py`](./modules/intelligence/enhanced/__init__.py.md)
+- [`modules/intelligence/enhanced/enhanced_tools.py`](./modules/intelligence/enhanced/enhanced_tools.py.md)
 - [`modules/intelligence/enhanced_chat.py`](./modules/intelligence/enhanced_chat.py.md)
 - [`modules/intelligence/finance_analysis_tools.py`](./modules/intelligence/finance_analysis_tools.py.md)
 - [`modules/intelligence/hr_tools.py`](./modules/intelligence/hr_tools.py.md)
+- [`modules/intelligence/intelligence_integration.py`](./modules/intelligence/intelligence_integration.py.md)
 - [`modules/intelligence/intelligence_window.py`](./modules/intelligence/intelligence_window.py.md)
 - [`modules/intelligence/inventory_tools.py`](./modules/intelligence/inventory_tools.py.md)
 - [`modules/intelligence/key_manager.py`](./modules/intelligence/key_manager.py.md)
@@ -1218,7 +1226,6 @@
 - [`opcclaw/core/super_intelligence.py`](./opcclaw/core/super_intelligence.py.md)
 - [`opcclaw/core/sync_bridge.py`](./opcclaw/core/sync_bridge.py.md)
 - [`opcclaw/core/task_scheduler.py`](./opcclaw/core/task_scheduler.py.md)
-- [`opcclaw/core/test_phase2.py`](./opcclaw/core/test_phase2.py.md)
 - [`opcclaw/core/todo_system.py`](./opcclaw/core/todo_system.py.md)
 - [`opcclaw/core/token_optimizer.py`](./opcclaw/core/token_optimizer.py.md)
 - [`opcclaw/core/token_saver.py`](./opcclaw/core/token_saver.py.md)
@@ -1226,7 +1233,6 @@
 - [`opcclaw/core/web_search.py`](./opcclaw/core/web_search.py.md)
 - [`opcclaw/core/workspace_indexer.py`](./opcclaw/core/workspace_indexer.py.md)
 - [`opcclaw/data/__init__.py`](./opcclaw/data/__init__.py.md)
-- [`opcclaw/gen_book.py`](./opcclaw/gen_book.py.md)
 - [`opcclaw/hermes_cli/__init__.py`](./opcclaw/hermes_cli/__init__.py.md)
 - [`opcclaw/hermes_cli/config.py`](./opcclaw/hermes_cli/config.py.md)
 - [`opcclaw/hermes_constants.py`](./opcclaw/hermes_constants.py.md)
@@ -1274,7 +1280,6 @@
 - [`opcclaw/plugins/google_meet/realtime/openai_client.py`](./opcclaw/plugins/google_meet/realtime/openai_client.py.md)
 - [`opcclaw/plugins/google_meet/tools.py`](./opcclaw/plugins/google_meet/tools.py.md)
 - [`opcclaw/plugins/hermes-achievements/dashboard/plugin_api.py`](./opcclaw/plugins/hermes-achievements/dashboard/plugin_api.py.md)
-- [`opcclaw/plugins/hermes-achievements/tests/test_achievement_engine.py`](./opcclaw/plugins/hermes-achievements/tests/test_achievement_engine.py.md)
 - [`opcclaw/plugins/image_gen/openai/__init__.py`](./opcclaw/plugins/image_gen/openai/__init__.py.md)
 - [`opcclaw/plugins/image_gen/openai-codex/__init__.py`](./opcclaw/plugins/image_gen/openai-codex/__init__.py.md)
 - [`opcclaw/plugins/image_gen/xai/__init__.py`](./opcclaw/plugins/image_gen/xai/__init__.py.md)
@@ -1358,11 +1363,6 @@
 - [`opcclaw/skills/creative/comfyui/scripts/run_workflow.py`](./opcclaw/skills/creative/comfyui/scripts/run_workflow.py.md)
 - [`opcclaw/skills/creative/comfyui/scripts/ws_monitor.py`](./opcclaw/skills/creative/comfyui/scripts/ws_monitor.py.md)
 - [`opcclaw/skills/creative/comfyui/tests/conftest.py`](./opcclaw/skills/creative/comfyui/tests/conftest.py.md)
-- [`opcclaw/skills/creative/comfyui/tests/test_check_deps.py`](./opcclaw/skills/creative/comfyui/tests/test_check_deps.py.md)
-- [`opcclaw/skills/creative/comfyui/tests/test_cloud_integration.py`](./opcclaw/skills/creative/comfyui/tests/test_cloud_integration.py.md)
-- [`opcclaw/skills/creative/comfyui/tests/test_common.py`](./opcclaw/skills/creative/comfyui/tests/test_common.py.md)
-- [`opcclaw/skills/creative/comfyui/tests/test_extract_schema.py`](./opcclaw/skills/creative/comfyui/tests/test_extract_schema.py.md)
-- [`opcclaw/skills/creative/comfyui/tests/test_run_workflow.py`](./opcclaw/skills/creative/comfyui/tests/test_run_workflow.py.md)
 - [`opcclaw/skills/creative/excalidraw/scripts/upload.py`](./opcclaw/skills/creative/excalidraw/scripts/upload.py.md)
 - [`opcclaw/skills/creative/pixel-art/scripts/__init__.py`](./opcclaw/skills/creative/pixel-art/scripts/__init__.py.md)
 - [`opcclaw/skills/creative/pixel-art/scripts/palettes.py`](./opcclaw/skills/creative/pixel-art/scripts/palettes.py.md)
@@ -1374,7 +1374,6 @@
 - [`opcclaw/skills/flybook_bot/server.py`](./opcclaw/skills/flybook_bot/server.py.md)
 - [`opcclaw/skills/flybook_bot/server_minimal.py`](./opcclaw/skills/flybook_bot/server_minimal.py.md)
 - [`opcclaw/skills/flybook_bot/server_simple.py`](./opcclaw/skills/flybook_bot/server_simple.py.md)
-- [`opcclaw/skills/flybook_bot/test_server.py`](./opcclaw/skills/flybook_bot/test_server.py.md)
 - [`opcclaw/skills/media/youtube-content/scripts/fetch_transcript.py`](./opcclaw/skills/media/youtube-content/scripts/fetch_transcript.py.md)
 - [`opcclaw/skills/productivity/google-workspace/scripts/_hermes_home.py`](./opcclaw/skills/productivity/google-workspace/scripts/_hermes_home.py.md)
 - [`opcclaw/skills/productivity/google-workspace/scripts/google_api.py`](./opcclaw/skills/productivity/google-workspace/scripts/google_api.py.md)
@@ -1421,11 +1420,6 @@
 - [`opcclaw/skills/research/polymarket/scripts/polymarket.py`](./opcclaw/skills/research/polymarket/scripts/polymarket.py.md)
 - [`opcclaw/skills/smart_memory/package_skill.py`](./opcclaw/skills/smart_memory/package_skill.py.md)
 - [`opcclaw/start_opcclaw.py`](./opcclaw/start_opcclaw.py.md)
-- [`opcclaw/test_opcclaw.py`](./opcclaw/test_opcclaw.py.md)
-- [`opcclaw/tests/__init__.py`](./opcclaw/tests/__init__.py.md)
-- [`opcclaw/tests/conftest.py`](./opcclaw/tests/conftest.py.md)
-- [`opcclaw/tests/test_core_modules.py`](./opcclaw/tests/test_core_modules.py.md)
-- [`opcclaw/tests/test_scraper.py`](./opcclaw/tests/test_scraper.py.md)
 - [`opcclaw/tools/__init__.py`](./opcclaw/tools/__init__.py.md)
 - [`opcclaw/tools/alert_tools.py`](./opcclaw/tools/alert_tools.py.md)
 - [`opcclaw/tools/analysis_tools.py`](./opcclaw/tools/analysis_tools.py.md)

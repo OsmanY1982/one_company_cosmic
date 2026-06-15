@@ -25,12 +25,12 @@ from core.planet_painter import (
 
 # ═══════ 6颗星球配置 ═══════
 PLANETS = [
-    {"id": "ai_chat",       "name": "AI对话",   "style": "neptune", "orbit": 120, "size": 30},
-    {"id": "digital_emp",   "name": "数字员工", "style": "mars",    "orbit": 195, "size": 32},
-    {"id": "ai_assistant",  "name": "AI助手",   "style": "jupiter", "orbit": 270, "size": 36},
-    {"id": "tools",         "name": "工具箱",   "style": "saturn",  "orbit": 345, "size": 32},
-    {"id": "scan",          "name": "扫码工具", "style": "mercury", "orbit": 420, "size": 30},
-    {"id": "system_mgmt",   "name": "系统管理", "style": "earth",   "orbit": 495, "size": 34},
+    {"id": "ai_chat",       "name": "AI对话",   "style": "neptune", "orbit": 120, "size": 52},
+    {"id": "digital_emp",   "name": "数字员工", "style": "mars",    "orbit": 195, "size": 54},
+    {"id": "ai_assistant",  "name": "AI助手",   "style": "jupiter", "orbit": 270, "size": 60},
+    {"id": "tools",         "name": "工具箱",   "style": "saturn",  "orbit": 345, "size": 54},
+    {"id": "scan",          "name": "扫码工具", "style": "mercury", "orbit": 420, "size": 52},
+    {"id": "system_mgmt",   "name": "系统管理", "style": "earth",   "orbit": 495, "size": 56},
 ]
 
 # ═══════ 导航 HUD 层 ═══════
@@ -88,18 +88,18 @@ class NavigationHUD(QWidget):
             style = PLANET_STYLES.get(planet_data["style"], PLANET_STYLES["neptune"])
             hovered = (self._hovered_planet == planet_data["id"])
             paint_planet(p, pos, planet_data["size"], style,
-                         hovered=hovered, label=planet_data["name"], font_size=9)
+                         hovered=hovered, label=planet_data["name"], font_size=10)
 
         # ── 中央核心地球 ──
-        core_r = 48
+        core_r = 68
         paint_planet(p, w2, core_r, PLANET_STYLES["earth"],
-                     label="NEURAL", font_size=10)
+                     label="NEURAL", font_size=12)
         # 额外一层蓝色科技辉光
         tech_glow = QPen(QColor(100, 180, 255, 30))
         tech_glow.setWidth(1)
         p.setPen(tech_glow)
         p.setBrush(Qt.NoBrush)
-        p.drawEllipse(w2, core_r + 8, core_r + 8)
+        p.drawEllipse(w2, core_r + 12, core_r + 12)
 
         p.end()
 
@@ -190,7 +190,7 @@ class IntelligenceWindow(QMainWindow):
         if planet_id == "ai_chat":
             from modules.intelligence.ai_chat_window import AIChatWindow
             dlg = AIChatWindow(self, opcclaw_engine=self._opcclaw_engine)
-            dlg.exec_()
+            dlg.show()
         elif planet_id == "digital_emp":
             from modules.intelligence.digital_emp_window import DigitalEmpWindow
             dlg = DigitalEmpWindow(self)

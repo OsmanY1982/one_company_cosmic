@@ -1,6 +1,6 @@
 # `modules/intelligence/voice_interface.py`
 
-> 路径：`modules/intelligence/voice_interface.py` | 行数：258
+> 路径：`modules/intelligence/voice_interface.py` | 行数：377
 
 
 ---
@@ -249,6 +249,125 @@ class VoiceInterface(QObject):
 
     def current_voice_label(self) -> str:
         return f"{self.CHINESE_VOICES[self._voice_index][0]} ({self.CHINESE_VOICES[self._voice_index][1]}wpm)"
+
+
+# ═══════════ 语音交互面板 Widget ═══════════
+
+from PyQt5.QtWidgets import (
+    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit, QLineEdit
+)
+from PyQt5.QtCore import Qt
+
+
+class VoiceWidget(QDialog):
+    """语音交互面板 — 供 AI 助手星球路由使用"""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._voice = VoiceInterface()
+        self._setup_ui()
+        self._connect_signals()
+
+    def _setup_ui(self):
+        self.setWindowTitle("语音接口")
+        self.setMinimumSize(500, 420)
+
+        layout = QVBoxLayout(self)
+        layout.setSpacing(12)
+
+        # 标题
+        title = QLabel("Mac 本地语音交互")
+        title.setStyleSheet("font-size: 16px; font-weight: bold; color: #2c3e50;")
+        title.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title)
+
+        # 状态显示
+        self._status_label = QLabel("就绪")
+        self._status_label.setAlignment(Qt.AlignCenter)
+        self._status_label.setStyleSheet("color: #888; font-size: 12px;")
+        layout.addWidget(self._status_label)
+
+        # 语音选择
+        voice_layout = QHBoxLayout()
+        voice_layout.addWidget(QLabel("语音:"))
+        self._voice_label = QLabel(self._voice.current_voice_label())
+        self._voice_label.setStyleSheet("font-weight: bold;")
+        voice_layout.addWidget(self._voice_label)
+        voice_layout.addStretch()
+        switch_btn = QPushButton("切换语音")
+        switch_btn.clicked.connect(self._on_switch_voice)
+        voice_layout.addWidget(switch_btn)
+        layout.addLayout(voice_layout)
+
+        # 识别结果区
+        self._result_area = QTextEdit()
+        self._result_area.setReadOnly(True)
+        self._result_area.setPlaceholderText("语音识别结果将显示在这里...")
+        self._result_area.setMaximumHeight(120)
+        layout.addWidget(self._result_area)
+
+        # 合成输入区
+        synth_layout = QHBoxLayout()
+        self._synth_input = QLineEdit()
+        self._synth_input.setPlaceholderText("输入要让 Mac 朗读的文字...")
+        synth_layout.addWidget(self._synth_input)
+
+        speak_btn = QPushButton("朗读")
+        speak_btn.setStyleSheet("""
+            QPushButton {
+                background: #27ae60; color: white; padding: 8px 20px;
+                border-radius: 4px; font-weight: bold;
+            }
+            QPushButton:hover { background: #219a52; }
+        """)
+        speak_btn.clicked.connect(self._on_speak)
+        synth_layout.addWidget(speak_btn)
+        layout.addLayout(synth_layout)
+
+        # 录音按钮
+        record_btn = QPushButton("开始录音（8秒）")
+        record_btn.setStyleSheet("""
+            QPushButton {
+                background: #e74c3c; color: white; padding: 12px;
+                border-radius: 6px; font-weight: bold; font-size: 14px;
+            }
+            QPushButton:hover { background: #c0392b; }
+        """)
+        record_btn.clicked.connect(self._on_record)
+        layout.addWidget(record_btn)
+
+        layout.addStretch()
+
+    def _connect_signals(self):
+        self._voice.recognition_result.connect(self._on_result)
+        self._voice.recognition_status.connect(self._on_status)
+        self._voice.error_occurred.connect(self._on_error)
+
+    def _on_switch_voice(self):
+        name = self._voice.next_voice()
+        self._voice_label.setText(self._voice.current_voice_label())
+        self._status_label.setText(f"已切换到 {name}")
+
+    def _on_record(self):
+        self._result_area.clear()
+        self._status_label.setText("正在录音...")
+        self._voice.start_listening(timeout=8.0)
+
+    def _on_speak(self):
+        text = self._synth_input.text().strip()
+        if text:
+            self._status_label.setText("正在朗读...")
+            self._voice.speak(text)
+
+    def _on_result(self, text: str):
+        self._result_area.append(f"[识别] {text}")
+
+    def _on_status(self, status: str):
+        self._status_label.setText(status)
+
+    def _on_error(self, error: str):
+        self._result_area.append(f"[错误] {error}")
+        self._status_label.setText("错误")
 
 
 # ═══════════ 快捷测试 ═══════════

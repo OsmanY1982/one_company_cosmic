@@ -1,6 +1,6 @@
 # `modules/intelligence/opcclaw_floating_planet.py`
 
-> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1566
+> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1321
 
 
 ---
@@ -35,7 +35,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 
 from core.planet_painter import PLANET_STYLES, paint_planet
 from core.shapes import alien, robot_alien, ghost_alien, jellyfish_alien
-from core.shapes import SHAPE_PAINTERS, SHAPE_MODE_LIST, SHAPE_MODES
+from core.shapes import SHAPE_PAINTERS, SHAPE_MODE_LIST, SHAPE_MODES, SHAPE_PLANETS, SHAPE_ALIENS, SHAPE_STARSHIPS
 from .voice_interface import VoiceInterface
 
 
@@ -113,6 +113,9 @@ class FloatingPlanet(QWidget):
         self._pulse_anim.setDuration(350)
         self._pulse_anim.setEasingCurve(QEasingCurve.OutCubic)
 
+        # ── 缩放倍数 ──
+        self._scale_multiplier = 1.0     # 缩放倍数 (0.5x ~ 3.0x)
+
         # ── 物理漫游 ──
         self._auto_move = True           # 是否启用自动漫游
         self._vx = 0.0                   # 水平速度 (px/frame)
@@ -147,8 +150,13 @@ class FloatingPlanet(QWidget):
 
         # shapes 形态系统 —— 28 种形态（新 shapes 模块渲染）
         self._shape_mode = None  # None=使用旧 planet_painter；"classic"/etc=使用 shapes
-        self._shape_keys = SHAPE_MODE_LIST.copy()  # 28 个形态 key
-        self._current_shape_idx = 0
+        self._planet_keys = SHAPE_PLANETS.copy()     # 星球形态
+        self._alien_keys = SHAPE_ALIENS.copy()       # 外星人形态
+        self._starship_keys = SHAPE_STARSHIPS.copy() # 太空星舰形态
+        self._current_category = "planet"            # 当前分类："planet" / "alien" / "starship"
+        self._current_planet_idx = 0                 # 星球索引
+        self._current_alien_idx = 0                  # 外星人索引
+        self._current_starship_idx = 0               # 太空星舰索引
 
         # ── 外星人装饰 ──
         self._aliens = self._spawn_aliens()  # [(type, x, y, vx, vy, phase, size), ...]
@@ -186,9 +194,16 @@ class FloatingPlanet(QWidget):
         self._tooltip.setStyleSheet(
             "color: rgba(255,255,255,180); font-size: 10px; background: transparent;"
         )
-        self._tooltip.setGeometry(0, self.ACTIVE_SIZE // 2 - 10, self.ACTIVE_SIZE, 20)
+        s = self._scaled_widget_size()
+        self._tooltip.setGeometry(0, s // 2 - 10, s, 20)
         self._tooltip.setAttribute(Qt.WA_TransparentForMouseEvents)
         self._tooltip.hide()
+
+        # 内嵌 AI 对话
+        from modules.intelligence.ai_chat_window import AIChatWindow
+        self._chat_widget = AIChatWindow(self, opcclaw_engine=self._engine, embedded=True)
+        self._chat_widget.hide()
+        self._pre_chat_geometry = None
 
         # 默认启用语音唤醒
         if self._wake_word_mode:
@@ -215,10 +230,14 @@ class FloatingPlanet(QWidget):
 
     # ── 圆形遮罩 ──
 
+    def _scaled_widget_size(self):
+        """返回缩放后的窗口固定尺寸"""
+        return max(16, int(self.ACTIVE_SIZE * self._scale_multiplier))
+
     def _apply_circular_mask(self):
         """应用圆形裁剪区域"""
-        r = self.ACTIVE_SIZE // 2
-        region = QRegion(0, 0, self.ACTIVE_SIZE, self.ACTIVE_SIZE, QRegion.Ellipse)
+        s = self._scaled_widget_size()
+        region = QRegion(0, 0, s, s, QRegion.Ellipse)
         self.setMask(region)
 
     # ── 动画 ──
@@ -253,7 +272,7 @@ class FloatingPlanet(QWidget):
             screen = QApplication.primaryScreen()
             if screen:
                 geom = screen.availableGeometry()
-                s = int(self._current_size)
+                s = self._scaled_widget_size()
                 left, top = geom.left(), geom.top()
                 right, bottom = geom.right() - s, geom.bottom() - s
 
@@ -302,13 +321,13 @@ class FloatingPlanet(QWidget):
         self.update()
 
     def _center_on_current_pos(self):
-        """保持窗口中心不变的情况下调整尺寸"""
+        """保持窗口中心不变的情况下调整尺寸（含缩放倍数）"""
         old_center = self.geometry().center()
-        # 始终以 ACTIVE_SIZE 作为 widget 尺寸，避免光环/粒子被裁剪
-        # 星球大小变化仅体现在 paintEvent 的渲染半径上
-        s = max(int(self._current_size), self.ACTIVE_SIZE)
+        base_s = max(int(self._current_size), self.ACTIVE_SIZE)
+        s = max(base_s, self._scaled_widget_size())
         new_rect = QRect(0, 0, s, s)
         new_rect.moveCenter(old_center)
+        self.setFixedSize(s, s)
         self.setGeometry(new_rect)
 
         region = QRegion(0, 0, s, s, QRegion.Ellipse)
@@ -471,36 +490,58 @@ class FloatingPlanet(QWidget):
             }
         """)
 
-        chat_action = menu.addAction("AI 对话")
-        chat_action.triggered.connect(self._open_chat)
-
-        menu.addSeparator()
-
-        # ── 形态切换子菜单 ──
-        shape_menu = menu.addMenu("切换形态")
-        shape_menu.setStyleSheet(menu.styleSheet())
         shape_icons = {
             k: v.get("name", k) for k, v in SHAPE_MODES.items()
         }
-        for key in self._shape_keys:
+
+        # ═══════════ 悬浮球子菜单 ═══════════
+        floating_menu = menu.addMenu("悬浮球")
+        floating_menu.setStyleSheet(menu.styleSheet())
+
+        planet_menu = floating_menu.addMenu("星球形态")
+        planet_menu.setStyleSheet(floating_menu.styleSheet())
+        for key in self._planet_keys:
             label = shape_icons.get(key, key)
-            action = shape_menu.addAction(label)
-            action.setData(key)
+            action = planet_menu.addAction(label)
             action.triggered.connect(
-                lambda checked, k=key: self._switch_to_shape(k)
+                lambda checked, cat="planet", k=key: self._switch_to_shape(cat, k)
             )
 
-        menu.addSeparator()
+        alien_menu = floating_menu.addMenu("外星人形态")
+        alien_menu.setStyleSheet(floating_menu.styleSheet())
+        for key in self._alien_keys:
+            label = shape_icons.get(key, key)
+            action = alien_menu.addAction(label)
+            action.triggered.connect(
+                lambda checked, cat="alien", k=key: self._switch_to_shape(cat, k)
+            )
 
-        # 模型设置入口
-        model_action = menu.addAction("模型设置")
+        starship_menu = floating_menu.addMenu("太空星舰")
+        starship_menu.setStyleSheet(floating_menu.styleSheet())
+        for key in self._starship_keys:
+            label = shape_icons.get(key, key)
+            action = starship_menu.addAction(label)
+            action.triggered.connect(
+                lambda checked, cat="starship", k=key: self._switch_to_shape(cat, k)
+            )
+
+        # ═══════════ AI对话子菜单 ═══════════
+        ai_menu = menu.addMenu("AI对话")
+        ai_menu.setStyleSheet(menu.styleSheet())
+
+        chat_action = ai_menu.addAction("AI 对话")
+        chat_action.triggered.connect(self._open_chat)
+
+        ai_menu.addSeparator()
+
+        model_action = ai_menu.addAction("模型设置")
         model_action.triggered.connect(self._open_model_config)
 
-        menu.addSeparator()
+        ai_menu.addSeparator()
 
         # 打开各模块
-        modules_menu = menu.addMenu("打开模块")
-        modules_menu.setStyleSheet(menu.styleSheet())
+        modules_menu = ai_menu.addMenu("打开模块")
+        modules_menu.setStyleSheet(ai_menu.styleSheet())
         modules = [
             ("business", "业务管理"),
             ("intelligence", "智能中心"),
@@ -519,20 +560,36 @@ class FloatingPlanet(QWidget):
                 lambda checked, m=mid: self._open_module(m)
             )
 
-        menu.addSeparator()
+        # ═══════════ 语音对话子菜单 ═══════════
+        voice_menu = menu.addMenu("语音对话")
+        voice_menu.setStyleSheet(menu.styleSheet())
 
-        voice_action = menu.addAction("语音对话")
+        voice_action = voice_menu.addAction("语音对话")
         voice_action.triggered.connect(self._start_voice_chat)
 
-        menu.addSeparator()
+        voice_menu.addSeparator()
 
-        wake_action = menu.addAction("语音唤醒 (开)" if self._wake_word_mode else "语音唤醒 (关)")
+        wake_action = voice_menu.addAction("语音唤醒 (开)" if self._wake_word_mode else "语音唤醒 (关)")
         wake_action.triggered.connect(self._toggle_wake_word)
 
-        move_action = menu.addAction("自动漫游 (开)" if self._auto_move else "自动漫游 (关)")
-        move_action.triggered.connect(self._toggle_auto_move)
+        # ═══════════ 缩放倍数子菜单 ═══════════
+        scale_menu = menu.addMenu("缩放倍数")
+        scale_menu.setStyleSheet(menu.styleSheet())
+        scale_options = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0]
+        for val in scale_options:
+            label = f"{val:.2f}x" if val != int(val) else f"{val:.1f}x"
+            if abs(self._scale_multiplier - val) < 0.01:
+                label = f"✓ {label}"
+            action = scale_menu.addAction(label)
+            action.triggered.connect(
+                lambda checked, v=val: self._set_scale_multiplier(v)
+            )
 
         menu.addSeparator()
+
+        # ═══════════ 第一层独立项 ═══════════
+        move_action = menu.addAction("自动漫游 (开)" if self._auto_move else "自动漫游 (关)")
+        move_action.triggered.connect(self._toggle_auto_move)
 
         exit_action = menu.addAction("退出悬浮球")
         exit_action.triggered.connect(self._on_exit)
@@ -568,21 +625,45 @@ class FloatingPlanet(QWidget):
 
     # ── shapes 形态切换 ──
 
-    def _switch_to_shape(self, key: str):
-        """切换到 shapes 系统的指定形态"""
-        if key in self._shape_keys:
-            self._current_shape_idx = self._shape_keys.index(key)
-            self._shape_mode = key
-            name = SHAPE_MODES.get(key, {}).get("name", key)
-            self._tooltip.setText(f"opcclaw · {name}")
-            print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+    def _switch_to_shape(self, category: str, key: str):
+        """切换到指定分类中的指定形态"""
+        if category == "planet":
+            if key in self._planet_keys:
+                self._current_planet_idx = self._planet_keys.index(key)
+                self._shape_mode = key
+                self._current_category = "planet"
+        elif category == "alien":
+            if key in self._alien_keys:
+                self._current_alien_idx = self._alien_keys.index(key)
+                self._shape_mode = key
+                self._current_category = "alien"
+        elif category == "starship":
+            if key in self._starship_keys:
+                self._current_starship_idx = self._starship_keys.index(key)
+                self._shape_mode = key
+                self._current_category = "starship"
+        else:
+            return
+        name = SHAPE_MODES.get(key, {}).get("name", key)
+        self._tooltip.setText(f"opcclaw · {name}")
+        print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
 
     def _cycle_shape(self, direction: int):
-        """按方向循环切换 shapes 形态（+1 下一个, -1 上一个）"""
-        count = len(self._shape_keys)
-        self._current_shape_idx = (self._current_shape_idx + direction) % count
-        key = self._shape_keys[self._current_shape_idx]
-        self._switch_to_shape(key)
+        """在当前分类内循环切换形态（+1 下一个, -1 上一个）"""
+        if self._current_category == "planet":
+            keys = self._planet_keys
+            idx = (self._current_planet_idx + direction) % len(keys)
+            self._current_planet_idx = idx
+        elif self._current_category == "starship":
+            keys = self._starship_keys
+            idx = (self._current_starship_idx + direction) % len(keys)
+            self._current_starship_idx = idx
+        else:
+            keys = self._alien_keys
+            idx = (self._current_alien_idx + direction) % len(keys)
+            self._current_alien_idx = idx
+        key = keys[idx]
+        self._switch_to_shape(self._current_category, key)
 
     # ── 外星人装饰 ──
 
@@ -697,11 +778,15 @@ class FloatingPlanet(QWidget):
     # ── 模型设置入口 ──
 
     def _open_model_config(self):
-        """打开模型配置面板"""
+        """打开模型配置面板（登录后同款界面）"""
         try:
-            from modules.auth.model_config_panel import ModelConfigDialog
-            dlg = ModelConfigDialog(parent=self, bridge=self._engine)
-            dlg.exec_()
+            from modules.auth.model_setup_window import ModelSetupWindow
+            self._model_setup_window = ModelSetupWindow(
+                username="",
+                role=self._role,
+                membership_info=self._membership_info,
+            )
+            self._model_setup_window.show()
         except Exception as e:
             print(f"[FloatingPlanet] Failed to open model config: {e}")
             traceback.print_exc()
@@ -709,14 +794,50 @@ class FloatingPlanet(QWidget):
     # ── AI 对话 ──
 
     def _open_chat(self):
-        """打开 AI 对话窗口"""
+        """将悬浮球展开为内嵌 AI 对话窗口（不改变窗口标志，避免重建原生句柄）"""
         self.wake()
-        try:
-            dlg = _ChatDialog(self._engine, self, voice=self._voice)
-            dlg.exec_()
-        except Exception as e:
-            print(f"[FloatingPlanet] Failed to open chat: {e}")
-            traceback.print_exc()
+
+        # 保存当前几何状态
+        self._pre_chat_geometry = self.geometry()
+
+        # 移除圆形遮罩
+        self.clearMask()
+
+        # 暂停星球动画，避免重绘干扰
+        self._timer.stop()
+
+        # 展开尺寸并居中到屏幕（保持 FramelessWindowHint | WindowStaysOnTopHint 不变）
+        self.setFixedSize(780, 580)
+        screen = QApplication.primaryScreen()
+        if screen:
+            geom = screen.availableGeometry()
+            x = geom.center().x() - 390
+            y = geom.center().y() - 290
+            self.move(x, y)
+
+        # 隐藏星球提示，显示聊天组件
+        self._tooltip.hide()
+        self._chat_widget.setGeometry(0, 0, 780, 580)
+        self._chat_widget.raise_()
+        self._chat_widget.show()
+
+        # 连接关闭信号
+        self._chat_widget.chat_close_requested.connect(self._close_embedded_chat)
+
+    def _close_embedded_chat(self):
+        """从内嵌对话恢复到星球模式（不改变窗口标志）"""
+        self._chat_widget.chat_close_requested.disconnect(self._close_embedded_chat)
+        self._chat_widget.hide()
+
+        # 恢复之前的位置和尺寸
+        if self._pre_chat_geometry:
+            self.setGeometry(self._pre_chat_geometry)
+
+        # 恢复圆形遮罩和动画
+        self._apply_circular_mask()
+        self._timer.start(16)
+
+        self.sleep()
 
     # ── 退出 ──
 
@@ -754,6 +875,32 @@ class FloatingPlanet(QWidget):
             kick = random.uniform(3.0, 6.0)
             self._vx = math.cos(angle) * kick
             self._vy = math.sin(angle) * kick
+
+    def _set_scale_multiplier(self, value: float):
+        """设置缩放倍数（带屏幕约束）"""
+        # 计算屏幕允许的最大倍数
+        screen = QApplication.primaryScreen()
+        if screen:
+            geom = screen.availableGeometry()
+            max_by_width = geom.width() * 0.9 / self.ACTIVE_SIZE
+            max_by_height = geom.height() * 0.9 / self.ACTIVE_SIZE
+            max_scale = min(3.0, max_by_width, max_by_height)
+        else:
+            max_scale = 3.0
+        # 修正到允许范围 [0.5, max_scale]
+        value = max(0.5, min(value, max_scale))
+        if abs(self._scale_multiplier - value) < 0.01:
+            return  # 没变，不操作
+        self._scale_multiplier = value
+        # 重新设置窗口大小
+        old_center = self.geometry().center()
+        s = self._scaled_widget_size()
+        self.setFixedSize(s, s)
+        new_rect = QRect(0, 0, s, s)
+        new_rect.moveCenter(old_center)
+        self.setGeometry(new_rect)
+        self._apply_circular_mask()
+        self.update()
 
     # ── 语音对话 ──
 
@@ -1080,7 +1227,7 @@ class FloatingPlanet(QWidget):
         p.setRenderHint(QPainter.Antialiasing)
 
         center = QPointF(self.width() / 2.0, self.height() / 2.0)
-        r = self._current_size / 2
+        r = self._current_size * self._scale_multiplier / 2
 
         # ── 悬停缩放 ──
         scaled_r = int(r * self._hover_scale)
@@ -1179,398 +1326,6 @@ class FloatingPlanet(QWidget):
 
 
 # ═══════════ AI 对话弹窗（内嵌） ═══════════
-
-class _ChatDialog(QDialog):
-    """悬浮球 AI 对话弹窗"""
-
-    def __init__(self, engine, parent=None, voice: VoiceInterface = None):
-        super().__init__(parent)
-        self._engine = engine
-        self._voice = voice
-        self.setWindowTitle("opcclaw · AI 对话")
-        self.setWindowFlags(
-            Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint | Qt.WindowStaysOnTopHint
-        )
-        self.setMinimumSize(420, 480)
-
-        self._build_ui()
-
-        # ── 恢复对话历史 ──
-        self._load_history()
-
-        # ── 连接 AgentLoop 工具信号（实时展示工具调用进度）──
-        if hasattr(self._engine, 'on_tool_start'):
-            self._engine.on_tool_start.connect(self._on_agent_tool_start)
-        if hasattr(self._engine, 'on_tool_result'):
-            self._engine.on_tool_result.connect(self._on_agent_tool_result)
-        if hasattr(self._engine, 'on_agent_event'):
-            self._engine.on_agent_event.connect(self._on_agent_stage)
-
-    def _build_ui(self):
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(10, 10, 10, 10)
-        layout.setSpacing(8)
-
-        # 对话历史
-        self._history_widget = QTextEdit()
-        self._history_widget.setReadOnly(True)
-        self._history_widget.setStyleSheet("""
-            QTextEdit {
-                background: rgba(10, 10, 30, 230);
-                color: #c0d0ff;
-                border: 1px solid rgba(80, 140, 255, 40);
-                border-radius: 8px;
-                padding: 10px;
-                font-size: 13px;
-            }
-        """)
-        layout.addWidget(self._history_widget)
-
-        # 输入区
-        input_layout = QHBoxLayout()
-        self._input = QTextEdit()
-        self._input.setPlaceholderText("输入问题，Ctrl+Enter 发送...")
-        self._input.setMaximumHeight(80)
-        self._input.setStyleSheet("""
-            QTextEdit {
-                background: rgba(10, 10, 30, 230);
-                color: #e0e0ff;
-                border: 1px solid rgba(80, 140, 255, 40);
-                border-radius: 8px;
-                padding: 6px;
-                font-size: 12px;
-            }
-        """)
-        self._input.installEventFilter(self)
-        input_layout.addWidget(self._input)
-
-        # 语音按钮
-        if self._voice:
-            self._mic_btn = QPushButton("🎤")
-            self._mic_btn.setToolTip("语音输入")
-            self._mic_btn.setFixedSize(36, 36)
-            self._mic_btn.setStyleSheet("""
-                QPushButton {
-                    background: rgba(255, 100, 80, 160);
-                    color: white;
-                    border: none;
-                    border-radius: 18px;
-                    font-size: 16px;
-                }
-                QPushButton:hover {
-                    background: rgba(255, 130, 100, 200);
-                }
-            """)
-            self._mic_btn.clicked.connect(self._toggle_voice_input)
-            input_layout.addWidget(self._mic_btn)
-
-        self._send_btn = QPushButton("发送")
-        self._send_btn.setStyleSheet("""
-            QPushButton {
-                background: rgba(60, 120, 255, 180);
-                color: white;
-                border: none;
-                border-radius: 6px;
-                padding: 6px 16px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background: rgba(80, 150, 255, 220);
-            }
-        """)
-        self._send_btn.clicked.connect(self._send)
-        input_layout.addWidget(self._send_btn)
-
-        layout.addLayout(input_layout)
-
-    def eventFilter(self, obj, event):
-        """Ctrl+Enter 发送"""
-        from PyQt5.QtCore import QEvent
-        if obj == self._input and event.type() == QEvent.KeyPress:
-            if event.key() == Qt.Key_Return and event.modifiers() == Qt.ControlModifier:
-                self._send()
-                return True
-        return super().eventFilter(obj, event)
-
-    def _toggle_voice_input(self):
-        """切换语音输入"""
-        if not self._voice:
-            return
-        if self._voice.is_listening():
-            self._voice.stop_listening()
-            self._mic_btn.setText("🎤")
-            parent = self.parent()
-            if hasattr(parent, '_enable_voice_handlers'):
-                parent._enable_voice_handlers()
-        else:
-            parent = self.parent()
-            if hasattr(parent, '_disable_voice_handlers'):
-                parent._disable_voice_handlers()
-            self._voice.recognition_result.connect(self._on_voice_result)
-            self._voice.start_listening(timeout=6.0)
-            self._mic_btn.setText("⏹️")
-            self._mic_btn.setStyleSheet(self._mic_btn.styleSheet().replace("rgba(255, 100, 80, 160)", "rgba(255, 80, 80, 220)"))
-
-    def _on_voice_result(self, text: str):
-        """语音识别结果（用于对话框）"""
-        if not self._voice:
-            return
-        try:
-            self._voice.recognition_result.disconnect(self._on_voice_result)
-        except TypeError:
-            import traceback; traceback.print_exc()
-        self._input.setText(text)
-        self._mic_btn.setText("🎤")
-        parent = self.parent()
-        if hasattr(parent, '_enable_voice_handlers'):
-            parent._enable_voice_handlers()
-
-    def closeEvent(self, event):
-        """关闭对话框时恢复悬浮球语音连接并保存对话历史"""
-        if hasattr(self._engine, 'save_session'):
-            try:
-                self._engine.save_session()
-            except Exception:
-                pass
-        parent = self.parent()
-        if hasattr(parent, '_enable_voice_handlers'):
-            parent._enable_voice_handlers()
-        super().closeEvent(event)
-
-    def _send(self):
-        text = self._input.toPlainText().strip()
-        if not text:
-            return
-
-        self._history_widget.append(f'<p style="color:#80b0ff;"><b>你:</b> {text}</p>')
-        self._input.clear()
-        self._input.setEnabled(False)
-        self._send_btn.setEnabled(False)
-
-        now = datetime.now().strftime("%H:%M")
-
-        # 流式输出 — 后台线程，不阻塞 UI
-        if self._engine and hasattr(self._engine, 'chat_stream'):
-            placeholder = (
-                f'<p style="color:#c0ffc0;"><b>[{now}] opcclaw:</b> '
-                f'<span id="stream_cursor" style="color:#44ff88;">_</span></p>'
-            )
-            self._history_widget.append(placeholder)
-            self._stream_accumulated = ""
-            self._stream_now = now
-            self._floating_fallback_text = text
-            self._floating_fallback_now = now
-
-            class _FloatingStreamWorker(QObject):
-                chunk_signal = pyqtSignal(str)
-                done_signal = pyqtSignal(str)
-                tool_signal = pyqtSignal(str, str)
-                error_signal = pyqtSignal()
-                def __init__(self, engine, text):
-                    super().__init__(None)  # engine 可能非 QObject，不由父对象管理
-                    self._engine = engine
-                    self._text = text
-                def run(self):
-                    accumulated = ""
-                    try:
-                        gen = self._engine.chat_stream_generator(self._text)
-                        for chunk in gen:
-                            if "Calling tool:" in chunk:
-                                name = chunk.split("Calling tool:")[1].split("...")[0].strip()
-                                self.tool_signal.emit(name, "running")
-                            elif ": OK]" in chunk and not chunk.startswith('{"'):
-                                name = chunk[1:].split(":")[0].strip()
-                                self.tool_signal.emit(name, "OK")
-                            elif ": Failed]" in chunk and not chunk.startswith('{"'):
-                                name = chunk[1:].split(":")[0].strip()
-                                self.tool_signal.emit(name, "Failed")
-                            if chunk.startswith('{"usage"'):
-                                continue
-                            accumulated += chunk
-                            self.chunk_signal.emit(chunk)
-                        self.done_signal.emit(accumulated)
-                    except Exception:
-                        traceback.print_exc()
-                        self.error_signal.emit()
-
-            self._floating_stream_worker = _FloatingStreamWorker(self._engine, text)
-            self._floating_stream_thread = QThread()
-            self._floating_stream_worker.moveToThread(self._floating_stream_thread)
-            self._floating_stream_thread.started.connect(self._floating_stream_worker.run)
-            self._floating_stream_worker.chunk_signal.connect(self._on_floating_chunk, Qt.QueuedConnection)
-            self._floating_stream_worker.done_signal.connect(self._on_floating_done, Qt.QueuedConnection)
-            self._floating_stream_worker.tool_signal.connect(self._on_floating_tool, Qt.QueuedConnection)
-            self._floating_stream_worker.error_signal.connect(self._on_floating_error, Qt.QueuedConnection)
-            self._floating_stream_worker.done_signal.connect(self._floating_stream_thread.quit)
-            self._floating_stream_worker.error_signal.connect(self._floating_stream_thread.quit)
-            self._floating_stream_thread.finished.connect(self._floating_stream_thread.deleteLater)
-            self._floating_stream_thread.finished.connect(self._floating_stream_worker.deleteLater)
-            self._floating_stream_thread.start()
-            return
-
-        # ═══ 同步模式 / 流式失败回退 ═══
-        if self._engine:
-            try:
-                reply = self._engine.chat(text)
-            except Exception as e:
-                traceback.print_exc()
-                reply = f"调用失败: {e}"
-        else:
-            reply = "引擎未初始化，请先在模型配置中选择模型。"
-
-        self._history_widget.append(
-            f'<p style="color:#c0ffc0;"><b>[{now}] opcclaw:</b> {reply}</p>'
-        )
-        self._input.setEnabled(True)
-        self._send_btn.setEnabled(True)
-
-        if self._voice and len(reply) < 300:
-            self._voice.speak(reply)
-
-    # ═══ 流式回调（实例方法 — 确保 QueuedConnection 派发到主线程） ═══
-
-    def _on_floating_chunk(self, chunk: str):
-        self._stream_accumulated += chunk
-        cursor = self._history_widget.textCursor()
-        cursor.movePosition(cursor.End)
-        cursor.select(cursor.BlockUnderCursor)
-        cursor.removeSelectedText()
-        display = self._stream_accumulated[-500:]
-        self._history_widget.append(
-            f'<p style="color:#c0ffc0;"><b>[{self._stream_now}] opcclaw:</b> {display}'
-            f'<span style="color:#44ff88;">_</span></p>'
-        )
-        sb = self._history_widget.verticalScrollBar()
-        sb.setValue(sb.maximum())
-
-    def _on_floating_done(self, full_text: str):
-        cursor = self._history_widget.textCursor()
-        cursor.movePosition(cursor.End)
-        cursor.select(cursor.BlockUnderCursor)
-        cursor.removeSelectedText()
-        final = full_text.replace('\n', '<br>') if full_text else ''
-        if not final:
-            self._history_widget.append(
-                f'<p style="color:#c0ffc0;"><b>[{self._stream_now}] opcclaw:</b> '
-                f'<span style="color:#ff8888;">[响应为空，请重试]</span></p>'
-            )
-        else:
-            self._history_widget.append(
-                f'<p style="color:#c0ffc0;"><b>[{self._stream_now}] opcclaw:</b> {final}</p>'
-            )
-        self._input.setEnabled(True)
-        self._send_btn.setEnabled(True)
-        self._input.setFocus()
-        if self._voice and len(full_text) < 300:
-            self._voice.speak(full_text)
-
-    def _on_floating_tool(self, name: str, status: str):
-        icon = "OK" if status == "OK" else "FAIL" if status == "Failed" else "..."
-        cursor = self._history_widget.textCursor()
-        cursor.movePosition(cursor.End)
-        cursor.select(cursor.BlockUnderCursor)
-        cursor.removeSelectedText()
-        display = self._stream_accumulated[-400:] if self._stream_accumulated else ""
-        self._history_widget.append(
-            f'<p style="color:#c0ffc0;"><b>[{self._stream_now}] opcclaw:</b> {display}'
-            f'<span style="color:#888888;">[{name}: {icon}]</span> '
-            f'<span style="color:#44ff88;">_</span></p>'
-        )
-
-    def _on_floating_error(self):
-        """流式调用失败 → 移除占位块，回退到同步 chat"""
-        cursor = self._history_widget.textCursor()
-        cursor.movePosition(cursor.End)
-        cursor.select(cursor.BlockUnderCursor)
-        cursor.removeSelectedText()
-        if self._engine:
-            try:
-                reply = self._engine.chat(self._floating_fallback_text)
-            except Exception as e:
-                reply = f"调用失败: {e}"
-        else:
-            reply = "引擎未初始化，请先完成模型配置。"
-        self._history_widget.append(
-            f'<p style="color:#c0ffc0;"><b>[{self._floating_fallback_now}] opcclaw:</b> {reply}</p>'
-        )
-        self._input.setEnabled(True)
-        self._send_btn.setEnabled(True)
-        if self._voice and len(reply) < 300:
-            self._voice.speak(reply)
-
-    # ═══ 对话持久化 ═══
-
-    def _load_history(self):
-        """启动时从 MemoryStore 恢复对话历史并在 UI 中显示"""
-        if not hasattr(self._engine, 'get_history'):
-            return
-        try:
-            msgs = self._engine.get_history()
-        except Exception:
-            return
-        if not msgs:
-            return
-        for msg in msgs:
-            role = msg.get("role", "")
-            content = msg.get("content", "")
-            if role == "user":
-                self._history_widget.append(
-                    f'<p style="color:#80b0ff;"><b>你:</b> {content}</p>'
-                )
-            elif role == "assistant" and content:
-                content_escaped = content.replace('\n', '<br>')
-                self._history_widget.append(
-                    f'<p style="color:#c0ffc0;"><b>opcclaw:</b> {content_escaped}</p>'
-                )
-            elif role == "tool":
-                c = msg.get("content", "")[:200]
-                self._history_widget.append(
-                    f'<p style="color:#666; font-size:11px; margin-left:20px;">  [工具结果] {c}</p>'
-                )
-
-    # ═══ AgentLoop 进度展示 ═══
-
-    _STAGE_LABELS = {
-        "THINK": "分析中...",
-        "PLAN": "规划步骤...",
-        "ACT": "执行操作...",
-        "OBSERVE": "观察结果...",
-        "REFLECT": "反思调整...",
-        "COMPLETE": "任务完成",
-    }
-
-    def _on_agent_tool_start(self, name: str, args: dict):
-        """AgentLoop 工具调用开始 → 在对话流中显示"""
-        now = datetime.now().strftime("%H:%M")
-        args_short = str(args)[:100] if args else ""
-        self._history_widget.append(
-            f'<p style="color:#888; font-size:11px; margin-left:20px;">'
-            f'  [ACT] 调用工具: <b>{name}</b> {args_short}</p>'
-        )
-
-    def _on_agent_tool_result(self, name: str, success: bool, summary: str):
-        """AgentLoop 工具执行结果"""
-        icon = "OK" if success else "FAIL"
-        color = "#44aa44" if success else "#cc4444"
-        self._history_widget.append(
-            f'<p style="color:{color}; font-size:11px; margin-left:20px;">'
-            f'  [{name}: {icon}] {summary}</p>'
-        )
-
-    def _on_agent_stage(self, event):
-        """AgentLoop 阶段变更（Think/Plan/Observe/Reflect/Complete）"""
-        stage_name = event.type.name if hasattr(event.type, 'name') else str(event.type)
-        label = self._STAGE_LABELS.get(stage_name, stage_name)
-        color_map = {
-            "THINK": "#6688cc", "PLAN": "#8866cc", "ACT": "#cc8866",
-            "OBSERVE": "#66cc88", "REFLECT": "#cc66aa", "COMPLETE": "#44cc44",
-        }
-        color = color_map.get(stage_name, "#888")
-        msg = event.message[:200] if hasattr(event, 'message') else ""
-        self._history_widget.append(
-            f'<p style="color:{color}; font-size:11px; margin-left:10px;">'
-            f'  [{label}] {msg}</p>'
-        )
 
 
 

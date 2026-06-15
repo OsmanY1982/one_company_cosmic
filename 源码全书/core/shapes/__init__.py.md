@@ -1,6 +1,6 @@
 # `core/shapes/__init__.py`
 
-> 路径：`core/shapes/__init__.py` | 行数：118
+> 路径：`core/shapes/__init__.py` | 行数：120
 
 
 ---
@@ -86,7 +86,7 @@ SHAPE_PLANETS = [
     "classic", "gas_giant", "ice_giant", "lava_planet",
     "pulsar", "black_hole", "comet",
     "mars", "venus", "saturn", "uranus", "neutron_star", "nebula",
-    "mercury", "pluto", "white_dwarf", "red_giant", "wormhole", "starship",
+    "mercury", "pluto", "white_dwarf", "red_giant", "wormhole",
 ]
 
 SHAPE_ALIENS = [
@@ -94,6 +94,8 @@ SHAPE_ALIENS = [
     "crystal_alien", "octopus_alien", "ghost_alien", "jellyfish_alien",
     "robot_alien",
 ]
+
+SHAPE_STARSHIPS = ["starship"]
 
 SHAPE_PAINTERS = {
     "classic":      classic.paint,

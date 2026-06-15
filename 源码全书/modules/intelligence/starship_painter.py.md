@@ -46,7 +46,7 @@ def get_bridge_planet_zones(rect: QRectF, role: str = "user", anim_t: float = 0.
     w, h = rect.width(), rect.height()
     glass_left, glass_top = rect.left() + 12, rect.top() + 10
     glass_w, glass_h = w - 24, h - 50
-    planet_r = min(glass_w, glass_h) * 0.10
+    planet_r = min(glass_w, glass_h) * 0.125
     hit_size = planet_r * 2.8
     zones = {}
     modules = ["business", "intelligence", "data"]
@@ -546,7 +546,7 @@ def _paint_bridge_planets(p, rect, anim_t, alpha, role="user"):
     w, h = rect.width(), rect.height()
     glass_left, glass_top = rect.left() + 12, rect.top() + 10
     glass_w, glass_h = w - 24, h - 50
-    planet_r = min(glass_w, glass_h) * 0.10
+    planet_r = min(glass_w, glass_h) * 0.125
     cx, cy = glass_left + glass_w / 2, glass_top + glass_h / 2
     modules = ["business", "intelligence", "data"]
     if role == "admin":

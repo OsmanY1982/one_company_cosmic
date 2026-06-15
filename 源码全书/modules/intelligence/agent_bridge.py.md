@@ -1,6 +1,6 @@
 # `modules/intelligence/agent_bridge.py`
 
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：1138
+> 路径：`modules/intelligence/agent_bridge.py` | 行数：1782
 
 
 ---
@@ -46,6 +46,163 @@ from opcclaw.core.agent_loop import AgentLoop, AgentEvent, AgentEventType, Agent
 from opcclaw.core.memory_store import MemoryStore
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
+# ── 引擎模块（try/except，缺失不阻塞启动）──
+try:
+    from opcclaw.core.code_executor import CodeExecutor
+    _HAVE_CODE_EXECUTOR = True
+except ImportError:
+    _HAVE_CODE_EXECUTOR = False
+try:
+    from opcclaw.core.code_intel import SymbolExtractor
+    _HAVE_CODE_INTEL = True
+except ImportError:
+    _HAVE_CODE_INTEL = False
+try:
+    from opcclaw.core.workspace_indexer import WorkspaceIndexer
+    _HAVE_INDEXER = True
+except ImportError:
+    _HAVE_INDEXER = False
+try:
+    from opcclaw.core.patch_engine import PatchEngine
+    _HAVE_PATCH_ENGINE = True
+except ImportError:
+    _HAVE_PATCH_ENGINE = False
+try:
+    from opcclaw.core.task_scheduler import TaskScheduler
+    _HAVE_TASK_SCHEDULER = True
+except ImportError:
+    _HAVE_TASK_SCHEDULER = False
+try:
+    from opcclaw.core.todo_system import TodoSystem
+    _HAVE_TODO_SYSTEM = True
+except ImportError:
+    _HAVE_TODO_SYSTEM = False
+try:
+    from opcclaw.core.session_search import SessionSearch
+    _HAVE_SESSION_SEARCH = True
+except ImportError:
+    _HAVE_SESSION_SEARCH = False
+try:
+    from opcclaw.core.semantic_search import SemanticReranker
+    _HAVE_SEMANTIC = True
+except ImportError:
+    _HAVE_SEMANTIC = False
+try:
+    from opcclaw.core.super_intelligence import SuperIntelligence
+    _HAVE_SUPER_INTEL = True
+except ImportError:
+    _HAVE_SUPER_INTEL = False
+try:
+    from opcclaw.core.rag_context import RAGContextInjector
+    _HAVE_RAG = True
+except ImportError:
+    _HAVE_RAG = False
+try:
+    from opcclaw.core.token_optimizer import TokenOptimizer
+    _HAVE_TOKEN_OPT = True
+except ImportError:
+    _HAVE_TOKEN_OPT = False
+try:
+    from opcclaw.core.clarify_system import ClarifySystem
+    _HAVE_CLARIFY = True
+except ImportError:
+    _HAVE_CLARIFY = False
+try:
+    from opcclaw.core.model_status import ModelStatus
+    _HAVE_MODEL_STATUS = True
+except ImportError:
+    _HAVE_MODEL_STATUS = False
+try:
+    from opcclaw.core.model_status_manager import ModelStatusManager
+    _HAVE_MODEL_MGR = True
+except ImportError:
+    _HAVE_MODEL_MGR = False
+try:
+    from opcclaw.core.multi_model import MultiModelRouter
+    _HAVE_MULTI_MODEL = True
+except ImportError:
+    _HAVE_MULTI_MODEL = False
+try:
+    from opcclaw.core.skill_loader import SkillLoader
+    _HAVE_SKILL_LOADER = True
+except ImportError:
+    _HAVE_SKILL_LOADER = False
+try:
+    from opcclaw.core.skill_system import SkillSystem
+    _HAVE_SKILL_SYSTEM = True
+except ImportError:
+    _HAVE_SKILL_SYSTEM = False
+try:
+    from opcclaw.core.agent_delegate import AgentDelegate
+    _HAVE_DELEGATE = True
+except ImportError:
+    _HAVE_DELEGATE = False
+try:
+    from opcclaw.core.cloud_sync import CloudSyncService
+    _HAVE_CLOUD_SYNC = True
+except ImportError:
+    _HAVE_CLOUD_SYNC = False
+try:
+    from opcclaw.core.performance_monitor import PerformanceMonitor
+    _HAVE_PERF_MON = True
+except ImportError:
+    _HAVE_PERF_MON = False
+try:
+    from opcclaw.core.process_manager import ProcessManager
+    _HAVE_PROC_MGR = True
+except ImportError:
+    _HAVE_PROC_MGR = False
+try:
+    from opcclaw.core.secure_storage import SecureStorage
+    _HAVE_SECURE = True
+except ImportError:
+    _HAVE_SECURE = False
+try:
+    from opcclaw.core.token_saver import TokenOptimizer as TokenSaverOptimizer, TokenStats
+    _HAVE_TOKEN_SAVER = True
+except ImportError:
+    _HAVE_TOKEN_SAVER = False
+try:
+    from opcclaw.core.smart_memory import SmartMemory
+    _HAVE_SMART_MEMORY = True
+except ImportError:
+    _HAVE_SMART_MEMORY = False
+try:
+    from opcclaw.core.smart_memory_adapter import SmartMemoryStore
+    _HAVE_SMART_ADAPTER = True
+except ImportError:
+    _HAVE_SMART_ADAPTER = False
+try:
+    from opcclaw.core.opcclaw_logging import get_logger, install as install_logging
+    _HAVE_LOGGING = True
+except ImportError:
+    _HAVE_LOGGING = False
+try:
+    from opcclaw.core.provider_registry import ModelConfig
+    _HAVE_PROVIDER_REG = True
+except ImportError:
+    _HAVE_PROVIDER_REG = False
+try:
+    from opcclaw.core.config_validator import ConfigValidator
+    _HAVE_CONFIG_VALID = True
+except ImportError:
+    _HAVE_CONFIG_VALID = False
+try:
+    from opcclaw.core.sync_bridge import SyncBridge
+    _HAVE_SYNC_BRIDGE = True
+except ImportError:
+    _HAVE_SYNC_BRIDGE = False
+try:
+    from opcclaw.core.collaboration_client import OPCclawHermesClient
+    _HAVE_COLLAB = True
+except ImportError:
+    _HAVE_COLLAB = False
+try:
+    from opcclaw.core.supabase_client import SupabaseClient
+    _HAVE_SUPABASE = True
+except ImportError:
+    _HAVE_SUPABASE = False
+
 
 # ═══════════════════════════════════════════
 # AgentBridge 主类
@@ -76,6 +233,11 @@ class AgentBridge:
         "- 每次只做一步，观察结果后再继续\n"
         "- 出错后分析原因，尝试替代方案\n"
         "- 关键操作（删除/覆盖）前确认安全性\n"
+        "\n"
+        "能力质疑处理：\n"
+        "- 如果用户问「你能不能做X」或质疑你的能力，不要用文字解释\n"
+        "- 直接调用工具现场演示，用行动证明\n"
+        "- 例如用户问「你不能调用工具吗」→ 立即调用 list_directory 列出桌面文件来证明\n"
     )
 
     def __init__(
@@ -128,9 +290,193 @@ class AgentBridge:
             verbose=True,
         )
 
+        # ── 引擎模块初始化 ──
+        self._init_engine_modules()
+
         # ── 后台线程 ──
         self._task_thread: Optional[QThread] = None
         self._task_worker: Optional[_TaskWorker] = None
+
+    def _init_engine_modules(self):
+        """初始化所有 opcclaw 引擎模块（try/except 包裹，逐个失败不影响启动）"""
+        # ── SuperIntelligence ──
+        if _HAVE_SUPER_INTEL:
+            try:
+                self._super_intel = SuperIntelligence()
+            except Exception:
+                self._super_intel = None
+        else:
+            self._super_intel = None
+
+        # ── RAG 上下文注入 ──
+        if _HAVE_RAG:
+            try:
+                self._rag = RAGContextInjector()
+                project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                self._rag.set_project(project_root, build=False)
+            except Exception:
+                self._rag = None
+        else:
+            self._rag = None
+
+        # ── Token 优化 ──
+        if _HAVE_TOKEN_OPT:
+            try:
+                self._token_opt = TokenOptimizer(mode="balanced")
+            except Exception:
+                self._token_opt = None
+        else:
+            self._token_opt = None
+
+        # ── 高风险确认 ──
+        if _HAVE_CLARIFY:
+            try:
+                self._clarify = ClarifySystem()
+            except Exception:
+                self._clarify = None
+        else:
+            self._clarify = None
+
+        # ── 模型健康监控 + 故障切换 ──
+        self._model_status = None
+        if _HAVE_MODEL_STATUS:
+            try:
+                self._model_status = ModelStatus()
+            except Exception:
+                pass
+        self._model_mgr = None
+        if _HAVE_MODEL_MGR:
+            try:
+                self._model_mgr = ModelStatusManager()
+            except Exception:
+                pass
+
+        # ── 多模型路由 ──
+        if _HAVE_MULTI_MODEL:
+            try:
+                self._multi_model = MultiModelRouter()
+            except Exception:
+                self._multi_model = None
+        else:
+            self._multi_model = None
+
+        # ── 技能系统 ──
+        if _HAVE_SKILL_LOADER:
+            try:
+                self._skill_loader = SkillLoader()
+            except Exception:
+                self._skill_loader = None
+        else:
+            self._skill_loader = None
+        if _HAVE_SKILL_SYSTEM:
+            try:
+                skills_dir = os.path.join(_project_root, "opcclaw", "skills")
+                self._skill_system = SkillSystem(skills_dir) if os.path.isdir(skills_dir) else None
+            except Exception:
+                self._skill_system = None
+        else:
+            self._skill_system = None
+
+        # ── 子代理分派 ──
+        if _HAVE_DELEGATE:
+            try:
+                self._delegate = AgentDelegate()
+            except Exception:
+                self._delegate = None
+        else:
+            self._delegate = None
+
+        # ── 工作效率工具 ──
+        self._code_executor = CodeExecutor(default_timeout=30) if _HAVE_CODE_EXECUTOR else None
+        self._patch_engine = PatchEngine() if _HAVE_PATCH_ENGINE else None
+        if _HAVE_TASK_SCHEDULER:
+            try:
+                self._task_scheduler = TaskScheduler()
+            except Exception:
+                self._task_scheduler = None
+        else:
+            self._task_scheduler = None
+        if _HAVE_TODO_SYSTEM:
+            try:
+                self._todo = TodoSystem()
+            except Exception:
+                self._todo = None
+        else:
+            self._todo = None
+        self._session_search = SessionSearch() if _HAVE_SESSION_SEARCH else None
+
+        # ── 后台服务 ──
+        self._cloud_sync = None
+        if _HAVE_CLOUD_SYNC:
+            try:
+                self._cloud_sync = CloudSyncService()
+            except Exception:
+                pass
+        self._perf_mon = None
+        if _HAVE_PERF_MON:
+            try:
+                self._perf_mon = PerformanceMonitor()
+            except Exception:
+                pass
+        self._proc_mgr = ProcessManager() if _HAVE_PROC_MGR else None
+        self._secure_store = SecureStorage() if _HAVE_SECURE else None
+
+        # ── 结构化日志 ──
+        self._logger = None
+        if _HAVE_LOGGING:
+            try:
+                install_logging()
+                self._logger = get_logger("agent_bridge")
+            except Exception:
+                pass
+
+        # ── 配置校验 ──
+        self._config_validator = None
+        if _HAVE_CONFIG_VALID:
+            try:
+                config_path = os.path.join(
+                    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                    "opcclaw", "data", "opcclaw_config.json"
+                )
+                self._config_validator = ConfigValidator(config_path)
+            except Exception:
+                pass
+
+        # ── 模型配置注册 ──
+        self._provider_registry = ModelConfig() if _HAVE_PROVIDER_REG else None
+
+        # ── Token 统计与节省 ──
+        self._token_stats = None
+        self._token_saver = None
+        if _HAVE_TOKEN_SAVER:
+            try:
+                self._token_stats = TokenStats()
+                self._token_saver = TokenSaverOptimizer(self._token_stats)
+            except Exception:
+                pass
+
+        # ── 智能记忆分层 ──
+        self._smart_memory = None
+        if _HAVE_SMART_MEMORY:
+            try:
+                project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                self._smart_memory = SmartMemory(project_root=project_root)
+            except Exception:
+                pass
+        if _HAVE_SMART_ADAPTER and self._memory_store:
+            try:
+                self._smart_memory_store = SmartMemoryStore(self._memory_store)
+            except Exception:
+                pass
+
+        # ── 云端同步 ──
+        self._sync_bridge = SyncBridge() if _HAVE_SYNC_BRIDGE else None
+
+        # ── Supabase 远程后端 ──
+        self._supabase = SupabaseClient() if _HAVE_SUPABASE else None
+
+        # ── 多人协作 ──
+        self._collab_client = OPCclawHermesClient() if _HAVE_COLLAB else None
 
     # ── 信号转发 ──
     @property
@@ -498,10 +844,66 @@ class AgentBridge:
                     return f"[AgentBridge 错误] {e}"
 
         try:
-            return self._engine.chat(message)
+            return self._apply_engine_pipeline(message)
         except Exception as e:
             traceback.print_exc()
             return f"[AgentBridge 错误] {e}"
+
+    def _apply_engine_pipeline(self, message: str) -> str:
+        """
+        引擎管线：对 ChatEngine 调用前注入上下文压缩、RAG、SuperIntelligence。
+        管线顺序：RAG 注入 → Token 压缩 → SuperIntelligence 提示词 → 路由判断 → LLM 调用
+        """
+        # 1. RAG 上下文注入（将项目相关知识前置到 system prompt）
+        if self._rag:
+            try:
+                rag_ctx = self._rag.inject_context(message)
+                if rag_ctx:
+                    old_prompt = self._engine.system_prompt
+                    self._engine.system_prompt = f"{old_prompt}\n\n[项目上下文]\n{rag_ctx}"
+            except Exception:
+                pass
+
+        # 2. Token 压缩（超长对话时裁剪上下文）
+        if self._token_opt:
+            try:
+                self._engine.messages = self._token_opt.optimize_messages(self._engine.messages)
+            except Exception:
+                pass
+
+        # 3. SuperIntelligence 推理链注入
+        if self._super_intel:
+            try:
+                si_prompt = self._super_intel.inject_prompt(message)
+                if si_prompt:
+                    old_sp = self._engine.system_prompt
+                    self._engine.system_prompt = f"{old_sp}\n\n{si_prompt}"
+            except Exception:
+                pass
+
+        # 4. 多模型路由（按任务类型自动选择最优后端）
+        if self._multi_model:
+            try:
+                route = self._multi_model.route(message)
+                if route and route.get("model"):
+                    self.switch_model(route.get("provider_id", ""), route["model"])
+            except Exception:
+                pass
+
+        # 5. 调用 ChatEngine
+        try:
+            return self._engine.chat(message)
+        except Exception as e:
+            # 故障切换：如果当前模型失败且 model_mgr 可用，尝试备用模型
+            if self._model_mgr:
+                try:
+                    fallback = self._model_mgr.get_fallback()
+                    if fallback:
+                        self.switch_model(fallback.provider_id, fallback.model)
+                        return self._engine.chat(message)
+                except Exception:
+                    pass
+            raise e
 
     def reset(self):
         """重置对话历史"""
@@ -575,6 +977,14 @@ class AgentBridge:
         # ── 网络 ──
         self._reg_web_search()
         self._reg_web_fetch_page()
+        # ── opcclaw 高级工具 ──
+        self._reg_execute_python()
+        self._reg_analyze_code()
+        self._reg_search_codebase()
+        self._reg_apply_patch()
+        self._reg_todo()
+        self._reg_task_scheduler()
+        self._reg_search_sessions()
 
     # ── 1. read_file ──
     def _reg_read_file(self):
@@ -1061,6 +1471,239 @@ class AgentBridge:
             category="web",
         )(handler)
 
+    # ── 13. execute_python ──
+    def _reg_execute_python(self):
+        """Python 沙箱执行（code_executor 模块）"""
+        def handler(code: str, timeout: int = 30) -> dict:
+            if not self._code_executor:
+                return {"error": "Python 沙箱未启用（code_executor 模块缺失）"}
+            try:
+                result = self._code_executor.execute(code, timeout=timeout)
+                return {
+                    "success": result.success,
+                    "output": result.output or "",
+                    "error": result.error or "",
+                    "duration_ms": result.duration_ms,
+                }
+            except Exception as e:
+                return {"error": str(e)}
+        self.registry.register(
+            name="execute_python",
+            description="在安全沙箱中执行 Python 代码，返回标准输出和错误",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "code": {"type": "string", "description": "要执行的 Python 代码"},
+                    "timeout": {"type": "integer", "description": "超时秒数，默认30", "default": 30},
+                },
+                "required": ["code"],
+            },
+            category="code",
+        )(handler)
+
+    # ── 14. analyze_code ──
+    def _reg_analyze_code(self):
+        """代码智能分析（code_intel 模块）"""
+        def handler(file_path: str, action: str = "symbols") -> dict:
+            if not os.path.exists(file_path):
+                return {"error": f"文件不存在: {file_path}"}
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    source = f.read()
+                if _HAVE_CODE_INTEL:
+                    import ast
+                    extractor = SymbolExtractor(source.split("\n"))
+                    extractor.visit(ast.parse(source))
+                    symbols = extractor._symbols if hasattr(extractor, '_symbols') else []
+                    return {"file": file_path, "symbols": [s.__dict__ if hasattr(s, '__dict__') else str(s) for s in symbols], "total": len(symbols)}
+                else:
+                    return {"error": "代码智能引擎未启用（code_intel 模块缺失）"}
+            except Exception as e:
+                return {"error": str(e)}
+        self.registry.register(
+            name="analyze_code",
+            description="分析代码文件的符号结构（函数/类/变量定义）",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "file_path": {"type": "string", "description": "要分析的代码文件绝对路径"},
+                    "action": {
+                        "type": "string",
+                        "description": "分析类型: symbols（符号提取）/ usages（引用搜索）/ imports（依赖分析）/ refactor（重构建议）",
+                        "enum": ["symbols", "usages", "imports", "refactor"],
+                        "default": "symbols",
+                    },
+                },
+                "required": ["file_path"],
+            },
+            category="code",
+        )(handler)
+
+    # ── 15. search_codebase ──
+    def _reg_search_codebase(self):
+        """代码库语义/全文搜索（workspace_indexer 模块）"""
+        def handler(query: str, top_k: int = 10) -> dict:
+            if _HAVE_INDEXER:
+                try:
+                    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                    indexer = WorkspaceIndexer(project_root)
+                    results = indexer.search(query, top_k=top_k)
+                    return {
+                        "query": query,
+                        "results": [{"path": r.path, "score": round(r.score, 3), "snippet": r.snippet} for r in results],
+                        "count": len(results),
+                    }
+                except Exception as e:
+                    return {"error": str(e)}
+            return {"error": "代码库索引器未启用（workspace_indexer 模块缺失）"}
+        self.registry.register(
+            name="search_codebase",
+            description="在项目代码库中全文搜索，支持中文和英文关键词",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "搜索关键词"},
+                    "top_k": {"type": "integer", "description": "返回结果数，默认10", "default": 10},
+                },
+                "required": ["query"],
+            },
+            category="code",
+        )(handler)
+
+    # ── 16. apply_patch ──
+    def _reg_apply_patch(self):
+        """文件补丁引擎（patch_engine 模块）"""
+        def handler(file_path: str, pattern: str, replacement: str, dry_run: bool = True) -> dict:
+            if not self._patch_engine:
+                return {"error": "补丁引擎未启用（patch_engine 模块缺失）"}
+            try:
+                if dry_run:
+                    result = self._patch_engine.preview(file_path, pattern, replacement)
+                else:
+                    result = self._patch_engine.apply(file_path, pattern, replacement)
+                return {
+                    "file": file_path,
+                    "dry_run": dry_run,
+                    "matches": result.get("matches", 0),
+                    "changes": result.get("changes", []),
+                    "success": result.get("success", False),
+                }
+            except Exception as e:
+                return {"error": str(e)}
+        self.registry.register(
+            name="apply_patch",
+            description="对文件执行查找替换补丁（默认预览不写入）",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "file_path": {"type": "string", "description": "目标文件绝对路径"},
+                    "pattern": {"type": "string", "description": "要查找的文本模式"},
+                    "replacement": {"type": "string", "description": "替换后的文本"},
+                    "dry_run": {"type": "boolean", "description": "是否仅预览不实际修改，默认true", "default": True},
+                },
+                "required": ["file_path", "pattern", "replacement"],
+            },
+            category="code",
+        )(handler)
+
+    # ── 17. todo ──
+    def _reg_todo(self):
+        """任务清单（todo_system 模块）"""
+        def handler(action: str = "list", title: str = "", status: str = "") -> dict:
+            todo = self._todo
+            if not todo:
+                return {"error": "任务系统未启用（todo_system 模块缺失）"}
+            try:
+                if action == "add":
+                    item = todo.add(title)
+                    return {"action": "add", "item": item}
+                elif action == "list":
+                    items = todo.list()
+                    return {"action": "list", "items": items, "total": len(items)}
+                elif action == "done":
+                    result = todo.mark_done(title)
+                    return {"action": "done", "result": result}
+                else:
+                    return {"error": f"未知操作: {action}，支持 add/list/done"}
+            except Exception as e:
+                return {"error": str(e)}
+        self.registry.register(
+            name="todo",
+            description="管理任务清单：添加、查看、标记完成",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "action": {"type": "string", "description": "操作: add（添加）/ list（查看）/ done（完成）", "default": "list"},
+                    "title": {"type": "string", "description": "任务标题（add/done 时需要）"},
+                    "status": {"type": "string", "description": "状态过滤（list 时可选）"},
+                },
+                "required": [],
+            },
+            category="productivity",
+        )(handler)
+
+    # ── 18. task_scheduler ──
+    def _reg_task_scheduler(self):
+        """定时任务（task_scheduler 模块）"""
+        def handler(action: str = "list", title: str = "", schedule: str = "") -> dict:
+            sched = self._task_scheduler
+            if not sched:
+                return {"error": "定时任务未启用（task_scheduler 模块缺失）"}
+            try:
+                if action == "add":
+                    task = sched.add(title, schedule)
+                    return {"action": "add", "task": task}
+                elif action == "list":
+                    tasks = sched.list()
+                    return {"action": "list", "tasks": tasks}
+                elif action == "remove":
+                    sched.remove(title)
+                    return {"action": "remove", "title": title, "success": True}
+                else:
+                    return {"error": f"未知操作: {action}，支持 add/list/remove"}
+            except Exception as e:
+                return {"error": str(e)}
+        self.registry.register(
+            name="task_scheduler",
+            description="管理定时任务：创建、查看、删除",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "action": {"type": "string", "description": "操作: add（添加）/ list（查看）/ remove（删除）", "default": "list"},
+                    "title": {"type": "string", "description": "任务标题"},
+                    "schedule": {"type": "string", "description": "调度表达式（add 时需要），如 'daily 08:00'"},
+                },
+                "required": [],
+            },
+            category="productivity",
+        )(handler)
+
+    # ── 19. search_sessions ──
+    def _reg_search_sessions(self):
+        """历史会话搜索（session_search 模块）"""
+        def handler(query: str, top_k: int = 10) -> dict:
+            ss = self._session_search
+            if not ss:
+                return {"error": "会话搜索未启用（session_search 模块缺失）"}
+            try:
+                results = ss.search(query, top_k=top_k)
+                return {"query": query, "results": results, "count": len(results)}
+            except Exception as e:
+                return {"error": str(e)}
+        self.registry.register(
+            name="search_sessions",
+            description="搜索历史对话会话，找到之前讨论过的内容",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "搜索关键词"},
+                    "top_k": {"type": "integer", "description": "返回结果数，默认10", "default": 10},
+                },
+                "required": ["query"],
+            },
+            category="memory",
+        )(handler)
+
 
 # ═══════════════════════════════════════════
 # 后台任务 Worker（用于 AgentLoop 异步执行）
@@ -1145,5 +1788,6 @@ class _StreamWorker(QObject):
             self.stream_done.emit(accumulated)
 
         self.finished.emit()
+
 
 ```

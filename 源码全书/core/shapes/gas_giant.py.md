@@ -1,6 +1,6 @@
 # `core/shapes/gas_giant.py`
 
-> 路径：`core/shapes/gas_giant.py` | 行数：179
+> 路径：`core/shapes/gas_giant.py` | 行数：227
 
 
 ---
@@ -27,6 +27,20 @@ def paint(painter: QPainter, center: QPointF, radius: float,
     if alpha < 1.0:
         p.setOpacity(alpha)
 
+
+    # ── 多层外辉光（增强质感）──
+    for glow_layer in range(4):
+        glow_scale = 1.06 + glow_layer * 0.20
+        glow_r = radius * glow_scale
+        glow = QRadialGradient(cx, cy, glow_r)
+        ga = max(1, 35 - glow_layer * 8)
+        glow.setColorAt(0.0, QColor(255, 255, 255, 0))
+        glow.setColorAt(0.25, QColor(200, 200, 255, ga // 2))
+        glow.setColorAt(0.55, QColor(120, 140, 255, ga))
+        glow.setColorAt(0.80, QColor(60, 80, 200, ga // 2))
+        glow.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setBrush(glow); p.setPen(Qt.NoPen)
+        p.drawEllipse(center, glow_r, glow_r)
     # ── 外层暖色辉光 ──
     for i in range(4):
         gr = radius * (1.04 + i * 0.12)
@@ -142,6 +156,14 @@ def paint(painter: QPainter, center: QPointF, radius: float,
     shadow.setColorAt(0.94, QColor(0, 0, 0, 160))
     shadow.setColorAt(1.0, QColor(0, 0, 0, 195))
     p.setBrush(shadow); p.setPen(Qt.NoPen); p.drawEllipse(center, radius, radius)
+    # ── 暗面呼吸增强（微妙的亮度波动）──
+    shadow_breath = QRadialGradient(cx, cy, radius * 0.72)
+    sb = int(12 * abs(math.sin(anim_t * 1.7 + 0.5)))
+    shadow_breath.setColorAt(0.0, QColor(0, 0, 0, 0))
+    shadow_breath.setColorAt(0.5, QColor(0, 0, 0, sb))
+    shadow_breath.setColorAt(1.0, QColor(0, 0, 0, 0))
+    p.setBrush(shadow_breath); p.setPen(Qt.NoPen)
+    p.drawEllipse(center, radius, radius)
 
     # ── 镜面高光 ──
     spec = QRadialGradient(cx - radius * 0.28, cy - radius * 0.35, radius * 0.45)
@@ -167,23 +189,49 @@ def paint(painter: QPainter, center: QPointF, radius: float,
         p.setBrush(pg)
         p.drawEllipse(QPointF(px, py), ps * 2.5, ps * 2.5)
 
-    # ── 悬停边框 ──
+    # ── 边缘逆光（大气散射模拟 + 呼吸微动）──
+    rim_breath = 1.0 + 0.03 * math.sin(anim_t * 2.2)
+    rim_grad = QRadialGradient(cx + radius * 0.45, cy + radius * 0.50, radius * 0.50)
+    rim_grad.setColorAt(0.0, QColor(255, 255, 255, 0))
+    rim_grad.setColorAt(0.55, QColor(255, 255, 255, 0))
+    rim_grad.setColorAt(0.78, QColor(180, 200, 255, int(15 * rim_breath)))
+    rim_grad.setColorAt(0.92, QColor(140, 170, 255, int(30 * rim_breath)))
+    rim_grad.setColorAt(1.0, QColor(0, 0, 0, 0))
+    p.setBrush(rim_grad); p.setPen(Qt.NoPen)
+    p.drawEllipse(center, radius, radius)
+
+# ── 悬停增强（主题色脉冲光晕 + 呼吸轮廓）──
     if hovered:
-        pulse = 0.7 + 0.3 * abs(math.sin(anim_t * 4.0 + 0.8))
-        pen = QPen(QColor(255, 200, 100, int(200 * pulse)))
-        pen.setWidthF(1.8)
-        p.setPen(pen); p.setBrush(Qt.NoBrush)
-        p.drawEllipse(center, radius + 2, radius + 2)
-        for i in range(2):
-            outer_r = radius + 7 + i * 7
+        hp = 0.7 + 0.3 * abs(math.sin(anim_t * 3.5))
+        # 内层主题光晕
+        for i in range(3):
+            ir = radius + 2 + i * 5
+            ig = QRadialGradient(center, ir)
+            ga = int((70 - i * 18) * hp)
+            ig.setColorAt(0.60, QColor(255, 255, 255, 0))
+            ig.setColorAt(0.78, QColor(255, 180, 60, ga // 2))
+            ig.setColorAt(0.90, QColor(255, 180, 60, ga))
+            ig.setColorAt(0.97, QColor(255//2, 180//2, 90, ga // 3))
+            ig.setColorAt(1.0, QColor(0, 0, 0, 0))
+            p.setPen(Qt.NoPen); p.setBrush(ig)
+            p.drawEllipse(center, ir, ir)
+        # 外层扩散光晕
+        for i in range(3):
+            outer_r = radius + 10 + i * 10
             og = QRadialGradient(center, outer_r)
-            ga = int((55 - i * 18) * pulse)
+            ga = int((50 - i * 14) * hp)
             og.setColorAt(0.75, QColor(255, 255, 255, 0))
-            og.setColorAt(0.85, QColor(255, 180, 60, ga // 2))
-            og.setColorAt(0.94, QColor(255, 140, 30, ga))
-            og.setColorAt(1.0, QColor(255, 255, 255, 0))
+            og.setColorAt(0.88, QColor(255, 180, 60, ga // 2))
+            og.setColorAt(0.96, QColor(255//2, 180//2, 100, ga // 3))
+            og.setColorAt(1.0, QColor(0, 0, 0, 0))
             p.setPen(Qt.NoPen); p.setBrush(og)
             p.drawEllipse(center, outer_r, outer_r)
+        # 明亮轮廓环（呼吸感）
+        br = 0.6 + 0.4 * abs(math.sin(anim_t * 4.0))
+        rpen = QPen(QColor(255, 180, 60, int(220 * hp * br)), 2.5 + 1.0 * br)
+        p.setPen(rpen); p.setBrush(Qt.NoBrush)
+        p.drawEllipse(center, radius + 3, radius + 3)
+
 
     p.restore()
 
