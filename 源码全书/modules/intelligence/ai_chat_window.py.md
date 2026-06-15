@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_chat_window.py`
 
-> 路径：`modules/intelligence/ai_chat_window.py` | 行数：1226
+> 路径：`modules/intelligence/ai_chat_window.py` | 行数：1241
 
 
 ---
@@ -215,15 +215,6 @@ class AIChatWindow(QWidget):
         l.setSpacing(10)
         l.setContentsMargins(16, 12, 16, 12)
 
-        # DEBUG: 确信新代码在执行
-        debug_ribbon = QLabel("*** NEW 按钮已就绪: [文件] [语音] [发送] [停止] [清屏] ***")
-        debug_ribbon.setAlignment(Qt.AlignCenter)
-        debug_ribbon.setStyleSheet(
-            "color: #ffffff; background: #cc3333; font-size: 13px; font-weight: 900;"
-            " border: 1px solid #ff6666; border-radius: 4px; padding: 4px;"
-        )
-        l.addWidget(debug_ribbon)
-
         # ── 顶部工具栏：状态 | 供应商 | 模型 | 切换 | 刷新 | 设置 ──
         top_row = QHBoxLayout()
         top_row.setSpacing(5)
@@ -256,6 +247,20 @@ class AIChatWindow(QWidget):
         """)
         self.btn_toggle_sidebar.clicked.connect(self._toggle_sidebar)
         top_row.addWidget(self.btn_toggle_sidebar)
+
+        # 新建对话按钮（工具栏常驻，侧边栏折叠时也能用）
+        self.btn_new_chat = QPushButton("+")
+        self.btn_new_chat.setToolTip("新建对话")
+        self.btn_new_chat.setFixedSize(24, 20)
+        self.btn_new_chat.setStyleSheet("""
+            QPushButton {
+                background: rgba(100,200,100,30); color: #88cc88; border: none;
+                border-radius: 4px; font-size: 14px; font-weight: bold;
+            }
+            QPushButton:hover { background: rgba(100,200,100,60); color: #aaffaa; }
+        """)
+        self.btn_new_chat.clicked.connect(self._on_new_session)
+        top_row.addWidget(self.btn_new_chat)
 
         top_row.addStretch()
 
@@ -624,6 +629,13 @@ class AIChatWindow(QWidget):
         """新建空白会话"""
         new_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         self._switch_to_session(new_id, "新对话")
+        # 立即保存空会话以使其出现在列表中，并刷新侧边栏
+        if self._bridge:
+            try:
+                self._bridge.save_session([], new_id)
+            except Exception:
+                pass
+        self._session_manager._load_sessions()
 
     def _on_session_deleted(self, session_id: str):
         """外部删除会话后：若为当前会话则切换到新会话"""
@@ -667,6 +679,9 @@ class AIChatWindow(QWidget):
 
         # 更新标题栏
         self.setWindowTitle(f"AI助手 · {title}")
+
+        # 刷新侧边栏（消息数/时间戳等元信息已更新）
+        self._session_manager._load_sessions()
 
     # ─── 模型管理（通过 AgentBridge 统一管理）───
     def _format_size(self, size_bytes: int) -> str:
