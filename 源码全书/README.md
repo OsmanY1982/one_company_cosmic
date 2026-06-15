@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-15 15:58
-> 共 606 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-15 16:50
+> 共 607 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -108,6 +108,7 @@
 │   │   ├── enhanced/
 │   │   │   ├── __init__.py
 │   │   │   └── enhanced_tools.py
+│   │   ├── temp_backup/
 │   │   ├── __init__.py
 │   │   ├── _ai_shared.py
 │   │   ├── _ai_widgets.py
@@ -138,6 +139,7 @@
 │   │   ├── bridge_window.py
 │   │   ├── business_ai_assistant.py
 │   │   ├── business_tools.py
+│   │   ├── chat_session_manager.py
 │   │   ├── core_engine_star.py
 │   │   ├── crm_tools.py
 │   │   ├── data_import_tools.py
@@ -1098,6 +1100,7 @@
 - [`modules/intelligence/bridge_window.py`](./modules/intelligence/bridge_window.py.md)
 - [`modules/intelligence/business_ai_assistant.py`](./modules/intelligence/business_ai_assistant.py.md)
 - [`modules/intelligence/business_tools.py`](./modules/intelligence/business_tools.py.md)
+- [`modules/intelligence/chat_session_manager.py`](./modules/intelligence/chat_session_manager.py.md)
 - [`modules/intelligence/core/__init__.py`](./modules/intelligence/core/__init__.py.md)
 - [`modules/intelligence/core/llm_backend.py`](./modules/intelligence/core/llm_backend.py.md)
 - [`modules/intelligence/core_engine_star.py`](./modules/intelligence/core_engine_star.py.md)

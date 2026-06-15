@@ -536,27 +536,42 @@ class AgentBridge:
     # 对话持久化
     # ═══════════════════════════════════════════
 
-    def save_session(self) -> bool:
-        """手动保存当前会话到磁盘"""
+    def save_session(self, messages: list = None, session_id: str = None) -> bool:
+        """手动保存当前会话到磁盘。
+        
+        Args:
+            messages: 消息列表，若为 None 则使用 engine 内的消息
+            session_id: 会话ID，若为 None 则使用当前 session_id
+        """
         try:
-            self._memory.save_session(
-                self._engine.messages, self.session_id
-            )
+            msgs = messages if messages is not None else self._engine.messages
+            sid = session_id if session_id is not None else self.session_id
+            self._memory.save_session(msgs, sid)
             return True
         except Exception as e:
             traceback.print_exc()
             return False
 
-    def load_session(self) -> int:
-        """从磁盘恢复会话历史，返回恢复的消息数"""
+    def load_session(self, session_id: str = None) -> list:
+        """从磁盘恢复会话历史，返回消息列表。
+        
+        Args:
+            session_id: 会话ID，若为 None 则使用当前 session_id
+        """
         try:
-            msgs = self._memory.load_session(self.session_id)
-            if msgs:
-                self._engine.messages = msgs
-                return len(msgs)
-            return 0
+            sid = session_id if session_id is not None else self.session_id
+            msgs = self._memory.load_session(sid)
+            return msgs
         except Exception:
-            return 0
+            return []
+
+    def append_message(self, role: str, content: str, session_id: str = "default") -> str:
+        """实时追加单条消息到会话（增量保存，防止崩溃丢失）"""
+        existing = self._memory.load_session(session_id)
+        if existing is None:
+            existing = []
+        existing.append({"role": role, "content": content})
+        return self._memory.save_session(existing, session_id)
 
     def list_sessions(self) -> List[Dict[str, Any]]:
         """列出所有已保存的会话"""

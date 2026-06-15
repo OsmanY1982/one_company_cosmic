@@ -11,13 +11,14 @@ from datetime import datetime
 
 from PyQt5.QtWidgets import (
     QWidget, QDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QLineEdit,
-    QPushButton, QLabel, QComboBox, QApplication,
+    QPushButton, QLabel, QComboBox, QApplication, QSplitter,
 )
 from PyQt5.QtCore import Qt, pyqtSignal
 
 from modules.intelligence.ai_chat_styles import (
     INPUT_STYLE, BTN_PRIMARY, BTN_DANGER, BTN_SETTINGS,
 )
+from modules.intelligence.chat_session_manager import ChatSessionManager
 from modules.intelligence.offline_analyzer import gather_context, offline_analysis
 from modules.auth.model_config_panel import (
     PRESET_PROVIDERS, LOCAL_SERVICES, PROVIDER_MODELS, ModelConfigDialog,
@@ -81,6 +82,12 @@ class AIChatWindow(QWidget):
         self._bridge = opcclaw_engine  # AgentBridge 实例（唯一引擎）
         self._streaming = False
         self._stream_buffer = ""
+
+        # ── 对话会话管理 ──
+        self._current_session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self._current_title = "新对话"
+        self._messages = []       # [{role, content}, ...] 当前会话消息缓存
+
         self._all_models = []  # 全量模型列表（云端+本地）
         self._current_model = ""
         self._current_provider_id = ""
@@ -204,7 +211,21 @@ class AIChatWindow(QWidget):
 
         l.addLayout(top_row)
 
-        # 对话区域
+        # ── 左右分栏：左侧会话列表 + 右侧对话区 ──
+        self._session_manager = ChatSessionManager(self._bridge)
+        self._session_manager.session_selected.connect(self._on_session_selected)
+        self._session_manager.new_chat_requested.connect(self._on_new_session)
+        self._session_manager.session_deleted.connect(self._on_session_deleted)
+
+        self._splitter = QSplitter(Qt.Horizontal)
+        self._splitter.addWidget(self._session_manager)
+
+        # 右侧对话面板
+        right_widget = QWidget()
+        right_layout = QVBoxLayout(right_widget)
+        right_layout.setContentsMargins(0, 0, 0, 0)
+        right_layout.setSpacing(10)
+
         self.ai_chat = QTextEdit()
         self.ai_chat.setReadOnly(True)
         self.ai_chat.setStyleSheet("""
@@ -214,7 +235,7 @@ class AIChatWindow(QWidget):
                 padding: 12px; font-size: 12px; line-height: 1.6;
             }
         """)
-        l.addWidget(self.ai_chat, 1)
+        right_layout.addWidget(self.ai_chat, 1)
 
         # 输入行
         ir = QHBoxLayout()
@@ -231,9 +252,84 @@ class AIChatWindow(QWidget):
 
         clear_btn = QPushButton("清屏")
         clear_btn.setStyleSheet(BTN_DANGER)
-        clear_btn.clicked.connect(lambda: self.ai_chat.clear())
+        clear_btn.clicked.connect(self._on_clear_chat)
         ir.addWidget(clear_btn)
-        l.addLayout(ir)
+        right_layout.addLayout(ir)
+
+        self._splitter.addWidget(right_widget)
+        self._splitter.setStretchFactor(0, 0)  # 左侧不拉伸
+        self._splitter.setStretchFactor(1, 1)  # 右侧拉伸
+
+        l.addWidget(self._splitter, 1)
+
+    def _on_clear_chat(self):
+        """清屏并清空本地消息缓存"""
+        self.ai_chat.clear()
+        self._messages = []
+
+    def closeEvent(self, event):
+        """窗口关闭时保存当前会话"""
+        if self._messages and self._bridge:
+            try:
+                self._bridge.save_session(self._messages, self._current_session_id)
+            except Exception as e:
+                print(f"[AIChatWindow] closeEvent 保存失败: {e}")
+        # 刷新会话列表
+        if hasattr(self, '_session_manager'):
+            try:
+                self._session_manager._load_sessions()
+            except Exception:
+                pass
+        super().closeEvent(event)
+
+    # ─── 会话切换 ───
+    def _on_session_selected(self, session_id: str, title: str):
+        """切换会话"""
+        self._switch_to_session(session_id, title)
+
+    def _on_new_session(self):
+        """新建空白会话"""
+        new_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self._switch_to_session(new_id, "新对话")
+
+    def _on_session_deleted(self, session_id: str):
+        """外部删除会话后：若为当前会话则切换到新会话"""
+        if self._current_session_id == session_id:
+            self._on_new_session()
+
+    def _switch_to_session(self, session_id: str, title: str):
+        """切换到指定会话：保存当前 → 清屏 → 加载新会话"""
+        # 保存当前会话
+        if self._messages and self._bridge:
+            try:
+                self._bridge.save_session(self._messages, self._current_session_id)
+            except Exception as e:
+                print(f"[AIChatWindow] 保存会话失败: {e}")
+
+        # 切换
+        self._current_session_id = session_id
+        self._current_title = title
+        self.ai_chat.clear()
+        self._messages = []
+
+        # 加载新会话历史
+        if self._bridge:
+            try:
+                msgs = self._bridge.load_session(session_id)
+                if msgs:
+                    self._messages = msgs
+                    for msg in msgs:
+                        role = msg.get("role", "")
+                        content = msg.get("content", "")
+                        if role == "user":
+                            self._append_user_msg(content)
+                        elif role == "assistant":
+                            self._append_ai_msg(content)
+            except Exception as e:
+                print(f"[AIChatWindow] 加载会话失败: {e}")
+
+        # 更新标题栏
+        self.setWindowTitle(f"AI助手 · {title}")
 
     # ─── 模型管理（通过 AgentBridge 统一管理）───
     def _format_size(self, size_bytes: int) -> str:
@@ -519,6 +615,13 @@ class AIChatWindow(QWidget):
         escaped = full_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
         cursor.insertHtml(f'<p style="color:#ccaaff;">{escaped}</p>')
         self._stream_buffer = ""
+        # 消息跟踪 + 增量保存
+        self._messages.append({"role": "assistant", "content": full_text})
+        if self._bridge:
+            try:
+                self._bridge.append_message("assistant", full_text, self._current_session_id)
+            except Exception:
+                pass
 
     def _stream_error(self, err_msg: str):
         import sys, datetime
@@ -540,6 +643,13 @@ class AIChatWindow(QWidget):
 
         self.ai_input.clear()
         self._append_user_msg(text)
+        self._messages.append({"role": "user", "content": text})
+        # 实时增量保存
+        if self._bridge:
+            try:
+                self._bridge.append_message("user", text, self._current_session_id)
+            except Exception:
+                pass
 
         # ── 优先级 1: AgentBridge 流式输出 ──
         if self._bridge is not None and hasattr(self._bridge, "chat_stream"):
@@ -564,13 +674,19 @@ class AIChatWindow(QWidget):
         # ── 优先级 2: AgentBridge 同步 chat ──
         if self._bridge is not None:
             try:
+                reply = ""
                 if hasattr(self._bridge, "chat"):
                     reply = self._bridge.chat(text)
-                    self._append_ai_msg(reply)
-                    return
                 elif hasattr(self._bridge, "query"):
                     reply = self._bridge.query(text)
+                if reply:
                     self._append_ai_msg(reply)
+                    self._messages.append({"role": "assistant", "content": reply})
+                    if self._bridge:
+                        try:
+                            self._bridge.append_message("assistant", reply, self._current_session_id)
+                        except Exception:
+                            pass
                     return
             except Exception as e:
                 self.ai_chat.append(
@@ -581,6 +697,7 @@ class AIChatWindow(QWidget):
         try:
             offline_resp = offline_analysis(text)
             self._append_ai_msg(offline_resp, offline=True)
+            self._messages.append({"role": "assistant", "content": offline_resp})
         except Exception as e:
             self.ai_chat.append(f'<p style="color:#ff6666;">错误: {e}</p>')
             traceback.print_exc()

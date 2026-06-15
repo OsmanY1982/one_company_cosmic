@@ -70,6 +70,10 @@ class OPCclawChatDialog(QDialog):
         self._floating_mode = floating_mode
         self._voice = voice
 
+        # ── 对话历史管理 ──
+        self._messages = []       # [{role, content}, ...] 当前会话消息
+        self._session_id = None   # 由外部 AIChatWindow 设置
+
         if floating_mode:
             self.setWindowTitle("opcclaw · AI 对话")
             self.setWindowFlags(
@@ -381,6 +385,13 @@ class OPCclawChatDialog(QDialog):
         if not text:
             return
         self._chat_input.clear()
+        # 消息追踪 + 实时增量保存
+        self._messages.append({"role": "user", "content": text})
+        if self._session_id and hasattr(self._opcclaw, "append_message"):
+            try:
+                self._opcclaw.append_message("user", text, self._session_id)
+            except Exception:
+                pass
         now = datetime.now().strftime("%H:%M:%S")
         self._chat_log.append(
             f'<p style="color:#ffaa44;font-weight:700;">[{now}] 你:</p>'
@@ -468,6 +479,13 @@ class OPCclawChatDialog(QDialog):
                 pass
         sb = self._chat_log.verticalScrollBar()
         sb.setValue(sb.maximum())
+        # 实时保存 AI 回复
+        self._messages.append({"role": "assistant", "content": full_text})
+        if self._session_id and hasattr(self._opcclaw, "append_message"):
+            try:
+                self._opcclaw.append_message("assistant", full_text, self._session_id)
+            except Exception:
+                pass
 
     def _on_stream_tool(self, name: str, status: str):
         icon = "[OK]" if status == "OK" else "[FAIL]" if status == "Failed" else "[...]"
@@ -520,6 +538,15 @@ class OPCclawChatDialog(QDialog):
             parent = self.parent()
             if hasattr(parent, '_enable_voice_handlers'):
                 parent._enable_voice_handlers()
+        # 非悬浮球模式：用 messages + session_id 保存
+        elif self._messages and self._session_id:
+            if hasattr(self._opcclaw, 'save_session'):
+                try:
+                    self._opcclaw.save_session(
+                        self._messages, self._session_id
+                    )
+                except Exception:
+                    pass
         super().closeEvent(event)
 
     # ── 语音输入 ──
@@ -559,6 +586,15 @@ class OPCclawChatDialog(QDialog):
 
     # ── 对话持久化 ──
 
+    def get_messages(self) -> list:
+        """返回当前对话的所有消息（供外部 AIChatWindow 保存用）"""
+        return list(self._messages)
+
+    def clear_chat(self):
+        """清空当前对话显示和消息缓存"""
+        self._messages = []
+        self._chat_log.clear()
+
     def _load_history(self):
         """启动时从 MemoryStore 恢复对话历史并在 UI 中显示"""
         if not hasattr(self._opcclaw, 'get_history'):
@@ -569,6 +605,7 @@ class OPCclawChatDialog(QDialog):
             return
         if not msgs:
             return
+        self._messages = list(msgs)  # 同步消息缓存
         for msg in msgs:
             role = msg.get("role", "")
             content = msg.get("content", "")
