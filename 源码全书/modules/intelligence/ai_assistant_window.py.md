@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_assistant_window.py`
 
-> 路径：`modules/intelligence/ai_assistant_window.py` | 行数：300
+> 路径：`modules/intelligence/ai_assistant_window.py` | 行数：302
 
 
 ---
@@ -131,7 +131,9 @@ class AIAssistantWindow(QMainWindow):
     # ═══════ 行星点击路由 ═══════
     def _on_planet_clicked(self, planet_id):
         if planet_id == "opcclaw_chat":
+            from modules.intelligence.session_context import session_ctx
             dlg = OPCclawChatDialog(self, opcclaw_engine=self._opcclaw)
+            dlg._session_id = session_ctx.current_session_id
             dlg.show()
         elif planet_id == "super_intelligence":
             if SUPER_INTELLIGENCE_AVAILABLE:

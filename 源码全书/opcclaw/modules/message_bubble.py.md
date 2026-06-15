@@ -1,6 +1,6 @@
 # `opcclaw/modules/message_bubble.py`
 
-> 路径：`opcclaw/modules/message_bubble.py` | 行数：139
+> 路径：`opcclaw/modules/message_bubble.py` | 行数：156
 
 
 ---
@@ -14,9 +14,10 @@
 from datetime import datetime
 from PyQt5.QtWidgets import (
     QFrame, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QSizePolicy
+    QSizePolicy, QTextEdit
 )
 from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QTextOption
 
 from ._shared import COLORS
 
@@ -65,13 +66,21 @@ class MessageBubble(QFrame):
         sender_label.setAlignment(align)
         layout.addWidget(sender_label)
 
-        self.content = QLabel(text)
-        self.content.setWordWrap(True)
-        self.content.setTextFormat(Qt.PlainText)
-        self.content.setTextInteractionFlags(Qt.TextSelectableByMouse)
-        self.content.setStyleSheet("font-size: 18px; color: #1E293B; line-height: 1.6;")
+        self.content = QTextEdit()
+        self.content.setReadOnly(True)
+        self.content.setPlainText(text)
+        self.content.setWordWrapMode(QTextOption.WrapAtWordBoundaryOrAnywhere)
+        self.content.setFrameShape(QFrame.NoFrame)
+        self.content.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.content.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.content.setStyleSheet("font-size: 18px; color: #1E293B; line-height: 1.6; background: transparent; border: none; padding: 0;")
         self.content.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.content.setMinimumWidth(160)
+        self.content.document().setDocumentMargin(0)
+        # 禁止 QTextEdit 接管 Ctrl+Scroll 缩放，但保留文本选择
+        self.content.setContextMenuPolicy(Qt.NoContextMenu)
+        # 自适应高度：内容变化时更新 QTextEdit 的固定高度
+        self.content.document().contentsChanged.connect(self._update_height)
         layout.addWidget(self.content)
 
         # AI 消息添加操作按钮行
@@ -144,6 +153,14 @@ class MessageBubble(QFrame):
         self.share_clicked.emit(self._text)
 
     def set_text(self, text: str):
-        self.content.setText(text)
+        self.content.setPlainText(text)
         self._text = text  # 更新保存的文字
+
+    def _update_height(self):
+        """根据文档内容动态调整 QTextEdit 高度"""
+        doc = self.content.document()
+        doc.setTextWidth(self.content.viewport().width())
+        h = int(doc.size().height())
+        if h != self.content.height():
+            self.content.setFixedHeight(h + 4)  # +4 避免底部裁切
 ```

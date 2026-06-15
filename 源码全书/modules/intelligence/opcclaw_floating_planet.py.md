@@ -1,6 +1,6 @@
 # `modules/intelligence/opcclaw_floating_planet.py`
 
-> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1478
+> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1484
 
 
 ---
@@ -892,8 +892,14 @@ class FloatingPlanet(QWidget):
             self._daemon_cleanup()
 
     def closeEvent(self, event):
-        """拦截窗口关闭（含 Cmd+Q），执行守护进程清理"""
-        self._do_cleanup()
+        """拦截窗口关闭：仅程序化关闭（右键退出）执行清理，忽略系统自发关闭"""
+        if not event.spontaneous():
+            # 程序化关闭（来自右键菜单 self.close()）
+            self._do_cleanup()
+        else:
+            # macOS 窗口服务器自发关闭事件 → 忽略，守护进程继续运行
+            event.ignore()
+            return
         super().closeEvent(event)
 
     def _toggle_auto_move(self):

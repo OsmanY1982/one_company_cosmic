@@ -1,0 +1,123 @@
+2026-06-16 00:20:09 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-16 00:21:23 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6178795520.
+2026-06-16 00:26:23 [ERROR] opcclaw: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 333, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-16 00:28:43 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6159101952.
+2026-06-16 00:33:43 [ERROR] opcclaw: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 333, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-16 00:34:18 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6159101952.
+2026-06-16 00:39:18 [ERROR] opcclaw: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 333, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-16 00:42:58 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-16 00:43:46 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6118682624.
+2026-06-16 05:47:26 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6098415616.
+2026-06-16 05:58:41 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-16 05:59:59 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6154629120.

@@ -1,6 +1,6 @@
 # `opcclaw/modules/sidebar_panel.py`
 
-> 路径：`opcclaw/modules/sidebar_panel.py` | 行数：252
+> 路径：`opcclaw/modules/sidebar_panel.py` | 行数：281
 
 
 ---
@@ -11,7 +11,7 @@
 OPCclaw - 侧栏导航（含对话列表）
 """
 
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel, QListWidget, QListWidgetItem, QHBoxLayout
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel, QListWidget, QListWidgetItem, QHBoxLayout, QWidget
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 
@@ -25,6 +25,7 @@ class Sidebar(QFrame):
     session_selected = pyqtSignal(str)   # session_id
     new_chat_requested = pyqtSignal()
     session_delete_requested = pyqtSignal(str)  # session_id
+    session_copy_requested = pyqtSignal(str)    # session_id
 
     NAV_ITEMS = [
         ("💬 对话", 0),
@@ -82,6 +83,11 @@ class Sidebar(QFrame):
             layout.addWidget(btn)
 
         # ── 对话列表区域 ──
+        # ── 调试横幅 ──
+        self._debug_banner = QLabel(" SIDEBAR v2 LOADED [0 sessions]")
+        self._debug_banner.setStyleSheet("color: #FF4444; background: #330000; font-size: 10px; padding: 3px 8px;")
+        layout.addWidget(self._debug_banner)
+
         # 标题栏
         session_header = QHBoxLayout()
         session_label = QLabel("  对话列表")
@@ -163,10 +169,12 @@ class Sidebar(QFrame):
 
     def set_sessions(self, sessions: list, current_id: str):
         """从外部推送会话列表，sessions 为 [{'id': str, 'updated_at': str, ...}]"""
+        print(f"[SIDEBAR] set_sessions: {len(sessions)} sessions, current={current_id}")
         self._session_list.blockSignals(True)
         self._session_list.clear()
         self._session_items.clear()
         self._current_session_id = current_id
+        self._debug_banner.setText(f" SIDEBAR v2 [{len(sessions)} sessions]" if sessions else " SIDEBAR v2 [EMPTY!]")
 
         for s in sessions:
             sid = s.get("id", "")
@@ -191,7 +199,7 @@ class Sidebar(QFrame):
         self._session_list.blockSignals(False)
 
     def _make_session_item_widget(self, label: str, sid: str) -> QWidget:
-        """构建单条会话列表项：标签 + 删除按钮"""
+        """构建单条会话列表项：标签 + 复制 + 删除"""
         widget = QWidget()
         layout = QHBoxLayout(widget)
         layout.setContentsMargins(4, 2, 4, 2)
@@ -200,6 +208,27 @@ class Sidebar(QFrame):
         lbl = QLabel(label)
         lbl.setStyleSheet(f"color: {COLORS['text_light']}; font-size: 11px; background: transparent; border: none;")
         layout.addWidget(lbl, 1)
+
+        copy_btn = QPushButton("⧉")
+        copy_btn.setFixedSize(20, 18)
+        copy_btn.setCursor(Qt.PointingHandCursor)
+        copy_btn.setToolTip(f"复制会话 {sid}")
+        copy_btn.setStyleSheet(f"""
+            QPushButton {{
+                color: {COLORS['text_light']};
+                background: transparent;
+                border: none;
+                font-size: 12px;
+                padding: 0;
+            }}
+            QPushButton:hover {{
+                color: {COLORS['success']};
+                background: rgba(39,174,96,0.15);
+                border-radius: 3px;
+            }}
+        """)
+        copy_btn.clicked.connect(lambda checked, s=sid: self.session_copy_requested.emit(s))
+        layout.addWidget(copy_btn)
 
         del_btn = QPushButton("✕")
         del_btn.setFixedSize(20, 18)

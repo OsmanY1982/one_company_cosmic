@@ -342,6 +342,22 @@ class ChatWindow(QWidget):
         new_session_btn.clicked.connect(self._on_new_session)
         header_layout.addWidget(new_session_btn)
 
+        export_btn = QPushButton("导出记录")
+        export_btn.setFixedSize(90, 32)
+        export_btn.setStyleSheet(f"""
+            QPushButton {{
+                color: #FFFFFF;
+                background: rgba(160, 120, 220, 0.6);
+                border: 1px solid rgba(160, 120, 220, 0.8);
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: bold;
+            }}
+            QPushButton:hover {{ background: rgba(160, 120, 220, 0.85); }}
+        """)
+        export_btn.clicked.connect(self._export_current_session)
+        header_layout.addWidget(export_btn)
+
         self.model_label = QLabel("无活跃模型")
         self.model_label.setStyleSheet(f"color: {COLORS['text_light']}; font-size: 12px;")
         header_layout.addWidget(self.model_label)
@@ -381,6 +397,7 @@ class ChatWindow(QWidget):
         self.sidebar.session_selected.connect(self._on_session_selected)
         self.sidebar.new_chat_requested.connect(self._on_new_session)
         self.sidebar.session_delete_requested.connect(self._on_session_delete)
+        self.sidebar.session_copy_requested.connect(self._on_session_copy)
         body_layout.addWidget(self.sidebar)
 
         self.stack = QStackedWidget()
@@ -1426,6 +1443,7 @@ class ChatWindow(QWidget):
     def _refresh_sessions(self):
         """刷新会话列表（下拉框+侧边栏）"""
         sessions = self.memory_store.list_sessions()
+        print(f"[CHAT_CORE] _refresh_sessions: {len(sessions)} sessions, current={self._session_id}")
         # 侧边栏列表
         self.sidebar.set_sessions(sessions, self._session_id)
         # 下拉框
@@ -1497,6 +1515,43 @@ class ChatWindow(QWidget):
                 self._on_new_session()
         else:
             self._refresh_sessions()
+
+    def _on_session_copy(self, session_id: str):
+        """复制会话：读源会话消息 → 写入新 ID → 刷新列表"""
+        messages = self.memory_store.load_session(session_id)
+        new_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self.memory_store.save_session(messages, new_id)
+        self._refresh_sessions()
+
+    def _export_current_session(self):
+        """导出当前会话为 Markdown 文件到桌面"""
+        import os as _os
+        desktop = _os.path.join(_os.path.expanduser("~"), "Desktop")
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"OPCclaw_对话记录_{ts}.md"
+        filepath = _os.path.join(desktop, filename)
+
+        messages = self.memory_store.load_session(self._session_id)
+        lines = [f"# OPCclaw 对话记录\n", f"会话 ID: {self._session_id}\n",
+                 f"导出时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n",
+                 f"消息数: {len(messages)}\n", "---\n"]
+        for m in messages:
+            role = m.get("role", "unknown")
+            content = m.get("content", "")
+            if role == "system":
+                continue
+            if role == "user":
+                lines.append(f"## 用户\n\n{content}\n\n")
+            elif role == "assistant":
+                lines.append(f"## AI\n\n{content}\n\n")
+            elif role == "tool":
+                lines.append(f"## 工具\n\n```\n{content[:500]}\n```\n\n")
+
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.writelines(lines)
+
+        QMessageBox.information(self, "导出成功",
+            f"已导出到:\n{filepath}")
 
     def _switch_to_session(self, new_id: str):
         """切换会话核心逻辑"""

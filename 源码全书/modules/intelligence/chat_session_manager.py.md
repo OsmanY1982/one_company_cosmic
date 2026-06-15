@@ -1,6 +1,6 @@
 # `modules/intelligence/chat_session_manager.py`
 
-> 路径：`modules/intelligence/chat_session_manager.py` | 行数：285
+> 路径：`modules/intelligence/chat_session_manager.py` | 行数：346
 
 
 ---
@@ -28,6 +28,7 @@ class ChatSessionManager(QWidget):
     session_selected = pyqtSignal(str, str)     # session_id, title
     session_deleted = pyqtSignal(str)            # session_id（通知外部）
     new_chat_requested = pyqtSignal()            # 请求新建会话
+    session_copy_requested = pyqtSignal(str)     # session_id（请求复制会话）
 
     def __init__(self, agent_bridge, parent=None):
         super().__init__(parent)
@@ -165,6 +166,7 @@ class ChatSessionManager(QWidget):
             ]
 
         for s in filtered:
+            sid = s.get("session_id", "")
             title = s.get("title", "未命名对话")[:30]
             msg_count = s.get("message_count", 0)
             updated = s.get("updated_at", "")
@@ -177,11 +179,66 @@ class ChatSessionManager(QWidget):
             except Exception:
                 time_str = ""
 
-            display_text = f"{title}\n{msg_count}条消息 · {time_str}"
-            item = QListWidgetItem(display_text)
-            item.setData(Qt.UserRole, s.get("session_id", ""))
-            item.setSizeHint(item.sizeHint().grownBy(0, 8))
+            # 自定义行控件: 标题 + 信息 + 操作按钮
+            row = QWidget()
+            row.setStyleSheet("background: transparent;")
+            row_layout = QHBoxLayout(row)
+            row_layout.setContentsMargins(8, 4, 4, 4)
+            row_layout.setSpacing(4)
+
+            # 左侧文本区域
+            text_widget = QWidget()
+            text_layout = QVBoxLayout(text_widget)
+            text_layout.setContentsMargins(0, 0, 0, 0)
+            text_layout.setSpacing(1)
+
+            title_lbl = QLabel(title)
+            title_lbl.setStyleSheet("color: #ccccdd; font-size: 12px; font-weight: bold; background: transparent;")
+            title_lbl.setCursor(Qt.PointingHandCursor)
+            title_lbl.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
+            text_layout.addWidget(title_lbl)
+
+            info_lbl = QLabel(f"{msg_count}条消息 · {time_str}")
+            info_lbl.setStyleSheet("color: #666688; font-size: 10px; background: transparent;")
+            text_layout.addWidget(info_lbl)
+
+            row_layout.addWidget(text_widget, 1)
+
+            # ⧉ 复制按钮
+            copy_btn = QPushButton("⧉")
+            copy_btn.setFixedSize(20, 18)
+            copy_btn.setCursor(Qt.PointingHandCursor)
+            copy_btn.setToolTip(f"复制会话 {sid}")
+            copy_btn.setStyleSheet("""
+                QPushButton {
+                    background: transparent; color: #666688; border: none;
+                    border-radius: 2px; font-size: 11px;
+                }
+                QPushButton:hover { background: rgba(100,180,255,30); color: #88aaff; }
+            """)
+            copy_btn.clicked.connect(lambda checked, ses=sid: self.session_copy_requested.emit(ses))
+            row_layout.addWidget(copy_btn)
+
+            # ✕ 删除按钮
+            del_btn = QPushButton("✕")
+            del_btn.setFixedSize(18, 18)
+            del_btn.setCursor(Qt.PointingHandCursor)
+            del_btn.setToolTip(f"删除会话 {sid}")
+            del_btn.setStyleSheet("""
+                QPushButton {
+                    background: transparent; color: #664444; border: none;
+                    border-radius: 2px; font-size: 11px;
+                }
+                QPushButton:hover { background: rgba(255,100,100,30); color: #ff6666; }
+            """)
+            del_btn.clicked.connect(lambda checked, ses=sid: self._delete_session(ses))
+            row_layout.addWidget(del_btn)
+
+            item = QListWidgetItem()
+            item.setData(Qt.UserRole, sid)
+            item.setSizeHint(row.sizeHint())
             self._list_widget.addItem(item)
+            self._list_widget.setItemWidget(item, row)
 
         self._count_label.setText(f"共 {len(filtered)} 个会话")
 
@@ -199,6 +256,25 @@ class ChatSessionManager(QWidget):
 
     def _on_new_chat(self):
         self.new_chat_requested.emit()
+
+    def _select_session(self, session_id: str, title: str):
+        """选中会话（从自定义 item widget 触发）"""
+        self.session_selected.emit(session_id, title)
+
+    def _delete_session(self, session_id: str):
+        """删除会话（从删除按钮触发）"""
+        reply = QMessageBox.question(
+            self, "确认删除",
+            "确定要删除这个会话吗？\n删除后不可恢复。",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No,
+        )
+        if reply == QMessageBox.Yes:
+            try:
+                self._agent._memory.delete_session(session_id)
+            except Exception as e:
+                print(f"[ChatSessionManager] 删除会话失败: {e}")
+            self._load_sessions()
+            self.session_deleted.emit(session_id)
 
     def _show_context_menu(self, pos):
         item = self._list_widget.itemAt(pos)
@@ -221,27 +297,12 @@ class ChatSessionManager(QWidget):
             }
         """)
 
-        delete_action = menu.addAction("删除会话")
         export_action = menu.addAction("导出会话")
 
         action = menu.exec_(self._list_widget.mapToGlobal(pos))
         session_id = item.data(Qt.UserRole)
 
-        if action == delete_action:
-            reply = QMessageBox.question(
-                self, "确认删除",
-                "确定要删除这个会话吗？\n删除后不可恢复。",
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.No,
-            )
-            if reply == QMessageBox.Yes:
-                try:
-                    self._agent._memory.delete_session(session_id)
-                except Exception as e:
-                    print(f"[ChatSessionManager] 删除会话失败: {e}")
-                self._load_sessions()
-                self.session_deleted.emit(session_id)
-
-        elif action == export_action:
+        if action == export_action:
             try:
                 default_name = f"chat_{session_id}"
                 path, selected_filter = QFileDialog.getSaveFileName(
