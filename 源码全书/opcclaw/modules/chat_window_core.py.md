@@ -1,6 +1,6 @@
 # `opcclaw/modules/chat_window_core.py`
 
-> 路径：`opcclaw/modules/chat_window_core.py` | 行数：1600
+> 路径：`opcclaw/modules/chat_window_core.py` | 行数：1613
 
 
 ---
@@ -387,6 +387,8 @@ class ChatWindow(QWidget):
 
         self.sidebar = Sidebar()
         self.sidebar.nav_changed.connect(self._on_nav_changed)
+        self.sidebar.session_selected.connect(self._on_session_selected)
+        self.sidebar.new_chat_requested.connect(self._on_new_session)
         body_layout.addWidget(self.sidebar)
 
         self.stack = QStackedWidget()
@@ -1430,22 +1432,23 @@ class ChatWindow(QWidget):
             pass
 
     def _refresh_sessions(self):
-        """刷新会话下拉列表"""
-        if not self._session_combo:
-            return
-        self._session_combo.blockSignals(True)
-        self._session_combo.clear()
+        """刷新会话列表（下拉框+侧边栏）"""
         sessions = self.memory_store.list_sessions()
-        for s in sessions:
-            label = s["id"]
-            # 用更新时间做友好显示
-            updated = s.get("updated_at", "")[:16].replace("T", " ")
-            if updated:
-                label = f"{updated} | {s['id']}"
-            self._session_combo.addItem(label, s["id"])
-            if s["id"] == self._session_id:
-                self._session_combo.setCurrentIndex(self._session_combo.count() - 1)
-        self._session_combo.blockSignals(False)
+        # 侧边栏列表
+        self.sidebar.set_sessions(sessions, self._session_id)
+        # 下拉框
+        if self._session_combo:
+            self._session_combo.blockSignals(True)
+            self._session_combo.clear()
+            for s in sessions:
+                label = s["id"]
+                updated = s.get("updated_at", "")[:16].replace("T", " ")
+                if updated:
+                    label = f"{updated} | {s['id']}"
+                self._session_combo.addItem(label, s["id"])
+                if s["id"] == self._session_id:
+                    self._session_combo.setCurrentIndex(self._session_combo.count() - 1)
+            self._session_combo.blockSignals(False)
 
     def _on_new_session(self):
         """创建新会话"""
@@ -1465,12 +1468,22 @@ class ChatWindow(QWidget):
         self._refresh_sessions()
 
     def _on_session_switch(self, idx: int):
-        """切换到选中的会话"""
+        """切换到选中的会话（QComboBox 回调）"""
         if not self._session_combo or idx < 0:
             return
         new_id = self._session_combo.itemData(idx)
         if not new_id or new_id == self._session_id:
             return
+        self._switch_to_session(new_id)
+
+    def _on_session_selected(self, session_id: str):
+        """侧边栏选中会话回调"""
+        if not session_id or session_id == self._session_id:
+            return
+        self._switch_to_session(session_id)
+
+    def _switch_to_session(self, new_id: str):
+        """切换会话核心逻辑"""
         # 保存当前会话
         if self.engine:
             self.memory_store.save_session(self.engine.get_history(), self._session_id)

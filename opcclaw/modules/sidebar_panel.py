@@ -1,8 +1,8 @@
 """
-OPCclaw - 侧栏导航
+OPCclaw - 侧栏导航（含对话列表）
 """
 
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel, QListWidget, QListWidgetItem, QHBoxLayout
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 
@@ -10,9 +10,11 @@ from ._shared import COLORS
 
 
 class Sidebar(QFrame):
-    """左侧导航栏"""
+    """左侧导航栏 + 对话列表"""
 
     nav_changed = pyqtSignal(int)
+    session_selected = pyqtSignal(str)   # session_id
+    new_chat_requested = pyqtSignal()
 
     NAV_ITEMS = [
         ("💬 对话", 0),
@@ -25,11 +27,13 @@ class Sidebar(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setFixedWidth(160)
+        self.setFixedWidth(200)
         self.setStyleSheet(f"""
             QFrame {{ background: {COLORS['sidebar']}; border: none; }}
         """)
         self._buttons: list[QPushButton] = []
+        self._session_items: dict = {}  # session_id → QListWidgetItem
+        self._current_session_id = None
         self._build()
 
     def _build(self):
@@ -67,6 +71,63 @@ class Sidebar(QFrame):
             self._buttons.append(btn)
             layout.addWidget(btn)
 
+        # ── 对话列表区域 ──
+        # 标题栏
+        session_header = QHBoxLayout()
+        session_label = QLabel("  对话列表")
+        session_label.setFont(QFont("PingFang SC", 10, QFont.Bold))
+        session_label.setStyleSheet(f"color: {COLORS['text_light']}; background: transparent; padding: 8px 0;")
+        session_header.addWidget(session_label)
+
+        self._new_chat_btn = QPushButton("+")
+        self._new_chat_btn.setToolTip("新建对话")
+        self._new_chat_btn.setFixedSize(24, 20)
+        self._new_chat_btn.setCursor(Qt.PointingHandCursor)
+        self._new_chat_btn.setStyleSheet(f"""
+            QPushButton {{
+                color: {COLORS['success']};
+                background: rgba(39,174,96,0.15);
+                border: 1px solid {COLORS['success']};
+                border-radius: 3px;
+                font-weight: bold;
+                font-size: 14px;
+            }}
+            QPushButton:hover {{
+                background: {COLORS['success']};
+                color: white;
+            }}
+        """)
+        self._new_chat_btn.clicked.connect(self.new_chat_requested.emit)
+        session_header.addWidget(self._new_chat_btn)
+        session_header.setContentsMargins(8, 0, 8, 0)
+        layout.addLayout(session_header)
+
+        # 对话 QListWidget
+        self._session_list = QListWidget()
+        self._session_list.setStyleSheet(f"""
+            QListWidget {{
+                background: transparent;
+                border: none;
+                color: {COLORS['text_light']};
+                outline: none;
+            }}
+            QListWidget::item {{
+                padding: 6px 12px;
+                border: none;
+                font-size: 11px;
+            }}
+            QListWidget::item:hover {{
+                background: {COLORS['sidebar_hover']};
+                color: white;
+            }}
+            QListWidget::item:selected {{
+                background: {COLORS['sidebar_active']};
+                color: white;
+            }}
+        """)
+        self._session_list.itemClicked.connect(self._on_session_clicked)
+        layout.addWidget(self._session_list)
+
         layout.addStretch()
 
         # 工具数量显示
@@ -87,6 +148,34 @@ class Sidebar(QFrame):
         layout.addWidget(version)
 
         self._set_active(0)
+
+    # ── 对话列表管理 ──
+
+    def set_sessions(self, sessions: list, current_id: str):
+        """从外部推送会话列表，sessions 为 [{'id': str, 'updated_at': str, ...}]"""
+        self._session_list.blockSignals(True)
+        self._session_list.clear()
+        self._session_items.clear()
+        self._current_session_id = current_id
+
+        for s in sessions:
+            sid = s.get("id", "")
+            updated = s.get("updated_at", "")[:16].replace("T", " ")
+            label = updated if updated else sid
+            item = QListWidgetItem(label)
+            item.setData(Qt.UserRole, sid)
+            item.setToolTip(sid)
+            self._session_list.addItem(item)
+            self._session_items[sid] = item
+            if sid == current_id:
+                self._session_list.setCurrentItem(item)
+
+        self._session_list.blockSignals(False)
+
+    def _on_session_clicked(self, item):
+        sid = item.data(Qt.UserRole)
+        if sid and sid != self._current_session_id:
+            self.session_selected.emit(sid)
 
     def _on_nav(self, idx: int):
         self._set_active(idx)
