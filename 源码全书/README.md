@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-15 14:10
-> 共 602 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-15 15:58
+> 共 606 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -269,8 +269,12 @@
 │   │   │   ├── cost_tracker.py
 │   │   │   ├── schema.py
 │   │   │   ├── test_obs.py
+│   │   │   ├── test_obs_20260615_143009_780.py
 │   │   │   ├── token_observer.py
 │   │   │   └── trace_manager.py
+│   │   ├── semantic_search/
+│   │   │   ├── __init__.py
+│   │   │   └── hybrid_retriever.py
 │   │   ├── __init__.py
 │   │   ├── agent_delegate.py
 │   │   ├── agent_loop.py
@@ -975,6 +979,8 @@
 │   ├── start_opcclaw.py
 │   ├── utils.py
 │   ├── verify_sync.py
+├── tests/
+│   └── test_semantic_search.py
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
@@ -1242,6 +1248,7 @@
 - [`opcclaw/core/observability/cost_tracker.py`](./opcclaw/core/observability/cost_tracker.py.md)
 - [`opcclaw/core/observability/schema.py`](./opcclaw/core/observability/schema.py.md)
 - [`opcclaw/core/observability/test_obs.py`](./opcclaw/core/observability/test_obs.py.md)
+- [`opcclaw/core/observability/test_obs_20260615_143009_780.py`](./opcclaw/core/observability/test_obs_20260615_143009_780.py.md)
 - [`opcclaw/core/observability/token_observer.py`](./opcclaw/core/observability/token_observer.py.md)
 - [`opcclaw/core/observability/trace_manager.py`](./opcclaw/core/observability/trace_manager.py.md)
 - [`opcclaw/core/opcclaw_logging.py`](./opcclaw/core/opcclaw_logging.py.md)
@@ -1251,6 +1258,8 @@
 - [`opcclaw/core/provider_registry.py`](./opcclaw/core/provider_registry.py.md)
 - [`opcclaw/core/rag_context.py`](./opcclaw/core/rag_context.py.md)
 - [`opcclaw/core/secure_storage.py`](./opcclaw/core/secure_storage.py.md)
+- [`opcclaw/core/semantic_search/__init__.py`](./opcclaw/core/semantic_search/__init__.py.md)
+- [`opcclaw/core/semantic_search/hybrid_retriever.py`](./opcclaw/core/semantic_search/hybrid_retriever.py.md)
 - [`opcclaw/core/semantic_search.py`](./opcclaw/core/semantic_search.py.md)
 - [`opcclaw/core/session_search.py`](./opcclaw/core/session_search.py.md)
 - [`opcclaw/core/skill_loader.py`](./opcclaw/core/skill_loader.py.md)
@@ -1589,3 +1598,4 @@
 - [`rollback_control.py`](./rollback_control.py.md)
 - [`siri_command_handler.py`](./siri_command_handler.py.md)
 - [`temp_test_stream.py`](./temp_test_stream.py.md)
+- [`tests/test_semantic_search.py`](./tests/test_semantic_search.py.md)

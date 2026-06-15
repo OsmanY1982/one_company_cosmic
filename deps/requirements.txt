@@ -22,6 +22,10 @@ huggingface-hub>=0.23    # HuggingFace 模型下载
 tokenizers>=0.19         # 分词器
 protobuf>=4.25           # 序列化
 
+# ── 语义搜索（可选，不安装自动降级 BM25）──
+sentence-transformers>=2.2.0  # Embedding 模型（all-MiniLM-L6-v2）
+faiss-cpu>=1.7.0              # 向量相似度搜索
+
 # ── 图像与视觉（可选，按需加载）──
 pillow>=10.0             # 图像处理
 pyzbar>=0.1              # 条码/二维码识别

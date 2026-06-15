@@ -1,6 +1,6 @@
 # `opcclaw/core/chat_engine.py`
 
-> 路径：`opcclaw/core/chat_engine.py` | 行数：418
+> 路径：`opcclaw/core/chat_engine.py` | 行数：440
 
 
 ---
@@ -159,12 +159,24 @@ class ChatEngine(QObject):
         return injected
 
     def inject_workspace_context(self, user_message: str) -> bool:
-        """自动注入工作区代码上下文 + 项目规则（Phase 2 RAG + OPCCLAW.md）"""
+        """自动注入工作区代码上下文 + 项目规则（HybridRetriever: BM25初筛 + Embedding精排）"""
         injector = RAGContextInjector()
         if not injector.enabled or not injector.has_project:
             return False
         try:
-            context = injector.indexer.get_context(user_message, max_chars=4000, top_k=5)
+            # ── 可观测性：语义搜索步骤追踪 ──
+            ss_step = -1
+            t0 = 0.0
+            if self.obs:
+                ss_step = self.obs.semantic_search_begin(query=user_message)
+                t0 = __import__('time').time()
+
+            context = injector.get_context(user_message, max_chars=4000, top_k=5, use_semantic=True)
+            result_count = len(context.split('\n---\n')) if context else 0
+
+            if self.obs and ss_step >= 0:
+                elapsed = (__import__('time').time() - t0) * 1000
+                self.obs.semantic_search_end(ss_step, result_count=result_count, elapsed_ms=elapsed)
 
             # 注入项目规则（OPCCLAW.md — 对标 CLAUDE.md）
             rules = injector.get_project_rules()
@@ -415,10 +427,20 @@ class ChatEngine(QObject):
 
     def reset(self) -> None:
         if self.auto_save and self.memory_store:
+            # 会话结束前持久化语义搜索索引
+            self._persist_semantic_index()
             self.memory_store.on_session_end(self.session_id)
             self.memory_store.save_session([], self.session_id)
         self.messages = []
         self.initialize_session()
+
+    def _persist_semantic_index(self) -> None:
+        """会话结束前，将 FAISS 语义索引持久化到 SmartMemoryStore"""
+        try:
+            injector = RAGContextInjector()
+            injector.save_index_to_memory(self.memory_store, index_name="default")
+        except Exception:
+            pass
 
     def get_history(self) -> list[dict]:
         return list(self.messages)

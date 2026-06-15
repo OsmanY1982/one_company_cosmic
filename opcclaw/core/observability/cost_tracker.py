@@ -18,7 +18,7 @@ class CostTracker:
 
     def __init__(self, store_callback: Callable = None):
         self._store_callback = store_callback
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
 
         # 运行时聚合数据
         self._session_costs: Dict[str, float] = {}    # session_id → cost

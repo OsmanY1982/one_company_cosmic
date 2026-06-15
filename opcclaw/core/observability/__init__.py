@@ -21,6 +21,11 @@ from .token_observer import TokenObserver
 from .trace_manager import TraceManager
 from .cost_tracker import CostTracker
 
+try:
+    from ..rag_context import _HAVE_SEMANTIC_SEARCH
+except ImportError:
+    _HAVE_SEMANTIC_SEARCH = False
+
 logger = logging.getLogger(__name__)
 
 
@@ -102,6 +107,26 @@ class ObservableBridge:
             return
         self.trace_manager.step_end(step_index, error, metadata)
 
+    # ── 语义搜索步骤追踪 ──
+
+    def semantic_search_begin(self, query: str = "") -> int:
+        """标记语义搜索开始"""
+        if not self._enabled:
+            return -1
+        return self.trace_manager.step_begin("semantic_search", {
+            "query": query[:200],
+            "search_mode": "hybrid" if _HAVE_SEMANTIC_SEARCH else "bm25_only",
+        })
+
+    def semantic_search_end(self, step_index: int, result_count: int = 0, elapsed_ms: float = 0, error: str = ""):
+        """标记语义搜索结束"""
+        if not self._enabled or step_index < 0:
+            return
+        self.trace_manager.step_end(step_index, error, {
+            "result_count": result_count,
+            "elapsed_ms": round(elapsed_ms, 2),
+        })
+
     def trace_end(self):
         """结束当前调用链并持久化"""
         if not self._enabled:
@@ -114,20 +139,21 @@ class ObservableBridge:
     # ── 持久化回调（写入 OPCclawMemory，agent_id='observability'）──
 
     def _persist_token_record(self, record):
+        # 成本追踪（不依赖 core_memory，始终生效）
+        self.cost_tracker.record(
+            model=record.model,
+            provider=record.provider,
+            tokens_in=record.tokens_in,
+            tokens_out=record.tokens_out,
+            session_id=record.session_id,
+        )
+        # 持久化（需 core_memory）
         if not self._core_memory:
             return
         try:
             self._core_memory.add(
                 category="observability/token",
                 content=json.dumps(record.__dict__, ensure_ascii=False),
-            )
-            # 同步成本
-            self.cost_tracker.record(
-                model=record.model,
-                provider=record.provider,
-                tokens_in=record.tokens_in,
-                tokens_out=record.tokens_out,
-                session_id=record.session_id,
             )
         except Exception as e:
             logger.debug("Persist token record failed: %s", e)

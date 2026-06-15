@@ -1,6 +1,6 @@
 # `opcclaw/core/smart_memory_adapter.py`
 
-> 路径：`opcclaw/core/smart_memory_adapter.py` | 行数：396
+> 路径：`opcclaw/core/smart_memory_adapter.py` | 行数：456
 
 
 ---
@@ -13,6 +13,7 @@ Smart Memory Adapter
 保持向后兼容的同时提供增强功能
 """
 
+import json
 import logging
 import os
 from typing import Optional, Dict, List, Any
@@ -383,6 +384,65 @@ class SmartMemoryStore:
     def close(self) -> None:
         """关闭智能记忆（无实际操作）"""
         pass
+
+    # ================================================================
+    # 语义搜索索引持久化
+    # ================================================================
+
+    def get_semantic_index(self, index_name: str = "default") -> Optional[bytes]:
+        """
+        从持久化存储中加载语义搜索索引二进制数据。
+
+        Args:
+            index_name: 索引名称（默认 "default"）
+
+        Returns:
+            索引的二进制数据（FAISS .index 格式），若不存在则返回 None
+        """
+        if not self._core_memory:
+            return None
+        try:
+            import base64
+            results = self._core_memory.search(
+                category="semantic_search/index",
+                keyword=index_name,
+                limit=1,
+            )
+            if results:
+                # results 可能是 list[dict] 或 list[str]，按内容取
+                raw = results[0].get("content") if isinstance(results[0], dict) else str(results[0])
+                if raw:
+                    return base64.b64decode(raw)
+        except Exception as e:
+            logger.debug("Failed to load semantic index '%s': %s", index_name, e)
+        return None
+
+    def set_semantic_index(self, index_data: bytes, index_name: str = "default") -> bool:
+        """
+        将语义搜索索引持久化到存储。
+
+        Args:
+            index_data: FAISS 索引的二进制数据
+            index_name: 索引名称（默认 "default"）
+
+        Returns:
+            是否成功
+        """
+        if not self._core_memory:
+            return False
+        try:
+            import base64
+            encoded = base64.b64encode(index_data).decode("ascii")
+            self._core_memory.add(
+                category="semantic_search/index",
+                content=encoded,
+                metadata=json.dumps({"name": index_name}),
+            )
+            logger.debug("Semantic index '%s' saved (%d bytes)", index_name, len(index_data))
+            return True
+        except Exception as e:
+            logger.debug("Failed to save semantic index '%s': %s", index_name, e)
+            return False
 
     # ================================================================
     # 生命周期

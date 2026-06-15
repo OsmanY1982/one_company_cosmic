@@ -84,10 +84,10 @@ try:
 except ImportError:
     _HAVE_SESSION_SEARCH = False
 try:
-    from opcclaw.core.semantic_search import SemanticReranker
-    _HAVE_SEMANTIC = True
+    from opcclaw.core.semantic_search import SemanticSearcher, HybridRetriever
+    _HAVE_SEMANTIC_SEARCH = True
 except ImportError:
-    _HAVE_SEMANTIC = False
+    _HAVE_SEMANTIC_SEARCH = False
 try:
     from opcclaw.core.super_intelligence import SuperIntelligence
     _HAVE_SUPER_INTEL = True

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 无畏舰形态 — 悬浮球变形
-矩形厚重装甲 + 多层甲板 + 大量炮塔阵列 + 巨大引擎
+真实感设计：多重楔形装甲船体 + 密集装甲板线 + 散热格栅 + 主炮阵列 + 副炮炮塔 + 八引擎矩阵
 适配悬浮球 ~40px 半径绘制区
 """
 import math
@@ -20,10 +20,12 @@ def paint(p: QPainter, center: QPointF, radius: float, anim_t: float,
     p.setRenderHint(QPainter.HighQualityAntialiasing)
 
     size = radius * 0.95
-    w, h = size * 3.0, size * 1.8
+    w, h = size * 3.0, size * 2.0
     left = center.x() - w / 2
     top = center.y() - h / 2
+    cx = left + w / 2
 
+    # === 外层宇宙光晕 ===
     for glow_layer in range(4):
         glow_scale = 1.06 + glow_layer * 0.22
         glow_r = radius * glow_scale
@@ -34,266 +36,547 @@ def paint(p: QPainter, center: QPointF, radius: float, anim_t: float,
         glow.setColorAt(0.55, QColor(120, 140, 255, ga))
         glow.setColorAt(0.80, QColor(60, 80, 200, ga // 2))
         glow.setColorAt(1.0, QColor(0, 0, 0, 0))
-        p.setBrush(glow); p.setPen(Qt.NoPen)
+        p.setBrush(glow)
+        p.setPen(Qt.NoPen)
         p.drawEllipse(center, glow_r, glow_r)
 
-    _paint_hull(p, left, top, w, h, size, center, anim_t, alpha)
-    _paint_decks(p, left, top, w, h, size, center, anim_t, alpha)
-    _paint_turrets(p, left, top, w, h, size, center, anim_t, alpha)
-    _paint_bridge(p, left, top, w, h, size, center, anim_t, alpha)
-    _paint_engines(p, left, top, w, h, size, center, anim_t, alpha)
+    _paint_main_hull(p, cx, left, top, w, h, size, alpha)
+    _paint_upper_deck(p, cx, left, top, w, h, size, alpha)
+    _paint_superstructure(p, cx, left, top, w, h, size, alpha)
+    _paint_bridge_complex(p, cx, left, top, w, h, size, alpha)
+    _paint_armor_panels(p, cx, left, top, w, h, size, alpha)
+    _paint_heat_sinks(p, cx, left, top, w, h, size, alpha)
+    _paint_rivets(p, cx, left, top, w, h, size, alpha)
+    _paint_sensors(p, cx, left, top, w, h, size, anim_t, alpha)
+    _paint_antennas(p, cx, left, top, w, h, size, alpha)
+    _paint_portholes(p, cx, left, top, w, h, size, anim_t, alpha)
+    _paint_engine_nacelles(p, cx, left, top, w, h, size, anim_t, alpha)
+    _paint_engine_flames(p, cx, left, top, w, h, size, anim_t, alpha)
+    _paint_weapons(p, cx, left, top, w, h, size, anim_t, alpha)
+    _paint_lighting(p, cx, left, top, w, h, size, alpha)
     _paint_nav_lights(p, center, size, anim_t, alpha)
 
     if hovered:
         _paint_hover_glow(p, center, size, anim_t, alpha)
 
 
-def _paint_hull(p, left, top, w, h, size, center, anim_t, alpha):
-    """矩形厚重装甲船体"""
-    cx = left + w / 2
-    hull_left = left + w * 0.06
-    hull_right = left + w * 0.94
-    hull_top = top + h * 0.02
-    hull_bot = top + h * 0.88
+def _paint_main_hull(p, cx, left, top, w, h, size, alpha):
+    """主船体 — 重型楔形，三层叠层"""
+    nose_y = top + h * 0.03
+    body_bot_y = top + h * 0.72
+    nose_hw = w * 0.03
+    mid_hw = w * 0.32
+    tail_hw = w * 0.18
+
+    # 底层暗面剪影（最大轮廓）
+    shadow_path = QPainterPath()
+    shadow_path.moveTo(cx, nose_y - h * 0.01)
+    shadow_path.cubicTo(cx + w * 0.04, nose_y + h * 0.02,
+                        cx + mid_hw * 0.9, top + h * 0.30,
+                        cx + mid_hw * 0.7, top + h * 0.50)
+    shadow_path.lineTo(cx + tail_hw * 0.8, body_bot_y + h * 0.03)
+    shadow_path.lineTo(cx - tail_hw * 0.8, body_bot_y + h * 0.03)
+    shadow_path.cubicTo(cx - mid_hw * 0.7, top + h * 0.50,
+                        cx - mid_hw * 0.9, top + h * 0.30,
+                        cx - w * 0.04, nose_y + h * 0.02)
+    shadow_path.closeSubpath()
+    p.setBrush(QColor(0x18, 0x1a, 0x20, int(200 * alpha)))
+    p.setPen(Qt.NoPen)
+    p.drawPath(shadow_path)
+
+    # 中层主体 — 楔形船体
+    hull_path = QPainterPath()
+    hull_path.moveTo(cx, nose_y)
+    hull_path.cubicTo(cx + nose_hw * 2, nose_y + h * 0.03,
+                      cx + mid_hw, top + h * 0.28,
+                      cx + mid_hw * 0.85, top + h * 0.48)
+    hull_path.lineTo(cx + tail_hw, body_bot_y)
+    hull_path.lineTo(cx - tail_hw, body_bot_y)
+    hull_path.cubicTo(cx - mid_hw * 0.85, top + h * 0.48,
+                      cx - mid_hw, top + h * 0.28,
+                      cx - nose_hw * 2, nose_y + h * 0.03)
+    hull_path.closeSubpath()
+
+    hull_grad = QLinearGradient(cx, nose_y, cx, body_bot_y)
+    hull_grad.setColorAt(0.00, QColor(0x3a, 0x3d, 0x42, int(245 * alpha)))
+    hull_grad.setColorAt(0.12, QColor(0x50, 0x53, 0x5a, int(250 * alpha)))
+    hull_grad.setColorAt(0.30, QColor(0x7a, 0x7e, 0x85, int(250 * alpha)))
+    hull_grad.setColorAt(0.50, QColor(0x5a, 0x5d, 0x63, int(248 * alpha)))
+    hull_grad.setColorAt(0.72, QColor(0x3a, 0x3d, 0x42, int(240 * alpha)))
+    hull_grad.setColorAt(1.00, QColor(0x22, 0x24, 0x2a, int(235 * alpha)))
+    p.setBrush(hull_grad)
+    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(180 * alpha)), 1.0))
+    p.drawPath(hull_path)
+
+    # 底部阴影
+    shadow_grad = QLinearGradient(cx, body_bot_y, cx, body_bot_y + h * 0.05)
+    shadow_grad.setColorAt(0.0, QColor(0x10, 0x12, 0x18, int(160 * alpha)))
+    shadow_grad.setColorAt(1.0, QColor(0x10, 0x12, 0x18, 0))
+    p.setBrush(shadow_grad)
+    p.setPen(Qt.NoPen)
+    p.drawRect(QRectF(cx - w * 0.14, body_bot_y, w * 0.28, h * 0.05))
+
+
+def _paint_upper_deck(p, cx, left, top, w, h, size, alpha):
+    """上层装甲甲板"""
+    ud_top = top + h * 0.05
+    ud_bot = top + h * 0.20
+    ud_hw_top = w * 0.06
+    ud_hw_bot = w * 0.24
 
     path = QPainterPath()
-    path.moveTo(left + w * 0.12, hull_top)
-    path.lineTo(left + w * 0.88, hull_top)
-    path.lineTo(left + w * 0.84, hull_bot)
-    path.lineTo(left + w * 0.16, hull_bot)
+    path.moveTo(cx, ud_top)
+    path.cubicTo(cx + ud_hw_top * 0.5, ud_top + h * 0.02,
+                 cx + ud_hw_bot * 0.5, top + h * 0.14,
+                 cx + ud_hw_bot, ud_bot)
+    path.lineTo(cx - ud_hw_bot, ud_bot)
+    path.cubicTo(cx - ud_hw_bot * 0.5, top + h * 0.14,
+                 cx - ud_hw_top * 0.5, ud_top + h * 0.02,
+                 cx, ud_top)
     path.closeSubpath()
 
-    hull_grad = QLinearGradient(cx, hull_top, cx, hull_bot)
-    hull_grad.setColorAt(0.0, QColor(48, 52, 66, int(245 * alpha)))
-    hull_grad.setColorAt(0.2, QColor(38, 42, 56, int(248 * alpha)))
-    hull_grad.setColorAt(0.5, QColor(30, 34, 48, int(245 * alpha)))
-    hull_grad.setColorAt(0.8, QColor(24, 28, 42, int(240 * alpha)))
-    hull_grad.setColorAt(1.0, QColor(18, 22, 34, int(235 * alpha)))
-    p.setBrush(hull_grad)
-    p.setPen(QPen(QColor(85, 95, 120, int(160 * alpha)), 1.2))
+    ud_grad = QLinearGradient(cx, ud_top, cx, ud_bot)
+    ud_grad.setColorAt(0.0, QColor(0x50, 0x53, 0x5a, int(240 * alpha)))
+    ud_grad.setColorAt(0.5, QColor(0x85, 0x89, 0x91, int(235 * alpha)))
+    ud_grad.setColorAt(1.0, QColor(0x42, 0x45, 0x4c, int(230 * alpha)))
+    p.setBrush(ud_grad)
+    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.7))
     p.drawPath(path)
 
-    # 船体装甲板线
+
+def _paint_superstructure(p, cx, left, top, w, h, size, alpha):
+    """上层建筑 — 指挥塔基座"""
+    ss_top = top + h * 0.06
+    ss_bot = top + h * 0.15
+    ss_hw_top = w * 0.03
+    ss_hw_bot = w * 0.09
+
+    path = QPainterPath()
+    path.moveTo(cx, ss_top)
+    path.lineTo(cx + ss_hw_top, ss_top + h * 0.015)
+    path.lineTo(cx + ss_hw_bot, ss_bot)
+    path.lineTo(cx - ss_hw_bot, ss_bot)
+    path.lineTo(cx - ss_hw_top, ss_top + h * 0.015)
+    path.closeSubpath()
+
+    ss_grad = QLinearGradient(cx, ss_top, cx, ss_bot)
+    ss_grad.setColorAt(0.0, QColor(0x5a, 0x5e, 0x65, int(240 * alpha)))
+    ss_grad.setColorAt(0.5, QColor(0x90, 0x94, 0x9c, int(235 * alpha)))
+    ss_grad.setColorAt(1.0, QColor(0x48, 0x4c, 0x53, int(230 * alpha)))
+    p.setBrush(ss_grad)
+    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.6))
+    p.drawPath(path)
+
+
+def _paint_bridge_complex(p, cx, left, top, w, h, size, alpha):
+    """舰桥复合体 — 主舰桥+副塔"""
+    # 主舰桥
+    bb_w = w * 0.10
+    bb_h = h * 0.065
+    bb_x = cx - bb_w / 2
+    bb_y = top + h * 0.16
+    bb_path = QPainterPath()
+    bb_path.addRoundedRect(QRectF(bb_x, bb_y, bb_w, bb_h), 3, 3)
+    bb_grad = QLinearGradient(cx, bb_y, cx, bb_y + bb_h)
+    bb_grad.setColorAt(0.0, QColor(0x68, 0x6c, 0x73, int(240 * alpha)))
+    bb_grad.setColorAt(0.5, QColor(0x98, 0x9c, 0xa4, int(235 * alpha)))
+    bb_grad.setColorAt(1.0, QColor(0x48, 0x4c, 0x53, int(230 * alpha)))
+    p.setBrush(bb_grad)
+    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.6))
+    p.drawPath(bb_path)
+
+    # 舰桥高光
+    hl = QRectF(bb_x + 2, bb_y + 1, bb_w - 4, bb_h * 0.3)
+    hl_grad = QLinearGradient(hl.left(), hl.top(), hl.left(), hl.bottom())
+    hl_grad.setColorAt(0.0, QColor(255, 255, 255, int(55 * alpha)))
+    hl_grad.setColorAt(1.0, QColor(255, 255, 255, 0))
+    p.setBrush(hl_grad)
+    p.setPen(Qt.NoPen)
+    p.drawRect(hl)
+
+    # 副塔（右侧通信阵列）
+    at_w = w * 0.03
+    at_h = h * 0.08
+    at_x = cx + w * 0.12
+    at_y = top + h * 0.10
+    at_path = QPainterPath()
+    at_path.addRoundedRect(QRectF(at_x, at_y, at_w, at_h), 2, 2)
+    at_grad = QLinearGradient(at_x, at_y, at_x + at_w, at_y)
+    at_grad.setColorAt(0.0, QColor(0x55, 0x58, 0x5e, int(230 * alpha)))
+    at_grad.setColorAt(0.6, QColor(0x80, 0x84, 0x8c, int(225 * alpha)))
+    at_grad.setColorAt(1.0, QColor(0x40, 0x43, 0x4a, int(220 * alpha)))
+    p.setBrush(at_grad)
+    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(130 * alpha)), 0.4))
+    p.drawPath(at_path)
+
+
+def _paint_armor_panels(p, cx, left, top, w, h, size, alpha):
+    """装甲板线 — 12 条密集分割线"""
+    pen = QPen(QColor(0x1a, 0x1d, 0x22, int(70 * alpha)), 0.5)
+    p.setPen(pen)
+
+    # 中段横向装甲线（6条）
+    base_y = top + h * 0.26
     for i in range(6):
-        ly = hull_top + h * 0.12 + i * h * 0.12
-        lw = w * 0.36 - i * w * 0.015
-        p.setPen(QPen(QColor(140, 160, 190, int(55 * alpha)), 0.4))
-        p.drawLine(QPointF(cx - lw, ly), QPointF(cx + lw, ly))
+        ly = base_y + i * h * 0.05 * (1 + i * 0.15)
+        frac = (ly - top) / h
+        hw = w * (0.28 - frac * 0.22)
+        p.drawLine(QPointF(cx - hw, ly), QPointF(cx + hw, ly))
 
-    # 侧面厚重装甲带
-    for side in [-1, 1]:
-        belt_x = cx + side * w * 0.34
-        belt_rect = QRectF(belt_x - w * 0.03, hull_top + h * 0.10, w * 0.06, h * 0.65)
-        belt_grad = QLinearGradient(belt_x - w * 0.03, 0, belt_x + w * 0.03, 0)
-        belt_grad.setColorAt(0.0, QColor(60, 65, 80, int(200 * alpha)))
-        belt_grad.setColorAt(0.5, QColor(45, 50, 65, int(210 * alpha)))
-        belt_grad.setColorAt(1.0, QColor(60, 65, 80, int(200 * alpha)))
-        p.setBrush(belt_grad)
+    # V形装甲线（2条）
+    v_center_y = top + h * 0.56
+    for sign in [-1, 1]:
+        vx1 = cx + sign * w * 0.18
+        vx2 = cx + sign * w * 0.05
+        vy1 = v_center_y
+        vy2 = v_center_y + h * 0.08
+        p.drawLine(QPointF(vx1, vy1), QPointF(vx2, vy2))
+
+    # 船首纵向线（2条）
+    for sign in [-1, 1]:
+        p.drawLine(QPointF(cx + sign * w * 0.04, top + h * 0.10),
+                   QPointF(cx + sign * w * 0.03, top + h * 0.22))
+
+    # 上层甲板横线（2条）
+    for i in range(2):
+        ly = top + h * (0.12 + i * 0.04)
+        hw = w * 0.12 - i * w * 0.02
+        p.drawLine(QPointF(cx - hw, ly), QPointF(cx + hw, ly))
+
+
+def _paint_heat_sinks(p, cx, left, top, w, h, size, alpha):
+    """散热格栅 — 两侧各 15 条"""
+    pen = QPen(QColor(0x2a, 0x2d, 0x33, int(100 * alpha)), 0.4)
+    p.setPen(pen)
+
+    for sign in [-1, 1]:
+        sx_base = cx + sign * w * 0.26
+        sy_start = top + h * 0.34
+        for i in range(15):
+            sy = sy_start + i * h * 0.016
+            p.drawLine(QPointF(sx_base - sign * size * 0.03, sy),
+                       QPointF(sx_base + sign * size * 0.08, sy))
+
+
+def _paint_rivets(p, cx, left, top, w, h, size, alpha):
+    """铆钉点 — 10 个沿装甲板线分布"""
+    p.setPen(Qt.NoPen)
+    p.setBrush(QColor(0x1a, 0x1d, 0x22, int(120 * alpha)))
+
+    rivet_y = [0.26, 0.31, 0.36, 0.41, 0.46, 0.51, 0.56, 0.61]
+    for ryf in rivet_y:
+        ry = top + h * ryf
+        frac = (ry - top) / h
+        hw = w * (0.28 - frac * 0.22)
+        for sign in [-1, 1]:
+            rx = cx + sign * hw * 0.55
+            p.drawEllipse(QPointF(rx, ry), size * 0.012, size * 0.012)
+
+    # 上层甲板铆钉
+    for ryf in [0.10, 0.14]:
+        ry = top + h * ryf
+        hw = w * 0.08
+        for sign in [-1, 1]:
+            rx = cx + sign * hw * 0.6
+            p.drawEllipse(QPointF(rx, ry), size * 0.010, size * 0.010)
+
+
+def _paint_sensors(p, cx, left, top, w, h, size, anim_t, alpha):
+    """传感器阵列 — 船首 6 点"""
+    sx = cx
+    sy = top + h * 0.05
+    for i in range(6):
+        ox = (i - 2.5) * size * 0.030
+        glow = 0.5 + 0.5 * abs(math.sin(anim_t * 3.5 + i * 0.8))
+        sg = QRadialGradient(sx + ox, sy, size * 0.016)
+        sg.setColorAt(0.0, QColor(60, 180, 255, int(180 * glow * alpha)))
+        sg.setColorAt(1.0, QColor(60, 180, 255, 0))
+        p.setBrush(sg)
         p.setPen(Qt.NoPen)
-        p.drawRect(belt_rect)
+        p.drawEllipse(QPointF(sx + ox, sy), size * 0.016, size * 0.016)
 
 
-def _paint_decks(p, left, top, w, h, size, center, anim_t, alpha):
-    """多层甲板结构"""
-    cx = left + w / 2
-    deck_gap = h * 0.16
-    for layer in range(4):
-        dy = top + h * 0.06 + layer * deck_gap
-        dw = w * 0.34 - layer * w * 0.015
-        deck_grad = QLinearGradient(cx, dy, cx, dy + h * 0.08)
-        da = int(180 * alpha * (0.8 - layer * 0.12))
-        deck_grad.setColorAt(0.0, QColor(60, 65, 80, da))
-        deck_grad.setColorAt(0.5, QColor(50, 55, 70, da))
-        deck_grad.setColorAt(1.0, QColor(35, 40, 55, da))
-        p.setBrush(deck_grad)
-        p.setPen(QPen(QColor(100, 110, 135, int(80 * alpha)), 0.3))
-        p.drawRect(QRectF(cx - dw, dy, dw * 2, h * 0.08))
+def _paint_antennas(p, cx, left, top, w, h, size, alpha):
+    """通信天线 — 3 根（1主+2从，不对称高度）"""
+    # 主天线
+    ant_x = cx
+    ant_base = top + h * 0.06
+    ant_tip = top - h * 0.07
+    p.setPen(QPen(QColor(0xc0, 0xc4, 0xcc, int(170 * alpha)), 0.8))
+    p.drawLine(QPointF(ant_x, ant_base), QPointF(ant_x, ant_tip))
+    p.setBrush(QColor(0xc0, 0xc4, 0xcc, int(190 * alpha)))
+    p.setPen(Qt.NoPen)
+    p.drawEllipse(QPointF(ant_x, ant_tip), size * 0.017, size * 0.017)
+
+    # 横臂
+    ant_mid = top + h * 0.02
+    p.setPen(QPen(QColor(0xc0, 0xc4, 0xcc, int(110 * alpha)), 0.4))
+    p.drawLine(QPointF(ant_x - size * 0.04, ant_mid), QPointF(ant_x + size * 0.04, ant_mid))
+
+    # 副天线
+    for sign, height_ratio in [(-1, 0.70), (1, 0.50)]:
+        sax = cx + sign * w * 0.07
+        sabase = top + h * 0.08
+        satip = top - h * 0.07 * height_ratio
+        p.setPen(QPen(QColor(0xb0, 0xb4, 0xbc, int(140 * alpha)), 0.5))
+        p.drawLine(QPointF(sax, sabase), QPointF(sax, satip))
+        p.setBrush(QColor(0xb0, 0xb4, 0xbc, int(160 * alpha)))
+        p.setPen(Qt.NoPen)
+        p.drawEllipse(QPointF(sax, satip), size * 0.012, size * 0.012)
 
 
-def _paint_turrets(p, left, top, w, h, size, center, anim_t, alpha):
-    """炮塔阵列"""
-    cx = left + w / 2
-    turret_positions = [
-        (-1, 0.22), (1, 0.22),
-        (-1, 0.40), (1, 0.40),
-        (0, 0.55),
-        (-0.6, 0.68), (0.6, 0.68),
+def _paint_portholes(p, cx, left, top, w, h, size, anim_t, alpha):
+    """发光舷窗 — 舰桥区域 5 个"""
+    py = top + h * 0.175
+    glow = 0.5 + 0.5 * abs(math.sin(anim_t * 2.5))
+
+    for i in range(5):
+        px = cx + (i - 2) * w * 0.015
+        p.setBrush(QColor(0xaa, 0xdd, 0xff, int(120 * glow * alpha)))
+        p.setPen(Qt.NoPen)
+        p.drawRoundedRect(QRectF(px - size * 0.010, py, size * 0.020, size * 0.014), 0.8, 0.8)
+
+    # 副塔舷窗
+    at_py = top + h * 0.12
+    for i in range(2):
+        at_px = cx + w * 0.12 + w * 0.015
+        p.setBrush(QColor(0xaa, 0xdd, 0xff, int(100 * glow * alpha)))
+        p.setPen(Qt.NoPen)
+        p.drawRoundedRect(QRectF(at_px + i * w * 0.010, at_py, size * 0.015, size * 0.010), 0.5, 0.5)
+
+
+def _paint_engine_nacelles(p, cx, left, top, w, h, size, anim_t, alpha):
+    """引擎舱 — 8 个引擎，双排4x2矩阵"""
+    pulse = 0.7 + 0.3 * abs(math.sin(anim_t * 4.0))
+
+    engine_y_top = top + h * 0.74
+    engine_y_bot = top + h * 0.80
+
+    for row_idx, ey in enumerate([engine_y_top, engine_y_bot]):
+        nacelle_rx = size * (0.065 if row_idx == 0 else 0.072)
+        nacelle_ry = size * (0.042 if row_idx == 0 else 0.048)
+        for col in range(4):
+            offset_x = (col - 1.5) * w * 0.06
+            ex = cx + offset_x
+
+            nacelle_grad = QRadialGradient(ex, ey, nacelle_rx)
+            nacelle_grad.setColorAt(0.0, QColor(0x3a, 0x3d, 0x42, int(220 * alpha)))
+            nacelle_grad.setColorAt(0.6, QColor(0x2a, 0x2d, 0x33, int(200 * alpha)))
+            nacelle_grad.setColorAt(1.0, QColor(0x1a, 0x1d, 0x22, int(100 * alpha)))
+            p.setBrush(nacelle_grad)
+            p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(140 * alpha)), 0.5))
+            p.drawEllipse(QPointF(ex, ey), nacelle_rx, nacelle_ry)
+
+            for ring_i, ring_scale in enumerate([0.7, 0.40]):
+                p.setPen(QPen(QColor(0x7a, 0x7e, 0x85, int((80 - ring_i * 20) * pulse * alpha)), 0.35))
+                p.setBrush(Qt.NoBrush)
+                p.drawEllipse(QPointF(ex, ey),
+                              nacelle_rx * ring_scale,
+                              nacelle_ry * ring_scale)
+
+            core_glow = QRadialGradient(ex, ey, nacelle_rx * 0.25)
+            core_glow.setColorAt(0.0, QColor(200, 220, 255, int(120 * pulse * alpha)))
+            core_glow.setColorAt(1.0, QColor(60, 140, 240, 0))
+            p.setBrush(core_glow)
+            p.setPen(Qt.NoPen)
+            p.drawEllipse(QPointF(ex, ey), nacelle_rx * 0.25, nacelle_ry * 0.25)
+
+
+def _paint_engine_flames(p, cx, left, top, w, h, size, anim_t, alpha):
+    """引擎尾焰 — 8 个引擎，三层叠加"""
+    pulse = 0.55 + 0.45 * abs(math.sin(anim_t * 8.0))
+
+    engine_pairs = [(top + h * 0.74, size * 0.28), (top + h * 0.80, size * 0.32)]
+    random.seed(42)
+
+    for row_idx, (ey, base_flame_h) in enumerate(engine_pairs):
+        for col in range(4):
+            offset_x = (col - 1.5) * w * 0.06
+            ex = cx + offset_x
+            length_factor = 1.0 + random.uniform(-0.20, 0.20)
+
+            flame_base_h = base_flame_h * pulse * length_factor
+
+            # 外层
+            outer_a = int(80 * alpha)
+            outer_grad = QRadialGradient(ex, ey + flame_base_h * 0.3, flame_base_h * 0.75)
+            outer_grad.setColorAt(0.0, QColor(0x88, 0xcc, 0xff, outer_a))
+            outer_grad.setColorAt(0.5, QColor(0x44, 0x88, 0xcc, outer_a // 2))
+            outer_grad.setColorAt(1.0, QColor(0, 0, 0, 0))
+            p.setBrush(outer_grad)
+            p.setPen(Qt.NoPen)
+            p.drawEllipse(QPointF(ex, ey + flame_base_h * 0.15),
+                          size * 0.04, flame_base_h * 0.50)
+
+            # 中层
+            mid_a = int(180 * alpha)
+            mid_grad = QRadialGradient(ex, ey + flame_base_h * 0.20, flame_base_h * 0.42)
+            mid_grad.setColorAt(0.0, QColor(0x4a, 0xa8, 0xff, mid_a))
+            mid_grad.setColorAt(0.6, QColor(0x22, 0x66, 0xcc, mid_a // 2))
+            mid_grad.setColorAt(1.0, QColor(0, 0, 0, 0))
+            p.setBrush(mid_grad)
+            p.setPen(Qt.NoPen)
+            p.drawEllipse(QPointF(ex, ey + flame_base_h * 0.08),
+                          size * 0.024, flame_base_h * 0.28)
+
+            # 内核
+            core_grad = QLinearGradient(ex, ey, ex, ey + flame_base_h * 0.25)
+            core_grad.setColorAt(0.0, QColor(255, 255, 255, int(240 * alpha)))
+            core_grad.setColorAt(0.3, QColor(255, 255, 240, int(200 * alpha)))
+            core_grad.setColorAt(0.7, QColor(200, 230, 255, int(100 * alpha)))
+            core_grad.setColorAt(1.0, QColor(0, 0, 0, 0))
+            p.setBrush(core_grad)
+            p.setPen(Qt.NoPen)
+            p.drawEllipse(QPointF(ex, ey + flame_base_h * 0.03),
+                          size * 0.012, flame_base_h * 0.14)
+
+
+def _paint_weapons(p, cx, left, top, w, h, size, anim_t, alpha):
+    """武器系统 — 4 门主炮（船首重型）+ 6 门副炮（舷侧炮塔）"""
+    charge = 0.4 + 0.6 * abs(math.sin(anim_t * 4.5))
+
+    # === 4 门主炮 — 重型，粗长 ===
+    main_gun_configs = [
+        (cx - w * 0.10, top + h * 0.35, size * 0.06, size * 0.20),
+        (cx + w * 0.10, top + h * 0.35, size * 0.06, size * 0.20),
+        (cx - w * 0.04, top + h * 0.38, size * 0.055, size * 0.22),
+        (cx + w * 0.04, top + h * 0.38, size * 0.055, size * 0.22),
     ]
 
-    for j, (side_factor, y_factor) in enumerate(turret_positions):
-        tx = cx + side_factor * w * 0.15
-        ty = top + h * y_factor
-        tr = size * 0.055
+    for gun_x, gun_y, gun_w, gun_h in main_gun_configs:
+        barrel_path = QPainterPath()
+        barrel_path.addRoundedRect(QRectF(gun_x - gun_w / 2, gun_y - gun_h,
+                                          gun_w, gun_h), 2.5, 2.5)
+        barrel_grad = QLinearGradient(gun_x - gun_w / 2, gun_y, gun_x + gun_w / 2, gun_y)
+        barrel_grad.setColorAt(0.0, QColor(0x2a, 0x2d, 0x33, int(220 * alpha)))
+        barrel_grad.setColorAt(0.30, QColor(0x55, 0x58, 0x5e, int(230 * alpha)))
+        barrel_grad.setColorAt(0.50, QColor(0x90, 0x94, 0x9c, int(225 * alpha)))
+        barrel_grad.setColorAt(0.70, QColor(0x55, 0x58, 0x5e, int(220 * alpha)))
+        barrel_grad.setColorAt(1.0, QColor(0x2a, 0x2d, 0x33, int(210 * alpha)))
+        p.setBrush(barrel_grad)
+        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(160 * alpha)), 0.5))
+        p.drawPath(barrel_path)
 
-        # 炮塔基座
-        turret_grad = QRadialGradient(tx, ty, tr)
-        turret_grad.setColorAt(0.0, QColor(70, 75, 90, int(220 * alpha)))
-        turret_grad.setColorAt(0.6, QColor(50, 55, 70, int(200 * alpha)))
-        turret_grad.setColorAt(1.0, QColor(30, 35, 50, int(150 * alpha)))
-        p.setBrush(turret_grad)
-        p.setPen(QPen(QColor(100, 110, 135, int(120 * alpha)), 0.5))
-        p.drawEllipse(QPointF(tx, ty), tr, tr * 0.7)
+        # 高光条
+        hl_rect = QRectF(gun_x - gun_w * 0.30, gun_y - gun_h + 2,
+                         gun_w * 0.6, gun_h * 0.20)
+        hl_grad = QLinearGradient(hl_rect.left(), hl_rect.top(),
+                                  hl_rect.left(), hl_rect.bottom())
+        hl_grad.setColorAt(0.0, QColor(255, 255, 255, int(80 * alpha)))
+        hl_grad.setColorAt(1.0, QColor(255, 255, 255, 0))
+        p.setBrush(hl_grad)
+        p.setPen(Qt.NoPen)
+        p.drawRect(hl_rect)
 
-        # 炮管
-        barrel_angle = -0.3 + j * 0.08
-        barrel_len = tr * 1.5
-        barrel_end_x = tx + math.sin(barrel_angle) * barrel_len * 0.3
-        barrel_end_y = ty - barrel_len * 0.8
-        p.setPen(QPen(QColor(85, 95, 115, int(160 * alpha)), tr * 0.25))
-        p.drawLine(QPointF(tx, ty), QPointF(barrel_end_x, barrel_end_y))
+        # 炮口能量
+        muzzle_x = gun_x
+        muzzle_y = gun_y - gun_h
+        muzzle_glow = QRadialGradient(muzzle_x, muzzle_y, size * 0.045)
+        muzzle_glow.setColorAt(0.0, QColor(255, 150, 30, int(180 * charge * alpha)))
+        muzzle_glow.setColorAt(0.6, QColor(255, 80, 15, int(80 * charge * alpha)))
+        muzzle_glow.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setBrush(muzzle_glow)
+        p.setPen(Qt.NoPen)
+        p.drawEllipse(QPointF(muzzle_x, muzzle_y), size * 0.045, size * 0.045)
 
-        # 炮口光点（部分炮塔）
-        if (j % 2 == 0):
-            charge_pulse = 0.3 + 0.7 * abs(math.sin(anim_t * 5.5 + j))
-            p.setBrush(QColor(255, 140, 20, int(160 * charge_pulse * alpha)))
-            p.setPen(Qt.NoPen)
-            p.drawEllipse(QPointF(barrel_end_x, barrel_end_y), tr * 0.25, tr * 0.25)
+    # === 6 门副炮 — 舷侧炮塔 ===
+    secondary_configs = [
+        (cx - w * 0.25, top + h * 0.42, size * 0.035, size * 0.10),
+        (cx + w * 0.25, top + h * 0.42, size * 0.035, size * 0.10),
+        (cx - w * 0.22, top + h * 0.52, size * 0.032, size * 0.09),
+        (cx + w * 0.22, top + h * 0.52, size * 0.032, size * 0.09),
+        (cx - w * 0.18, top + h * 0.60, size * 0.030, size * 0.08),
+        (cx + w * 0.18, top + h * 0.60, size * 0.030, size * 0.08),
+    ]
 
+    for gun_x, gun_y, gun_w, gun_h in secondary_configs:
+        barrel_path = QPainterPath()
+        barrel_path.addRoundedRect(QRectF(gun_x - gun_w / 2, gun_y - gun_h,
+                                          gun_w, gun_h), 1.5, 1.5)
+        barrel_grad = QLinearGradient(gun_x - gun_w / 2, gun_y, gun_x + gun_w / 2, gun_y)
+        barrel_grad.setColorAt(0.0, QColor(0x2a, 0x2d, 0x33, int(220 * alpha)))
+        barrel_grad.setColorAt(0.35, QColor(0x5a, 0x5e, 0x65, int(230 * alpha)))
+        barrel_grad.setColorAt(0.65, QColor(0x90, 0x94, 0x9c, int(220 * alpha)))
+        barrel_grad.setColorAt(1.0, QColor(0x2a, 0x2d, 0x33, int(210 * alpha)))
+        p.setBrush(barrel_grad)
+        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(160 * alpha)), 0.35))
+        p.drawPath(barrel_path)
 
-def _paint_bridge(p, left, top, w, h, size, center, anim_t, alpha):
-    """指挥舰桥"""
-    cx = left + w / 2
-    bw = w * 0.12
-    bh = h * 0.20
-    bx = cx - bw / 2
-    by = top + h * 0.00
+        # 高光
+        hl_rect = QRectF(gun_x - gun_w * 0.30, gun_y - gun_h + 1,
+                         gun_w * 0.6, gun_h * 0.20)
+        hl_grad = QLinearGradient(hl_rect.left(), hl_rect.top(),
+                                  hl_rect.left(), hl_rect.bottom())
+        hl_grad.setColorAt(0.0, QColor(255, 255, 255, int(70 * alpha)))
+        hl_grad.setColorAt(1.0, QColor(255, 255, 255, 0))
+        p.setBrush(hl_grad)
+        p.setPen(Qt.NoPen)
+        p.drawRect(hl_rect)
 
-    # 舰桥主体
-    bridge_grad = QLinearGradient(bx, by, bx + bw, by)
-    bridge_grad.setColorAt(0.0, QColor(45, 50, 65, int(220 * alpha)))
-    bridge_grad.setColorAt(0.5, QColor(85, 90, 105, int(225 * alpha)))
-    bridge_grad.setColorAt(1.0, QColor(40, 45, 60, int(210 * alpha)))
-    p.setBrush(bridge_grad)
-    p.setPen(QPen(QColor(105, 115, 135, int(140 * alpha)), 0.8))
-    p.drawRoundedRect(QRectF(bx, by, bw, bh), 4, 4)
-
-    # 舷窗
-    for col in range(3):
-        for row in range(2):
-            wx = bx + bw * 0.12 + col * bw * 0.32
-            wy = by + bh * 0.18 + row * bh * 0.36
-            glow = 0.4 + 0.6 * abs(math.sin(anim_t * 2.4 + col * 0.6 + row))
-            p.setBrush(QColor(90, 200, 255, int(170 * alpha * glow)))
-            p.setPen(Qt.NoPen)
-            p.drawRoundedRect(QRectF(wx, wy, bw * 0.18, bh * 0.22), 1.5, 1.5)
-
-    # 天线塔
-    mast_x = cx
-    mast_y = by - h * 0.04
-    p.setPen(QPen(QColor(100, 110, 130, int(120 * alpha)), 0.8))
-    p.drawLine(QPointF(cx, by), QPointF(mast_x, mast_y))
-
-    # 雷达旋转
-    radar_angle = anim_t * 2.5
-    radar_r = size * 0.08
-    p.setPen(QPen(QColor(0, 200, 255, int(140 * alpha)), 0.6))
-    p.setBrush(Qt.NoBrush)
-    p.drawEllipse(QPointF(mast_x, mast_y), radar_r, radar_r * 0.25)
-    p.drawLine(QPointF(mast_x, mast_y),
-               QPointF(mast_x + math.cos(radar_angle) * radar_r,
-                       mast_y + math.sin(radar_angle) * radar_r * 0.25))
+        # 炮口
+        muzzle_x = gun_x
+        muzzle_y = gun_y - gun_h
+        muzzle_glow = QRadialGradient(muzzle_x, muzzle_y, size * 0.028)
+        muzzle_glow.setColorAt(0.0, QColor(255, 150, 30, int(160 * charge * alpha)))
+        muzzle_glow.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setBrush(muzzle_glow)
+        p.setPen(Qt.NoPen)
+        p.drawEllipse(QPointF(muzzle_x, muzzle_y), size * 0.028, size * 0.028)
 
 
-def _paint_engines(p, left, top, w, h, size, center, anim_t, alpha):
-    """巨大引擎阵列（6联装）"""
-    engine_y = top + h * 0.91
-    pulse = 0.55 + 0.45 * abs(math.sin(anim_t * 5.0))
-    positions = [center.x() + d * w * 0.11 for d in range(-2, 3)]
-
-    for i, ex in enumerate(positions):
-        # 引擎外壳
-        eng_grad = QRadialGradient(ex, engine_y, size * 0.08)
-        eng_grad.setColorAt(0.0, QColor(55, 60, 75, int(210 * alpha)))
-        eng_grad.setColorAt(1.0, QColor(20, 25, 40, 0))
-        p.setPen(Qt.NoPen); p.setBrush(eng_grad)
-        p.drawEllipse(QPointF(ex, engine_y), size * 0.08, size * 0.05)
-
-        # 尾焰光晕
-        for fl in range(3):
-            fl_r = size * (0.06 + fl * 0.07)
-            fl_grad = QRadialGradient(ex, engine_y + size * 0.22, fl_r * 1.4)
-            fa = int((80 - fl * 22) * pulse * alpha)
-            fl_grad.setColorAt(0.0, QColor(255, 200, 50, fa))
-            fl_grad.setColorAt(0.5, QColor(255, 100, 20, fa // 2))
-            fl_grad.setColorAt(1.0, QColor(0, 0, 0, 0))
-            p.setPen(Qt.NoPen); p.setBrush(fl_grad)
-            p.drawEllipse(QPointF(ex, engine_y + size * 0.22), fl_r * 1.4, fl_r * 2.3)
-
-        # 尾焰主体
-        flame_h = size * 0.30 * pulse * (0.85 + i * 0.08)
-        flame_w = size * 0.04
-        fgrad = QLinearGradient(ex, engine_y - flame_h, ex, engine_y + flame_h * 0.2)
-        fgrad.setColorAt(0.00, QColor(255, 255, 240, int(245 * alpha)))
-        fgrad.setColorAt(0.06, QColor(200, 230, 255, int(220 * alpha)))
-        fgrad.setColorAt(0.25, QColor(80, 170, 255, int(180 * alpha)))
-        fgrad.setColorAt(0.55, QColor(30, 90, 220, int(90 * alpha)))
-        fgrad.setColorAt(0.85, QColor(10, 40, 130, int(25 * alpha)))
-        fgrad.setColorAt(1.00, QColor(0, 5, 30, 0))
-        p.setBrush(fgrad); p.setPen(Qt.NoPen)
-        p.drawEllipse(QPointF(ex, engine_y), flame_w, flame_h)
-
-        # 粒子喷射
-        for _ in range(5):
-            px = ex + random.uniform(-flame_w * 1.4, flame_w * 1.4)
-            py = engine_y + random.uniform(0, flame_h * 2.2)
-            ps = random.uniform(0.3, 1.8)
-            pa = int(random.uniform(30, 150) * alpha * pulse)
-            p.setBrush(QColor(100, 190, 255, pa))
-            p.setPen(Qt.NoPen)
-            p.drawEllipse(QPointF(px, py), ps, ps)
+def _paint_lighting(p, cx, left, top, w, h, size, alpha):
+    """光影 — 顶部高光带 + 底部阴影"""
+    # 顶部高光
+    hl_top = top + h * 0.07
+    hl_h = h * 0.013
+    hl_w = w * 0.40
+    hl_grad = QLinearGradient(cx, hl_top, cx, hl_top + hl_h)
+    hl_grad.setColorAt(0.0, QColor(255, 255, 255, int(45 * alpha)))
+    hl_grad.setColorAt(0.5, QColor(255, 255, 255, int(25 * alpha)))
+    hl_grad.setColorAt(1.0, QColor(255, 255, 255, 0))
+    p.setBrush(hl_grad)
+    p.setPen(Qt.NoPen)
+    p.drawRect(QRectF(cx - hl_w / 2, hl_top, hl_w, hl_h))
 
 
 def _paint_nav_lights(p, center, size, anim_t, alpha):
-    """红绿导航灯 + 尾灯"""
+    """红绿导航灯 + 白色尾灯"""
     cx, cy = center.x(), center.y()
     for sign, base_color in [(-1, QColor(255, 30, 15)), (1, QColor(15, 255, 35))]:
-        nx = cx + sign * size * 0.90
-        ny = cy - size * 0.10
-        flicker = 0.3 + 0.7 * abs(math.sin(anim_t * 4.0 + sign * 1.4))
+        nx = cx + sign * size * 0.85
+        ny = cy - size * 0.20
+        flicker = 0.3 + 0.7 * abs(math.sin(anim_t * 5.0 + sign * 1.5))
         nav_g = QRadialGradient(nx, ny, size * 0.08)
-        nav_g.setColorAt(0.0, QColor(base_color.red(), base_color.green(), base_color.blue(), int(200 * flicker * alpha)))
-        nav_g.setColorAt(0.4, QColor(base_color.red(), base_color.green(), base_color.blue(), int(100 * flicker * alpha)))
+        nav_g.setColorAt(0.0, QColor(base_color.red(), base_color.green(),
+                                     base_color.blue(), int(200 * flicker * alpha)))
+        nav_g.setColorAt(0.4, QColor(base_color.red(), base_color.green(),
+                                     base_color.blue(), int(100 * flicker * alpha)))
         nav_g.setColorAt(1.0, QColor(0, 0, 0, 0))
-        p.setPen(Qt.NoPen); p.setBrush(nav_g)
+        p.setPen(Qt.NoPen)
+        p.setBrush(nav_g)
         p.drawEllipse(QPointF(nx, ny), size * 0.08, size * 0.08)
         p.setBrush(QColor(255, 255, 255, int(180 * flicker * alpha)))
-        p.drawEllipse(QPointF(nx, ny), size * 0.022, size * 0.022)
-    strobe_y = cy + size * 0.50
-    strobe_flicker = abs(math.sin(anim_t * 5.5))
-    for sx in [cx - size * 0.30, cx + size * 0.30]:
-        sg = QRadialGradient(sx, strobe_y, size * 0.06)
-        sg.setColorAt(0.0, QColor(255, 255, 255, int(200 * strobe_flicker * alpha)))
-        sg.setColorAt(0.5, QColor(200, 220, 255, int(100 * strobe_flicker * alpha)))
-        sg.setColorAt(1.0, QColor(0, 0, 0, 0))
-        p.setPen(Qt.NoPen); p.setBrush(sg)
-        p.drawEllipse(QPointF(sx, strobe_y), size * 0.06, size * 0.06)
+        p.drawEllipse(QPointF(nx, ny), size * 0.025, size * 0.025)
 
 
 def _paint_hover_glow(p, center, size, anim_t, alpha):
-    """Hover 增强光晕"""
+    """Hover 光晕"""
     pulse = 0.7 + 0.3 * abs(math.sin(anim_t * 3.0))
     for i in range(3):
-        ir = size * (0.88 + i * 0.10)
+        ir = size * (0.88 + i * 0.12)
         iglow = QRadialGradient(center, ir)
-        ga = int((65 - i * 18) * pulse)
-        iglow.setColorAt(0.55, QColor(255, 255, 255, 0))
-        iglow.setColorAt(0.76, QColor(80, 190, 255, ga // 2))
-        iglow.setColorAt(0.90, QColor(0, 140, 255, ga))
-        iglow.setColorAt(0.98, QColor(0, 70, 180, ga // 3))
+        ga = int((55 - i * 16) * pulse)
+        iglow.setColorAt(0.50, QColor(0, 0, 0, 0))
+        iglow.setColorAt(0.72, QColor(40, 140, 255, ga // 3))
+        iglow.setColorAt(0.85, QColor(0, 120, 240, ga // 2))
+        iglow.setColorAt(0.94, QColor(0, 60, 180, ga))
         iglow.setColorAt(1.00, QColor(0, 0, 0, 0))
-        p.setBrush(iglow); p.setPen(Qt.NoPen)
+        p.setBrush(iglow)
+        p.setPen(Qt.NoPen)
         p.drawEllipse(center, ir, ir)
-    for i in range(3):
-        outer_r = size * (1.0 + i * 0.26)
-        glow = QRadialGradient(center, outer_r)
-        ga = int((48 - i * 14) * pulse)
-        glow.setColorAt(0.70, QColor(255, 255, 255, 0))
-        glow.setColorAt(0.85, QColor(80, 190, 255, ga // 2))
-        glow.setColorAt(0.94, QColor(0, 140, 255, ga))
-        glow.setColorAt(1.00, QColor(0, 0, 0, 0))
-        p.setBrush(glow); p.setPen(Qt.NoPen)
-        p.drawEllipse(center, outer_r, outer_r)
+
     br = 0.55 + 0.45 * abs(math.sin(anim_t * 4.5))
-    rpen = QPen(QColor(80, 190, 255, int(210 * pulse * alpha * br)), 2.2 + 1.2 * br)
-    p.setPen(rpen); p.setBrush(Qt.NoBrush)
-    p.drawEllipse(center, size * 0.95, size * 0.95)
+    rpen = QPen(QColor(0, 140, 255, int(180 * pulse * alpha * br)), 2.0 + 1.0 * br)
+    p.setPen(rpen)
+    p.setBrush(Qt.NoBrush)
+    p.drawEllipse(center, size * 0.96, size * 0.96)

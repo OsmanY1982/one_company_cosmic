@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-小绿外星人 — 大头 + 大椭圆黑眼 + 触角弹性摆动 + 微表情眨眼 + 漂浮
+小绿外星人 — 3D真实感异形头骨 + 曲面光照 + 呼吸瞳孔 + 弹性触角
 """
 import math, random
 from PyQt5.QtCore import Qt, QPointF, QRectF
@@ -18,94 +18,106 @@ def paint(painter: QPainter, center: QPointF, radius: float,
     if alpha < 1.0:
         p.setOpacity(alpha)
 
-
-    # ── 多层外辉光（增强质感）──
-    for glow_layer in range(4):
-        glow_scale = 1.06 + glow_layer * 0.20
-        glow_r = radius * glow_scale
-        glow = QRadialGradient(cx, cy, glow_r)
-        ga = max(1, 35 - glow_layer * 8)
-        glow.setColorAt(0.0, QColor(255, 255, 255, 0))
-        glow.setColorAt(0.25, QColor(200, 200, 255, ga // 2))
-        glow.setColorAt(0.55, QColor(120, 140, 255, ga))
-        glow.setColorAt(0.80, QColor(60, 80, 200, ga // 2))
-        glow.setColorAt(1.0, QColor(0, 0, 0, 0))
-        p.setBrush(glow); p.setPen(Qt.NoPen)
-        p.drawEllipse(center, glow_r, glow_r)
-    # 整体缩放，外星人在 radius 范围内
-    s = radius / 50.0  # 基准半径 50px
-
-    # ── 浮动动画 ──
+    s = radius / 50.0
     float_y = math.sin(anim_t * 2.2) * radius * 0.08
     float_x = math.cos(anim_t * 1.7) * radius * 0.04
+    body_cx = cx + float_x
+    body_cy = cy + float_y
+    head_r = radius * 0.62
+    head_cx = body_cx
+    head_cy = body_cy - radius * 0.18
 
-    head_cx = cx + float_x
-    head_cy = cy - radius * 0.15 + float_y
-    head_r = radius * 0.65
+    # ── 远景：暗色剪影辉光 ──
+    silhouette = QRadialGradient(body_cx, body_cy, radius * 1.15)
+    silhouette.setColorAt(0.0, QColor(15, 40, 10, 25))
+    silhouette.setColorAt(0.5, QColor(8, 25, 5, 12))
+    silhouette.setColorAt(1.0, QColor(0, 0, 0, 0))
+    p.setBrush(silhouette); p.setPen(Qt.NoPen)
+    p.drawEllipse(QPointF(body_cx, body_cy), radius * 1.15, radius * 1.15)
 
-    # ── 头部辉光 ──
-    glow = QRadialGradient(head_cx, head_cy, head_r * 1.3)
-    glow.setColorAt(0.0, QColor(120, 255, 100, 20))
-    glow.setColorAt(0.7, QColor(60, 200, 60, 8))
-    glow.setColorAt(1.0, QColor(255, 255, 255, 0))
-    p.setBrush(glow); p.setPen(Qt.NoPen)
-    p.drawEllipse(QPointF(head_cx, head_cy), head_r * 1.3, head_r * 1.3)
+    # ── 头部：不规则异形头骨（QPainterPath cubicTo）──
+    # 倒梨形头骨：上部宽阔隆起，眼窝凹陷，下颌收缩
+    head_path = QPainterPath()
+    hw_top = head_r * 0.88     # 头顶宽度
+    hw_mid = head_r * 0.72     # 眼窝宽度
+    hw_eye = head_r * 0.55     # 眼窝凹陷宽度
+    hw_jaw = head_r * 0.38     # 下颌宽度
+    hh_top = head_r * 0.92     # 头顶高度
+    hh_eye = head_r * 0.15     # 眼窝位置
+    hh_mid = head_r * 0.40     # 中部
+    hh_jaw = head_r * 0.78     # 下颌底
 
-    # ── 触角（两根，弹性摆动）──
-    for side in (-1, 1):
-        ant_base_x = head_cx + side * head_r * 0.35
-        ant_base_y = head_cy - head_r * 0.75
-        ant_len = radius * 0.55
-        # 弹性摆动（二阶弹簧模拟：sin叠加）
-        swing = math.sin(anim_t * 3.5 + side * 1.2) * radius * 0.12
-        swing2 = math.cos(anim_t * 4.2 + side * 0.7) * radius * 0.06
-        ant_path = QPainterPath()
-        ant_path.moveTo(ant_base_x, ant_base_y)
-        cp1_x = ant_base_x + side * ant_len * 0.25 + swing
-        cp1_y = ant_base_y - ant_len * 0.4
-        cp2_x = ant_base_x + side * ant_len * 0.5 + swing * 1.4
-        cp2_y = ant_base_y - ant_len * 0.7
-        tip_x = ant_base_x + side * ant_len * 0.3 + swing * 1.8 + swing2
-        tip_y = ant_base_y - ant_len * 0.9
-        ant_path.cubicTo(cp1_x, cp1_y, cp2_x, cp2_y, tip_x, tip_y)
-        pen = QPen(QColor(80, 220, 60), 2.5 * s)
-        pen.setCapStyle(Qt.RoundCap)
-        p.setPen(pen); p.setBrush(Qt.NoBrush)
-        p.drawPath(ant_path)
-        # 触角末端小球
-        ball_grad = QRadialGradient(tip_x, tip_y, 4 * s)
-        ball_grad.setColorAt(0.0, QColor(150, 255, 100))
-        ball_grad.setColorAt(0.6, QColor(80, 220, 60))
-        ball_grad.setColorAt(1.0, QColor(30, 150, 20))
-        p.setPen(Qt.NoPen); p.setBrush(ball_grad)
-        p.drawEllipse(QPointF(tip_x, tip_y), 4 * s, 4 * s)
+    # 头顶右侧 → 头顶 → 头顶左侧
+    head_path.moveTo(head_cx + hw_mid * 0.6, head_cy + hh_eye * 0.4)
+    head_path.cubicTo(
+        head_cx + hw_top, head_cy - hh_top * 0.5,
+        head_cx + hw_top * 0.7, head_cy - hh_top,
+        head_cx, head_cy - hh_top
+    )
+    head_path.cubicTo(
+        head_cx - hw_top * 0.7, head_cy - hh_top,
+        head_cx - hw_top, head_cy - hh_top * 0.5,
+        head_cx - hw_mid * 0.6, head_cy + hh_eye * 0.4
+    )
+    # 左眼窝凹陷
+    head_path.cubicTo(
+        head_cx - hw_eye, head_cy - hh_eye * 0.3,
+        head_cx - hw_eye * 0.9, head_cy + hh_eye * 1.8,
+        head_cx - hw_mid, head_cy + hh_mid * 0.6
+    )
+    # 左颊 → 下颌
+    head_path.cubicTo(
+        head_cx - hw_jaw * 0.9, head_cy + hh_jaw * 0.6,
+        head_cx - hw_jaw * 0.5, head_cy + hh_jaw,
+        head_cx, head_cy + hh_jaw
+    )
+    # 下颌 → 右颊
+    head_path.cubicTo(
+        head_cx + hw_jaw * 0.5, head_cy + hh_jaw,
+        head_cx + hw_jaw * 0.9, head_cy + hh_jaw * 0.6,
+        head_cx + hw_mid, head_cy + hh_mid * 0.6
+    )
+    # 右眼窝凹陷 → 回起点
+    head_path.cubicTo(
+        head_cx + hw_eye * 0.9, head_cy + hh_eye * 1.8,
+        head_cx + hw_eye, head_cy - hh_eye * 0.3,
+        head_cx + hw_mid * 0.6, head_cy + hh_eye * 0.4
+    )
+    head_path.closeSubpath()
 
-    # ── 头部（椭圆大头，绿渐变）──
-    head = QRadialGradient(head_cx - head_r * 0.15, head_cy - head_r * 0.2, head_r * 1.05)
-    head.setColorAt(0.0, QColor(140, 240, 100))
-    head.setColorAt(0.4, QColor(80, 200, 60))
-    head.setColorAt(0.75, QColor(40, 150, 30))
-    head.setColorAt(0.92, QColor(20, 100, 15))
-    head.setColorAt(1.0, QColor(10, 60, 8))
-    p.setBrush(head); p.setPen(QPen(QColor(30, 120, 25), 1.5 * s))
-    # 头部椭圆（宽于高）
-    head_ry = head_r * 0.88
-    p.drawEllipse(QPointF(head_cx, head_cy), head_r, head_ry)
+    # 皮肤：QRadialGradient 曲面光照（左上光源）
+    skin_grad = QRadialGradient(head_cx - head_r * 0.25, head_cy - head_r * 0.3, head_r * 1.05)
+    skin_grad.setColorAt(0.0, QColor(160, 255, 110))   # 高光
+    skin_grad.setColorAt(0.18, QColor(130, 230, 85))
+    skin_grad.setColorAt(0.40, QColor(90, 200, 55))    # 主色
+    skin_grad.setColorAt(0.65, QColor(50, 145, 28))
+    skin_grad.setColorAt(0.85, QColor(25, 90, 12))     # 暗面
+    skin_grad.setColorAt(1.0, QColor(10, 50, 5))       # 边缘阴影
+    p.setBrush(skin_grad)
+    p.setPen(QPen(QColor(18, 80, 10), 1.2 * s))
+    p.drawPath(head_path)
 
-    # ── 高光 ──
-    head_spec = QRadialGradient(head_cx - head_r * 0.25, head_cy - head_r * 0.28, head_r * 0.38)
-    head_spec.setColorAt(0.0, QColor(200, 255, 160, 70))
-    head_spec.setColorAt(0.5, QColor(160, 240, 120, 20))
-    head_spec.setColorAt(1.0, QColor(120, 220, 80, 0))
-    p.setBrush(head_spec); p.setPen(Qt.NoPen)
-    p.drawEllipse(QPointF(head_cx, head_cy), head_r, head_ry)
+    # 头顶高光区（左上光源反射）
+    spec_hl = QRadialGradient(head_cx - head_r * 0.3, head_cy - head_r * 0.42, head_r * 0.38)
+    spec_hl.setColorAt(0.0, QColor(200, 255, 160, 65))
+    spec_hl.setColorAt(0.4, QColor(170, 245, 130, 25))
+    spec_hl.setColorAt(1.0, QColor(0, 0, 0, 0))
+    p.setBrush(spec_hl); p.setPen(Qt.NoPen)
+    p.drawPath(head_path)
 
-    # ── 眼睛（大椭圆，黑色虹膜 + 白色高光点）──
-    eye_spacing = head_r * 0.30
+    # 下颚阴影区
+    jaw_shadow = QRadialGradient(head_cx, head_cy + head_r * 0.5, head_r * 0.5)
+    jaw_shadow.setColorAt(0.0, QColor(0, 0, 0, 0))
+    jaw_shadow.setColorAt(0.5, QColor(5, 25, 3, 30))
+    jaw_shadow.setColorAt(1.0, QColor(2, 10, 1, 60))
+    p.setBrush(jaw_shadow); p.setPen(Qt.NoPen)
+    p.drawPath(head_path)
+
+    # ── 眼睛：大黑椭圆 + 瞳孔 + 虹膜 + 角膜高光 ──
+    eye_spacing = head_r * 0.28
     eye_rx = head_r * 0.22
     eye_ry = head_r * 0.30
 
-    # 眨眼动画（每 3 秒眨一次，持续 0.15 秒）
     blink_phase = (anim_t * 0.7) % 3.0
     blink = 1.0
     if blink_phase < 0.15:
@@ -113,80 +125,147 @@ def paint(painter: QPainter, center: QPointF, radius: float,
     elif 2.85 < blink_phase <= 3.0:
         blink = (3.0 - blink_phase) / 0.15
 
+    pupil_scale = 0.65 + 0.04 * math.sin(anim_t * 1.8)  # 呼吸缩放
+
     for sign in (-1, 1):
         ex = head_cx + sign * eye_spacing
-        ey = head_cy - head_ry * 0.1
-        # 眼白
-        eye_white = QRadialGradient(ex, ey, eye_rx * 1.2)
-        eye_white.setColorAt(0.0, QColor(255, 255, 255))
-        eye_white.setColorAt(0.7, QColor(240, 255, 240))
-        eye_white.setColorAt(1.0, QColor(200, 240, 200))
-        p.setBrush(eye_white); p.setPen(QPen(QColor(30, 100, 25), 1.0 * s))
+        ey = head_cy - head_r * 0.05
+        # 眼白（微绿底色）
+        eye_white = QRadialGradient(ex, ey, eye_rx * 1.15)
+        eye_white.setColorAt(0.0, QColor(250, 255, 245))
+        eye_white.setColorAt(0.6, QColor(235, 250, 235))
+        eye_white.setColorAt(1.0, QColor(180, 220, 185))
+        p.setBrush(eye_white); p.setPen(QPen(QColor(25, 80, 18), 0.8 * s))
         if blink < 1.0:
             p.drawEllipse(QRectF(ex - eye_rx, ey - eye_ry * blink,
                                   eye_rx * 2, eye_ry * 2 * blink))
         else:
             p.drawEllipse(QPointF(ex, ey), eye_rx, eye_ry)
-        # 瞳孔（深黑大圆）
-        pupil_r = eye_rx * 0.65
-        p.setBrush(QColor(10, 20, 5))
-        p.setPen(Qt.NoPen)
-        p.drawEllipse(QPointF(ex, ey), pupil_r, pupil_r)
-        # 高光点
-        highlight_x = ex - eye_rx * 0.28
-        highlight_y = ey - eye_ry * 0.32
-        p.setBrush(QColor(255, 255, 255, 220))
-        p.drawEllipse(QPointF(highlight_x, highlight_y), pupil_r * 0.3, pupil_r * 0.3)
-        p.setBrush(QColor(255, 255, 255, 120))
-        p.drawEllipse(QPointF(highlight_x + pupil_r * 0.15, highlight_y + pupil_r * 0.2),
-                      pupil_r * 0.15, pupil_r * 0.15)
 
-    # ── 微笑嘴巴 ──
+        # 虹膜（径向渐变，深绿→黑）
+        iris_r = eye_rx * 0.78
+        iris_grad = QRadialGradient(ex + eye_rx * 0.05, ey - eye_ry * 0.05, iris_r * 1.05)
+        iris_grad.setColorAt(0.0, QColor(120, 180, 60))
+        iris_grad.setColorAt(0.3, QColor(70, 140, 30))
+        iris_grad.setColorAt(0.7, QColor(25, 70, 10))
+        iris_grad.setColorAt(1.0, QColor(5, 20, 3))
+        p.setBrush(iris_grad); p.setPen(Qt.NoPen)
+        p.drawEllipse(QPointF(ex, ey), iris_r, iris_r)
+
+        # 瞳孔（深黑椭圆，呼吸缩放）
+        pupil_rx = iris_r * pupil_scale * 0.55
+        pupil_ry = iris_r * pupil_scale * 0.7
+        p.setBrush(QColor(3, 8, 1))
+        p.drawEllipse(QPointF(ex, ey), pupil_rx, pupil_ry)
+
+        # 角膜高光（双高光点）
+        hl1_x = ex - eye_rx * 0.28
+        hl1_y = ey - eye_ry * 0.30
+        p.setBrush(QColor(255, 255, 255, 210))
+        p.drawEllipse(QPointF(hl1_x, hl1_y), pupil_rx * 0.28, pupil_rx * 0.28)
+        p.setBrush(QColor(255, 255, 255, 100))
+        p.drawEllipse(QPointF(hl1_x + pupil_rx * 0.18, hl1_y + pupil_rx * 0.22),
+                      pupil_rx * 0.13, pupil_rx * 0.13)
+
+        # 眼睛微光投射到面部
+        eye_glow = QRadialGradient(ex, ey, eye_rx * 2.0)
+        eye_glow.setColorAt(0.0, QColor(120, 230, 80, 18))
+        eye_glow.setColorAt(0.5, QColor(60, 180, 40, 6))
+        eye_glow.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setBrush(eye_glow); p.setPen(Qt.NoPen)
+        p.drawEllipse(QPointF(ex, ey), eye_rx * 2.0, eye_rx * 2.0)
+
+    # ── 微笑嘴巴（QPainterPath弧线）──
     mouth_cx = head_cx
-    mouth_cy = head_cy + head_ry * 0.30
+    mouth_cy = head_cy + head_r * 0.38
     mouth = QPainterPath()
     mouth.moveTo(mouth_cx - head_r * 0.18, mouth_cy)
-    mouth.cubicTo(mouth_cx - head_r * 0.10, mouth_cy + head_ry * 0.15,
-                  mouth_cx + head_r * 0.10, mouth_cy + head_ry * 0.15,
+    mouth.cubicTo(mouth_cx - head_r * 0.08, mouth_cy + head_r * 0.12,
+                  mouth_cx + head_r * 0.08, mouth_cy + head_r * 0.12,
                   mouth_cx + head_r * 0.18, mouth_cy)
-    pen_m = QPen(QColor(20, 80, 15), 1.2 * s)
+    pen_m = QPen(QColor(18, 65, 12), 1.0 * s)
     pen_m.setCapStyle(Qt.RoundCap)
     p.setPen(pen_m); p.setBrush(Qt.NoBrush)
     p.drawPath(mouth)
 
-    # ── 小身体（半椭圆）──
-    body_rx = head_r * 0.55
-    body_ry = head_r * 0.35
-    body_cx = head_cx
-    body_cy = head_cy + head_ry * 0.70
-    body = QRadialGradient(body_cx, body_cy - body_ry * 0.1, body_rx * 1.1)
-    body.setColorAt(0.0, QColor(100, 220, 70))
-    body.setColorAt(0.7, QColor(50, 160, 35))
-    body.setColorAt(1.0, QColor(20, 100, 15))
-    p.setBrush(body); p.setPen(Qt.NoPen)
-    p.drawEllipse(QPointF(body_cx, body_cy), body_rx, body_ry)
+    # ── 触角（两根，贝塞尔弹性摆动）──
+    for side in (-1, 1):
+        ant_base_x = head_cx + side * head_r * 0.30
+        ant_base_y = head_cy - head_r * 0.80
+        ant_len = radius * 0.52
+        swing = math.sin(anim_t * 3.5 + side * 1.2) * radius * 0.11
+        swing2 = math.cos(anim_t * 4.2 + side * 0.7) * radius * 0.05
+        ant_path = QPainterPath()
+        ant_path.moveTo(ant_base_x, ant_base_y)
+        cp1_x = ant_base_x + side * ant_len * 0.22 + swing
+        cp1_y = ant_base_y - ant_len * 0.38
+        cp2_x = ant_base_x + side * ant_len * 0.48 + swing * 1.5
+        cp2_y = ant_base_y - ant_len * 0.68
+        tip_x = ant_base_x + side * ant_len * 0.25 + swing * 1.9 + swing2
+        tip_y = ant_base_y - ant_len * 0.88
+        ant_path.cubicTo(cp1_x, cp1_y, cp2_x, cp2_y, tip_x, tip_y)
+        # 触角渐变
+        ant_grad = QLinearGradient(ant_base_x, ant_base_y, tip_x, tip_y)
+        ant_grad.setColorAt(0.0, QColor(90, 220, 60))
+        ant_grad.setColorAt(0.5, QColor(60, 180, 35))
+        ant_grad.setColorAt(1.0, QColor(30, 130, 18))
+        pen = QPen(QBrush(ant_grad), 2.2 * s)
+        pen.setCapStyle(Qt.RoundCap)
+        p.setPen(pen); p.setBrush(Qt.NoBrush)
+        p.drawPath(ant_path)
+        # 触角末端发光球
+        ball_grad = QRadialGradient(tip_x, tip_y, 3.5 * s)
+        ball_grad.setColorAt(0.0, QColor(180, 255, 120))
+        ball_grad.setColorAt(0.5, QColor(100, 230, 70))
+        ball_grad.setColorAt(1.0, QColor(20, 120, 15))
+        p.setPen(Qt.NoPen); p.setBrush(ball_grad)
+        p.drawEllipse(QPointF(tip_x, tip_y), 3.5 * s, 3.5 * s)
 
-    # ── 肩膀小闪烁粒子 ──
-    part_rng = random.Random(int(anim_t * 350) % 100000 + 666)
-    p.setPen(Qt.NoPen)
-    for _ in range(8):
-        pa2 = part_rng.uniform(0, 2 * math.pi)
-        pd2 = radius * (0.70 + 0.30 * part_rng.random())
-        px2 = cx + math.cos(pa2) * pd2
-        py2 = cy + math.sin(pa2) * pd2
-        ps2 = part_rng.uniform(0.3, 1.0)
-        pg = QRadialGradient(px2, py2, ps2 * 2.0)
-        pg.setColorAt(0.0, QColor(140, 255, 100, 60))
-        pg.setColorAt(1.0, QColor(255, 255, 255, 0))
-        p.setBrush(pg)
-        p.drawEllipse(QPointF(px2, py2), ps2 * 2.0, ps2 * 2.0)
+    # ── 躯干：3层构造 ──
+    body_rx = head_r * 0.50
+    body_ry = head_r * 0.32
+    body_cx2 = head_cx
+    body_cy2 = head_cy + head_r * 0.92
 
-    # ── 环绕粒子光环（主题色匹配）──
+    # 暗面底层
+    body_dark = QRadialGradient(body_cx2, body_cy2 + body_ry * 0.3, body_rx * 1.15)
+    body_dark.setColorAt(0.0, QColor(15, 60, 8, 80))
+    body_dark.setColorAt(1.0, QColor(0, 0, 0, 0))
+    p.setBrush(body_dark); p.setPen(Qt.NoPen)
+    p.drawEllipse(QPointF(body_cx2, body_cy2 + body_ry * 0.15), body_rx * 1.15, body_ry * 1.15)
+
+    # 主体中层（曲面渐变）
+    body_grad = QRadialGradient(body_cx2 - body_rx * 0.15, body_cy2 - body_ry * 0.2, body_rx * 1.05)
+    body_grad.setColorAt(0.0, QColor(120, 240, 80))
+    body_grad.setColorAt(0.35, QColor(85, 200, 55))
+    body_grad.setColorAt(0.7, QColor(45, 150, 28))
+    body_grad.setColorAt(1.0, QColor(15, 80, 10))
+    p.setBrush(body_grad); p.setPen(QPen(QColor(20, 90, 12), 1.0 * s))
+    p.drawEllipse(QPointF(body_cx2, body_cy2), body_rx, body_ry)
+
+    # 高光表层
+    body_hl = QRadialGradient(body_cx2 - body_rx * 0.3, body_cy2 - body_ry * 0.3, body_rx * 0.45)
+    body_hl.setColorAt(0.0, QColor(180, 255, 130, 45))
+    body_hl.setColorAt(1.0, QColor(0, 0, 0, 0))
+    p.setBrush(body_hl); p.setPen(Qt.NoPen)
+    p.drawEllipse(QPointF(body_cx2, body_cy2), body_rx, body_ry)
+
+    # ── 肩膀连接球 ──
+    for sign in (-1, 1):
+        shx = body_cx2 + sign * body_rx * 0.85
+        shy = body_cy2 - body_ry * 0.35
+        sh_grad = QRadialGradient(shx, shy, body_rx * 0.28)
+        sh_grad.setColorAt(0.0, QColor(110, 220, 65, 140))
+        sh_grad.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setBrush(sh_grad); p.setPen(Qt.NoPen)
+        p.drawEllipse(QPointF(shx, shy), body_rx * 0.28, body_rx * 0.28)
+
+    # ── 粒子光环 ──
     aura_rng = random.Random(int(anim_t * 280) % 100000 + 43132)
     p.setPen(Qt.NoPen)
     for _ in range(22):
         a_angle = aura_rng.uniform(0, 2 * math.pi)
-        a_dist = radius * (0.55 + 0.45 * aura_rng.random())
+        a_dist = radius * (0.58 + 0.42 * aura_rng.random())
         a_offset = anim_t * (0.3 + 0.2 * aura_rng.random())
         ax = cx + math.cos(a_angle + a_offset) * a_dist
         ay = cy + math.sin(a_angle + a_offset) * a_dist * 0.7
@@ -194,42 +273,38 @@ def paint(painter: QPainter, center: QPointF, radius: float,
         a_alpha = aura_rng.randint(25, 70)
         ag = QRadialGradient(ax, ay, a_size * 2.5)
         ag.setColorAt(0.0, QColor(120, 200, 240, a_alpha))
-        ag.setColorAt(0.5, QColor(120//2, 200//2, 255, a_alpha // 2))
+        ag.setColorAt(0.5, QColor(60, 100, 200, a_alpha // 2))
         ag.setColorAt(1.0, QColor(0, 0, 0, 0))
         p.setBrush(ag)
         p.drawEllipse(QPointF(ax, ay), a_size * 2.5, a_size * 2.5)
 
-# ── 悬停增强（主题色脉冲光晕 + 呼吸轮廓）──
+    # ── hover 光晕（绿色主题）──
     if hovered:
         hp = 0.7 + 0.3 * abs(math.sin(anim_t * 3.5))
-        # 内层主题光晕
         for i in range(3):
             ir = radius + 2 + i * 5
             ig = QRadialGradient(center, ir)
             ga = int((70 - i * 18) * hp)
             ig.setColorAt(0.60, QColor(255, 255, 255, 0))
-            ig.setColorAt(0.78, QColor(120, 200, 240, ga // 2))
-            ig.setColorAt(0.90, QColor(120, 200, 240, ga))
-            ig.setColorAt(0.97, QColor(120//2, 200//2, 255, ga // 3))
+            ig.setColorAt(0.78, QColor(100, 230, 80, ga // 2))
+            ig.setColorAt(0.90, QColor(100, 230, 80, ga))
+            ig.setColorAt(0.97, QColor(50, 150, 40, ga // 3))
             ig.setColorAt(1.0, QColor(0, 0, 0, 0))
             p.setPen(Qt.NoPen); p.setBrush(ig)
             p.drawEllipse(center, ir, ir)
-        # 外层扩散光晕
         for i in range(3):
             outer_r = radius + 10 + i * 10
             og = QRadialGradient(center, outer_r)
             ga = int((50 - i * 14) * hp)
             og.setColorAt(0.75, QColor(255, 255, 255, 0))
-            og.setColorAt(0.88, QColor(120, 200, 240, ga // 2))
-            og.setColorAt(0.96, QColor(120//2, 200//2, 255, ga // 3))
+            og.setColorAt(0.88, QColor(100, 230, 80, ga // 2))
+            og.setColorAt(0.96, QColor(50, 150, 40, ga // 3))
             og.setColorAt(1.0, QColor(0, 0, 0, 0))
             p.setPen(Qt.NoPen); p.setBrush(og)
             p.drawEllipse(center, outer_r, outer_r)
-        # 明亮轮廓环（呼吸感）
         br = 0.6 + 0.4 * abs(math.sin(anim_t * 4.0))
-        rpen = QPen(QColor(120, 200, 240, int(220 * hp * br)), 2.5 + 1.0 * br)
+        rpen = QPen(QColor(100, 230, 80, int(220 * hp * br)), 2.5 + 1.0 * br)
         p.setPen(rpen); p.setBrush(Qt.NoBrush)
         p.drawEllipse(center, radius + 3, radius + 3)
-
 
     p.restore()
