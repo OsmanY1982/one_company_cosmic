@@ -152,9 +152,9 @@ def init_opcclaw_engine(config: dict):
 
         # ── 恢复上次会话 ──
         try:
-            n = engine.load_session()
-            if n > 0:
-                logger.info("已从磁盘恢复 %d 条对话历史", n)
+            msgs = engine.load_session()
+            if msgs:
+                logger.info("已从磁盘恢复 %d 条对话历史", len(msgs))
         except Exception as e:
             logger.warning("恢复会话历史失败: %s", e)
 

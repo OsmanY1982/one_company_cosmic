@@ -111,7 +111,7 @@ def _paint_main_hull(p, cx, left, top, w, h, size, alpha):
     hull_grad.setColorAt(0.72, QColor(0x38, 0x3b, 0x42, int(240 * alpha)))
     hull_grad.setColorAt(1.00, QColor(0x22, 0x24, 0x2a, int(235 * alpha)))
     p.setBrush(hull_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(180 * alpha)), 1.0))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(hull_path)
 
     # 底部阴影
@@ -146,7 +146,7 @@ def _paint_forward_ram(p, cx, left, top, w, h, size, alpha):
     ram_grad.setColorAt(0.5, QColor(0x88, 0x8c, 0x94, int(235 * alpha)))
     ram_grad.setColorAt(1.0, QColor(0x40, 0x43, 0x4a, int(230 * alpha)))
     p.setBrush(ram_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.6))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(ram_path)
 
 
@@ -173,7 +173,7 @@ def _paint_upper_deck(p, cx, left, top, w, h, size, alpha):
     ud_grad.setColorAt(0.5, QColor(0x85, 0x89, 0x91, int(235 * alpha)))
     ud_grad.setColorAt(1.0, QColor(0x42, 0x45, 0x4c, int(230 * alpha)))
     p.setBrush(ud_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.7))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(path)
 
 
@@ -197,7 +197,7 @@ def _paint_superstructure(p, cx, left, top, w, h, size, alpha):
     ss_grad.setColorAt(0.5, QColor(0x90, 0x94, 0x9c, int(235 * alpha)))
     ss_grad.setColorAt(1.0, QColor(0x48, 0x4c, 0x53, int(230 * alpha)))
     p.setBrush(ss_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.6))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(path)
 
 
@@ -215,7 +215,7 @@ def _paint_bridge_complex(p, cx, left, top, w, h, size, alpha):
     bb_grad.setColorAt(0.5, QColor(0xa0, 0xa4, 0xac, int(235 * alpha)))
     bb_grad.setColorAt(1.0, QColor(0x48, 0x4c, 0x53, int(230 * alpha)))
     p.setBrush(bb_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.7))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(bb_path)
 
     # 舰桥高光
@@ -239,7 +239,7 @@ def _paint_bridge_complex(p, cx, left, top, w, h, size, alpha):
     at_grad.setColorAt(0.6, QColor(0x80, 0x84, 0x8c, int(225 * alpha)))
     at_grad.setColorAt(1.0, QColor(0x40, 0x43, 0x4a, int(220 * alpha)))
     p.setBrush(at_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(130 * alpha)), 0.4))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(at_path)
 
 
@@ -404,7 +404,7 @@ def _paint_engine_nacelles(p, cx, left, top, w, h, size, anim_t, alpha):
             nacelle_grad.setColorAt(0.6, QColor(0x2a, 0x2d, 0x33, int(200 * alpha)))
             nacelle_grad.setColorAt(1.0, QColor(0x1a, 0x1d, 0x22, int(100 * alpha)))
             p.setBrush(nacelle_grad)
-            p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(140 * alpha)), 0.5))
+            p.setPen(Qt.NoPen)  # was dark outline, removed
             p.drawEllipse(QPointF(ex, ey), nacelle_rx, nacelle_ry)
 
             for ring_i, ring_scale in enumerate([0.7, 0.40]):
@@ -493,7 +493,7 @@ def _paint_weapons(p, cx, left, top, w, h, size, anim_t, alpha):
         barrel_grad.setColorAt(0.55, QColor(0x95, 0x99, 0xa1, int(225 * alpha)))
         barrel_grad.setColorAt(1.0, QColor(0x2a, 0x2d, 0x33, int(210 * alpha)))
         p.setBrush(barrel_grad)
-        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(160 * alpha)), 0.5))
+        p.setPen(Qt.NoPen)  # was dark outline, removed
         p.drawPath(barrel_path)
 
         # 高光条
@@ -536,7 +536,7 @@ def _paint_weapons(p, cx, left, top, w, h, size, anim_t, alpha):
         barrel_grad.setColorAt(0.65, QColor(0x90, 0x94, 0x9c, int(220 * alpha)))
         barrel_grad.setColorAt(1.0, QColor(0x2a, 0x2d, 0x33, int(210 * alpha)))
         p.setBrush(barrel_grad)
-        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(160 * alpha)), 0.35))
+        p.setPen(Qt.NoPen)  # was dark outline, removed
         p.drawPath(barrel_path)
 
         hl_rect = QRectF(gun_x - gun_w * 0.30, gun_y - gun_h + 1,
@@ -609,8 +609,3 @@ def _paint_hover_glow(p, center, size, anim_t, alpha):
         p.setPen(Qt.NoPen)
         p.drawEllipse(center, ir, ir)
 
-    br = 0.55 + 0.45 * abs(math.sin(anim_t * 4.5))
-    rpen = QPen(QColor(0, 140, 255, int(180 * pulse * alpha * br)), 2.0 + 1.0 * br)
-    p.setPen(rpen)
-    p.setBrush(Qt.NoBrush)
-    p.drawEllipse(center, size * 0.96, size * 0.96)

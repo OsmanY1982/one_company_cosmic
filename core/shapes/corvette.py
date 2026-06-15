@@ -96,7 +96,7 @@ def _paint_main_hull(p, cx, left, top, w, h, size, alpha):
     hull_grad.setColorAt(0.72, QColor(0x3a, 0x3d, 0x42, int(240 * alpha)))
     hull_grad.setColorAt(1.00, QColor(0x22, 0x24, 0x2a, int(235 * alpha)))
     p.setBrush(hull_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(180 * alpha)), 0.9))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(path)
 
     # 底部阴影带
@@ -134,7 +134,7 @@ def _paint_superstructure(p, cx, left, top, w, h, size, alpha):
     spine_grad.setColorAt(0.5, QColor(0x90, 0x94, 0x9c, int(235 * alpha)))
     spine_grad.setColorAt(1.0, QColor(0x48, 0x4c, 0x53, int(230 * alpha)))
     p.setBrush(spine_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.6))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(path)
 
     # 顶部环境光高光带
@@ -240,7 +240,7 @@ def _paint_bridge(p, cx, left, top, w, h, size, anim_t, alpha):
     bridge_grad.setColorAt(0.5, QColor(0x70, 0x74, 0x7c, int(225 * alpha)))
     bridge_grad.setColorAt(1.0, QColor(0x40, 0x43, 0x4a, int(210 * alpha)))
     p.setBrush(bridge_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(130 * alpha)), 0.5))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawRoundedRect(QRectF(bx, by, bw, bh), 2.0, 2.0)
 
     # 舷窗
@@ -268,7 +268,7 @@ def _paint_engine_nacelles(p, cx, left, top, w, h, size, anim_t, alpha):
         nacelle_grad.setColorAt(0.6, QColor(0x2a, 0x2d, 0x33, int(200 * alpha)))
         nacelle_grad.setColorAt(1.0, QColor(0x1a, 0x1d, 0x22, int(100 * alpha)))
         p.setBrush(nacelle_grad)
-        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(140 * alpha)), 0.5))
+        p.setPen(Qt.NoPen)  # was dark outline, removed
         p.drawEllipse(QPointF(ex_real, engine_y), size * 0.08, size * 0.05)
 
         # 结构环
@@ -355,7 +355,7 @@ def _paint_weapons(p, cx, left, top, w, h, size, anim_t, alpha):
             bg.setColorAt(0.65, QColor(0x90, 0x94, 0x9c, int(220 * alpha)))
             bg.setColorAt(1.0, QColor(0x2a, 0x2d, 0x33, int(210 * alpha)))
             p.setBrush(bg)
-            p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.4))
+            p.setPen(Qt.NoPen)  # was dark outline, removed
             p.drawPath(barrel_path)
 
             # 高光条
@@ -441,8 +441,3 @@ def _paint_hover_glow(p, center, size, anim_t, alpha):
         p.setPen(Qt.NoPen)
         p.drawEllipse(center, ir, ir)
 
-    br = 0.55 + 0.45 * abs(math.sin(anim_t * 4.5))
-    rpen = QPen(QColor(0, 140, 255, int(180 * pulse * alpha * br)), 2.0 + 1.0 * br)
-    p.setPen(rpen)
-    p.setBrush(Qt.NoBrush)
-    p.drawEllipse(center, size * 0.96, size * 0.96)

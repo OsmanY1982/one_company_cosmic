@@ -1,6 +1,6 @@
 # `core/shapes/transporter.py`
 
-> 路径：`core/shapes/transporter.py` | 行数：528
+> 路径：`core/shapes/transporter.py` | 行数：523
 
 
 ---
@@ -116,7 +116,7 @@ def _paint_main_hull(p, cx, left, top, w, h, size, alpha):
     hull_grad.setColorAt(0.75, QColor(0x3a, 0x3d, 0x42, int(240 * alpha)))
     hull_grad.setColorAt(1.00, QColor(0x22, 0x24, 0x2a, int(235 * alpha)))
     p.setBrush(hull_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(180 * alpha)), 0.9))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(hull_path)
 
     # 底部阴影
@@ -156,7 +156,7 @@ def _paint_cargo_modules(p, cx, left, top, w, h, size, alpha):
         front_grad.setColorAt(0.5, QColor(0x68, 0x6b, 0x72, int(230 * alpha)))
         front_grad.setColorAt(1.0, QColor(0x30, 0x33, 0x39, int(225 * alpha)))
         p.setBrush(front_grad)
-        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(140 * alpha)), 0.6))
+        p.setPen(Qt.NoPen)  # was dark outline, removed
         p.drawPath(front_path)
 
         # 顶部面板（3D透视感）
@@ -172,7 +172,7 @@ def _paint_cargo_modules(p, cx, left, top, w, h, size, alpha):
         top_grad.setColorAt(0.0, QColor(0x50, 0x53, 0x5a, int(215 * alpha)))
         top_grad.setColorAt(1.0, QColor(0x38, 0x3b, 0x42, int(210 * alpha)))
         p.setBrush(top_grad)
-        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(120 * alpha)), 0.4))
+        p.setPen(Qt.NoPen)  # was dark outline, removed
         p.drawPath(top_path)
 
         # 货柜编号标记（小矩形）
@@ -181,7 +181,7 @@ def _paint_cargo_modules(p, cx, left, top, w, h, size, alpha):
         mark_h = ch * 0.12
         mark_y = cy_idx + ch * 0.2
         p.setBrush(QColor(cargo_colors[idx][0]))
-        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(80 * alpha)), 0.3))
+        p.setPen(Qt.NoPen)  # was dark outline, removed
         p.drawRect(QRectF(mark_x, mark_y, mark_w, mark_h))
 
         # 货柜把手/锁定点
@@ -207,7 +207,7 @@ def _paint_forward_cabin(p, cx, left, top, w, h, size, alpha):
     cabin_grad.setColorAt(0.5, QColor(0x80, 0x84, 0x8c, int(235 * alpha)))
     cabin_grad.setColorAt(1.0, QColor(0x3e, 0x41, 0x48, int(230 * alpha)))
     p.setBrush(cabin_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.6))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(cabin_path)
 
     # 驾驶舱视窗（大面积弧形舷窗）
@@ -220,7 +220,7 @@ def _paint_forward_cabin(p, cx, left, top, w, h, size, alpha):
     win_grad.setColorAt(0.5, QColor(60, 160, 220, int(130 * alpha)))
     win_grad.setColorAt(1.0, QColor(20, 80, 140, int(60 * alpha)))
     p.setBrush(win_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(100 * alpha)), 0.4))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawRoundedRect(QRectF(cwx, cwy, cw, ch), 3, 3)
 
 
@@ -238,7 +238,7 @@ def _paint_superstructure(p, cx, left, top, w, h, size, alpha):
     bridge_grad.setColorAt(0.5, QColor(0x88, 0x8c, 0x94, int(235 * alpha)))
     bridge_grad.setColorAt(1.0, QColor(0x45, 0x48, 0x4f, int(230 * alpha)))
     p.setBrush(bridge_grad)
-    p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(150 * alpha)), 0.5))
+    p.setPen(Qt.NoPen)  # was dark outline, removed
     p.drawPath(bridge_path)
 
     # 舰桥高光
@@ -369,7 +369,7 @@ def _paint_engine_nacelles(p, cx, left, top, w, h, size, anim_t, alpha):
         nacelle_grad.setColorAt(0.6, QColor(0x2a, 0x2d, 0x33, int(200 * alpha)))
         nacelle_grad.setColorAt(1.0, QColor(0x1a, 0x1d, 0x22, int(100 * alpha)))
         p.setBrush(nacelle_grad)
-        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(140 * alpha)), 0.5))
+        p.setPen(Qt.NoPen)  # was dark outline, removed
         p.drawEllipse(QPointF(ex, engine_y), size * 0.075, size * 0.05)
 
         for ring_i, ring_scale in enumerate([0.7, 0.40]):
@@ -454,7 +454,7 @@ def _paint_weapons(p, cx, left, top, w, h, size, anim_t, alpha):
         barrel_grad.setColorAt(0.65, QColor(0x90, 0x94, 0x9c, int(220 * alpha)))
         barrel_grad.setColorAt(1.0, QColor(0x2a, 0x2d, 0x33, int(210 * alpha)))
         p.setBrush(barrel_grad)
-        p.setPen(QPen(QColor(0x1a, 0x1d, 0x22, int(160 * alpha)), 0.35))
+        p.setPen(Qt.NoPen)  # was dark outline, removed
         p.drawPath(barrel_path)
 
         # 高光条
@@ -530,10 +530,5 @@ def _paint_hover_glow(p, center, size, anim_t, alpha):
         p.setPen(Qt.NoPen)
         p.drawEllipse(center, ir, ir)
 
-    br = 0.55 + 0.45 * abs(math.sin(anim_t * 4.5))
-    rpen = QPen(QColor(0, 140, 255, int(180 * pulse * alpha * br)), 2.0 + 1.0 * br)
-    p.setPen(rpen)
-    p.setBrush(Qt.NoBrush)
-    p.drawEllipse(center, size * 0.96, size * 0.96)
 
 ```

@@ -4,6 +4,8 @@ opcclaw 悬浮星球 — 桌面常驻 AI 助理
 可拖拽、语音对话（Apple Speech 引擎）、右键菜单导航、双击对话
 """
 import sys, os, traceback, math, random
+import subprocess
+import threading
 from datetime import datetime
 from PyQt5.QtWidgets import (
     QWidget, QMenu, QAction, QApplication, QDialog,
@@ -28,6 +30,7 @@ from core.planet_painter import PLANET_STYLES, paint_planet
 from core.shapes import alien, robot_alien, ghost_alien, jellyfish_alien
 from core.shapes import SHAPE_PAINTERS, SHAPE_MODE_LIST, SHAPE_MODES, SHAPE_PLANETS, SHAPE_ALIENS, SHAPE_STARSHIPS
 from .voice_interface import VoiceInterface
+from .session_context import session_ctx
 
 
 # ═══════════ 悬浮星球主窗口 ═══════════
@@ -42,6 +45,7 @@ class FloatingPlanet(QWidget):
     LISTENING = "listening"
     THINKING = "thinking"
     SPEAKING = "speaking"
+    CONVERSING = "conversing"
 
     # 尺寸参数
     SLEEP_SIZE = 85
@@ -129,12 +133,21 @@ class FloatingPlanet(QWidget):
         self._voice_enabled = True  # 可动态禁用
         self._voice_handlers_active = True  # 信号连接状态
 
+        # 朗读进程
+        self._speak_process = None  # 后台 say 朗读进程
+
         # ── 语音唤醒 ──
         self._wake_word_mode = True        # 默认启用持续监听唤醒
         self._wake_words = ["球球", "星仔", "球球在吗", "小助手", "助理"]
         self._wake_pending = False           # 已检测到唤醒词，等待命令
         self._exit_words = ["退出", "关闭", "再见", "拜拜", "睡觉", "休息", "退下"]
         self._whisper_wake_recognizer = None  # Whisper 唤醒模式专用识别器
+
+        # ── 连续对话 ──
+        self._conversation_timer = QTimer(self)   # 连续对话超时定时器（单次触发）
+        self._conversation_timer.setSingleShot(True)
+        self._conversation_timer.timeout.connect(self._exit_conversation)
+        self._in_conversation = False              # 是否处于连续对话模式
 
         # 星球样式（默认地球）
         self._style = PLANET_STYLES.get("earth", PLANET_STYLES["neptune"])
@@ -159,7 +172,7 @@ class FloatingPlanet(QWidget):
         self._auto_switch_idx = 0
         self._auto_switch_timer = QTimer(self)
         self._auto_switch_timer.timeout.connect(self._auto_cycle_shape)
-        self._auto_switch_timer.start(7000)  # 每7秒自动切换
+        # self._auto_switch_timer.start(7000)  # DEBUG: 临时禁用以排查退出问题
 
         # 窗口配置 — 无边框置顶独立窗口
         self.setWindowFlags(
@@ -824,19 +837,21 @@ class FloatingPlanet(QWidget):
         try:
             from modules.intelligence.ai_chat_window import AIChatWindow
 
-            # 如果已有对话窗口，则聚焦
-            if hasattr(self, '_standalone_chat') and self._standalone_chat is not None:
+            # 注入 AgentBridge 到全局上下文
+            session_ctx.set_agent_bridge(self._engine)
+
+            # 如果已有活跃窗口，关闭后重建（确保新代码生效）
+            if session_ctx._active_window is not None:
                 try:
-                    if self._standalone_chat.isVisible():
-                        self._standalone_chat.raise_()
-                        self._standalone_chat.activateWindow()
-                        return
+                    session_ctx._active_window.close()
                 except RuntimeError:
-                    pass  # 已销毁，重新创建
+                    pass
+                session_ctx._active_window = None
 
             self._standalone_chat = AIChatWindow(
                 opcclaw_engine=self._engine,
                 embedded=False,
+                session_id=session_ctx.current_session_id,
             )
             self._standalone_chat.setAttribute(Qt.WA_DeleteOnClose)
             self._standalone_chat.show()
@@ -854,6 +869,7 @@ class FloatingPlanet(QWidget):
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No
         )
         if reply == QMessageBox.Yes:
+            self._terminate_speak()
             self._voice.stop_listening()
             self._do_cleanup()
             self.close()
@@ -955,8 +971,20 @@ class FloatingPlanet(QWidget):
     def _on_voice_result(self, text: str):
         """语音识别结果"""
         text = text.strip()
-        print(f"[Voice] result: '{text}' wake_mode={self._wake_word_mode} wake_pending={self._wake_pending}")
+        print(f"[Voice] result: '{text}' wake_mode={self._wake_word_mode} wake_pending={self._wake_pending} conversing={self._in_conversation}")
         if not text or len(text) < 1:
+            return
+
+        # ── 阶段3：连续对话模式 ──
+        if self._in_conversation and self._state == self.CONVERSING:
+            if self._check_exit(text):
+                return
+            self._last_voice_text = text
+            self.update()
+            # 重置超时定时器（用户说话了）
+            self._conversation_timer.stop()
+            self._conversation_timer.start(10000)
+            self._query_ai(text)
             return
 
         # 唤醒模式：先检测唤醒词
@@ -1021,7 +1049,22 @@ class FloatingPlanet(QWidget):
                 prompt = f"{text}\n\n[语音模式：口语化回复，控制在150字以内]"
             else:
                 prompt = text
+
+            # 语音对话写入全局会话
+            session_ctx.set_agent_bridge(self._engine)
+            try:
+                session_ctx.agent_bridge.append_message("user", text, session_ctx.current_session_id)
+                session_ctx.notify_message_added(session_ctx.current_session_id, "user", text)
+            except Exception as e:
+                print(f"[FloatingPlanet] append_message(user) 失败: {e}")
+
             reply = self._engine.chat(prompt)
+
+            try:
+                session_ctx.agent_bridge.append_message("assistant", reply, session_ctx.current_session_id)
+                session_ctx.notify_message_added(session_ctx.current_session_id, "assistant", reply)
+            except Exception as e:
+                print(f"[FloatingPlanet] append_message(assistant) 失败: {e}")
         except Exception as e:
             traceback.print_exc()
             reply = f"出错了: {e}"
@@ -1030,6 +1073,19 @@ class FloatingPlanet(QWidget):
         self._state = self.SPEAKING
         self._last_voice_text = reply
         self.update()
+
+        # 自动播报：后台执行 macOS say 命令朗读 AI 回复
+        if self._wake_word_mode:
+            self._terminate_speak()
+            def _say_run():
+                try:
+                    proc = subprocess.Popen(['say', '-v', 'Tingting', reply])
+                    self._speak_process = proc
+                    proc.wait()
+                except Exception as e:
+                    print(f"[FloatingPlanet Speak] 朗读失败: {e}")
+            t = threading.Thread(target=_say_run, daemon=True)
+            t.start()
 
         self._voice.speak(reply)
         self._voice.synthesis_done.connect(self._on_speak_done)
@@ -1045,37 +1101,107 @@ class FloatingPlanet(QWidget):
         text_lower = text.lower()
         return any(kw in text_lower for kw in task_keywords)
 
+    def _terminate_speak(self):
+        """终止后台 say 朗读进程"""
+        if self._speak_process and self._speak_process.poll() is None:
+            try:
+                self._speak_process.terminate()
+                self._speak_process.wait(timeout=2)
+            except Exception:
+                try:
+                    self._speak_process.kill()
+                except Exception:
+                    pass
+        self._speak_process = None
+
     def _on_speak_done(self):
-        """朗读完成，恢复状态"""
-        self._state = self.ACTIVE
+        """朗读完成，进入连续对话模式"""
         try:
             self._voice.synthesis_done.disconnect(self._on_speak_done)
         except TypeError:
             import traceback; traceback.print_exc()
 
-        # 唤醒模式下，朗读结束后重新开始监听
         if self._wake_word_mode:
-            from PyQt5.QtCore import QTimer
-            # Whisper 持续唤醒：AI回复完毕后恢复唤醒监听
-            if self._whisper_wake_recognizer and self._whisper_wake_recognizer.isRunning():
-                self._whisper_wake_recognizer.resume_wake()
-                return
-            # Apple Speech 轮询模式（Whisper 未就绪时使用）
-            if not self._whisper_wake_recognizer:
-                QTimer.singleShot(600, self._start_wake_listen)
+            # AI 回复完毕 → 进入连续对话模式（无需唤醒词）
+            self._enter_conversation()
+        else:
+            self._state = self.ACTIVE
+            self.update()
 
     def _check_exit(self, text: str) -> bool:
         """检测退出词，返回 True 表示已拦截并执行退出"""
         for ew in self._exit_words:
             if ew in text:
-                self._last_voice_text = "好的，再见！"
-                self._state = self.SPEAKING
-                self.update()
-                self._voice.speak("好的，再见！")
-                from PyQt5.QtCore import QTimer
-                QTimer.singleShot(1800, self.close)
+                if self._state == self.CONVERSING:
+                    # 连续对话中：退出对话模式，回到唤醒监听
+                    self._last_voice_text = "好的，有需要再叫我"
+                    self._state = self.SPEAKING
+                    self.update()
+                    self._voice.speak("好的，有需要再叫我")
+                    try:
+                        self._voice.synthesis_done.disconnect(self._on_speak_done)
+                    except TypeError:
+                        pass
+                    self._voice.synthesis_done.connect(self._exit_conversation)
+                else:
+                    # 非连续对话模式：保持原有关闭行为
+                    self._last_voice_text = "好的，再见！"
+                    self._state = self.SPEAKING
+                    self.update()
+                    self._voice.speak("好的，再见！")
+                    from PyQt5.QtCore import QTimer
+                    QTimer.singleShot(1800, self.close)
                 return True
         return False
+
+    def _enter_conversation(self):
+        """进入连续对话模式：无需唤醒词，直接说话即可"""
+        self._state = self.CONVERSING
+        self._in_conversation = True
+        self.update()
+
+        # 终止正在进行的朗读（用户开始新语音输入）
+        self._terminate_speak()
+
+        # 启动超时定时器（10秒无人声则退出对话）
+        self._conversation_timer.start(10000)
+
+        if self._whisper_wake_recognizer and self._whisper_wake_recognizer.isRunning():
+            # Whisper 模式：直接进入命令录制（无需唤醒）
+            self._whisper_wake_recognizer.listen_for_command()
+        else:
+            # Apple Speech 模式：用 10s timeout 监听
+            if self._voice.is_listening():
+                self._voice.stop_listening()
+            from PyQt5.QtCore import QTimer
+            QTimer.singleShot(400, lambda: self._voice.start_listening(timeout=10.0))
+
+    def _exit_conversation(self):
+        """退出连续对话模式，回到唤醒监听"""
+        self._state = self.ACTIVE
+        self._in_conversation = False
+        self._conversation_timer.stop()
+        self.update()
+
+        # 终止正在进行的朗读
+        self._terminate_speak()
+
+        # 断开可能残留的 synthesis_done 连接
+        try:
+            self._voice.synthesis_done.disconnect(self._exit_conversation)
+        except TypeError:
+            pass
+        try:
+            self._voice.synthesis_done.disconnect(self._on_speak_done)
+        except TypeError:
+            pass
+
+        if self._wake_word_mode:
+            if self._whisper_wake_recognizer and self._whisper_wake_recognizer.isRunning():
+                self._whisper_wake_recognizer.resume_wake()
+            else:
+                from PyQt5.QtCore import QTimer
+                QTimer.singleShot(600, self._start_wake_listen)
 
     # ── 语音唤醒 ──
 
@@ -1096,6 +1222,8 @@ class FloatingPlanet(QWidget):
             self.setToolTip("opcclaw · 唤醒已开启")
         else:
             self._wake_pending = False
+            self._in_conversation = False
+            self._conversation_timer.stop()
             self._state = self.ACTIVE
             self.update()
             # 停止 Whisper 唤醒
@@ -1165,6 +1293,8 @@ class FloatingPlanet(QWidget):
             return
         self._last_voice_text = text
         self.update()
+        # 标记进入连续对话（AI 回复完毕 → _on_speak_done → _enter_conversation）
+        self._in_conversation = True
         self._query_ai(text)
 
     def _on_whisper_status(self, status: str):
@@ -1277,6 +1407,19 @@ class FloatingPlanet(QWidget):
                 p.setBrush(speak_grad)
                 p.setPen(Qt.NoPen)
                 p.drawEllipse(center, speak_r, speak_r)
+        elif self._state == self.CONVERSING:
+            # 连续对话光效（琥珀金呼吸 + 持续光晕，表示"我在听"）
+            for layer in range(3):
+                wave_phase = self._anim_t * (3.5 + layer * 2.2)
+                conv_r = scaled_r + 5 + int((7 + layer * 4) * abs(math.sin(wave_phase)))
+                conv_grad = QRadialGradient(center, conv_r)
+                conv_grad.setColorAt(0, QColor(255, 200, 60, 0))
+                conv_grad.setColorAt(0.3, QColor(255, 180, 40, 40 - layer * 10))
+                conv_grad.setColorAt(0.6, QColor(255, 160, 20, 25 - layer * 7))
+                conv_grad.setColorAt(1.0, QColor(255, 140, 0, 0))
+                p.setBrush(conv_grad)
+                p.setPen(Qt.NoPen)
+                p.drawEllipse(center, conv_r, conv_r)
         elif self._state in (self.WAKING, self.ACTIVE):
             # 外层多层光晕
             for layer in range(2):

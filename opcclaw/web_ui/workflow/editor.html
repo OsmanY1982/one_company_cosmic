@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>opcclaw 工作流编辑器</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f1117; --panel-bg: #161822; --border: #2a2d3a;
+  --text: #c9d1d9; --text-muted: #6e7681; --accent: #58a6ff;
+  --accent-dim: #1f2a3e; --success: #3fb950; --warning: #d29922;
+  --danger: #f85149; --node-bg: #1c1f2e; --node-border: #30363d;
+  --input-bg: #0d1117; --btn-bg: #21262d; --btn-hover: #30363d;
+  --llm-color: #58a6ff; --tool-color: #3fb950; --cond-color: #d29922;
+  --loop-color: #bc8cff; --output-color: #f85149; --input-color: #8b949e;
+  --port-size: 12px; --node-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 13px; line-height: 1.5;
+}
+body { 
+  background: var(--bg); color: var(--text); height: 100vh; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+/* Toolbar */
+#toolbar {
+  display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+  background: var(--panel-bg); border-bottom: 1px solid var(--border);
+  flex-shrink: 0; height: 44px; z-index: 10;
+}
+#toolbar .title { font-weight: 600; font-size: 14px; margin-right: 16px; color: #fff; }
+#toolbar .sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+#toolbar button {
+  padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--btn-bg); color: var(--text); cursor: pointer;
+  font-size: 12px; transition: all 0.15s;
+}
+#toolbar button:hover { background: var(--btn-hover); border-color: #555; }
+#toolbar button.accent { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+#toolbar button.accent:hover { background: #388bfd; }
+#toolbar button.danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+#toolbar button.danger:hover { opacity: 0.9; }
+#toolbar select {
+  padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--btn-bg); color: var(--text); font-size: 12px; cursor: pointer;
+}
+#toolbar .status { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+/* Main layout */
+#main { display: flex; flex: 1; overflow: hidden; }
+/* Left panel - node palette */
+#left-panel {
+  width: 200px; background: var(--panel-bg); border-right: 1px solid var(--border);
+  padding: 12px; overflow-y: auto; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
+}
+#left-panel h3 { font-size: 12px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 2px; }
+.node-card {
+  padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--node-bg); cursor: grab; user-select: none;
+  transition: all 0.15s; font-size: 12px;
+}
+.node-card:hover { border-color: var(--accent); background: var(--accent-dim); }
+.node-card:active { cursor: grabbing; }
+.node-card .card-icon { font-size: 16px; margin-right: 6px; }
+.node-card .card-label { font-weight: 500; }
+.node-card .card-desc { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+/* Canvas */
+#canvas-wrap {
+  flex: 1; overflow: hidden; position: relative;
+  background: 
+    radial-gradient(circle, #1a1d2e 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+  background-color: var(--bg);
+}
+#canvas-wrap.panning { cursor: grabbing; }
+#svg-canvas { width: 100%; height: 100%; display: block; }
+/* SVG elements */
+.node-group { cursor: move; }
+.node-group:hover .node-rect { filter: brightness(1.1); }
+.node-rect { 
+  fill: var(--node-bg); stroke: var(--node-border); stroke-width: 1.5;
+  rx: var(--node-radius); ry: var(--node-radius);
+}
+.node-rect.selected { stroke: var(--accent); stroke-width: 2; filter: drop-shadow(0 0 8px rgba(88,166,255,0.3)); }
+.node-type-badge {
+  font-size: 9px; font-weight: 600; text-transform: uppercase;
+}
+.node-label { font-size: 13px; font-weight: 500; fill: var(--text); }
+.node-sub { font-size: 10px; fill: var(--text-muted); }
+/* Ports */
+.port {
+  fill: var(--border); stroke: var(--text-muted); stroke-width: 1;
+  cursor: crosshair; transition: all 0.1s;
+}
+.port:hover { fill: var(--accent); stroke: var(--accent); }
+.port.input-port { }
+.port.output-port { }
+/* Edges */
+.edge-line {
+  fill: none; stroke: var(--text-muted); stroke-width: 2;
+  marker-end: url(#arrowhead);
+}
+.edge-line.temp { stroke: var(--accent); stroke-dasharray: 6 3; opacity: 0.7; }
+/* Right panel */
+#right-panel {
+  width: 280px; background: var(--panel-bg); border-left: 1px solid var(--border);
+  padding: 12px; overflow-y: auto; flex-shrink: 0; display: flex; flex-direction: column;
+}
+#right-panel h3 { font-size: 12px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 4px; }
+#right-panel .empty-hint { color: var(--text-muted); font-size: 12px; text-align: center; padding: 24px 0; }
+#right-panel label { font-size: 11px; color: var(--text-muted); display: block; margin-top: 10px; margin-bottom: 3px; }
+#right-panel input, #right-panel select, #right-panel textarea {
+  width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px;
+  background: var(--input-bg); color: var(--text); font-size: 12px; font-family: inherit;
+}
+#right-panel textarea { min-height: 100px; resize: vertical; }
+#right-panel input:focus, #right-panel textarea:focus { border-color: var(--accent); outline: none; }
+#right-panel .prop-section { margin-bottom: 8px; }
+/* Toast */
+#toast {
+  position: fixed; bottom: 24px; right: 24px; padding: 10px 18px;
+  border-radius: 8px; font-size: 12px; z-index: 100;
+  opacity: 0; transform: translateY(16px); transition: all 0.25s; pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+#toast.info { background: #1f6feb; color: #fff; }
+#toast.error { background: var(--danger); color: #fff; }
+#toast.success { background: var(--success); color: #fff; }
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div id="toolbar">
+  <span class="title">⚡ opcclaw 工作流编辑器</span>
+  <span class="sep"></span>
+  <button class="accent" onclick="runWorkflow()" title="运行工作流">▶ 运行</button>
+  <button onclick="stopWorkflow()" title="停止运行">■ 停止</button>
+  <span class="sep"></span>
+  <button onclick="saveWorkflow()">💾 保存</button>
+  <button onclick="loadWorkflow()">📂 加载</button>
+  <button onclick="clearCanvas()">🗑 清空</button>
+  <span class="sep"></span>
+  <select id="template-select" onchange="loadTemplate(this.value)">
+    <option value="">📋 加载模板...</option>
+  </select>
+  <span class="sep"></span>
+  <button onclick="compileWorkflow()" title="编译为 Python 代码">🔧 编译</button>
+  <span class="status" id="status-text">就绪</span>
+</div>
+
+<!-- Main -->
+<div id="main">
+  <!-- Left: Node Palette -->
+  <div id="left-panel">
+    <h3>Agent 节点</h3>
+    <div class="node-card" draggable="true" data-type="InputNode" ondragstart="onDragStart(event)">
+      <span class="card-icon">📥</span><span class="card-label">输入节点</span>
+      <div class="card-desc">用户输入/文件输入</div>
+    </div>
+    <div class="node-card" draggable="true" data-type="LLMNode" ondragstart="onDragStart(event)">
+      <span class="card-icon">🧠</span><span class="card-label">LLM 节点</span>
+      <div class="card-desc">大模型推理/生成</div>
+    </div>
+    <div class="node-card" draggable="true" data-type="ToolNode" ondragstart="onDragStart(event)">
+      <span class="card-icon">🔧</span><span class="card-label">工具节点</span>
+      <div class="card-desc">调用外部工具/API</div>
+    </div>
+    <div class="node-card" draggable="true" data-type="ConditionalNode" ondragstart="onDragStart(event)">
+      <span class="card-icon">🔀</span><span class="card-label">条件节点</span>
+      <div class="card-desc">if/else 分支路由</div>
+    </div>
+    <div class="node-card" draggable="true" data-type="LoopNode" ondragstart="onDragStart(event)">
+      <span class="card-icon">🔄</span><span class="card-label">循环节点</span>
+      <div class="card-desc">while 迭代执行</div>
+    </div>
+    <div class="node-card" draggable="true" data-type="OutputNode" ondragstart="onDragStart(event)">
+      <span class="card-icon">📤</span><span class="card-label">输出节点</span>
+      <div class="card-desc">结果输出/展示</div>
+    </div>
+  </div>
+
+  <!-- Center: Canvas -->
+  <div id="canvas-wrap" 
+       ondragover="onDragOver(event)" 
+       ondrop="onDrop(event)"
+       onmousedown="onCanvasMouseDown(event)"
+       onmousemove="onCanvasMouseMove(event)"
+       onmouseup="onCanvasMouseUp(event)">
+    <svg id="svg-canvas"></svg>
+  </div>
+
+  <!-- Right: Properties -->
+  <div id="right-panel">
+    <h3>属性面板</h3>
+    <div class="empty-hint" id="prop-empty">← 选中节点查看属性</div>
+    <div id="prop-content" style="display:none"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Arrow marker definition -->
+<svg style="position:absolute;width:0;height:0">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6e7681" />
+    </marker>
+  </defs>
+</svg>
+
+<script>
+// ═══════════════════════════════════════════
+// 状态管理
+// ═══════════════════════════════════════════
+const NODE_DEFAULTS = {
+  InputNode: { w: 180, h: 70, label: "输入", config: { input_type: "text" } },
+  LLMNode: { w: 180, h: 80, label: "LLM", config: { model: "gpt-4o", temperature: 0.7, prompt: "{input}", use_rag: false } },
+  ToolNode: { w: 180, h: 80, label: "工具", config: { tool_name: "web_search", params: { query: "{input}" } } },
+  ConditionalNode: { w: 190, h: 80, label: "条件", config: { condition: "grade", branches: {} } },
+  LoopNode: { w: 190, h: 80, label: "循环", config: { max_iterations: 10, condition: "" } },
+  OutputNode: { w: 180, h: 70, label: "输出", config: { output_format: "text" } }
+};
+const NODE_COLORS = {
+  InputNode: "#8b949e", LLMNode: "#58a6ff", ToolNode: "#3fb950",
+  ConditionalNode: "#d29922", LoopNode: "#bc8cff", OutputNode: "#f85149"
+};
+
+let nodes = {};
+let edges = [];
+let nodeCounter = { InputNode:0, LLMNode:0, ToolNode:0, ConditionalNode:0, LoopNode:0, OutputNode:0 };
+let selectedNodeId = null;
+let svgEl, canvasWrap;
+let connectFrom = null; // {nodeId, port}
+let tempEdge = null;
+let panning = false, panStart = { x: 0, y: 0 };
+let viewBox = { x: 0, y: 0, w: 1200, h: 800 };
+let dragNodeId = null, dragOffset = { x: 0, y: 0 };
+
+// ═══════════════════════════════════════════
+// 初始化
+// ═══════════════════════════════════════════
+window.addEventListener("DOMContentLoaded", () => {
+  svgEl = document.getElementById("svg-canvas");
+  canvasWrap = document.getElementById("canvas-wrap");
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+  loadTemplateList();
+});
+
+function resizeCanvas() {
+  const rect = canvasWrap.getBoundingClientRect();
+  viewBox.w = rect.width;
+  viewBox.h = rect.height;
+  svgEl.setAttribute("viewBox", `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+  renderAll();
+}
+
+// ═══════════════════════════════════════════
+// 渲染
+// ═══════════════════════════════════════════
+function renderAll() {
+  let html = `<defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6e7681" /></marker></defs>`;
+
+  // 渲染连线
+  for (const edge of edges) {
+    const sn = nodes[edge.source], tn = nodes[edge.target];
+    if (!sn || !tn) continue;
+    const sp = getPortPos(edge.source, "output");
+    const tp = getPortPos(edge.target, "input");
+    html += `<line class="edge-line" x1="${sp.x}" y1="${sp.y}" x2="${tp.x}" y2="${tp.y}" />`;
+  }
+
+  // 临时连线
+  if (tempEdge) {
+    html += `<line class="edge-line temp" x1="${tempEdge.x1}" y1="${tempEdge.y1}" x2="${tempEdge.x2}" y2="${tempEdge.y2}" />`;
+  }
+
+  // 渲染节点
+  for (const [id, node] of Object.entries(nodes)) {
+    const color = NODE_COLORS[node.type] || "#8b949e";
+    const sel = id === selectedNodeId ? " selected" : "";
+    html += `<g class="node-group" data-id="${id}" transform="translate(${node.x},${node.y})" onmousedown="onNodeMouseDown(event,'${id}')">`;
+    html += `<rect class="node-rect${sel}" width="${node.w}" height="${node.h}" rx="10" ry="10" />`;
+    html += `<rect x="4" y="4" width="${node.w-8}" height="18" rx="4" fill="${color}" opacity="0.2" />`;
+    html += `<text x="12" y="15" class="node-type-badge" fill="${color}">${node.type}</text>`;
+    html += `<text x="${node.w/2}" y="38" class="node-label" text-anchor="middle">${node.label}</text>`;
+    if (node.sub) html += `<text x="${node.w/2}" y="54" class="node-sub" text-anchor="middle">${node.sub}</text>`;
+    // 输入端口 (左上)
+    html += `<circle class="port input-port" cx="0" cy="${node.h/2}" r="6" data-node="${id}" data-port="input" onmousedown="onPortMouseDown(event,'${id}','input')" />`;
+    // 输出端口 (右上)
+    html += `<circle class="port output-port" cx="${node.w}" cy="${node.h/2}" r="6" data-node="${id}" data-port="output" onmousedown="onPortMouseDown(event,'${id}','output')" />`;
+    html += `</g>`;
+  }
+
+  svgEl.innerHTML = html;
+  updatePropertiesPanel();
+}
+
+function getPortPos(nodeId, port) {
+  const node = nodes[nodeId];
+  if (!node) return { x: 0, y: 0 };
+  if (port === "output") return { x: node.x + node.w, y: node.y + node.h / 2 };
+  return { x: node.x, y: node.y + node.h / 2 };
+}
+
+// ═══════════════════════════════════════════
+// 拖拽节点
+// ═══════════════════════════════════════════
+function onDragStart(e) {
+  e.dataTransfer.setData("text/plain", e.target.closest(".node-card").dataset.type);
+  e.dataTransfer.effectAllowed = "copy";
+}
+
+function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; }
+
+function onDrop(e) {
+  e.preventDefault();
+  const nodeType = e.dataTransfer.getData("text/plain");
+  if (!nodeType || !NODE_DEFAULTS[nodeType]) return;
+
+  const rect = canvasWrap.getBoundingClientRect();
+  const x = e.clientX - rect.left + viewBox.x - 90; // center the card
+  const y = e.clientY - rect.top + viewBox.y - 35;
+
+  addNode(nodeType, x, y);
+}
+
+function addNode(type, x, y) {
+  nodeCounter[type] = (nodeCounter[type] || 0) + 1;
+  const id = `${type}_${nodeCounter[type]}`;
+  const def = NODE_DEFAULTS[type];
+  nodes[id] = {
+    id, type, x, y, w: def.w, h: def.h,
+    label: def.label,
+    sub: "",
+    config: JSON.parse(JSON.stringify(def.config))
+  };
+  selectedNodeId = id;
+  renderAll();
+  toast(`已添加: ${type}`, "info");
+}
+
+// ═══════════════════════════════════════════
+// 画布交互
+// ═══════════════════════════════════════════
+function onNodeMouseDown(e, nodeId) {
+  if (e.button !== 0) return;
+  e.stopPropagation();
+  dragNodeId = nodeId;
+  const node = nodes[nodeId];
+  const rect = canvasWrap.getBoundingClientRect();
+  dragOffset.x = (e.clientX - rect.left + viewBox.x) - node.x;
+  dragOffset.y = (e.clientY - rect.top + viewBox.y) - node.y;
+  selectedNodeId = nodeId;
+  renderAll();
+  canvasWrap.style.cursor = "grabbing";
+}
+
+function onCanvasMouseDown(e) {
+  if (e.target !== svgEl && e.target !== canvasWrap) return;
+  if (e.button === 1 || (e.button === 0 && e.shiftKey) || (e.button === 0 && e.target === svgEl)) {
+    panning = true;
+    panStart.x = e.clientX;
+    panStart.y = e.clientY;
+    canvasWrap.classList.add("panning");
+    selectedNodeId = null;
+    renderAll();
+  }
+}
+
+function onCanvasMouseMove(e) {
+  const rect = canvasWrap.getBoundingClientRect();
+
+  if (dragNodeId) {
+    const node = nodes[dragNodeId];
+    node.x = Math.max(0, e.clientX - rect.left + viewBox.x - dragOffset.x);
+    node.y = Math.max(0, e.clientY - rect.top + viewBox.y - dragOffset.y);
+    renderAll();
+  }
+
+  if (panning) {
+    viewBox.x -= (e.clientX - panStart.x);
+    viewBox.y -= (e.clientY - panStart.y);
+    panStart.x = e.clientX;
+    panStart.y = e.clientY;
+    svgEl.setAttribute("viewBox", `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+    renderAll();
+  }
+
+  if (tempEdge) {
+    tempEdge.x2 = e.clientX - rect.left + viewBox.x;
+    tempEdge.y2 = e.clientY - rect.top + viewBox.y;
+    renderAll();
+  }
+}
+
+function onCanvasMouseUp(e) {
+  if (dragNodeId) {
+    dragNodeId = null;
+    canvasWrap.style.cursor = "";
+    renderAll();
+  }
+  if (panning) {
+    panning = false;
+    canvasWrap.classList.remove("panning");
+  }
+  if (tempEdge) {
+    // 检查是否落在某个输入端口上
+    const rect = canvasWrap.getBoundingClientRect();
+    const mx = e.clientX - rect.left + viewBox.x;
+    const my = e.clientY - rect.top + viewBox.y;
+    const targetNode = findNodeNearPort(mx, my, "input");
+    if (targetNode && targetNode.id !== connectFrom.nodeId) {
+      // 检查不存在重复边
+      const exists = edges.some(ed =>
+        ed.source === connectFrom.nodeId && ed.target === targetNode.id
+      );
+      if (!exists) {
+        edges.push({ source: connectFrom.nodeId, target: targetNode.id,
+                      source_port: "output", target_port: "input" });
+      }
+    }
+    tempEdge = null;
+    connectFrom = null;
+    renderAll();
+  }
+}
+
+function findNodeNearPort(x, y, port) {
+  for (const [id, node] of Object.entries(nodes)) {
+    const pp = getPortPos(id, port);
+    const dx = Math.abs(x - pp.x), dy = Math.abs(y - pp.y);
+    if (dx < 20 && dy < 20) return node;
+  }
+  return null;
+}
+
+// ═══════════════════════════════════════════
+// 端口连线
+// ═══════════════════════════════════════════
+function onPortMouseDown(e, nodeId, port) {
+  e.stopPropagation();
+  if (port !== "output") return;
+  connectFrom = { nodeId, port };
+  const pp = getPortPos(nodeId, "output");
+  tempEdge = { x1: pp.x, y1: pp.y, x2: pp.x, y2: pp.y };
+  dragNodeId = null;
+  renderAll();
+  e.preventDefault();
+}
+
+// ═══════════════════════════════════════════
+// 键盘删除
+// ═══════════════════════════════════════════
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Delete" || e.key === "Backspace") {
+    if (selectedNodeId && document.activeElement === document.body) {
+      delete selectedNodeId;
+      deleteNode(selectedNodeId);
+    } else if (document.activeElement === document.body) {
+      // 删除最后选中的边
+    }
+  }
+});
+
+function deleteNode(nodeId) {
+  delete nodes[nodeId];
+  edges = edges.filter(e => e.source !== nodeId && e.target !== nodeId);
+  if (selectedNodeId === nodeId) selectedNodeId = null;
+  renderAll();
+}
+
+// ═══════════════════════════════════════════
+// 属性面板
+// ═══════════════════════════════════════════
+function updatePropertiesPanel() {
+  const empty = document.getElementById("prop-empty");
+  const content = document.getElementById("prop-content");
+  if (!selectedNodeId || !nodes[selectedNodeId]) {
+    empty.style.display = "block";
+    content.style.display = "none";
+    return;
+  }
+  empty.style.display = "none";
+  content.style.display = "block";
+
+  const node = nodes[selectedNodeId];
+  let html = `<h3 style="color:${NODE_COLORS[node.type] || '#ccc'}">${node.type}</h3>`;
+  html += `<label>节点 ID</label><input value="${node.id}" readonly style="opacity:0.6">`;
+  html += `<label>标签</label><input value="${node.label}" onchange="updateNodeProp('label',this.value)">`;
+
+  const cfg = node.config || {};
+  switch (node.type) {
+    case "LLMNode":
+      html += `<label>模型</label>
+        <select onchange="updateNodeConfig('model',this.value)">
+          <option value="gpt-4o" ${cfg.model==='gpt-4o'?'selected':''}>GPT-4o</option>
+          <option value="gpt-4-turbo" ${cfg.model==='gpt-4-turbo'?'selected':''}>GPT-4 Turbo</option>
+          <option value="claude-3-opus" ${cfg.model==='claude-3-opus'?'selected':''}>Claude 3 Opus</option>
+          <option value="deepseek-v3" ${cfg.model==='deepseek-v3'?'selected':''}>DeepSeek V3</option>
+        </select>`;
+      html += `<label>温度 (${cfg.temperature||0.7})</label>
+        <input type="range" min="0" max="2" step="0.1" value="${cfg.temperature||0.7}" oninput="updateNodeConfig('temperature',parseFloat(this.value));this.previousElementSibling.textContent='温度 ('+this.value+')'">`;
+      html += `<label>提示词</label>
+        <textarea onchange="updateNodeConfig('prompt',this.value)">${(cfg.prompt||'').replace(/</g,'&lt;')}</textarea>`;
+      html += `<label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <input type="checkbox" ${cfg.use_rag?'checked':''} onchange="updateNodeConfig('use_rag',this.checked)"> 启用 RAG
+      </label>`;
+      break;
+    case "ToolNode":
+      html += `<label>工具名</label><input value="${cfg.tool_name||''}" onchange="updateNodeConfig('tool_name',this.value)">`;
+      html += `<label>参数 (JSON)</label>
+        <textarea onchange="try{updateNodeConfig('params',JSON.parse(this.value))}catch(e){toast('JSON格式错误','error')}">${JSON.stringify(cfg.params||{},null,2)}</textarea>`;
+      break;
+    case "ConditionalNode":
+      html += `<label>判断字段</label><input value="${cfg.condition||''}" onchange="updateNodeConfig('condition',this.value)">`;
+      html += `<label>分支映射 (JSON: {"值":"目标节点ID"})</label>
+        <textarea onchange="try{updateNodeConfig('branches',JSON.parse(this.value))}catch(e){toast('JSON格式错误','error')}">${JSON.stringify(cfg.branches||{},null,2)}</textarea>`;
+      break;
+    case "LoopNode":
+      html += `<label>最大迭代</label><input type="number" value="${cfg.max_iterations||10}" onchange="updateNodeConfig('max_iterations',parseInt(this.value))">`;
+      html += `<label>退出条件</label><input value="${cfg.condition||''}" onchange="updateNodeConfig('condition',this.value)">`;
+      break;
+    case "OutputNode":
+      html += `<label>输出格式</label>
+        <select onchange="updateNodeConfig('output_format',this.value)">
+          <option value="text" ${cfg.output_format==='text'?'selected':''}>纯文本</option>
+          <option value="markdown" ${cfg.output_format==='markdown'?'selected':''}>Markdown</option>
+          <option value="json" ${cfg.output_format==='json'?'selected':''}>JSON</option>
+        </select>`;
+      break;
+  }
+  html += `<button style="margin-top:16px;width:100%;padding:6px;border:1px solid var(--danger);border-radius:4px;background:transparent;color:var(--danger);cursor:pointer" onclick="deleteNode('${node.id}')">删除节点</button>`;
+  content.innerHTML = html;
+}
+
+function updateNodeProp(prop, value) {
+  if (!selectedNodeId || !nodes[selectedNodeId]) return;
+  nodes[selectedNodeId][prop] = value;
+  renderAll();
+}
+
+function updateNodeConfig(key, value) {
+  if (!selectedNodeId || !nodes[selectedNodeId]) return;
+  if (!nodes[selectedNodeId].config) nodes[selectedNodeId].config = {};
+  nodes[selectedNodeId].config[key] = value;
+}
+
+// ═══════════════════════════════════════════
+// 数据导出/导入
+// ═══════════════════════════════════════════
+function toWorkflowJSON() {
+  return {
+    name: "workflow",
+    nodes: Object.values(nodes).map(n => ({
+      id: n.id, type: n.type, label: n.label, x: n.x, y: n.y, config: n.config
+    })),
+    edges: edges
+  };
+}
+
+function fromWorkflowJSON(json) {
+  nodes = {};
+  edges = json.edges || [];
+  for (const n of (json.nodes || [])) {
+    const def = NODE_DEFAULTS[n.type] || { w: 180, h: 70 };
+    nodes[n.id] = {
+      id: n.id, type: n.type, label: n.label || n.type,
+      x: n.x || 100, y: n.y || 100,
+      w: def.w, h: def.h,
+      sub: n.sub || "",
+      config: n.config || {}
+    };
+    // 更新计数器
+    const match = n.id.match(/^(\w+Node)_(\d+)$/);
+    if (match && nodeCounter[match[1]] !== undefined) {
+      nodeCounter[match[1]] = Math.max(nodeCounter[match[1]], parseInt(match[2]));
+    }
+  }
+  selectedNodeId = null;
+  renderAll();
+}
+
+// ═══════════════════════════════════════════
+// API 调用
+// ═══════════════════════════════════════════
+async function api(method, path, body) {
+  const opts = { method, headers: { "Content-Type": "application/json" } };
+  if (body) opts.body = JSON.stringify(body);
+  const resp = await fetch(path, opts);
+  return resp.json();
+}
+
+async function saveWorkflow() {
+  const wf = toWorkflowJSON();
+  const name = prompt("工作流名称:", wf.name || "untitled");
+  if (!name) return;
+  wf.name = name;
+  const res = await api("POST", "/api/workflow/save", wf);
+  if (res.error) toast(res.error, "error");
+  else toast(`已保存: ${res.path}`, "success");
+}
+
+async function loadWorkflow() {
+  const name = prompt("要加载的工作流名称:");
+  if (!name) return;
+  const res = await api("GET", `/api/workflow/load?name=${encodeURIComponent(name)}`);
+  if (res.error) { toast(res.error, "error"); return; }
+  fromWorkflowJSON(res);
+  toast(`已加载: ${name}`, "success");
+}
+
+async function compileWorkflow() {
+  const wf = toWorkflowJSON();
+  setStatus("编译中...");
+  const res = await api("POST", "/api/workflow/compile", wf);
+  if (res.error) { toast(res.error, "error"); setStatus("编译失败"); return; }
+  // 展示代码
+  const code = res.code;
+  const w = window.open("", "_blank", "width=700,height=500");
+  w.document.write(`<pre style="background:#0d1117;color:#c9d1d9;padding:16px;font-family:monospace;font-size:12px;white-space:pre-wrap;word-break:break-all">${code.replace(/</g,'&lt;')}</pre>`);
+  toast("编译成功 ✓", "success");
+  setStatus("编译完成");
+}
+
+async function runWorkflow() {
+  setStatus("运行中...");
+  const wf = toWorkflowJSON();
+  const comp = await api("POST", "/api/workflow/compile", wf);
+  if (comp.error) { toast(comp.error, "error"); setStatus("运行失败"); return; }
+  const res = await api("POST", "/api/workflow/run", { code: comp.code });
+  if (res.error) { toast(res.error, "error"); setStatus("运行失败"); return; }
+  const out = res.stdout || "(无输出)";
+  const w = window.open("", "_blank", "width=700,height=500");
+  w.document.write(`<pre style="background:#0d1117;color:#c9d1d9;padding:16px;font-family:monospace;font-size:13px">${out.replace(/</g,'&lt;')}</pre>`);
+  toast(`运行完成 (code=${res.returncode})`, res.returncode===0?"success":"error");
+  setStatus(res.returncode===0?"运行成功":"运行出错");
+}
+
+function stopWorkflow() {
+  setStatus("就绪");
+  toast("已停止", "info");
+}
+
+function clearCanvas() {
+  if (!confirm("确认清空画布？所有未保存的工作流将丢失。")) return;
+  nodes = {};
+  edges = [];
+  selectedNodeId = null;
+  renderAll();
+  setStatus("就绪");
+  toast("画布已清空", "info");
+}
+
+// ═══════════════════════════════════════════
+// 模板加载
+// ═══════════════════════════════════════════
+async function loadTemplateList() {
+  const res = await api("GET", "/api/workflow/templates");
+  if (res.error) return;
+  const sel = document.getElementById("template-select");
+  for (const t of (res.templates || [])) {
+    sel.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+  }
+}
+
+async function loadTemplate(id) {
+  if (!id) return;
+  document.getElementById("template-select").value = "";
+  const res = await api("GET", `/api/workflow/template?id=${encodeURIComponent(id)}`);
+  if (res.error) { toast(res.error, "error"); return; }
+  fromWorkflowJSON(res);
+  toast(`已加载模板: ${res.name}`, "success");
+}
+
+// ═══════════════════════════════════════════
+// 工具函数
+// ═══════════════════════════════════════════
+function toast(msg, type = "info") {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = type + " show";
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.className = "", 2500);
+}
+
+function setStatus(text) {
+  document.getElementById("status-text").textContent = text;
+}
+</script>
+</body>
+</html>

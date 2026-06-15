@@ -37,6 +37,7 @@ bcrypt>=4.0              # 密码哈希
 cffi>=1.16               # C 扩展接口
 
 # ── 网络与爬虫（可选）──
+firecrawl-py>=1.0        # Firecrawl 网页抓取 API
 beautifulsoup4>=4.12     # HTML 解析
 urllib3>=2.0             # HTTP 连接池
 anyio>=4.0               # 异步 I/O
@@ -64,4 +65,5 @@ packaging>=23.2          # 包版本管理
 soupsieve>=2.5           # CSS 选择器
 flatbuffers>=23.5        # 序列化
 hf-xet>=1.0              # HuggingFace 传输
+networkx>=3.0            # 代码知识图谱（可选依赖）
 （内容由AI生成，仅供参考）

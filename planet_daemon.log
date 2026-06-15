@@ -92,3 +92,350 @@ ModuleNotFoundError: No module named 'faster_whisper'
 2026-06-15 07:29:56 [PlanetDaemon] INFO: 悬浮星球守护进程已退出 (exit_code=0)
 2026-06-15 07:29:56 [PlanetDaemon] INFO: ============================================================
 2026-06-15 07:29:56 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)
+2026-06-15 20:00:06 [PlanetDaemon] INFO: PROJECT_ROOT: /Volumes/D盘工作区/一人公司/one_company_cosmic
+2026-06-15 20:00:06 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data
+2026-06-15 20:00:06 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:00:06 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:00:06 [PlanetDaemon] INFO: 活跃 provider: id=ollama, type=local
+2026-06-15 20:00:06 [PlanetDaemon] INFO: 正在初始化 opcclaw Engine...
+2026-06-15 20:00:07 [PlanetDaemon] INFO: ProviderConfig 构建完成: name=Ollama, model=qwen2.5:7b-64k, base_url=http://localhost:11434/v1
+2026-06-15 20:00:07 [PlanetDaemon] INFO: LLM Backend 创建成功: OpenAICompatibleBackend
+2026-06-15 20:00:07 [PlanetDaemon] ERROR: opcclaw Engine 初始化失败: 'AgentBridge' object has no attribute '_reg_multi_channel'
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/planet_daemon.py", line 141, in init_opcclaw_engine
+    engine = AgentBridge(backend)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/agent_bridge.py", line 314, in __init__
+    self._register_tools()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/agent_bridge.py", line 1103, in _register_tools
+    self._reg_multi_channel()
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AgentBridge' object has no attribute '_reg_multi_channel'
+2026-06-15 20:00:07 [PlanetDaemon] WARNING: 将以离线模式运行（无 AI 对话能力）
+2026-06-15 20:00:07 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:00:07 [PlanetDaemon] INFO: 悬浮星球守护进程启动中...
+2026-06-15 20:00:07 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:00:07 [PlanetDaemon] INFO: 旧的锁文件 PID 无效，清理并重新获取
+2026-06-15 20:00:07 [PlanetDaemon] INFO: 单实例锁已获取 (PID=56361)
+2026-06-15 20:00:07 [PlanetDaemon] INFO: 正在创建 QApplication 实例...
+2026-06-15 20:00:07 [PlanetDaemon] INFO: 任务栏图标已设置（圆角）
+2026-06-15 20:00:07 [PlanetDaemon] INFO: 正在创建 FloatingPlanet 实例...
+2026-06-15 20:00:07 [PlanetDaemon] WARNING: Engine 为空，FloatingPlanet 将以离线模式运行
+[FloatingPlanet] VoiceInterface stt=whisper, tts=apple
+2026-06-15 20:00:07 [PlanetDaemon] INFO: 悬浮星球已显示
+2026-06-15 20:00:07 [PlanetDaemon] INFO: 进入事件循环（麦克风权限请求将在 1.5s 后触发）
+[Wake] _start_wake_on_init: stt=whisper
+[Wake] 先用 Apple Speech 启动唤醒，后台加载 Whisper...
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice] 语音权限被拒绝，关闭唤醒模式以避免无限重试
+[Whisper] 线程启动
+[Whisper] 开始加载模型...
+[Whisper] 模型加载失败: No module named 'faster_whisper'
+Traceback (most recent call last):
+[Whisper Status] 加载 Whisper 模型...  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/whisper_recognizer.py", line 341, in run
+    self._ensure_model()
+
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/whisper_recognizer.py", line 74, in _ensure_model
+    from faster_whisper import WhisperModel
+ModuleNotFoundError: No module named 'faster_whisper'
+2026-06-15 20:00:09 [PlanetDaemon] INFO: 正在请求麦克风权限...
+2026-06-15 20:00:09 [PlanetDaemon] INFO: request_mic 返回: 当前权限状态: 0 (0=NotDetermined, 3=Authorized)
+正在请求麦克风权限...
+权限请求结果: 已拒绝
+[FloatingPlanet] 切换到形态: 🌍 经典星球 (classic)
+[AutoSwitch] #1/35 -> 🌍 经典星球 (classic)
+[FloatingPlanet] 切换到形态: 🪐 气态巨行星 (gas_giant)
+[AutoSwitch] #2/35 -> 🪐 气态巨行星 (gas_giant)
+[FloatingPlanet] 切换到形态: 🔵 冰巨星 (ice_giant)
+[AutoSwitch] #3/35 -> 🔵 冰巨星 (ice_giant)
+[FloatingPlanet] 切换到形态: 🌋 熔岩行星 (lava_planet)
+[AutoSwitch] #4/35 -> 🌋 熔岩行星 (lava_planet)
+[FloatingPlanet] 切换到形态: 💫 脉冲星 (pulsar)
+[AutoSwitch] #5/35 -> 💫 脉冲星 (pulsar)
+[FloatingPlanet] 切换到形态: 🕳️ 黑洞 (black_hole)
+[AutoSwitch] #6/35 -> 🕳️ 黑洞 (black_hole)
+[FloatingPlanet] 切换到形态: ☄️ 彗星 (comet)
+[AutoSwitch] #7/35 -> ☄️ 彗星 (comet)
+[FloatingPlanet] 切换到形态: 🔴 火星 (mars)
+[AutoSwitch] #8/35 -> 🔴 火星 (mars)
+[FloatingPlanet] 切换到形态: 🟡 金星 (venus)
+[AutoSwitch] #9/35 -> 🟡 金星 (venus)
+[FloatingPlanet] 切换到形态: 🪐 土星 (saturn)
+[AutoSwitch] #10/35 -> 🪐 土星 (saturn)
+[FloatingPlanet] 切换到形态: 🔷 天王星 (uranus)
+[AutoSwitch] #11/35 -> 🔷 天王星 (uranus)
+[FloatingPlanet] 切换到形态: ⭐ 中子星 (neutron_star)
+[AutoSwitch] #12/35 -> ⭐ 中子星 (neutron_star)
+[FloatingPlanet] 切换到形态: 🌌 星云 (nebula)
+[AutoSwitch] #13/35 -> 🌌 星云 (nebula)
+[FloatingPlanet] 切换到形态: ☿️ 水星 (mercury)
+[AutoSwitch] #14/35 -> ☿️ 水星 (mercury)
+[FloatingPlanet] 切换到形态: ♇ 冥王星 (pluto)
+[AutoSwitch] #15/35 -> ♇ 冥王星 (pluto)
+[FloatingPlanet] 切换到形态: ⚪ 白矮星 (white_dwarf)
+[AutoSwitch] #16/35 -> ⚪ 白矮星 (white_dwarf)
+[FloatingPlanet] 切换到形态: 🔴 红巨星 (red_giant)
+[AutoSwitch] #17/35 -> 🔴 红巨星 (red_giant)
+[FloatingPlanet] 切换到形态: 🌀 虫洞 (wormhole)
+[AutoSwitch] #18/35 -> 🌀 虫洞 (wormhole)
+[FloatingPlanet] 切换到形态: 👽 小绿外星人 (alien)
+[AutoSwitch] #19/35 -> 👽 小绿外星人 (alien)
+[FloatingPlanet] 切换到形态: 👾 灰人 (grey_alien)
+[AutoSwitch] #20/35 -> 👾 灰人 (grey_alien)
+[FloatingPlanet] 切换到形态: 🦎 蜥蜴人 (reptilian)
+[AutoSwitch] #21/35 -> 🦎 蜥蜴人 (reptilian)
+[FloatingPlanet] 切换到形态: ✨ 能量体 (energy_being)
+[AutoSwitch] #22/35 -> ✨ 能量体 (energy_being)
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 1335, in paintEvent
+    painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/core/shapes/energy_being.py", line 151, in paint
+    part_grad.setColorAt(0.0, QColor.fromHsv(ph, 160, 255, pa_))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: fromHsv(h: int, s: int, v: int, alpha: int = 255): argument 1 has unexpected type 'float'
+2026-06-15 20:07:19 [PlanetDaemon] INFO: PROJECT_ROOT: /Volumes/D盘工作区/一人公司/one_company_cosmic
+2026-06-15 20:07:19 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data
+2026-06-15 20:07:19 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:07:19 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:07:19 [PlanetDaemon] INFO: 活跃 provider: id=ollama, type=local
+2026-06-15 20:07:19 [PlanetDaemon] INFO: 正在初始化 opcclaw Engine...
+2026-06-15 20:07:20 [PlanetDaemon] INFO: ProviderConfig 构建完成: name=Ollama, model=qwen2.5:7b-64k, base_url=http://localhost:11434/v1
+2026-06-15 20:07:20 [PlanetDaemon] INFO: LLM Backend 创建成功: OpenAICompatibleBackend
+[2m20:07:20[0m [32mℹ️ INFO   [0m [2m[opcclaw][0m OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:07:20 [PlanetDaemon] INFO: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:07:20 [PlanetDaemon] INFO: AgentBridge (opcclaw Engine) 初始化成功
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 已从磁盘恢复 40 条对话历史
+2026-06-15 20:07:20 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 悬浮星球守护进程启动中...
+2026-06-15 20:07:20 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 旧的锁文件 PID 无效，清理并重新获取
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 单实例锁已获取 (PID=56700)
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 正在创建 QApplication 实例...
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 任务栏图标已设置（圆角）
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 正在创建 FloatingPlanet 实例...
+2026-06-15 20:07:20 [PlanetDaemon] INFO: Engine 已就绪，FloatingPlanet 将具备 AI 对话能力
+[FloatingPlanet] VoiceInterface stt=whisper, tts=apple
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 悬浮星球已显示
+2026-06-15 20:07:20 [PlanetDaemon] INFO: 进入事件循环（麦克风权限请求将在 1.5s 后触发）
+[Wake] _start_wake_on_init: stt=whisper
+[Wake] 先用 Apple Speech 启动唤醒，后台加载 Whisper...
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice] 语音权限被拒绝，关闭唤醒模式以避免无限重试
+[Whisper] 线程启动
+2026-06-15 20:07:21 [PlanetDaemon] INFO: 正在请求麦克风权限...
+[Whisper] 开始加载模型...
+[Whisper] 模型加载失败: No module named 'faster_whisper'
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/whisper_recognizer.py", line 341, in run
+    self._ensure_model()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/whisper_recognizer.py", line 74, in _ensure_model
+    from faster_whisper import WhisperModel
+ModuleNotFoundError: No module named 'faster_whisper'
+2026-06-15 20:07:21 [PlanetDaemon] INFO: request_mic 返回: 当前权限状态: 0 (0=NotDetermined, 3=Authorized)
+正在请求麦克风权限...
+权限请求结果: 已拒绝
+[Whisper Status] 加载 Whisper 模型...
+[FloatingPlanet] 切换到形态: 🌍 经典星球 (classic)
+[AutoSwitch] #1/35 -> 🌍 经典星球 (classic)
+[FloatingPlanet] 切换到形态: 🪐 气态巨行星 (gas_giant)
+[AutoSwitch] #2/35 -> 🪐 气态巨行星 (gas_giant)
+[FloatingPlanet] 切换到形态: 🔵 冰巨星 (ice_giant)
+[AutoSwitch] #3/35 -> 🔵 冰巨星 (ice_giant)
+[FloatingPlanet] 切换到形态: 🌋 熔岩行星 (lava_planet)
+[AutoSwitch] #4/35 -> 🌋 熔岩行星 (lava_planet)
+[FloatingPlanet] 切换到形态: 💫 脉冲星 (pulsar)
+[AutoSwitch] #5/35 -> 💫 脉冲星 (pulsar)
+[FloatingPlanet] 切换到形态: 🕳️ 黑洞 (black_hole)
+[AutoSwitch] #6/35 -> 🕳️ 黑洞 (black_hole)
+[FloatingPlanet] 切换到形态: ☄️ 彗星 (comet)
+[AutoSwitch] #7/35 -> ☄️ 彗星 (comet)
+[FloatingPlanet] 切换到形态: 🔴 火星 (mars)
+[AutoSwitch] #8/35 -> 🔴 火星 (mars)
+[FloatingPlanet] 切换到形态: 🟡 金星 (venus)
+[AutoSwitch] #9/35 -> 🟡 金星 (venus)
+[FloatingPlanet] 切换到形态: 🪐 土星 (saturn)
+[AutoSwitch] #10/35 -> 🪐 土星 (saturn)
+[FloatingPlanet] 切换到形态: 🔷 天王星 (uranus)
+[AutoSwitch] #11/35 -> 🔷 天王星 (uranus)
+[FloatingPlanet] 切换到形态: ⭐ 中子星 (neutron_star)
+[AutoSwitch] #12/35 -> ⭐ 中子星 (neutron_star)
+[FloatingPlanet] 切换到形态: 🌌 星云 (nebula)
+[AutoSwitch] #13/35 -> 🌌 星云 (nebula)
+[FloatingPlanet] 切换到形态: ☿️ 水星 (mercury)
+[AutoSwitch] #14/35 -> ☿️ 水星 (mercury)
+2026-06-15 20:09:04 [PlanetDaemon] INFO: 彻底退出触发，正在清理...
+2026-06-15 20:09:04 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)
+2026-06-15 20:09:04 [PlanetDaemon] INFO: 事件循环结束，exit_code=0
+2026-06-15 20:09:04 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:09:04 [PlanetDaemon] INFO: 悬浮星球守护进程已退出 (exit_code=0)
+2026-06-15 20:09:04 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:09:04 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)
+2026-06-15 20:10:37 [PlanetDaemon] INFO: PROJECT_ROOT: /Volumes/D盘工作区/一人公司/one_company_cosmic
+2026-06-15 20:10:37 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data
+2026-06-15 20:10:37 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:10:37 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:10:37 [PlanetDaemon] INFO: 活跃 provider: id=ollama, type=local
+2026-06-15 20:10:37 [PlanetDaemon] INFO: 正在初始化 opcclaw Engine...
+2026-06-15 20:10:37 [PlanetDaemon] INFO: ProviderConfig 构建完成: name=Ollama, model=qwen2.5:7b-64k, base_url=http://localhost:11434/v1
+2026-06-15 20:10:37 [PlanetDaemon] INFO: LLM Backend 创建成功: OpenAICompatibleBackend
+[2m20:10:38[0m [32mℹ️ INFO   [0m [2m[opcclaw][0m OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:10:38 [PlanetDaemon] INFO: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:10:38 [PlanetDaemon] INFO: AgentBridge (opcclaw Engine) 初始化成功
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 已从磁盘恢复 40 条对话历史
+2026-06-15 20:10:38 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 悬浮星球守护进程启动中...
+2026-06-15 20:10:38 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 旧的锁文件 PID 无效，清理并重新获取
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 单实例锁已获取 (PID=56877)
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 正在创建 QApplication 实例...
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 任务栏图标已设置（圆角）
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 正在创建 FloatingPlanet 实例...
+2026-06-15 20:10:38 [PlanetDaemon] INFO: Engine 已就绪，FloatingPlanet 将具备 AI 对话能力
+[FloatingPlanet] VoiceInterface stt=whisper, tts=apple
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 悬浮星球已显示
+2026-06-15 20:10:38 [PlanetDaemon] INFO: 进入事件循环（麦克风权限请求将在 1.5s 后触发）
+[Wake] _start_wake_on_init: stt=whisper
+[Wake] 先用 Apple Speech 启动唤醒，后台加载 Whisper...
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice] 语音权限被拒绝，关闭唤醒模式以避免无限重试
+[Whisper] 线程启动
+[Whisper] 开始加载模型...
+[Whisper] 模型加载失败: No module named 'faster_whisper'
+Traceback (most recent call last):
+[Whisper Status] 加载 Whisper 模型...  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/whisper_recognizer.py", line 341, in run
+    self._ensure_model()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/whisper_recognizer.py", line 74, in _ensure_model
+    from faster_whisper import WhisperModel
+
+ModuleNotFoundError: No module named 'faster_whisper'
+2026-06-15 20:10:39 [PlanetDaemon] INFO: 正在请求麦克风权限...
+2026-06-15 20:10:39 [PlanetDaemon] INFO: request_mic 返回: 当前权限状态: 0 (0=NotDetermined, 3=Authorized)
+正在请求麦克风权限...
+权限请求结果: 已拒绝
+[FloatingPlanet] 切换到形态: 🌍 经典星球 (classic)
+[AutoSwitch] #1/35 -> 🌍 经典星球 (classic)
+[FloatingPlanet] 切换到形态: 🪐 气态巨行星 (gas_giant)
+[AutoSwitch] #2/35 -> 🪐 气态巨行星 (gas_giant)
+[FloatingPlanet] 切换到形态: 🔵 冰巨星 (ice_giant)
+[AutoSwitch] #3/35 -> 🔵 冰巨星 (ice_giant)
+[FloatingPlanet] 切换到形态: 🌋 熔岩行星 (lava_planet)
+[AutoSwitch] #4/35 -> 🌋 熔岩行星 (lava_planet)
+[FloatingPlanet] 切换到形态: 💫 脉冲星 (pulsar)
+[AutoSwitch] #5/35 -> 💫 脉冲星 (pulsar)
+[FloatingPlanet] 切换到形态: 🕳️ 黑洞 (black_hole)
+[AutoSwitch] #6/35 -> 🕳️ 黑洞 (black_hole)
+[FloatingPlanet] 切换到形态: ☄️ 彗星 (comet)
+[AutoSwitch] #7/35 -> ☄️ 彗星 (comet)
+[FloatingPlanet] 切换到形态: 🔴 火星 (mars)
+[AutoSwitch] #8/35 -> 🔴 火星 (mars)
+[FloatingPlanet] 切换到形态: 🟡 金星 (venus)
+[AutoSwitch] #9/35 -> 🟡 金星 (venus)
+[FloatingPlanet] 切换到形态: 🪐 土星 (saturn)
+[AutoSwitch] #10/35 -> 🪐 土星 (saturn)
+[FloatingPlanet] 切换到形态: 🔷 天王星 (uranus)
+[AutoSwitch] #11/35 -> 🔷 天王星 (uranus)
+[FloatingPlanet] 切换到形态: ⭐ 中子星 (neutron_star)
+[AutoSwitch] #12/35 -> ⭐ 中子星 (neutron_star)
+[FloatingPlanet] 切换到形态: 🌌 星云 (nebula)
+[AutoSwitch] #13/35 -> 🌌 星云 (nebula)
+[FloatingPlanet] 切换到形态: ☿️ 水星 (mercury)
+[AutoSwitch] #14/35 -> ☿️ 水星 (mercury)
+[FloatingPlanet] 切换到形态: ♇ 冥王星 (pluto)
+[AutoSwitch] #15/35 -> ♇ 冥王星 (pluto)
+[FloatingPlanet] 切换到形态: ⚪ 白矮星 (white_dwarf)
+[AutoSwitch] #16/35 -> ⚪ 白矮星 (white_dwarf)
+[FloatingPlanet] 切换到形态: 🔴 红巨星 (red_giant)
+[AutoSwitch] #17/35 -> 🔴 红巨星 (red_giant)
+[FloatingPlanet] 切换到形态: 🌀 虫洞 (wormhole)
+[AutoSwitch] #18/35 -> 🌀 虫洞 (wormhole)
+[FloatingPlanet] 切换到形态: 👽 小绿外星人 (alien)
+[AutoSwitch] #19/35 -> 👽 小绿外星人 (alien)
+[FloatingPlanet] 切换到形态: 👾 灰人 (grey_alien)
+[AutoSwitch] #20/35 -> 👾 灰人 (grey_alien)
+[FloatingPlanet] 切换到形态: 🦎 蜥蜴人 (reptilian)
+[AutoSwitch] #21/35 -> 🦎 蜥蜴人 (reptilian)
+[FloatingPlanet] 切换到形态: ✨ 能量体 (energy_being)
+[AutoSwitch] #22/35 -> ✨ 能量体 (energy_being)
+[FloatingPlanet] 切换到形态: 💎 水晶生命体 (crystal_alien)
+[AutoSwitch] #23/35 -> 💎 水晶生命体 (crystal_alien)
+[FloatingPlanet] 切换到形态: 🐙 章鱼星人 (octopus_alien)
+[AutoSwitch] #24/35 -> 🐙 章鱼星人 (octopus_alien)
+[FloatingPlanet] 切换到形态: 👻 幽灵外星人 (ghost_alien)
+[AutoSwitch] #25/35 -> 👻 幽灵外星人 (ghost_alien)
+[FloatingPlanet] 切换到形态: 🪼 水母外星人 (jellyfish_alien)
+[AutoSwitch] #26/35 -> 🪼 水母外星人 (jellyfish_alien)
+[FloatingPlanet] 切换到形态: 🤖 机器外星人 (robot_alien)
+[AutoSwitch] #27/35 -> 🤖 机器外星人 (robot_alien)
+[FloatingPlanet] 切换到形态: 🚀 太空星舰 (starship)
+[AutoSwitch] #28/35 -> 🚀 太空星舰 (starship)
+[FloatingPlanet] 切换到形态: ⚔️ 星际战机 (fighter)
+[AutoSwitch] #29/35 -> ⚔️ 星际战机 (fighter)
+[FloatingPlanet] 切换到形态: 🛡️ 轻型护卫舰 (corvette)
+[AutoSwitch] #30/35 -> 🛡️ 轻型护卫舰 (corvette)
+[FloatingPlanet] 切换到形态: 💥 重型驱逐舰 (destroyer)
+[AutoSwitch] #31/35 -> 💥 重型驱逐舰 (destroyer)
+[FloatingPlanet] 切换到形态: ⚡ 截击机 (interceptor)
+[AutoSwitch] #32/35 -> ⚡ 截击机 (interceptor)
+[FloatingPlanet] 切换到形态: 🏰 无畏舰 (dreadnought)
+[AutoSwitch] #33/35 -> 🏰 无畏舰 (dreadnought)
+[FloatingPlanet] 切换到形态: 🔭 侦察舰 (scout)
+[AutoSwitch] #34/35 -> 🔭 侦察舰 (scout)
+[FloatingPlanet] 切换到形态: 📦 运输舰 (transporter)
+[AutoSwitch] #0/35 -> 📦 运输舰 (transporter)
+[FloatingPlanet] 切换到形态: 🌍 经典星球 (classic)
+[AutoSwitch] #1/35 -> 🌍 经典星球 (classic)
+[FloatingPlanet] 切换到形态: 🪐 气态巨行星 (gas_giant)
+[AutoSwitch] #2/35 -> 🪐 气态巨行星 (gas_giant)
+[FloatingPlanet] 切换到形态: 🔵 冰巨星 (ice_giant)
+[AutoSwitch] #3/35 -> 🔵 冰巨星 (ice_giant)
+[FloatingPlanet] 切换到形态: 🌋 熔岩行星 (lava_planet)
+[AutoSwitch] #4/35 -> 🌋 熔岩行星 (lava_planet)
+[FloatingPlanet] 切换到形态: 💫 脉冲星 (pulsar)
+[AutoSwitch] #5/35 -> 💫 脉冲星 (pulsar)
+[FloatingPlanet] 切换到形态: 🕳️ 黑洞 (black_hole)
+[AutoSwitch] #6/35 -> 🕳️ 黑洞 (black_hole)
+[FloatingPlanet] 切换到形态: ☄️ 彗星 (comet)
+[AutoSwitch] #7/35 -> ☄️ 彗星 (comet)
+[FloatingPlanet] 切换到形态: 🔴 火星 (mars)
+[AutoSwitch] #8/35 -> 🔴 火星 (mars)
+[FloatingPlanet] 切换到形态: 🟡 金星 (venus)
+[AutoSwitch] #9/35 -> 🟡 金星 (venus)
+[FloatingPlanet] 切换到形态: 🪐 土星 (saturn)
+[AutoSwitch] #10/35 -> 🪐 土星 (saturn)
+[FloatingPlanet] 切换到形态: 🔷 天王星 (uranus)
+[AutoSwitch] #11/35 -> 🔷 天王星 (uranus)
+[FloatingPlanet] 切换到形态: ⭐ 中子星 (neutron_star)
+[AutoSwitch] #12/35 -> ⭐ 中子星 (neutron_star)
+[FloatingPlanet] 切换到形态: 🌌 星云 (nebula)
+[AutoSwitch] #13/35 -> 🌌 星云 (nebula)
+[FloatingPlanet] 切换到形态: ☿️ 水星 (mercury)
+[AutoSwitch] #14/35 -> ☿️ 水星 (mercury)
+[FloatingPlanet] 切换到形态: ♇ 冥王星 (pluto)
+[AutoSwitch] #15/35 -> ♇ 冥王星 (pluto)
+[FloatingPlanet] 切换到形态: ⚪ 白矮星 (white_dwarf)
+[AutoSwitch] #16/35 -> ⚪ 白矮星 (white_dwarf)
+[FloatingPlanet] 切换到形态: 🔴 红巨星 (red_giant)
+[AutoSwitch] #17/35 -> 🔴 红巨星 (red_giant)
+[FloatingPlanet] 切换到形态: 🌀 虫洞 (wormhole)
+[AutoSwitch] #18/35 -> 🌀 虫洞 (wormhole)
+[FloatingPlanet] 切换到形态: 👽 小绿外星人 (alien)
+[AutoSwitch] #19/35 -> 👽 小绿外星人 (alien)
+[FloatingPlanet] 切换到形态: 👾 灰人 (grey_alien)
+[AutoSwitch] #20/35 -> 👾 灰人 (grey_alien)
+[FloatingPlanet] 切换到形态: 🦎 蜥蜴人 (reptilian)
+[AutoSwitch] #21/35 -> 🦎 蜥蜴人 (reptilian)
+[FloatingPlanet] 切换到形态: ✨ 能量体 (energy_being)
+[AutoSwitch] #22/35 -> ✨ 能量体 (energy_being)
+[FloatingPlanet] 切换到形态: 💎 水晶生命体 (crystal_alien)
+[AutoSwitch] #23/35 -> 💎 水晶生命体 (crystal_alien)
+[FloatingPlanet] 切换到形态: 🐙 章鱼星人 (octopus_alien)
+[AutoSwitch] #24/35 -> 🐙 章鱼星人 (octopus_alien)
+[FloatingPlanet] 切换到形态: 👻 幽灵外星人 (ghost_alien)
+[AutoSwitch] #25/35 -> 👻 幽灵外星人 (ghost_alien)
+2026-06-15 20:17:42 [PlanetDaemon] INFO: 彻底退出触发，正在清理...
+2026-06-15 20:17:42 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)
+2026-06-15 20:17:42 [PlanetDaemon] INFO: 事件循环结束，exit_code=0
+2026-06-15 20:17:42 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:17:42 [PlanetDaemon] INFO: 悬浮星球守护进程已退出 (exit_code=0)
+2026-06-15 20:17:42 [PlanetDaemon] INFO: ============================================================
+2026-06-15 20:17:42 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)

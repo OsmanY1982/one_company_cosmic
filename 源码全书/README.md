@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-15 15:58
-> 共 606 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-15 21:39
+> 共 644 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -8,6 +8,10 @@
 
 ```
 .
+├── cache/
+│   └── firecrawl/
+├── config/
+│   └── agents/
 ├── core/
 │   ├── shapes/
 │   │   ├── __init__.py
@@ -62,9 +66,12 @@
 │   └── voice.py
 ├── D:/
 │   └── one_company_desktop/
-│       └── data/
-│           ├── sync/
+│       ├── data/
+│       │   ├── sync/
+│       └── opcclaw/
+│           └── skills/
 ├── data/
+│   ├── drafts/
 │   ├── enhanced/
 │   ├── metrics/
 ├── knowledge_base/
@@ -138,6 +145,7 @@
 │   │   ├── bridge_window.py
 │   │   ├── business_ai_assistant.py
 │   │   ├── business_tools.py
+│   │   ├── chat_session_manager.py
 │   │   ├── core_engine_star.py
 │   │   ├── crm_tools.py
 │   │   ├── data_import_tools.py
@@ -170,6 +178,7 @@
 │   │   ├── report_generator.py
 │   │   ├── scan_window.py
 │   │   ├── self_monitor.py
+│   │   ├── session_context.py
 │   │   ├── smart_report_tools.py
 │   │   ├── smart_workflow.py
 │   │   ├── starship_painter.py
@@ -203,6 +212,16 @@
 │   │   ├── orbital_sphere.py
 │   └── __init__.py
 ├── opcclaw/
+│   ├── adapters/
+│   │   ├── channels/
+│   │   │   ├── __init__.py
+│   │   │   ├── dingtalk.py
+│   │   │   ├── discord.py
+│   │   │   ├── feishu.py
+│   │   │   ├── router.py
+│   │   │   ├── slack.py
+│   │   │   └── telegram.py
+│   │   └── __init__.py
 │   ├── agent/
 │   │   ├── transports/
 │   │   │   ├── __init__.py
@@ -263,7 +282,40 @@
 │   │   ├── tool_guardrails.py
 │   │   ├── trajectory.py
 │   │   └── usage_pricing.py
+│   ├── cache/
+│   │   └── firecrawl/
+│   ├── config/
+│   │   └── agents/
 │   ├── core/
+│   │   ├── code_graph/
+│   │   │   ├── __init__.py
+│   │   │   ├── ast_parser.py
+│   │   │   └── graph_store.py
+│   │   ├── firecrawl/
+│   │   │   ├── __init__.py
+│   │   │   ├── cache.py
+│   │   │   ├── converter.py
+│   │   │   └── test_self_check.py
+│   │   ├── harness/
+│   │   │   ├── __init__.py
+│   │   │   └── config_schema.py
+│   │   ├── impeccable/
+│   │   │   ├── __init__.py
+│   │   │   ├── complexity_checker.py
+│   │   │   ├── coupling_checker.py
+│   │   │   ├── report_generator.py
+│   │   │   └── solid_checker.py
+│   │   ├── multi_channel/
+│   │   │   ├── platforms/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── linkedin.py
+│   │   │   │   ├── twitter.py
+│   │   │   │   ├── wechat.py
+│   │   │   │   ├── weibo.py
+│   │   │   │   └── zhihu.py
+│   │   │   ├── __init__.py
+│   │   │   ├── content_optimizer.py
+│   │   │   └── draft_manager.py
 │   │   ├── observability/
 │   │   │   ├── __init__.py
 │   │   │   ├── cost_tracker.py
@@ -331,6 +383,7 @@
 │   │   │   │   ├── preferences/
 │   │   │   │   ├── snapshots/
 │   │   ├── process_logs/
+│   │   ├── workflows/
 │   │   ├── __init__.py
 │   ├── hermes_cli/
 │   │   ├── __init__.py
@@ -523,6 +576,8 @@
 │   ├── providers/
 │   │   ├── __init__.py
 │   │   ├── base.py
+│   ├── reports/
+│   │   └── impeccable/
 │   ├── skills/
 │   │   ├── apple/
 │   │   │   ├── apple-notes/
@@ -970,6 +1025,14 @@
 │   │   ├── website_policy.py
 │   │   ├── xai_http.py
 │   │   └── yuanbao_tools.py
+│   ├── web_ui/
+│   │   ├── harness/
+│   │   │   ├── __init__.py
+│   │   ├── workflow/
+│   │   │   ├── __init__.py
+│   │   │   ├── compiler.py
+│   │   │   └── templates.py
+│   │   └── __init__.py
 │   ├── __init__.py
 │   ├── __init___20260613_080428_724.py
 │   ├── conftest.py
@@ -1098,6 +1161,7 @@
 - [`modules/intelligence/bridge_window.py`](./modules/intelligence/bridge_window.py.md)
 - [`modules/intelligence/business_ai_assistant.py`](./modules/intelligence/business_ai_assistant.py.md)
 - [`modules/intelligence/business_tools.py`](./modules/intelligence/business_tools.py.md)
+- [`modules/intelligence/chat_session_manager.py`](./modules/intelligence/chat_session_manager.py.md)
 - [`modules/intelligence/core/__init__.py`](./modules/intelligence/core/__init__.py.md)
 - [`modules/intelligence/core/llm_backend.py`](./modules/intelligence/core/llm_backend.py.md)
 - [`modules/intelligence/core_engine_star.py`](./modules/intelligence/core_engine_star.py.md)
@@ -1134,6 +1198,7 @@
 - [`modules/intelligence/report_generator.py`](./modules/intelligence/report_generator.py.md)
 - [`modules/intelligence/scan_window.py`](./modules/intelligence/scan_window.py.md)
 - [`modules/intelligence/self_monitor.py`](./modules/intelligence/self_monitor.py.md)
+- [`modules/intelligence/session_context.py`](./modules/intelligence/session_context.py.md)
 - [`modules/intelligence/smart_report_tools.py`](./modules/intelligence/smart_report_tools.py.md)
 - [`modules/intelligence/smart_workflow.py`](./modules/intelligence/smart_workflow.py.md)
 - [`modules/intelligence/starship_painter.py`](./modules/intelligence/starship_painter.py.md)
@@ -1164,6 +1229,14 @@
 - [`modules/tools/orbital_sphere.py`](./modules/tools/orbital_sphere.py.md)
 - [`opcclaw/__init__.py`](./opcclaw/__init__.py.md)
 - [`opcclaw/__init___20260613_080428_724.py`](./opcclaw/__init___20260613_080428_724.py.md)
+- [`opcclaw/adapters/__init__.py`](./opcclaw/adapters/__init__.py.md)
+- [`opcclaw/adapters/channels/__init__.py`](./opcclaw/adapters/channels/__init__.py.md)
+- [`opcclaw/adapters/channels/dingtalk.py`](./opcclaw/adapters/channels/dingtalk.py.md)
+- [`opcclaw/adapters/channels/discord.py`](./opcclaw/adapters/channels/discord.py.md)
+- [`opcclaw/adapters/channels/feishu.py`](./opcclaw/adapters/channels/feishu.py.md)
+- [`opcclaw/adapters/channels/router.py`](./opcclaw/adapters/channels/router.py.md)
+- [`opcclaw/adapters/channels/slack.py`](./opcclaw/adapters/channels/slack.py.md)
+- [`opcclaw/adapters/channels/telegram.py`](./opcclaw/adapters/channels/telegram.py.md)
 - [`opcclaw/agent/__init__.py`](./opcclaw/agent/__init__.py.md)
 - [`opcclaw/agent/account_usage.py`](./opcclaw/agent/account_usage.py.md)
 - [`opcclaw/agent/anthropic_adapter.py`](./opcclaw/agent/anthropic_adapter.py.md)
@@ -1230,18 +1303,41 @@
 - [`opcclaw/core/clarify_system.py`](./opcclaw/core/clarify_system.py.md)
 - [`opcclaw/core/cloud_sync.py`](./opcclaw/core/cloud_sync.py.md)
 - [`opcclaw/core/code_executor.py`](./opcclaw/core/code_executor.py.md)
+- [`opcclaw/core/code_graph/__init__.py`](./opcclaw/core/code_graph/__init__.py.md)
+- [`opcclaw/core/code_graph/ast_parser.py`](./opcclaw/core/code_graph/ast_parser.py.md)
+- [`opcclaw/core/code_graph/graph_store.py`](./opcclaw/core/code_graph/graph_store.py.md)
 - [`opcclaw/core/code_intel.py`](./opcclaw/core/code_intel.py.md)
 - [`opcclaw/core/collaboration_client.py`](./opcclaw/core/collaboration_client.py.md)
 - [`opcclaw/core/config_validator.py`](./opcclaw/core/config_validator.py.md)
 - [`opcclaw/core/core_engine.py`](./opcclaw/core/core_engine.py.md)
 - [`opcclaw/core/enhanced_core.py`](./opcclaw/core/enhanced_core.py.md)
 - [`opcclaw/core/enhanced_hermes_bridge.py`](./opcclaw/core/enhanced_hermes_bridge.py.md)
+- [`opcclaw/core/firecrawl/__init__.py`](./opcclaw/core/firecrawl/__init__.py.md)
+- [`opcclaw/core/firecrawl/cache.py`](./opcclaw/core/firecrawl/cache.py.md)
+- [`opcclaw/core/firecrawl/converter.py`](./opcclaw/core/firecrawl/converter.py.md)
+- [`opcclaw/core/firecrawl/test_self_check.py`](./opcclaw/core/firecrawl/test_self_check.py.md)
 - [`opcclaw/core/git_ops.py`](./opcclaw/core/git_ops.py.md)
+- [`opcclaw/core/harness/__init__.py`](./opcclaw/core/harness/__init__.py.md)
+- [`opcclaw/core/harness/config_schema.py`](./opcclaw/core/harness/config_schema.py.md)
+- [`opcclaw/core/impeccable/__init__.py`](./opcclaw/core/impeccable/__init__.py.md)
+- [`opcclaw/core/impeccable/complexity_checker.py`](./opcclaw/core/impeccable/complexity_checker.py.md)
+- [`opcclaw/core/impeccable/coupling_checker.py`](./opcclaw/core/impeccable/coupling_checker.py.md)
+- [`opcclaw/core/impeccable/report_generator.py`](./opcclaw/core/impeccable/report_generator.py.md)
+- [`opcclaw/core/impeccable/solid_checker.py`](./opcclaw/core/impeccable/solid_checker.py.md)
 - [`opcclaw/core/llm_backend.py`](./opcclaw/core/llm_backend.py.md)
 - [`opcclaw/core/memory.py`](./opcclaw/core/memory.py.md)
 - [`opcclaw/core/memory_store.py`](./opcclaw/core/memory_store.py.md)
 - [`opcclaw/core/model_status.py`](./opcclaw/core/model_status.py.md)
 - [`opcclaw/core/model_status_manager.py`](./opcclaw/core/model_status_manager.py.md)
+- [`opcclaw/core/multi_channel/__init__.py`](./opcclaw/core/multi_channel/__init__.py.md)
+- [`opcclaw/core/multi_channel/content_optimizer.py`](./opcclaw/core/multi_channel/content_optimizer.py.md)
+- [`opcclaw/core/multi_channel/draft_manager.py`](./opcclaw/core/multi_channel/draft_manager.py.md)
+- [`opcclaw/core/multi_channel/platforms/__init__.py`](./opcclaw/core/multi_channel/platforms/__init__.py.md)
+- [`opcclaw/core/multi_channel/platforms/linkedin.py`](./opcclaw/core/multi_channel/platforms/linkedin.py.md)
+- [`opcclaw/core/multi_channel/platforms/twitter.py`](./opcclaw/core/multi_channel/platforms/twitter.py.md)
+- [`opcclaw/core/multi_channel/platforms/wechat.py`](./opcclaw/core/multi_channel/platforms/wechat.py.md)
+- [`opcclaw/core/multi_channel/platforms/weibo.py`](./opcclaw/core/multi_channel/platforms/weibo.py.md)
+- [`opcclaw/core/multi_channel/platforms/zhihu.py`](./opcclaw/core/multi_channel/platforms/zhihu.py.md)
 - [`opcclaw/core/multi_model.py`](./opcclaw/core/multi_model.py.md)
 - [`opcclaw/core/multi_model_chat_engine.py`](./opcclaw/core/multi_model_chat_engine.py.md)
 - [`opcclaw/core/observability/__init__.py`](./opcclaw/core/observability/__init__.py.md)
@@ -1594,6 +1690,11 @@
 - [`opcclaw/tools/yuanbao_tools.py`](./opcclaw/tools/yuanbao_tools.py.md)
 - [`opcclaw/utils.py`](./opcclaw/utils.py.md)
 - [`opcclaw/verify_sync.py`](./opcclaw/verify_sync.py.md)
+- [`opcclaw/web_ui/__init__.py`](./opcclaw/web_ui/__init__.py.md)
+- [`opcclaw/web_ui/harness/__init__.py`](./opcclaw/web_ui/harness/__init__.py.md)
+- [`opcclaw/web_ui/workflow/__init__.py`](./opcclaw/web_ui/workflow/__init__.py.md)
+- [`opcclaw/web_ui/workflow/compiler.py`](./opcclaw/web_ui/workflow/compiler.py.md)
+- [`opcclaw/web_ui/workflow/templates.py`](./opcclaw/web_ui/workflow/templates.py.md)
 - [`planet_daemon.py`](./planet_daemon.py.md)
 - [`rollback_control.py`](./rollback_control.py.md)
 - [`siri_command_handler.py`](./siri_command_handler.py.md)

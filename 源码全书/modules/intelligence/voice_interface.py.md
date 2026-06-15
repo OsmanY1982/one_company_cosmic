@@ -1,6 +1,6 @@
 # `modules/intelligence/voice_interface.py`
 
-> 路径：`modules/intelligence/voice_interface.py` | 行数：377
+> 路径：`modules/intelligence/voice_interface.py` | 行数：403
 
 
 ---
@@ -47,8 +47,34 @@ class AppleSpeechRecognizer(QThread):
             # pyobjc 12.x: authorizationStatus() 返回 int
             # 3 = Authorized, 0 = NotDetermined, 1 = Denied, 2 = Restricted
             status = SFSpeechRecognizer.authorizationStatus()
-            if status != 3:
-                self.error_occurred.emit("语音识别权限未授权，请在系统设置中开启")
+            if status == 0:  # NotDetermined — 主动请求授权
+                self.status_changed.emit("正在请求语音识别权限...")
+                # requestAuthorization 是异步回调，用信号量等结果
+                import threading
+                auth_event = threading.Event()
+                auth_result = [0]
+
+                def auth_handler(status_val):
+                    auth_result[0] = int(status_val)
+                    auth_event.set()
+
+                SFSpeechRecognizer.requestAuthorization_(auth_handler)
+                # 等待系统弹窗（最多等 30 秒）
+                if not auth_event.wait(timeout=30.0):
+                    self.error_occurred.emit("语音识别授权超时，请在系统设置中手动开启")
+                    return
+                status = auth_result[0]
+                if status != 3:
+                    if status == 1:
+                        self.error_occurred.emit("语音识别权限被拒绝，请在 系统设置 → 隐私与安全性 → 语音识别 中开启")
+                    else:
+                        self.error_occurred.emit("语音识别权限未授权，请在系统设置中开启")
+                    return
+            elif status != 3:
+                if status == 1:
+                    self.error_occurred.emit("语音识别权限被拒绝，请在 系统设置 → 隐私与安全性 → 语音识别 中开启")
+                else:
+                    self.error_occurred.emit("语音识别权限未授权，请在系统设置中开启")
                 return
 
             ns_locale = __import__('Foundation', fromlist=['NSLocale']).NSLocale

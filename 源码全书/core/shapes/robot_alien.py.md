@@ -1,6 +1,6 @@
 # `core/shapes/robot_alien.py`
 
-> 路径：`core/shapes/robot_alien.py` | 行数：326
+> 路径：`core/shapes/robot_alien.py` | 行数：322
 
 
 ---
@@ -327,10 +327,6 @@ def paint(painter: QPainter, center: QPointF, radius: float,
             og.setColorAt(1.0, QColor(0, 0, 0, 0))
             p.setPen(Qt.NoPen); p.setBrush(og)
             p.drawEllipse(center, outer_r, outer_r)
-        br = 0.6 + 0.4 * abs(math.sin(anim_t * 4.0))
-        rpen = QPen(QColor(100, 180, 255, int(220 * hp * br)), 2.5 + 1.0 * br)
-        p.setPen(rpen); p.setBrush(Qt.NoBrush)
-        p.drawEllipse(center, radius + 3, radius + 3)
 
     p.restore()
 

@@ -1,6 +1,6 @@
 # `modules/intelligence/intelligence_window.py`
 
-> 路径：`modules/intelligence/intelligence_window.py` | 行数：204
+> 路径：`modules/intelligence/intelligence_window.py` | 行数：219
 
 
 ---
@@ -22,6 +22,7 @@ from PyQt5.QtGui import QColor, QFont, QPainter, QPen, QFontMetrics
 from core.planet_painter import (
     PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line,
 )
+from .session_context import session_ctx
 
 # ═══════ 6颗星球配置 ═══════
 PLANETS = [
@@ -188,8 +189,22 @@ class IntelligenceWindow(QMainWindow):
 
     def _on_planet_clicked(self, planet_id):
         if planet_id == "ai_chat":
-            from modules.intelligence.ai_chat_window import AIChatWindow
-            dlg = AIChatWindow(self, opcclaw_engine=self._opcclaw_engine)
+            # 使用全局会话上下文
+            session_ctx.set_agent_bridge(self._opcclaw_engine)
+
+            if session_ctx._active_window is not None:
+                try:
+                    session_ctx._active_window.close()
+                except RuntimeError:
+                    pass
+                session_ctx._active_window = None
+
+            from .ai_chat_window import AIChatWindow
+            dlg = AIChatWindow(
+                self,
+                opcclaw_engine=self._opcclaw_engine,
+                session_id=session_ctx.current_session_id,
+            )
             dlg.show()
         elif planet_id == "digital_emp":
             from modules.intelligence.digital_emp_window import DigitalEmpWindow

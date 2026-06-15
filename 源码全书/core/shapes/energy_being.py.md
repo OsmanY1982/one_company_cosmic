@@ -1,6 +1,6 @@
 # `core/shapes/energy_being.py`
 
-> 路径：`core/shapes/energy_being.py` | 行数：208
+> 路径：`core/shapes/energy_being.py` | 行数：203
 
 
 ---
@@ -40,7 +40,7 @@ def paint(painter: QPainter, center: QPointF, radius: float,
     body_cy = cy + float_y
 
     # HSL 基准色调
-    hue_base = (anim_t * 45) % 360
+    hue_base = int((anim_t * 45) % 360)
 
     # ── 远景：暗色能量场剪影 ──
     silhouette = QRadialGradient(body_cx, body_cy, radius * 1.25)
@@ -208,11 +208,6 @@ def paint(painter: QPainter, center: QPointF, radius: float,
             og.setColorAt(1.0, QColor(0, 0, 0, 0))
             p.setPen(Qt.NoPen); p.setBrush(og)
             p.drawEllipse(center, outer_r, outer_r)
-        br = 0.6 + 0.4 * abs(math.sin(anim_t * 4.0))
-        hue_ring = (hue_base + 40) % 360
-        rpen = QPen(QColor.fromHsv(hue_ring, 180, 255, int(220 * hp * br)), 2.5 + 1.0 * br)
-        p.setPen(rpen); p.setBrush(Qt.NoBrush)
-        p.drawEllipse(center, radius + 3, radius + 3)
 
     p.restore()
 
