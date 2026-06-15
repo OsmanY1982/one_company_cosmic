@@ -106,6 +106,11 @@
 │   │   ├── data_window.py
 │   │   └── report_window.py
 │   ├── intelligence/
+│   │   ├── backup_p02/
+│   │   │   ├── agent_bridge.py
+│   │   │   ├── ai_chat_window.py
+│   │   │   ├── intelligence_window.py
+│   │   │   └── opcclaw_floating_planet.py
 │   │   ├── core/
 │   │   │   ├── __init__.py
 │   │   │   └── llm_backend.py
@@ -115,6 +120,7 @@
 │   │   ├── enhanced/
 │   │   │   ├── __init__.py
 │   │   │   └── enhanced_tools.py
+│   │   ├── temp_backup/
 │   │   ├── __init__.py
 │   │   ├── _ai_shared.py
 │   │   ├── _ai_widgets.py
@@ -1158,6 +1164,10 @@
 - [`modules/intelligence/ai_features_sales_ai.py`](./modules/intelligence/ai_features_sales_ai.py.md)
 - [`modules/intelligence/analysis_tools.py`](./modules/intelligence/analysis_tools.py.md)
 - [`modules/intelligence/anomaly_detector.py`](./modules/intelligence/anomaly_detector.py.md)
+- [`modules/intelligence/backup_p02/agent_bridge.py`](./modules/intelligence/backup_p02/agent_bridge.py.md)
+- [`modules/intelligence/backup_p02/ai_chat_window.py`](./modules/intelligence/backup_p02/ai_chat_window.py.md)
+- [`modules/intelligence/backup_p02/intelligence_window.py`](./modules/intelligence/backup_p02/intelligence_window.py.md)
+- [`modules/intelligence/backup_p02/opcclaw_floating_planet.py`](./modules/intelligence/backup_p02/opcclaw_floating_planet.py.md)
 - [`modules/intelligence/bridge_window.py`](./modules/intelligence/bridge_window.py.md)
 - [`modules/intelligence/business_ai_assistant.py`](./modules/intelligence/business_ai_assistant.py.md)
 - [`modules/intelligence/business_tools.py`](./modules/intelligence/business_tools.py.md)
