@@ -15,18 +15,18 @@ from core.planet_painter import (
 # 12颗星球配置
 # ═══════════════════════════════════════════
 PLANETS = [
-    {"id": "super_intelligence",   "name": "超级智能",     "style": "jupiter",  "orbit": 100, "size": 30},
-    {"id": "enhanced_chat",        "name": "增强对话",     "style": "neptune",  "orbit": 140, "size": 26},
-    {"id": "knowledge_base",       "name": "知识库",       "style": "uranus",   "orbit": 180, "size": 28},
-    {"id": "system_monitor",       "name": "系统监控",     "style": "mars",     "orbit": 220, "size": 26},
-    {"id": "quick_actions",        "name": "快捷操作",     "style": "mercury",  "orbit": 260, "size": 24},
-    {"id": "ai_dashboard",         "name": "AI仪表盘",     "style": "saturn",   "orbit": 300, "size": 30},
-    {"id": "anomaly_detector",     "name": "异常检测",     "style": "pluto",    "orbit": 340, "size": 24},
-    {"id": "recommendation_engine","name": "推荐引擎",     "style": "sun",      "orbit": 380, "size": 26},
-    {"id": "data_visualization",   "name": "数据可视化",   "style": "moon",     "orbit": 420, "size": 26},
-    {"id": "smart_workflow",       "name": "智能工作流",   "style": "venus",    "orbit": 460, "size": 28},
-    {"id": "business_ai",          "name": "商业AI",       "style": "jupiter",  "orbit": 500, "size": 30},
-    {"id": "voice_interface",      "name": "语音接口",     "style": "neptune",  "orbit": 540, "size": 26},
+    {"id": "super_intelligence",   "name": "超级智能",     "style": "jupiter",  "orbit": 100, "size": 42},
+    {"id": "enhanced_chat",        "name": "增强对话",     "style": "neptune",  "orbit": 140, "size": 38},
+    {"id": "knowledge_base",       "name": "知识库",       "style": "uranus",   "orbit": 180, "size": 40},
+    {"id": "system_monitor",       "name": "系统监控",     "style": "mars",     "orbit": 220, "size": 38},
+    {"id": "quick_actions",        "name": "快捷操作",     "style": "mercury",  "orbit": 260, "size": 36},
+    {"id": "ai_dashboard",         "name": "AI仪表盘",     "style": "saturn",   "orbit": 300, "size": 42},
+    {"id": "anomaly_detector",     "name": "异常检测",     "style": "pluto",    "orbit": 340, "size": 36},
+    {"id": "recommendation_engine","name": "推荐引擎",     "style": "sun",      "orbit": 380, "size": 38},
+    {"id": "data_visualization",   "name": "数据可视化",   "style": "moon",     "orbit": 420, "size": 38},
+    {"id": "smart_workflow",       "name": "智能工作流",   "style": "venus",    "orbit": 460, "size": 40},
+    {"id": "business_ai",          "name": "商业AI",       "style": "jupiter",  "orbit": 500, "size": 42},
+    {"id": "voice_interface",      "name": "语音接口",     "style": "neptune",  "orbit": 540, "size": 38},
 ]
 
 
@@ -83,10 +83,10 @@ class NavigationHUD(QWidget):
             style = PLANET_STYLES.get(planet_data["style"], PLANET_STYLES["neptune"])
             hovered = (self._hovered_planet == planet_data["id"])
             paint_planet(p, pos, planet_data["size"], style,
-                         hovered=hovered, label=planet_data["name"], font_size=9)
+                         hovered=hovered, label=planet_data["name"], font_size=10)
 
         # ── 中央 AI 核心 · 地球 ──
-        paint_planet(p, w2, 42, PLANET_STYLES["earth"], label="CREW", font_size=10)
+        paint_planet(p, w2, 60, PLANET_STYLES["earth"], label="CREW", font_size=12)
 
         p.end()
 

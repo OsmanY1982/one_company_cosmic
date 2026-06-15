@@ -23,6 +23,20 @@ def paint(p: QPainter, center: QPointF, radius: float, anim_t: float,
     left = center.x() - w / 2
     top = center.y() - h / 2
 
+    # ── 多层外辉光（增强质感）──
+    for glow_layer in range(4):
+        glow_scale = 1.06 + glow_layer * 0.22
+        glow_r = radius * glow_scale
+        glow = QRadialGradient(center.x(), center.y(), glow_r)
+        ga = max(1, 35 - glow_layer * 8)
+        glow.setColorAt(0.0, QColor(255, 255, 255, 0))
+        glow.setColorAt(0.25, QColor(200, 200, 255, ga // 2))
+        glow.setColorAt(0.55, QColor(120, 140, 255, ga))
+        glow.setColorAt(0.80, QColor(60, 80, 200, ga // 2))
+        glow.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setBrush(glow); p.setPen(Qt.NoPen)
+        p.drawEllipse(center, glow_r, glow_r)
+
     _paint_engine_glow(p, left, top, w, h, size, anim_t, alpha)
     _paint_hull(p, left, top, w, h, size, anim_t, alpha)
     _paint_deck(p, left, top, w, h, size, center, anim_t, alpha)
@@ -30,6 +44,7 @@ def paint(p: QPainter, center: QPointF, radius: float, anim_t: float,
     _paint_runway(p, left, top, w, h, size, anim_t, alpha)
     _paint_radar(p, left, top, w, h, size, anim_t, alpha)
     _paint_engine_flames(p, left, top, w, h, size, center, anim_t, alpha)
+    _paint_nav_lights(p, center, size, anim_t, alpha)
 
     if hovered:
         _paint_hover_glow(p, center, size, anim_t, alpha)
@@ -185,7 +200,7 @@ def _paint_radar(p, left, top, w, h, size, anim_t, alpha):
 
 
 def _paint_engine_flames(p, left, top, w, h, size, center, anim_t, alpha):
-    """双引擎尾焰"""
+    """双引擎尾焰（增强版：外层光晕 + 火焰核心 + 粒子喷射）"""
     engine_y = top + h + size * 0.06
     for i, side in enumerate([-1, 1]):
         ex = center.x() + side * w * 0.12
@@ -193,36 +208,97 @@ def _paint_engine_flames(p, left, top, w, h, size, center, anim_t, alpha):
         pulse = 0.6 + 0.4 * abs(math.sin(anim_t * 7 + i * 2.5))
         flame_h = size * 0.30 * pulse
         flame_w = size * 0.05
+        # ── 外层火焰光晕（径向渐变脉冲）──
+        for fl in range(3):
+            fl_r = size * (0.06 + fl * 0.07)
+            fl_grad = QRadialGradient(ex, ey + flame_h * 0.4, fl_r * 1.6)
+            fl_a = int((70 - fl * 20) * pulse * alpha)
+            fl_grad.setColorAt(0.0, QColor(255, 200, 50, fl_a))
+            fl_grad.setColorAt(0.5, QColor(255, 100, 20, fl_a // 2))
+            fl_grad.setColorAt(1.0, QColor(0, 0, 0, 0))
+            p.setPen(Qt.NoPen); p.setBrush(fl_grad)
+            p.drawEllipse(QPointF(ex, ey + flame_h * 0.4), fl_r * 1.6, fl_r * 2.5)
+        # ── 线性尾焰主体 ──
         flame_grad = QLinearGradient(ex, ey - flame_h, ex, ey + flame_h * 0.2)
-        flame_grad.setColorAt(0.00, QColor(255, 255, 240, int(230 * alpha)))
-        flame_grad.setColorAt(0.08, QColor(180, 220, 255, int(210 * alpha)))
-        flame_grad.setColorAt(0.30, QColor(60, 160, 255, int(170 * alpha)))
-        flame_grad.setColorAt(0.60, QColor(20, 80, 220, int(85 * alpha)))
-        flame_grad.setColorAt(0.88, QColor(5, 30, 120, int(18 * alpha)))
+        flame_grad.setColorAt(0.00, QColor(255, 255, 240, int(240 * alpha)))
+        flame_grad.setColorAt(0.06, QColor(200, 230, 255, int(220 * alpha)))
+        flame_grad.setColorAt(0.25, QColor(80, 170, 255, int(180 * alpha)))
+        flame_grad.setColorAt(0.55, QColor(30, 90, 220, int(90 * alpha)))
+        flame_grad.setColorAt(0.85, QColor(10, 40, 130, int(25 * alpha)))
         flame_grad.setColorAt(1.00, QColor(0, 5, 30, 0))
         p.setBrush(flame_grad)
         p.setPen(Qt.NoPen)
         p.drawEllipse(QPointF(ex, ey), flame_w, flame_h)
-
-        # 尾焰粒子
-        for _ in range(4):
-            import random
-            px = ex + random.uniform(-flame_w * 1.2, flame_w * 1.2)
-            py = ey + random.uniform(0, flame_h * 2)
-            ps = random.uniform(0.5, 1.8)
-            pa = int(random.uniform(30, 150) * alpha)
-            p.setBrush(QColor(100, 180, 255, pa))
+        # ── 尾焰粒子喷射 ──
+        import random
+        for _ in range(6):
+            px = ex + random.uniform(-flame_w * 1.3, flame_w * 1.3)
+            py = ey + random.uniform(0, flame_h * 2.2)
+            ps = random.uniform(0.4, 2.0)
+            pa = int(random.uniform(30, 160) * alpha * pulse)
+            p.setBrush(QColor(120, 200, 255, pa))
             p.setPen(Qt.NoPen)
             p.drawEllipse(QPointF(px, py), ps, ps)
 
 
+def _paint_nav_lights(p, center, size, anim_t, alpha):
+    """航行灯闪烁（红绿翼尖灯 + 白色频闪尾灯）"""
+    cx, cy = center.x(), center.y()
+    for sign, nav_base in [(-1, QColor(255, 30, 15)), (1, QColor(15, 255, 35))]:
+        nx = cx + sign * size * 0.75
+        ny = cy - size * 0.15
+        flicker = 0.3 + 0.7 * abs(math.sin(anim_t * 4.5 + sign * 1.3))
+        nav_g = QRadialGradient(nx, ny, size * 0.10)
+        nav_g.setColorAt(0.0, QColor(nav_base.red(), nav_base.green(), nav_base.blue(), int(200 * flicker * alpha)))
+        nav_g.setColorAt(0.4, QColor(nav_base.red(), nav_base.green(), nav_base.blue(), int(100 * flicker * alpha)))
+        nav_g.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setPen(Qt.NoPen); p.setBrush(nav_g)
+        p.drawEllipse(QPointF(nx, ny), size * 0.10, size * 0.10)
+        p.setBrush(QColor(255, 255, 255, int(200 * flicker * alpha)))
+        p.drawEllipse(QPointF(nx, ny), size * 0.03, size * 0.03)
+    strobe_y = cy + size * 0.55
+    strobe_flicker = abs(math.sin(anim_t * 6.0))
+    for sx in [cx - size * 0.30, cx + size * 0.30]:
+        sg = QRadialGradient(sx, strobe_y, size * 0.08)
+        sg.setColorAt(0.0, QColor(255, 255, 255, int(200 * strobe_flicker * alpha)))
+        sg.setColorAt(0.5, QColor(200, 220, 255, int(100 * strobe_flicker * alpha)))
+        sg.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setPen(Qt.NoPen); p.setBrush(sg)
+        p.drawEllipse(QPointF(sx, strobe_y), size * 0.08, size * 0.08)
+
+
 def _paint_hover_glow(p, center, size, anim_t, alpha):
-    """hover 高亮光晕"""
+    """hover 增强光晕（多层扩散环 + 引擎光晕联动）"""
     pulse = 0.7 + 0.3 * abs(math.sin(anim_t * 3.0))
-    glow = QRadialGradient(center, size * 1.1)
-    glow.setColorAt(0.0, QColor(0, 200, 255, int(40 * pulse * alpha)))
-    glow.setColorAt(0.5, QColor(0, 140, 220, int(15 * pulse * alpha)))
-    glow.setColorAt(1.0, QColor(0, 60, 160, 0))
-    p.setBrush(glow)
-    p.setPen(Qt.NoPen)
-    p.drawEllipse(center, size * 1.1, size * 1.1)
+    # 内层主题密集光晕
+    for i in range(3):
+        ir = size * (0.88 + i * 0.10)
+        iglow = QRadialGradient(center, ir)
+        ga = int((65 - i * 18) * pulse)
+        iglow.setColorAt(0.55, QColor(255, 255, 255, 0))
+        iglow.setColorAt(0.76, QColor(80, 190, 255, ga // 2))
+        iglow.setColorAt(0.90, QColor(0, 140, 255, ga))
+        iglow.setColorAt(0.98, QColor(0, 70, 180, ga // 3))
+        iglow.setColorAt(1.00, QColor(0, 0, 0, 0))
+        p.setBrush(iglow)
+        p.setPen(Qt.NoPen)
+        p.drawEllipse(center, ir, ir)
+    # 外层扩散光晕
+    for i in range(3):
+        outer_r = size * (1.0 + i * 0.26)
+        glow = QRadialGradient(center, outer_r)
+        ga = int((48 - i * 14) * pulse)
+        glow.setColorAt(0.70, QColor(255, 255, 255, 0))
+        glow.setColorAt(0.85, QColor(80, 190, 255, ga // 2))
+        glow.setColorAt(0.94, QColor(0, 140, 255, ga))
+        glow.setColorAt(1.00, QColor(0, 0, 0, 0))
+        p.setBrush(glow)
+        p.setPen(Qt.NoPen)
+        p.drawEllipse(center, outer_r, outer_r)
+    # 明亮轮廓环（呼吸感）
+    br = 0.55 + 0.45 * abs(math.sin(anim_t * 4.5))
+    rpen = QPen(QColor(80, 190, 255, int(210 * pulse * alpha * br)), 2.2 + 1.2 * br)
+    p.setPen(rpen)
+    p.setBrush(Qt.NoBrush)
+    p.drawEllipse(center, size * 0.95, size * 0.95)
+

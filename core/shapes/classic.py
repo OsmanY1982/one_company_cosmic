@@ -20,6 +20,20 @@ def paint(painter: QPainter, center: QPointF, radius: float,
     if alpha < 1.0:
         p.setOpacity(alpha)
 
+
+    # ── 多层外辉光（增强质感）──
+    for glow_layer in range(4):
+        glow_scale = 1.06 + glow_layer * 0.20
+        glow_r = radius * glow_scale
+        glow = QRadialGradient(cx, cy, glow_r)
+        ga = max(1, 35 - glow_layer * 8)
+        glow.setColorAt(0.0, QColor(255, 255, 255, 0))
+        glow.setColorAt(0.25, QColor(200, 200, 255, ga // 2))
+        glow.setColorAt(0.55, QColor(120, 140, 255, ga))
+        glow.setColorAt(0.80, QColor(60, 80, 200, ga // 2))
+        glow.setColorAt(1.0, QColor(0, 0, 0, 0))
+        p.setBrush(glow); p.setPen(Qt.NoPen)
+        p.drawEllipse(center, glow_r, glow_r)
     if style is None:
         style = {
             "surface": [
@@ -68,25 +82,37 @@ def paint(painter: QPainter, center: QPointF, radius: float,
     # 边缘逆光
     _paint_rim_light(p, center, radius, style, anim_t)
 
-    # 悬停边框
+    # 悬停增强（主题色脉冲光晕 + 呼吸轮廓）──
     if hovered:
-        pulse = 0.7 + 0.3 * abs(math.sin(anim_t * 4.0 + 1.0))
-        pen = QPen(QColor(255, 255, 255, int(220 * pulse)))
-        pen.setWidthF(1.5)
-        p.setPen(pen)
-        p.setBrush(Qt.NoBrush)
-        p.drawEllipse(center, radius + 1, radius + 1)
-        for i in range(2):
-            outer_r = radius + 7 + i * 7
-            outer_glow = QRadialGradient(center, outer_r)
-            ga = int((50 - i * 18) * pulse)
-            outer_glow.setColorAt(0.75, QColor(255, 255, 255, 0))
-            outer_glow.setColorAt(0.85, QColor(100, 170, 255, ga // 2))
-            outer_glow.setColorAt(0.94, QColor(80, 150, 255, ga))
-            outer_glow.setColorAt(1.00, QColor(255, 255, 255, 0))
-            p.setPen(Qt.NoPen)
-            p.setBrush(outer_glow)
+        hp = 0.7 + 0.3 * abs(math.sin(anim_t * 3.5))
+        # 内层主题光晕
+        for i in range(3):
+            ir = radius + 2 + i * 5
+            ig = QRadialGradient(center, ir)
+            ga = int((70 - i * 18) * hp)
+            ig.setColorAt(0.60, QColor(255, 255, 255, 0))
+            ig.setColorAt(0.78, QColor(100, 180, 255, ga // 2))
+            ig.setColorAt(0.90, QColor(100, 180, 255, ga))
+            ig.setColorAt(0.97, QColor(50, 90, 175, ga // 3))
+            ig.setColorAt(1.0, QColor(0, 0, 0, 0))
+            p.setPen(Qt.NoPen); p.setBrush(ig)
+            p.drawEllipse(center, ir, ir)
+        # 外层扩散光晕
+        for i in range(3):
+            outer_r = radius + 10 + i * 10
+            og = QRadialGradient(center, outer_r)
+            ga = int((50 - i * 14) * hp)
+            og.setColorAt(0.75, QColor(255, 255, 255, 0))
+            og.setColorAt(0.88, QColor(100, 180, 255, ga // 2))
+            og.setColorAt(0.96, QColor(50, 90, 175, ga // 3))
+            og.setColorAt(1.0, QColor(0, 0, 0, 0))
+            p.setPen(Qt.NoPen); p.setBrush(og)
             p.drawEllipse(center, outer_r, outer_r)
+        # 明亮轮廓环（呼吸感）
+        br = 0.6 + 0.4 * abs(math.sin(anim_t * 4.0))
+        rpen = QPen(QColor(100, 180, 255, int(220 * hp * br)), 2.5 + 1.0 * br)
+        p.setPen(rpen); p.setBrush(Qt.NoBrush)
+        p.drawEllipse(center, radius + 3, radius + 3)
 
     # 标签
     if label:

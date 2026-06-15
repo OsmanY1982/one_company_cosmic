@@ -263,7 +263,11 @@ class ChatEngine(QObject):
         return 'Sorry, processing encountered a loop. Please try a different approach.'
 
     def _should_force_tools(self, user_message: str) -> bool:
-        """判断是否应该强制使用工具"""
+        """判断是否应该强制使用工具。跳过纯能力询问（以"吗？"/"吗"/"？"结尾的寒暄句）"""
+        msg_stripped = user_message.strip()
+        # 纯元问题（"你能...吗？""你支持...?"）不强制工具，交给 LLM 自然决策
+        if msg_stripped.endswith(('吗？', '吗', '？')) or msg_stripped.endswith('?'):
+            return False
         force_keywords = [
             '执行', '运行', '调用', '使用', '打开', '关闭', '创建', '删除',
             '读取', '写入', '修改', '搜索', '查询', '分析', '计算',

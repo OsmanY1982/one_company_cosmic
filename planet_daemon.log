@@ -1,0 +1,94 @@
+2026-06-15 07:29:42 [PlanetDaemon] INFO: PROJECT_ROOT: /Volumes/D盘工作区/一人公司/one_company_cosmic
+2026-06-15 07:29:42 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data
+2026-06-15 07:29:42 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 活跃 provider: id=ollama, type=local
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 正在初始化 opcclaw Engine...
+2026-06-15 07:29:42 [PlanetDaemon] INFO: ProviderConfig 构建完成: name=Ollama, model=qwen2.5:7b-64k, base_url=http://localhost:11434/v1
+2026-06-15 07:29:42 [PlanetDaemon] INFO: LLM Backend 创建成功: OpenAICompatibleBackend
+[2m07:29:42[0m [32mℹ️ INFO   [0m [2m[opcclaw][0m OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:29:42 [PlanetDaemon] INFO: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:29:42 [PlanetDaemon] INFO: AgentBridge (opcclaw Engine) 初始化成功
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 已从磁盘恢复 41 条对话历史
+2026-06-15 07:29:42 [PlanetDaemon] INFO: ============================================================
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 悬浮星球守护进程启动中...
+2026-06-15 07:29:42 [PlanetDaemon] INFO: ============================================================
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 单实例锁已获取 (PID=19424)
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 正在创建 QApplication 实例...
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 正在创建 FloatingPlanet 实例...
+2026-06-15 07:29:42 [PlanetDaemon] INFO: Engine 已就绪，FloatingPlanet 将具备 AI 对话能力
+[FloatingPlanet] VoiceInterface stt=whisper, tts=apple
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 悬浮星球已显示
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 进入事件循环（麦克风权限请求将在 1.5s 后触发）
+[Wake] _start_wake_on_init: stt=whisper
+[Wake] 先用 Apple Speech 启动唤醒，后台加载 Whisper...
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Whisper] 线程启动
+2026-06-15 07:29:44 [PlanetDaemon] INFO: 正在请求麦克风权限...
+[Whisper] 开始加载模型...
+[Whisper] 模型加载失败: No module named 'faster_whisper'
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/whisper_recognizer.py", line 341, in run
+    self._ensure_model()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/whisper_recognizer.py", line 74, in _ensure_model
+    from faster_whisper import WhisperModel
+ModuleNotFoundError: No module named 'faster_whisper'
+2026-06-15 07:29:44 [PlanetDaemon] INFO: request_mic 返回: 当前权限状态: 0 (0=NotDetermined, 3=Authorized)
+正在请求麦克风权限...
+权限请求结果: 已拒绝
+[Whisper Status] 加载 Whisper 模型...
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+[Voice Error] 语音识别权限未授权，请在系统设置中开启
+2026-06-15 07:29:56 [PlanetDaemon] INFO: 彻底退出触发，正在清理...
+2026-06-15 07:29:56 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)
+2026-06-15 07:29:56 [PlanetDaemon] INFO: 事件循环结束，exit_code=0
+2026-06-15 07:29:56 [PlanetDaemon] INFO: ============================================================
+2026-06-15 07:29:56 [PlanetDaemon] INFO: 悬浮星球守护进程已退出 (exit_code=0)
+2026-06-15 07:29:56 [PlanetDaemon] INFO: ============================================================
+2026-06-15 07:29:56 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)

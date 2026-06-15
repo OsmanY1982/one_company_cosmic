@@ -52,6 +52,7 @@ from ._ai_widgets import (
     SuperIntelligenceWidget, AnomalyDetectorWidget,
     RecommendationEngineWidget, DataVisualizationWidget,
 )
+from ._chat_dialog import OPCclawChatDialog
 
 
 
@@ -136,15 +137,104 @@ class AIAssistantWindow(QMainWindow):
         elif planet_id == "enhanced_chat":
             try:
                 from modules.intelligence.enhanced_chat import EnhancedChatWidget
-                dlg = EnhancedChatWidget(self)
-                dlg.exec_()
+                dlg = QDialog(self)
+                dlg.setWindowTitle("增强对话")
+                dlg.setMinimumSize(800, 600)
+                layout = QVBoxLayout(dlg)
+                layout.addWidget(EnhancedChatWidget(dlg))
+                dlg.show()
             except ImportError as e:
                 QMessageBox.warning(self, "错误", f"增强对话模块加载失败: {e}")
         elif planet_id == "knowledge_base":
             try:
                 from modules.intelligence.knowledge_base import KnowledgeBase
-                dlg = KnowledgeBase(self)
-                dlg.exec_()
+                kb = KnowledgeBase()
+                from PyQt5.QtWidgets import QListWidget, QFileDialog
+                dlg = QDialog(self)
+                dlg.setWindowTitle("知识库")
+                dlg.setMinimumSize(700, 500)
+                dl = QVBoxLayout(dlg)
+
+                # 搜索区域
+                search_layout = QHBoxLayout()
+                search_input = QLineEdit()
+                search_input.setPlaceholderText("输入查询关键词...")
+                search_btn = QPushButton("搜索")
+                search_layout.addWidget(search_input)
+                search_layout.addWidget(search_btn)
+                dl.addLayout(search_layout)
+
+                # 结果显示
+                result_area = QTextEdit()
+                result_area.setReadOnly(True)
+                result_area.setStyleSheet("font-family: monospace; font-size: 11px;")
+                dl.addWidget(result_area)
+
+                # 文档列表
+                dl.addWidget(QLabel("已导入文档:"))
+                doc_list = QListWidget()
+                dl.addWidget(doc_list)
+
+                # 操作按钮
+                btn_layout = QHBoxLayout()
+                import_btn = QPushButton("导入文档")
+                import_text_btn = QPushButton("导入文本")
+                refresh_btn = QPushButton("刷新列表")
+                btn_layout.addWidget(import_btn)
+                btn_layout.addWidget(import_text_btn)
+                btn_layout.addWidget(refresh_btn)
+                btn_layout.addStretch()
+                dl.addLayout(btn_layout)
+
+                def refresh_docs():
+                    doc_list.clear()
+                    docs = kb.list_documents()
+                    for d in docs:
+                        title = d.get("title", d.get("id", "?"))
+                        doc_list.addItem(title)
+
+                def do_search():
+                    q = search_input.text().strip()
+                    if not q:
+                        return
+                    res = kb.query(q, top_k=10)
+                    result_area.clear()
+                    if not res.get("success"):
+                        result_area.append(f"查询失败: {res.get('error', '未知错误')}")
+                        return
+                    sources = res.get("sources", [])
+                    if not sources:
+                        result_area.append(f"无匹配结果。")
+                        return
+                    result_area.append(f"答案: {res.get('answer', 'N/A')}\n{'-'*50}")
+                    for s in sources:
+                        result_area.append(f"【{s.get('title', '?')}】(相似度: {s.get('score', 0):.2f})\n{s.get('chunk', '')}\n{'-'*50}")
+
+                def import_doc():
+                    fp, _ = QFileDialog.getOpenFileName(dlg, "选择文档", "", "文本文件 (*.txt *.md *.json *.csv)")
+                    if fp:
+                        outcome = kb.import_document(fp, title="")
+                        result_area.append(f"导入: {outcome}")
+                        refresh_docs()
+
+                def import_txt():
+                    fp, _ = QFileDialog.getOpenFileName(dlg, "选择文件", "", "所有文件 (*)")
+                    if fp:
+                        try:
+                            with open(fp, 'r', encoding='utf-8') as f:
+                                content = f.read()
+                            outcome = kb.import_text(content, title=os.path.basename(fp))
+                            result_area.append(f"导入文本: {outcome}")
+                            refresh_docs()
+                        except Exception as ex:
+                            result_area.append(f"导入失败: {ex}")
+
+                search_btn.clicked.connect(do_search)
+                import_btn.clicked.connect(import_doc)
+                import_text_btn.clicked.connect(import_txt)
+                refresh_btn.clicked.connect(refresh_docs)
+                refresh_docs()
+                dlg.show()
             except ImportError as e:
                 QMessageBox.warning(self, "错误", f"知识库模块加载失败: {e}")
         elif planet_id == "system_monitor":
@@ -153,8 +243,12 @@ class AIAssistantWindow(QMainWindow):
         elif planet_id == "quick_actions":
             try:
                 from modules.intelligence.quick_actions import QuickActionsWidget
-                dlg = QuickActionsWidget(self)
-                dlg.exec_()
+                dlg = QDialog(self)
+                dlg.setWindowTitle("快捷操作")
+                dlg.setMinimumSize(700, 550)
+                layout = QVBoxLayout(dlg)
+                layout.addWidget(QuickActionsWidget(dlg))
+                dlg.show()
             except ImportError as e:
                 QMessageBox.warning(self, "错误", f"快捷操作模块加载失败: {e}")
         elif planet_id == "ai_dashboard":
@@ -191,7 +285,7 @@ class AIAssistantWindow(QMainWindow):
             try:
                 from modules.intelligence.voice_interface import VoiceWidget
                 dlg = VoiceWidget(self)
-                dlg.exec_()
+                dlg.show()
             except ImportError as e:
                 QMessageBox.warning(self, "错误", f"语音接口模块加载失败: {e}")
 

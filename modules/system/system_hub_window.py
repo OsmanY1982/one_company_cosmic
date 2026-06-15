@@ -16,11 +16,11 @@ from core.planet_painter import (
 
 # ═══════ 5颗子星球配置 ═══════
 PLANETS = [
-    {"id": "system_settings", "name": "系统设置", "style": "uranus",  "orbit": 140, "size": 30},
-    {"id": "activation",      "name": "激活码",   "style": "sun",     "orbit": 210, "size": 30},
-    {"id": "cloud_sync",      "name": "云端同步", "style": "neptune", "orbit": 280, "size": 30},
-    {"id": "system_logs",     "name": "系统日志", "style": "pluto",   "orbit": 350, "size": 30},
-    {"id": "update_check",    "name": "更新检测", "style": "moon",    "orbit": 420, "size": 30},
+    {"id": "system_settings", "name": "系统设置", "style": "uranus",  "orbit": 140, "size": 46},
+    {"id": "activation",      "name": "激活码",   "style": "sun",     "orbit": 210, "size": 46},
+    {"id": "cloud_sync",      "name": "云端同步", "style": "neptune", "orbit": 280, "size": 46},
+    {"id": "system_logs",     "name": "系统日志", "style": "pluto",   "orbit": 350, "size": 46},
+    {"id": "update_check",    "name": "更新检测", "style": "moon",    "orbit": 420, "size": 46},
 ]
 
 
@@ -74,10 +74,10 @@ class NavigationHUD(QWidget):
             style = PLANET_STYLES.get(planet_data.get("style"), PLANET_STYLES["neptune"])
             is_hovered = (self._hovered_planet == planet_data["id"])
             paint_planet(p, pos, planet_data["size"], style,
-                         hovered=is_hovered, label=planet_data["name"], font_size=9)
+                         hovered=is_hovered, label=planet_data["name"], font_size=10)
 
         # 中央核心 · 太阳
-        paint_planet(p, w2, 38, PLANET_STYLES["sun"], label="SYS", font_size=10)
+        paint_planet(p, w2, 56, PLANET_STYLES["sun"], label="SYS", font_size=12)
 
         p.end()
 

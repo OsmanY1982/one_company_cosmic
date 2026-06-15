@@ -519,3 +519,87 @@ Traceback (most recent call last):
     self._send_btn.setEnabled(False)
 AttributeError: '_ChatDialog' object has no attribute '_send_btn'
 
+2026-06-15 03:44:26,115 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 140, in _on_planet_clicked
+    dlg = QDialog(self)
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-15 03:44:29,392 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 146, in _on_planet_clicked
+    except ImportError as e:
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-15 03:44:49,425 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 146, in _on_planet_clicked
+    except ImportError as e:
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 233, in __init__
+    self._ensure_storage()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/knowledge_base.py", line 237, in _ensure_storage
+    if not os.path.exists(self.storage_path):
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.py", line 19, in exists
+    os.stat(path)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not AIAssistantWindow
+
+2026-06-15 03:44:54,448 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 140, in _on_planet_clicked
+    dlg = QDialog(self)
+AttributeError: 'EnhancedChatWidget' object has no attribute 'exec_'
+
+2026-06-15 03:45:04,383 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 157, in _on_planet_clicked
+AttributeError: 'QuickActionsWidget' object has no attribute 'exec_'
+
+2026-06-15 03:45:07,475 [MainThread] 未捕获异常:
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/_navigation_hud.py", line 113, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/ai_assistant_window.py", line 157, in _on_planet_clicked
+AttributeError: 'QuickActionsWidget' object has no attribute 'exec_'
+
+2026-06-15 06:09:01,292 [Dummy-1] Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 06:28:53,154 [Dummy-1] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 06:30:10,184 [Dummy-1] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 06:36:01,937 [Dummy-1] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 06:38:53,035 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 07:00:15,500 [Dummy-1] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 07:03:18,946 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 07:30:23,414 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:30:36,510 [Dummy-2] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6124941312.
+2026-06-15 07:30:36,511 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 07:32:08,816 [Dummy-3] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6106968064.
+2026-06-15 07:32:08,819 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:08:34,534 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:08:44,099 [Dummy-2] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6148976640.
+2026-06-15 09:08:44,101 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:09:23,193 [Dummy-3] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6131003392.
+2026-06-15 09:09:23,194 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:10:15,335 [Dummy-4] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6129856512.
+2026-06-15 09:10:15,338 [Dummy-4] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:10:53,937 [Dummy-2] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6148976640.
+2026-06-15 09:10:53,937 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:11:29,295 [Dummy-5] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6148403200.
+2026-06-15 09:11:29,298 [Dummy-5] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:12:02,186 [Dummy-3] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6131003392.
+2026-06-15 09:12:02,189 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:17:33,912 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)

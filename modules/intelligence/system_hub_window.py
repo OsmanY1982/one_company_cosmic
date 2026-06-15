@@ -16,11 +16,11 @@ from core.planet_painter import (
 
 # ═══════ 5颗系统管理子星球 ═══════
 SYSTEM_PLANETS = [
-    {"id": "base_info",     "name": "系统设置",   "style": "uranus",  "orbit": 130, "size": 30},
-    {"id": "activation",    "name": "激活码",     "style": "sun",     "orbit": 200, "size": 32},
-    {"id": "cloud_server",  "name": "云端同步",   "style": "neptune", "orbit": 270, "size": 34},
-    {"id": "system_logs",   "name": "系统日志",   "style": "pluto",   "orbit": 340, "size": 30},
-    {"id": "update",        "name": "更新检测",   "style": "moon",    "orbit": 410, "size": 30},
+    {"id": "base_info",     "name": "系统设置",   "style": "uranus",  "orbit": 130, "size": 46},
+    {"id": "activation",    "name": "激活码",     "style": "sun",     "orbit": 200, "size": 48},
+    {"id": "cloud_server",  "name": "云端同步",   "style": "neptune", "orbit": 270, "size": 50},
+    {"id": "system_logs",   "name": "系统日志",   "style": "pluto",   "orbit": 340, "size": 46},
+    {"id": "update",        "name": "更新检测",   "style": "moon",    "orbit": 410, "size": 46},
 ]
 
 
@@ -75,12 +75,12 @@ class SystemHubHUD(QWidget):
             style = PLANET_STYLES.get(sp["style"], PLANET_STYLES["neptune"])
             hovered = (self._hovered_planet == sp["id"])
             paint_planet(p, pos, sp["size"], style,
-                         hovered=hovered, label=sp["name"], font_size=9)
+                         hovered=hovered, label=sp["name"], font_size=10)
 
         # 中央核心：太阳
-        core_r = 42
+        core_r = 60
         paint_planet(p, w2, core_r, PLANET_STYLES["sun"],
-                     label="SOLAR", font_size=10)
+                     label="SOLAR", font_size=12)
 
         p.end()
 

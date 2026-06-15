@@ -4,13 +4,13 @@
 
 与 opcclaw 共享配置格式（opcclaw_config.json）
 """
-import os, sys, json, re, traceback
+import os, json, re
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget,
     QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox,
     QDialog,
 )
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QThread
 
 # ── 预设供应商模板 ──
 PRESET_PROVIDERS = [
@@ -30,6 +30,23 @@ PRESET_PROVIDERS = [
     {"id": "cohere",          "name": "Cohere",            "base_url": "https://api.cohere.com/v1",                   "model": "command-r-plus",   "desc": "Cohere Command R/R+ 企业级 RAG",             "local": False, "models": ["command-r-plus", "command-r"]},
     {"id": "stepfun",         "name": "阶跃星辰 StepFun",   "base_url": "https://api.stepfun.com/v1",                  "model": "step-2-16k",       "desc": "阶跃星辰 Step 系列大模型",                   "local": False, "models": ["step-2-16k", "step-1-flash"]},
 ]
+
+# ── 硬编码供应商模型列表（无需网络即可显示）──
+PROVIDER_MODELS = {
+    "OpenAI": ["gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini", "o4-mini", "o3", "o3-mini"],
+    "DeepSeek": ["deepseek-chat", "deepseek-reasoner"],
+    "Google": ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"],
+    "Anthropic": ["claude-sonnet-4-20250514", "claude-3.5-sonnet", "claude-3.5-haiku"],
+    "Groq": ["llama-4-scout-17b-16e", "llama-3.3-70b", "deepseek-r1-distill-llama-70b"],
+    "Together": ["meta-llama/Llama-4-Maverick-17B", "meta-llama/Llama-3.3-70B-Instruct-Turbo", "deepseek-ai/DeepSeek-R1"],
+    "智谱AI": ["glm-4-plus", "glm-4-flash", "glm-4-air"],
+    "Moonshot": ["moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"],
+    "百川": ["Baichuan4-Turbo", "Baichuan4-Air"],
+    "零一万物": ["yi-large", "yi-medium", "yi-lightning"],
+    "MiniMax": ["abab7-chat", "abab6.5s-chat"],
+    "硅基流动": ["Qwen/Qwen3-235B-A22B", "Qwen/Qwen2.5-72B-Instruct", "deepseek-ai/DeepSeek-V3"],
+    "OpenRouter": ["openai/gpt-4o", "anthropic/claude-sonnet-4", "google/gemini-2.5-pro", "meta-llama/llama-4-maverick"],
+}
 
 LOCAL_SERVICES = [
     {"id": "ollama",    "name": "Ollama",     "base_url": "http://localhost:11434/v1", "desc": "一键启动，已装 7 个模型（qwen2.5/qwen3.6/gemma4）", "models": ["qwen2.5:7b-64k", "gemma4-hermes:latest", "qwen3.6-35b-iq4xs:latest", "qwen3.6-35b-vl:latest"]},
@@ -71,28 +88,101 @@ _DEPRECATED_PREFIXES = [
 
 
 def _filter_usable_models(models: list[str]) -> list[str]:
-    """过滤掉过期/快照/废弃模型，只保留可用模型。
+    """过滤掉过期/快照/废弃/非对话模型，只保留可用的对话模型。
 
     规则:
     1. 移除含4位日期后缀的快照模型 (如 gpt-4-0314, gpt-3.5-turbo-0301)
        注: 8位日期后缀(如 claude-sonnet-4-20250514)是版本号，不杀
     2. 移除已知废弃前缀的模型 (如 text-davinci-*, gpt-3.5-turbo-instruct)
     3. 移除音频/TTS 模型 (whisper-, tts-)
+    4. 移除 embedding 模型 (text-embedding-, bge-, embedding-)
+    5. 移除 moderation 模型 (text-moderation-, omni-moderation-)
+    6. 移除已知非对话/过时模型后缀
     """
     # 4位日期快照后缀: gpt-4-0314, gpt-3.5-turbo-0301, gpt-3.5-turbo-1106, etc.
     date_pattern = re.compile(r'-\d{4}$')
 
+    # 非对话模型的前缀黑名单
+    _NON_CHAT_PREFIXES = [
+        "text-embedding-", "bge-", "embedding-",
+        "text-moderation-", "omni-moderation-",
+        "tts-", "whisper-", "text-to-speech",
+    ]
+    # 非对话模型关键词（包含即排除）
+    _NON_CHAT_KEYWORDS = [
+        "-tts-", "embedding", "moderation", "whisper",
+        "dall-e", "dalle",
+        "-edit",  # text-edit-001 等
+        "-similarity", "-search-",
+    ]
+    # 已知应排除的精确后缀
+    _BLACKLIST_SUFFIXES = [
+        "-search-doc", "-search-query", "-code-search-",
+        "-similarity", "-insert", 
+    ]
+
     result = []
     for m in models:
+        # 废弃前缀
         if any(m.startswith(p) or m == p for p in _DEPRECATED_PREFIXES):
             continue
+        # 4位日期快照
         if date_pattern.search(m):
             continue
-        if m.startswith("tts-") or m.startswith("whisper-") or "-tts-" in m:
+        # 非对话前缀
+        if any(m.startswith(p) for p in _NON_CHAT_PREFIXES):
+            continue
+        # 非对话关键词
+        m_lower = m.lower()
+        if any(kw in m_lower for kw in _NON_CHAT_KEYWORDS):
+            continue
+        # 黑名单后缀
+        if any(m_lower.endswith(s) for s in _BLACKLIST_SUFFIXES):
             continue
         result.append(m)
 
     return result
+
+
+def _populate_model_combo(combo: QComboBox, models: list[str], saved_model: str = ""):
+    """用模型列表填充下拉框，并尝试恢复之前选中的模型。"""
+    combo.clear()
+    if not models:
+        combo.addItem("（无可用的活跃模型）", "")
+        if saved_model:
+            combo.setEditText(saved_model)
+        return
+    for m in models:
+        combo.addItem(m, m)
+    # 恢复已保存的模型
+    if saved_model:
+        idx = combo.findText(saved_model)
+        if idx >= 0:
+            combo.setCurrentIndex(idx)
+        else:
+            combo.setEditText(saved_model)
+
+
+# ── 手动模型获取线程（仅用于自定义/本地模式的按钮触发）──
+
+class _ManualModelFetcher(QThread):
+    """后台线程：手动触发从 OpenAI 兼容端点获取可用模型列表。"""
+    finished = pyqtSignal(list, str)  # (model_list, error_msg)
+
+    def __init__(self, base_url: str, api_key: str = "", timeout: int = 15):
+        super().__init__()
+        self._base_url = base_url
+        self._api_key = api_key
+        self._timeout = timeout
+
+    def run(self):
+        try:
+            from opcclaw.core.llm_backend import get_available_models
+            raw = get_available_models(self._base_url, self._api_key, timeout=self._timeout)
+            usable = _filter_usable_models(raw)
+            self.finished.emit(usable, "")
+        except Exception as e:
+            self.finished.emit([], str(e))
 
 
 # ── 样式 ──
@@ -162,16 +252,22 @@ BTN_SECONDARY = """
 # ModelConfigDialog — 弹窗包装（非独立模式）
 # ═══════════════════════════════════════════
 
-class ModelConfigDialog(QDialog):
+class ModelConfigDialog(QWidget):
     """模型设置弹窗，嵌入 ModelConfigPanel。用于 AIChatWindow / FloatingPlanet 的「⚙ 引擎设置」按钮"""
+
+    accepted = pyqtSignal()
 
     def __init__(self, parent=None, bridge=None):
         super().__init__(parent)
         self._bridge = bridge
+        self.setWindowFlags(
+            Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint | Qt.WindowCloseButtonHint
+        )
+        self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("引 擎 设 置")
         self.setMinimumSize(620, 580)
         self.setStyleSheet("""
-            QDialog {
+            ModelConfigDialog {
                 background: rgba(5, 10, 24, 248);
                 border: 1px solid rgba(0, 180, 255, 60);
                 border-radius: 16px;
@@ -205,7 +301,8 @@ class ModelConfigDialog(QDialog):
             except Exception as e:
                 print(f"[ModelConfigDialog] 切换模型失败: {e}")
 
-        self.accept()
+        self.accepted.emit()
+        self.close()
 
 
 # ═══════════════════════════════════════════
@@ -219,8 +316,9 @@ class ModelConfigPanel(QWidget):
       - 智能中心 AI 对话窗口（AIChatWindow 弹窗，standalone=False）
       - 悬浮球对话框（FloatingPlanet 弹窗，standalone=False）
     
-    standalone=True:  显示"点火"/"跳过配置"按钮，点保存后发射 config_saved 信号
-    standalone=False: 显示"保存并切换"按钮，保存后调用 _reinit_engine 并发射 config_saved
+    standalone=True:  显示"点火"/"跳过配置"按钮，保存后发射 config_saved → ModelSetupWindow 创建 AgentBridge
+    standalone=False: 显示"保存并切换"按钮，保存后发射 config_saved → ModelConfigDialog 调用 bridge.switch_model()
+    模型切换统一通过 AgentBridge.switch_model() + _BridgeSignals.model_changed 全局信号广播
     """
 
     config_saved = pyqtSignal(dict)  # 配置保存后发射，携带 config dict
@@ -397,21 +495,27 @@ class ModelConfigPanel(QWidget):
         provider = next((p for p in PRESET_PROVIDERS if p["id"] == pid), None)
         if not provider:
             return
+
+        # 用硬编码字典填充模型列表（即时显示，无需网络）
         self._preset_model.clear()
-        for m in provider.get("models", ["default"]):
-            self._preset_model.addItem(m, m)
-        existing_key = ""
+        hardcoded = PROVIDER_MODELS.get(provider["name"], [])
+        if hardcoded:
+            for m in hardcoded:
+                self._preset_model.addItem(m, m)
+
+        # 恢复已保存的 key 和 model
         cloud = self._existing.get("cloud_providers", {})
         if pid in cloud:
             existing_key = cloud[pid].get("api_key", "")
             existing_model = cloud[pid].get("model", "")
-            idx_m = self._preset_model.findText(existing_model)
-            if idx_m >= 0:
-                self._preset_model.setCurrentIndex(idx_m)
-            elif existing_model:
-                self._preset_model.setEditText(existing_model)
-        if existing_key:
-            self._preset_key.setText(existing_key)
+            if existing_model:
+                idx_m = self._preset_model.findText(existing_model)
+                if idx_m >= 0:
+                    self._preset_model.setCurrentIndex(idx_m)
+                else:
+                    self._preset_model.setEditText(existing_model)
+            if existing_key:
+                self._preset_key.setText(existing_key)
 
     # ─── 自定义模式面板 ───
 
@@ -440,6 +544,9 @@ class ModelConfigPanel(QWidget):
                 le.setEchoMode(QLineEdit.Password)
             v.addWidget(le)
             self._custom_inputs[attr] = le
+
+        # URL 改变时自动尝试拉取模型列表
+        self._custom_inputs["custom_url"].editingFinished.connect(self._on_custom_url_changed)
 
         # 模型名称 → QComboBox (editable) + "获取模型" 按钮
         model_label = QLabel("模型名称 (Model Name)")
@@ -497,8 +604,12 @@ class ModelConfigPanel(QWidget):
 
         return panel
 
+    def _on_custom_url_changed(self):
+        """自定义端点 URL 变更后记录，不自动拉取模型列表（由用户手动点击"获取模型"触发）。"""
+        pass
+
     def _on_fetch_custom_models(self):
-        """调用 get_available_models 获取自定义端点的模型列表并填入下拉框。"""
+        """手动点击"获取模型"按钮时拉取模型列表。"""
         url = self._custom_inputs["custom_url"].text().strip()
         key = self._custom_inputs["custom_key"].text().strip()
 
@@ -506,34 +617,40 @@ class ModelConfigPanel(QWidget):
             QMessageBox.warning(self, "缺少URL", "请先填写 API Base URL")
             return
 
-        # 找按钮并设为 disabled
         btn = self.sender()
         if btn:
             btn.setEnabled(False)
             btn.setText("获取中...")
 
-        try:
-            from opcclaw.core.llm_backend import get_available_models
-            raw_models = get_available_models(url, key, timeout=20)
-            usable = _filter_usable_models(raw_models)
+        saved_model = self._custom_inputs["custom_model"].currentText().strip()
+        combo = self._custom_model_combo
 
-            self._custom_model_combo.clear()
-            if not usable:
-                self._custom_model_combo.addItem("（无可用的活跃模型）", "")
-            else:
-                for m in usable:
-                    self._custom_model_combo.addItem(m, m)
+        # 插入加载指示器
+        loading_label = "⏳ 刷新模型列表中..."
+        old_idx = combo.findText(loading_label)
+        if old_idx >= 0:
+            combo.removeItem(old_idx)
+        combo.insertItem(0, loading_label, "")
+        combo.setCurrentIndex(0)
 
-            # 过滤掉的数量
-            skipped = len(raw_models) - len(usable)
-            if skipped > 0:
-                print(f"[ModelConfigPanel] 过滤掉 {skipped} 个过期/废弃模型，保留 {len(usable)} 个")
-        except Exception as e:
-            QMessageBox.warning(self, "获取失败", f"获取模型列表失败:\n{str(e)}")
-        finally:
+        fetcher = _ManualModelFetcher(url, key, timeout=15)
+
+        def on_finished(models, error):
+            lidx = combo.findText(loading_label)
+            if lidx >= 0:
+                combo.removeItem(lidx)
+            if error:
+                print(f"[ModelConfigPanel] 获取模型列表失败: {error}")
+                if saved_model and combo.findText(saved_model) < 0:
+                    combo.setEditText(saved_model)
+            elif models:
+                _populate_model_combo(combo, models, saved_model)
             if btn:
                 btn.setEnabled(True)
                 btn.setText("获取模型")
+
+        fetcher.finished.connect(on_finished)
+        fetcher.start()
 
     # ─── 本地模式面板 ───
 
@@ -616,35 +733,46 @@ class ModelConfigPanel(QWidget):
         if not svc:
             return
         self._local_url.setText(svc["base_url"])
+
+        # 用硬编码列表填充（不自动远程拉取，由用户手动点击"刷新模型"触发）
         self._local_model.clear()
-        if sid == "ollama":
-            self._refresh_local_models()
-        else:
-            for m in svc.get("models", ["default"]):
+        hardcoded = svc.get("models", [])
+        if hardcoded:
+            for m in hardcoded:
                 self._local_model.addItem(m, m)
 
     def _refresh_local_models(self):
-        """通过 AgentBridge.list_all_models() 获取已配置的本地模型并填充下拉框"""
-        from modules.intelligence.agent_bridge import AgentBridge
-        self._local_model.clear()
+        """手动刷新：从本地服务端点重新拉取模型列表。"""
+        url = self._local_url.text().strip()
+        saved_model = self._local_model.currentText().strip()
         self._refresh_btn.setEnabled(False)
         self._refresh_btn.setText("获取中...")
-        try:
-            all_models = AgentBridge.list_all_models()
-            local_models = [m for m in all_models if m.get("category") == "local"]
-        except Exception as e:
-            print(f"[ModelConfigPanel] agent_bridge 获取模型列表失败: {e}")
-            local_models = []
-        if not local_models:
-            self._local_model.addItem("（暂无本地模型，请先配置或启动 Ollama）", "")
-        else:
-            for m in local_models:
-                name = m.get("model", "")
-                size = m.get("size", 0)
-                size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
-                self._local_model.addItem(f"{name}{size_str}", name)
-        self._refresh_btn.setEnabled(True)
-        self._refresh_btn.setText("刷新模型")
+
+        combo = self._local_model
+        loading_label = "⏳ 刷新模型列表中..."
+        old_idx = combo.findText(loading_label)
+        if old_idx >= 0:
+            combo.removeItem(old_idx)
+        combo.insertItem(0, loading_label, "")
+        combo.setCurrentIndex(0)
+
+        fetcher = _ManualModelFetcher(url, "", timeout=15)
+
+        def on_finished(models, error):
+            lidx = combo.findText(loading_label)
+            if lidx >= 0:
+                combo.removeItem(lidx)
+            if error:
+                print(f"[ModelConfigPanel] 获取本地模型列表失败: {error}")
+                if saved_model and combo.findText(saved_model) < 0:
+                    combo.setEditText(saved_model)
+            elif models:
+                _populate_model_combo(combo, models, saved_model)
+            self._refresh_btn.setEnabled(True)
+            self._refresh_btn.setText("刷新模型")
+
+        fetcher.finished.connect(on_finished)
+        fetcher.start()
 
     # ─── 配置构建 ───
 
@@ -725,45 +853,15 @@ class ModelConfigPanel(QWidget):
         self.config_saved.emit(config)
 
     def _reinit_engine(self, config: dict):
-        """重新初始化 AgentBridge 引擎（非独立模式）"""
-        try:
-            from modules.intelligence.agent_bridge import AgentBridge
-            from opcclaw.core.llm_backend import BackendFactory, ProviderConfig
+        """
+        已废弃 — 旧版通过创建新 AgentBridge 初始化引擎，存在以下问题：
+        1. 创建新 bridge 会导致 AIChatWindow / FloatingPlanet / OPCclawChatDialog 持有旧引用
+        2. 新 bridge 的 model_changed signal 广播后无人监听
+        3. 线程状态（chat_stream / AgentLoop）未迁移
 
-            provider_id = config.get("active_provider_id", "")
-            provider_type = config.get("active_provider_type", "")
-
-            if provider_type == "cloud":
-                prov_cfg = config.get("cloud_providers", {}).get(provider_id, {})
-            elif provider_type == "local":
-                prov_cfg = config.get("local_providers", {}).get(provider_id, {})
-            else:
-                print("[ModelConfigPanel] 无有效 provider，跳过引擎初始化")
-                return
-
-            pc = ProviderConfig(
-                name=prov_cfg.get("name", provider_id),
-                provider_type=prov_cfg.get("provider_type", "openai_compatible"),
-                base_url=prov_cfg.get("base_url", ""),
-                api_key=prov_cfg.get("api_key", ""),
-                model=prov_cfg.get("model", ""),
-            )
-            backend = BackendFactory.create(pc)
-            new_bridge = AgentBridge(backend)
-            print(f"[ModelConfigPanel] 引擎已重新初始化: {provider_id} / {prov_cfg.get('model', '')}")
-
-            # 广播切换事件
-            model_name = prov_cfg.get("model", "")
-            provider_name = prov_cfg.get("name", provider_id)
-            new_bridge.model_changed.emit(provider_name, model_name)
-
-            # 更新全局单例引用
-            try:
-                from modules.intelligence.agent_bridge import _bridge_instance
-                AgentBridge._bridge_instance = new_bridge
-            except Exception:
-                pass
-
-        except Exception as e:
-            print(f"[ModelConfigPanel] 引擎重新初始化失败: {e}")
-            traceback.print_exc()
+        当前架构：
+        - AgentBridge.switch_model() 不更换实例，仅替换后端
+        - model_changed 全局信号通过 _BridgeSignals 单例广播
+        - 所有窗口监听 model_changed 自动同步 UI
+        """
+        pass

@@ -132,7 +132,7 @@ class SetupCosmicBackground(QWidget):
             px = cx + math.cos(angle) * 180
             py = cy + math.sin(angle) * 180 * 0.6
             style = PLANET_STYLES.get(planet_styles[i], PLANET_STYLES["neptune"])
-            paint_planet(painter, QPointF(px, py), 20, style, anim_t=self._t)
+            paint_planet(painter, QPointF(px, py), 36, style, anim_t=self._t)
 
         painter.end()
 
