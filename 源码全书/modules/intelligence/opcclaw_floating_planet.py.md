@@ -1,6 +1,6 @@
 # `modules/intelligence/opcclaw_floating_planet.py`
 
-> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1439
+> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1447
 
 
 ---
@@ -844,11 +844,17 @@ class FloatingPlanet(QWidget):
             # 注入 AgentBridge 到全局上下文
             session_ctx.set_agent_bridge(self._engine)
 
-            # 如果已有活跃窗口，激活它
+            # 如果已有活跃窗口，激活并刷新它
             if session_ctx._active_window is not None:
                 try:
                     session_ctx._active_window.raise_()
                     session_ctx._active_window.activateWindow()
+                    # 刷新当前会话（语音可能已新增消息）
+                    if hasattr(session_ctx._active_window, '_switch_to_session'):
+                        session_ctx._active_window._switch_to_session(
+                            session_ctx.current_session_id,
+                            session_ctx.current_title,
+                        )
                     return
                 except RuntimeError:
                     session_ctx._active_window = None
@@ -1058,6 +1064,7 @@ class FloatingPlanet(QWidget):
             session_ctx.set_agent_bridge(self._engine)
             try:
                 session_ctx.agent_bridge.append_message("user", text, session_ctx.current_session_id)
+                session_ctx.notify_message_added(session_ctx.current_session_id, "user", text)
             except Exception as e:
                 print(f"[FloatingPlanet] append_message(user) 失败: {e}")
 
@@ -1065,6 +1072,7 @@ class FloatingPlanet(QWidget):
 
             try:
                 session_ctx.agent_bridge.append_message("assistant", reply, session_ctx.current_session_id)
+                session_ctx.notify_message_added(session_ctx.current_session_id, "assistant", reply)
             except Exception as e:
                 print(f"[FloatingPlanet] append_message(assistant) 失败: {e}")
         except Exception as e:

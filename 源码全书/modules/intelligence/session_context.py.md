@@ -1,6 +1,6 @@
 # `modules/intelligence/session_context.py`
 
-> 路径：`modules/intelligence/session_context.py` | 行数：90
+> 路径：`modules/intelligence/session_context.py` | 行数：109
 
 
 ---
@@ -38,6 +38,7 @@ class SessionContext:
         self._agent_bridge = None            # AgentBridge 引用
         self._active_window = None           # 当前活跃的 AIChatWindow
         self._listeners: List[Callable] = [] # 会话切换监听器
+        self._message_listeners: List[Callable] = []  # 消息新增监听器
         
     def set_agent_bridge(self, bridge):
         """设置引擎引用（由悬浮球或智能中心初始化时注入）"""
@@ -93,6 +94,24 @@ class SessionContext:
                 cb(session_id, title)
             except Exception as e:
                 print(f"[SessionContext] 监听器异常: {e}")
+
+    def add_message_listener(self, callback: Callable):
+        """添加消息新增监听器，callback(session_id, role, content)"""
+        if callback not in self._message_listeners:
+            self._message_listeners.append(callback)
+
+    def remove_message_listener(self, callback: Callable):
+        """移除消息新增监听器"""
+        if callback in self._message_listeners:
+            self._message_listeners.remove(callback)
+
+    def notify_message_added(self, session_id: str, role: str, content: str):
+        """通知所有消息监听器有新消息"""
+        for cb in self._message_listeners:
+            try:
+                cb(session_id, role, content)
+            except Exception as e:
+                print(f"[SessionContext] 消息监听器异常: {e}")
 
 
 # 全局单例实例

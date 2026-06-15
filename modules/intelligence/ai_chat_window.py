@@ -97,6 +97,9 @@ class AIChatWindow(QWidget):
             session_ctx.set_agent_bridge(self._bridge)
         self._messages = []       # [{role, content}, ...] 当前会话消息缓存
 
+        # 监听外部消息（语音等入口）实时同步到当前窗口
+        session_ctx.add_message_listener(self._on_external_message)
+
         self._all_models = []  # 全量模型列表（云端+本地）
         self._current_model = ""
         self._current_provider_id = ""
@@ -291,6 +294,7 @@ class AIChatWindow(QWidget):
                 pass
         # 注销全局上下文
         session_ctx.unregister_window(self)
+        session_ctx.remove_message_listener(self._on_external_message)
         super().closeEvent(event)
 
     # ─── 会话切换 ───
@@ -565,6 +569,18 @@ class AIChatWindow(QWidget):
                 f"AgentBridge: {prov.get('name', 'OPCclaw')} / {prov.get('model', self._current_model)}"
             )
             self.lbl_status.setStyleSheet("color: #44cc88; font-size: 11px; background: transparent;")
+
+    # ─── 外部消息监听（语音等入口实时同步到窗口）───
+    def _on_external_message(self, session_id: str, role: str, content: str):
+        """接收全局上下文中的消息通知，追加到当前会话 UI"""
+        if session_id != self._current_session_id:
+            return  # 非当前会话，忽略
+        if role == "user":
+            self._messages.append({"role": "user", "content": content})
+            self._append_user_msg(content)
+        elif role == "assistant":
+            self._messages.append({"role": "assistant", "content": content})
+            self._append_ai_msg(content)
 
     # ─── 交互逻辑 ───
     def _append_user_msg(self, text):
