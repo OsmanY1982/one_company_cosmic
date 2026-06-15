@@ -35,6 +35,7 @@ class ChatEngine(QObject):
             self.smart_memory = None
         self.auto_save = auto_save
         self.session_id = session_id
+        self.obs = None  # ObservableBridge，由 agent_bridge 注入
         self.messages = []
         if self.memory_store:
             self.messages = self.memory_store.load_session(self.session_id)
@@ -199,6 +200,8 @@ class ChatEngine(QObject):
         logger.debug(f'chat() called msg_len={len(user_message)}')
         if self.memory_store:
             self.memory_store.on_turn_start(turn_number=len(self.messages), message=user_message)
+        if self.obs:
+            self.obs.trace_begin(session_id=self.session_id, user_message=user_message)
         self.messages.append({'role': 'user', 'content': user_message})
         self._trim_context()
         # 自动注入与当前问题最相关的技能（按需加载，节省 token）
@@ -224,6 +227,8 @@ class ChatEngine(QObject):
                 logger.error(f'LLM API failed: {e}', exc_info=True)
                 self.messages.append({'role': 'assistant', 'content': f'Sorry, AI service unavailable: {e}'})
                 self._maybe_save()
+                if self.obs:
+                    self.obs.trace_end()
                 return f'Sorry, AI service unavailable: {e}'
             if not response.tool_calls:
                 # 如果强制使用工具但 LLM 没调用，添加提示并重试
@@ -234,6 +239,8 @@ class ChatEngine(QObject):
                 self.messages.append({'role': 'assistant', 'content': assistant_msg})
                 if self.auto_save and self.memory_store:
                     self.memory_store.save_session(self.messages, self.session_id)
+                if self.obs:
+                    self.obs.trace_end()
                 return assistant_msg
             assistant_msg = {'role': 'assistant', 'content': None, 'tool_calls': []}
             for tc in response.tool_calls:
@@ -262,6 +269,8 @@ class ChatEngine(QObject):
             self.messages.append(assistant_msg)
         if self.auto_save and self.memory_store:
             self.memory_store.save_session(self.messages, self.session_id)
+        if self.obs:
+            self.obs.trace_end()
         return 'Sorry, processing encountered a loop. Please try a different approach.'
 
     def _should_force_tools(self, user_message: str) -> bool:
@@ -283,6 +292,8 @@ class ChatEngine(QObject):
         logger.debug(f'chat_stream() called msg_len={len(user_message)} tools={self.registry.count()}')
         if self.memory_store:
             self.memory_store.on_turn_start(turn_number=len(self.messages), message=user_message)
+        if self.obs:
+            self.obs.trace_begin(session_id=self.session_id, user_message=user_message)
         self.messages.append({'role': 'user', 'content': user_message})
         self._trim_context()
         # 自动注入与当前问题最相关的技能
@@ -312,6 +323,8 @@ class ChatEngine(QObject):
                 except Exception as e:
                     logger.error(f'LLM API failed: {e}', exc_info=True)
                     self._maybe_save()
+                    if self.obs:
+                        self.obs.trace_end()
                     yield '\nSorry, AI service unavailable: {}\n'.format(e)
                     return
                 if check_response.tool_calls:
@@ -342,6 +355,8 @@ class ChatEngine(QObject):
                 return_text = check_response.content or ''
                 self.messages.append({'role': 'assistant', 'content': return_text})
                 self._maybe_save()
+                if self.obs:
+                    self.obs.trace_end()
                 yield return_text
                 if check_response.usage:
                     yield json.dumps({'usage': check_response.usage}, ensure_ascii=False)
@@ -368,6 +383,8 @@ class ChatEngine(QObject):
                         pass
                 self.messages.append({'role': 'assistant', 'content': accumulated})
                 self._maybe_save()
+                if self.obs:
+                    self.obs.trace_end()
                 if last_usage:
                     yield json.dumps({'usage': last_usage}, ensure_ascii=False)
                 return
@@ -375,6 +392,8 @@ class ChatEngine(QObject):
                 logger.error(f'Streaming failed: {e}', exc_info=True)
                 self.messages.append({'role': 'assistant', 'content': f'Sorry, AI service unavailable: {e}'})
                 self._maybe_save()
+                if self.obs:
+                    self.obs.trace_end()
                 yield f'\nSorry, AI service unavailable: {e}\n'
                 return
         self._maybe_save()

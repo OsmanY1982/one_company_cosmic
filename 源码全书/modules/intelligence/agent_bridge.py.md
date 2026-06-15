@@ -1,6 +1,6 @@
 # `modules/intelligence/agent_bridge.py`
 
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：1833
+> 路径：`modules/intelligence/agent_bridge.py` | 行数：1848
 
 
 ---
@@ -184,6 +184,11 @@ try:
 except ImportError:
     _HAVE_SYNC_BRIDGE = False
 try:
+    from opcclaw.core.observability import ObservableBridge
+    _HAVE_OBSERVABILITY = True
+except ImportError:
+    _HAVE_OBSERVABILITY = False
+try:
     from opcclaw.core.collaboration_client import OPCclawHermesClient
     _HAVE_COLLAB = True
 except ImportError:
@@ -271,6 +276,16 @@ class AgentBridge:
             auto_save=True,
             session_id=session_id,
         )
+
+        # ── 可观测性（Token/调用链/成本，缺失不阻塞引擎）──
+        self.obs = None
+        if _HAVE_OBSERVABILITY:
+            try:
+                self.obs = ObservableBridge(memory_store=self._memory)
+                self.obs.attach_to(backend)
+                self._engine.obs = self.obs
+            except Exception:
+                self.obs = None
 
         # ── AgentLoop（自主执行模式）──
         self._agent_loop = AgentLoop(

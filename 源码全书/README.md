@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-15 13:54
-> 共 589 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-15 14:10
+> 共 602 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -16,14 +16,19 @@
 │   │   ├── classic.py
 │   │   ├── classic_20260614_184255_598.py
 │   │   ├── comet.py
+│   │   ├── corvette.py
 │   │   ├── crystal_alien.py
+│   │   ├── destroyer.py
+│   │   ├── dreadnought.py
 │   │   ├── energy_being.py
+│   │   ├── fighter.py
 │   │   ├── gas_giant.py
 │   │   ├── gas_giant_20260614_184255_426.py
 │   │   ├── ghost_alien.py
 │   │   ├── grey_alien.py
 │   │   ├── ice_giant.py
 │   │   ├── ice_giant_20260614_184255_207.py
+│   │   ├── interceptor.py
 │   │   ├── jellyfish_alien.py
 │   │   ├── lava_planet.py
 │   │   ├── lava_planet_20260614_184255_101.py
@@ -39,7 +44,9 @@
 │   │   ├── reptilian.py
 │   │   ├── robot_alien.py
 │   │   ├── saturn.py
+│   │   ├── scout.py
 │   │   ├── starship.py
+│   │   ├── transporter.py
 │   │   ├── uranus.py
 │   │   ├── venus.py
 │   │   ├── white_dwarf.py
@@ -257,6 +264,13 @@
 │   │   ├── trajectory.py
 │   │   └── usage_pricing.py
 │   ├── core/
+│   │   ├── observability/
+│   │   │   ├── __init__.py
+│   │   │   ├── cost_tracker.py
+│   │   │   ├── schema.py
+│   │   │   ├── test_obs.py
+│   │   │   ├── token_observer.py
+│   │   │   └── trace_manager.py
 │   │   ├── __init__.py
 │   │   ├── agent_delegate.py
 │   │   ├── agent_loop.py
@@ -987,14 +1001,19 @@
 - [`core/shapes/classic.py`](./core/shapes/classic.py.md)
 - [`core/shapes/classic_20260614_184255_598.py`](./core/shapes/classic_20260614_184255_598.py.md)
 - [`core/shapes/comet.py`](./core/shapes/comet.py.md)
+- [`core/shapes/corvette.py`](./core/shapes/corvette.py.md)
 - [`core/shapes/crystal_alien.py`](./core/shapes/crystal_alien.py.md)
+- [`core/shapes/destroyer.py`](./core/shapes/destroyer.py.md)
+- [`core/shapes/dreadnought.py`](./core/shapes/dreadnought.py.md)
 - [`core/shapes/energy_being.py`](./core/shapes/energy_being.py.md)
+- [`core/shapes/fighter.py`](./core/shapes/fighter.py.md)
 - [`core/shapes/gas_giant.py`](./core/shapes/gas_giant.py.md)
 - [`core/shapes/gas_giant_20260614_184255_426.py`](./core/shapes/gas_giant_20260614_184255_426.py.md)
 - [`core/shapes/ghost_alien.py`](./core/shapes/ghost_alien.py.md)
 - [`core/shapes/grey_alien.py`](./core/shapes/grey_alien.py.md)
 - [`core/shapes/ice_giant.py`](./core/shapes/ice_giant.py.md)
 - [`core/shapes/ice_giant_20260614_184255_207.py`](./core/shapes/ice_giant_20260614_184255_207.py.md)
+- [`core/shapes/interceptor.py`](./core/shapes/interceptor.py.md)
 - [`core/shapes/jellyfish_alien.py`](./core/shapes/jellyfish_alien.py.md)
 - [`core/shapes/lava_planet.py`](./core/shapes/lava_planet.py.md)
 - [`core/shapes/lava_planet_20260614_184255_101.py`](./core/shapes/lava_planet_20260614_184255_101.py.md)
@@ -1010,7 +1029,9 @@
 - [`core/shapes/reptilian.py`](./core/shapes/reptilian.py.md)
 - [`core/shapes/robot_alien.py`](./core/shapes/robot_alien.py.md)
 - [`core/shapes/saturn.py`](./core/shapes/saturn.py.md)
+- [`core/shapes/scout.py`](./core/shapes/scout.py.md)
 - [`core/shapes/starship.py`](./core/shapes/starship.py.md)
+- [`core/shapes/transporter.py`](./core/shapes/transporter.py.md)
 - [`core/shapes/uranus.py`](./core/shapes/uranus.py.md)
 - [`core/shapes/venus.py`](./core/shapes/venus.py.md)
 - [`core/shapes/white_dwarf.py`](./core/shapes/white_dwarf.py.md)
@@ -1217,6 +1238,12 @@
 - [`opcclaw/core/model_status_manager.py`](./opcclaw/core/model_status_manager.py.md)
 - [`opcclaw/core/multi_model.py`](./opcclaw/core/multi_model.py.md)
 - [`opcclaw/core/multi_model_chat_engine.py`](./opcclaw/core/multi_model_chat_engine.py.md)
+- [`opcclaw/core/observability/__init__.py`](./opcclaw/core/observability/__init__.py.md)
+- [`opcclaw/core/observability/cost_tracker.py`](./opcclaw/core/observability/cost_tracker.py.md)
+- [`opcclaw/core/observability/schema.py`](./opcclaw/core/observability/schema.py.md)
+- [`opcclaw/core/observability/test_obs.py`](./opcclaw/core/observability/test_obs.py.md)
+- [`opcclaw/core/observability/token_observer.py`](./opcclaw/core/observability/token_observer.py.md)
+- [`opcclaw/core/observability/trace_manager.py`](./opcclaw/core/observability/trace_manager.py.md)
 - [`opcclaw/core/opcclaw_logging.py`](./opcclaw/core/opcclaw_logging.py.md)
 - [`opcclaw/core/patch_engine.py`](./opcclaw/core/patch_engine.py.md)
 - [`opcclaw/core/performance_monitor.py`](./opcclaw/core/performance_monitor.py.md)

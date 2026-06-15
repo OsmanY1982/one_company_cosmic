@@ -31,6 +31,13 @@ from . import ghost_alien
 from . import jellyfish_alien
 from . import robot_alien
 from . import starship
+from . import fighter
+from . import corvette
+from . import destroyer
+from . import interceptor
+from . import dreadnought
+from . import scout
+from . import transporter
 
 SHAPE_MODES = {
     "classic":      {"name": "🌍 经典星球"},
@@ -61,6 +68,13 @@ SHAPE_MODES = {
     "jellyfish_alien":  {"name": "🪼 水母外星人"},
     "robot_alien":      {"name": "🤖 机器外星人"},
     "starship":          {"name": "🚀 太空星舰"},
+    "fighter":           {"name": "⚔️ 星际战机"},
+    "corvette":          {"name": "🛡️ 轻型护卫舰"},
+    "destroyer":         {"name": "💥 重型驱逐舰"},
+    "interceptor":       {"name": "⚡ 截击机"},
+    "dreadnought":       {"name": "🏰 无畏舰"},
+    "scout":             {"name": "🔭 侦察舰"},
+    "transporter":       {"name": "📦 运输舰"},
 }
 
 SHAPE_MODE_LIST = [
@@ -71,6 +85,8 @@ SHAPE_MODE_LIST = [
     "mercury", "pluto", "white_dwarf", "red_giant", "wormhole",
     "crystal_alien", "octopus_alien", "ghost_alien", "jellyfish_alien",
     "robot_alien", "starship",
+    "fighter", "corvette", "destroyer", "interceptor",
+    "dreadnought", "scout", "transporter",
 ]
 
 SHAPE_PLANETS = [
@@ -86,7 +102,8 @@ SHAPE_ALIENS = [
     "robot_alien",
 ]
 
-SHAPE_STARSHIPS = ["starship"]
+SHAPE_STARSHIPS = ["starship", "fighter", "corvette", "destroyer",
+                   "interceptor", "dreadnought", "scout", "transporter"]
 
 SHAPE_PAINTERS = {
     "classic":      classic.paint,
@@ -117,4 +134,11 @@ SHAPE_PAINTERS = {
     "jellyfish_alien": jellyfish_alien.paint,
     "robot_alien":   robot_alien.paint,
     "starship":       starship.paint,
+    "fighter":        fighter.paint,
+    "corvette":       corvette.paint,
+    "destroyer":      destroyer.paint,
+    "interceptor":    interceptor.paint,
+    "dreadnought":    dreadnought.paint,
+    "scout":          scout.paint,
+    "transporter":    transporter.paint,
 }
