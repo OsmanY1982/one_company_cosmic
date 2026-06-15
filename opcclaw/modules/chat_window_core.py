@@ -380,6 +380,7 @@ class ChatWindow(QWidget):
         self.sidebar.nav_changed.connect(self._on_nav_changed)
         self.sidebar.session_selected.connect(self._on_session_selected)
         self.sidebar.new_chat_requested.connect(self._on_new_session)
+        self.sidebar.session_delete_requested.connect(self._on_session_delete)
         body_layout.addWidget(self.sidebar)
 
         self.stack = QStackedWidget()
@@ -1472,6 +1473,30 @@ class ChatWindow(QWidget):
         if not session_id or session_id == self._session_id:
             return
         self._switch_to_session(session_id)
+
+    def _on_session_delete(self, session_id: str):
+        """侧边栏删除会话回调"""
+        reply = QMessageBox.question(
+            self, "删除确认",
+            f"确定要删除会话 {session_id} 吗？\n此操作不可撤销。",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No,
+        )
+        if reply != QMessageBox.Yes:
+            return
+
+        self.memory_store.delete_session(session_id)
+
+        # 如果删除的是当前会话，切换到第一个可用会话或新建
+        if session_id == self._session_id:
+            sessions = self.memory_store.list_sessions()
+            if sessions:
+                next_id = sessions[0]["id"]
+                self._switch_to_session(next_id)
+            else:
+                self._on_new_session()
+        else:
+            self._refresh_sessions()
 
     def _switch_to_session(self, new_id: str):
         """切换会话核心逻辑"""

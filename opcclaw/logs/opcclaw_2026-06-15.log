@@ -665,3 +665,6 @@ RuntimeError: [Ollama] 请求异常: timed out
 2026-06-15 22:39:38 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
 2026-06-15 22:44:33 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
 2026-06-15 22:48:57 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:52:17 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:59:19 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 23:09:44 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)

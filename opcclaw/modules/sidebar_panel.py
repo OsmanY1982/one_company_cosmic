@@ -15,6 +15,7 @@ class Sidebar(QFrame):
     nav_changed = pyqtSignal(int)
     session_selected = pyqtSignal(str)   # session_id
     new_chat_requested = pyqtSignal()
+    session_delete_requested = pyqtSignal(str)  # session_id
 
     NAV_ITEMS = [
         ("💬 对话", 0),
@@ -162,15 +163,57 @@ class Sidebar(QFrame):
             sid = s.get("id", "")
             updated = s.get("updated_at", "")[:16].replace("T", " ")
             label = updated if updated else sid
-            item = QListWidgetItem(label)
+
+            item = QListWidgetItem()
             item.setData(Qt.UserRole, sid)
             item.setToolTip(sid)
+
+            widget = self._make_session_item_widget(label, sid)
             self._session_list.addItem(item)
+            self._session_list.setItemWidget(item, widget)
             self._session_items[sid] = item
+
+            # 让 item 高度适配 widget
+            item.setSizeHint(widget.sizeHint())
+
             if sid == current_id:
                 self._session_list.setCurrentItem(item)
 
         self._session_list.blockSignals(False)
+
+    def _make_session_item_widget(self, label: str, sid: str) -> QWidget:
+        """构建单条会话列表项：标签 + 删除按钮"""
+        widget = QWidget()
+        layout = QHBoxLayout(widget)
+        layout.setContentsMargins(4, 2, 4, 2)
+        layout.setSpacing(4)
+
+        lbl = QLabel(label)
+        lbl.setStyleSheet(f"color: {COLORS['text_light']}; font-size: 11px; background: transparent; border: none;")
+        layout.addWidget(lbl, 1)
+
+        del_btn = QPushButton("✕")
+        del_btn.setFixedSize(20, 18)
+        del_btn.setCursor(Qt.PointingHandCursor)
+        del_btn.setToolTip(f"删除会话 {sid}")
+        del_btn.setStyleSheet(f"""
+            QPushButton {{
+                color: {COLORS['text_light']};
+                background: transparent;
+                border: none;
+                font-size: 12px;
+                padding: 0;
+            }}
+            QPushButton:hover {{
+                color: {COLORS['danger']};
+                background: rgba(231,76,60,0.15);
+                border-radius: 3px;
+            }}
+        """)
+        del_btn.clicked.connect(lambda: self.session_delete_requested.emit(sid))
+        layout.addWidget(del_btn)
+
+        return widget
 
     def _on_session_clicked(self, item):
         sid = item.data(Qt.UserRole)
