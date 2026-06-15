@@ -16,6 +16,7 @@ AgentBridge v2 — opcclaw 自主 Agent 引擎（对标 Codex / Claude Code）
 import os
 import sys
 import json
+import re
 import subprocess
 import fnmatch
 import traceback
@@ -743,6 +744,7 @@ class AgentBridge:
         on_chunk: Callable[[str], None] = None,
         on_done: Callable[[str], None] = None,
         on_tool: Callable[[str, str], None] = None,
+        on_error: Callable[[str], None] = None,
     ):
         """
         流式对话（逐字输出，打字机效果）。在后台线程执行，回调运行在主线程。
@@ -752,9 +754,13 @@ class AgentBridge:
             on_chunk: 每收到一个文本块时回调 on_chunk(chunk_str)
             on_done: 流式完成后回调 on_done(full_text)
             on_tool: 工具调用时回调 on_tool(tool_name, status)
+            on_error: 流式出错时回调 on_error(error_message)
         """
         # 终止前一次流式（如果还在运行），防止旧 finished 信号误杀新线程
         self._abort_stream()
+
+        # 管线预处理（RAG / Token 压缩 / SuperIntelligence / 多模型路由）
+        self._preprocess_stream(message)
 
         self._stream_thread = QThread()
         self._stream_worker = _StreamWorker(self._engine, message)
@@ -768,6 +774,8 @@ class AgentBridge:
             self._stream_worker.tool_event.connect(on_tool, Qt.QueuedConnection)
         if on_done:
             self._stream_worker.stream_done.connect(on_done, Qt.QueuedConnection)
+        if on_error:
+            self._stream_worker.stream_error.connect(on_error, Qt.QueuedConnection)
 
         self._stream_thread.started.connect(self._stream_worker.run)
         self._stream_worker.finished.connect(self._stream_thread.quit)
@@ -840,18 +848,37 @@ class AgentBridge:
             traceback.print_exc()
             return f"[AgentBridge 错误] {e}"
 
+    def _clear_pipeline_blocks(self, engine):
+        """移除 system message 中旧的管线注入块，防止重复追加导致膨胀"""
+        if not engine.messages or engine.messages[0]['role'] != 'system':
+            return
+        content = engine.messages[0]['content']
+        content = re.sub(
+            r'\n<pipeline_rag>.*?</pipeline_rag>\n',
+            '', content, flags=re.DOTALL
+        )
+        content = re.sub(
+            r'\n<pipeline_si>.*?</pipeline_si>\n',
+            '', content, flags=re.DOTALL
+        )
+        engine.messages[0]['content'] = content
+
     def _apply_engine_pipeline(self, message: str) -> str:
         """
         引擎管线：对 ChatEngine 调用前注入上下文压缩、RAG、SuperIntelligence。
         管线顺序：RAG 注入 → Token 压缩 → SuperIntelligence 提示词 → 路由判断 → LLM 调用
         """
-        # 1. RAG 上下文注入（将项目相关知识前置到 system prompt）
+        # 清理旧的管线注入块，防止 system prompt 无限增长
+        self._clear_pipeline_blocks(self._engine)
+
+        # 1. RAG 上下文注入（直接写入 messages[0] 确保 LLM 可见）
         if self._rag:
             try:
                 rag_ctx = self._rag.inject_context(message)
                 if rag_ctx:
-                    old_prompt = self._engine.system_prompt
-                    self._engine.system_prompt = f"{old_prompt}\n\n[项目上下文]\n{rag_ctx}"
+                    self._engine.inject_context(
+                        f'<pipeline_rag>\n[项目上下文]\n{rag_ctx}\n</pipeline_rag>'
+                    )
             except Exception:
                 pass
 
@@ -867,8 +894,9 @@ class AgentBridge:
             try:
                 si_prompt = self._super_intel.inject_prompt(message)
                 if si_prompt:
-                    old_sp = self._engine.system_prompt
-                    self._engine.system_prompt = f"{old_sp}\n\n{si_prompt}"
+                    self._engine.inject_context(
+                        f'<pipeline_si>\n{si_prompt}\n</pipeline_si>'
+                    )
             except Exception:
                 pass
 
@@ -895,6 +923,51 @@ class AgentBridge:
                 except Exception:
                     pass
             raise e
+
+    def _preprocess_stream(self, message: str):
+        """
+        流式管线预处理（对标 _apply_engine_pipeline），
+        在 ChatEngine.chat_stream() 被 _StreamWorker 调用前执行。
+        """
+        self._clear_pipeline_blocks(self._engine)
+
+        # 1. RAG 上下文注入
+        if self._rag:
+            try:
+                rag_ctx = self._rag.inject_context(message)
+                if rag_ctx:
+                    self._engine.inject_context(
+                        f'<pipeline_rag>\n[项目上下文]\n{rag_ctx}\n</pipeline_rag>'
+                    )
+            except Exception:
+                pass
+
+        # 2. Token 压缩
+        if self._token_opt:
+            try:
+                self._engine.messages = self._token_opt.optimize_messages(self._engine.messages)
+            except Exception:
+                pass
+
+        # 3. SuperIntelligence 推理链注入
+        if self._super_intel:
+            try:
+                si_prompt = self._super_intel.inject_prompt(message)
+                if si_prompt:
+                    self._engine.inject_context(
+                        f'<pipeline_si>\n{si_prompt}\n</pipeline_si>'
+                    )
+            except Exception:
+                pass
+
+        # 4. 多模型路由
+        if self._multi_model:
+            try:
+                route = self._multi_model.route(message)
+                if route and route.get("model"):
+                    self.switch_model(route.get("provider_id", ""), route["model"])
+            except Exception:
+                pass
 
     def reset(self):
         """重置对话历史"""
@@ -1748,6 +1821,8 @@ class _StreamWorker(QObject):
 
     def run(self):
         accumulated = ""
+        import sys, datetime
+        print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] StreamWorker.run() START — engine={type(self._engine).__name__}, msg={self._message[:50]}", flush=True)
         try:
             for chunk in self._engine.chat_stream(self._message):
                 # 工具调用标记

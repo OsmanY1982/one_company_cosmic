@@ -1,6 +1,6 @@
 # `modules/intelligence/opcclaw_floating_planet.py`
 
-> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1321
+> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1334
 
 
 ---
@@ -163,6 +163,13 @@ class FloatingPlanet(QWidget):
         self._mouse_x = 0
         self._mouse_y = 0
 
+        # ── 自动切换形态 ──
+        self._all_shape_keys = self._planet_keys + self._alien_keys + self._starship_keys
+        self._auto_switch_idx = 0
+        self._auto_switch_timer = QTimer(self)
+        self._auto_switch_timer.timeout.connect(self._auto_cycle_shape)
+        self._auto_switch_timer.start(7000)  # 每7秒自动切换
+
         # 窗口配置 — 无边框置顶独立窗口
         self.setWindowFlags(
             Qt.Window |
@@ -199,11 +206,7 @@ class FloatingPlanet(QWidget):
         self._tooltip.setAttribute(Qt.WA_TransparentForMouseEvents)
         self._tooltip.hide()
 
-        # 内嵌 AI 对话
-        from modules.intelligence.ai_chat_window import AIChatWindow
-        self._chat_widget = AIChatWindow(self, opcclaw_engine=self._engine, embedded=True)
-        self._chat_widget.hide()
-        self._pre_chat_geometry = None
+
 
         # 默认启用语音唤醒
         if self._wake_word_mode:
@@ -648,6 +651,17 @@ class FloatingPlanet(QWidget):
         self._tooltip.setText(f"opcclaw · {name}")
         print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
 
+        # 同步自动切换索引
+        if key in self._all_shape_keys:
+            self._auto_switch_idx = self._all_shape_keys.index(key)
+
+        # 切换到外星人形态时语音自我介绍
+        if category == "alien" and self._voice:
+            try:
+                self._voice.speak(f"我是{name}")
+            except Exception:
+                pass
+
     def _cycle_shape(self, direction: int):
         """在当前分类内循环切换形态（+1 下一个, -1 上一个）"""
         if self._current_category == "planet":
@@ -664,6 +678,24 @@ class FloatingPlanet(QWidget):
             self._current_alien_idx = idx
         key = keys[idx]
         self._switch_to_shape(self._current_category, key)
+
+    def _auto_cycle_shape(self):
+        """每隔7秒自动在所有28种形态中循环切换"""
+        total = len(self._all_shape_keys)
+        if total == 0:
+            return
+        key = self._all_shape_keys[self._auto_switch_idx]
+        self._auto_switch_idx = (self._auto_switch_idx + 1) % total
+
+        if key in self._planet_keys:
+            category = "planet"
+        elif key in self._alien_keys:
+            category = "alien"
+        else:
+            category = "starship"
+        name = SHAPE_MODES.get(key, {}).get("name", key)
+        print(f"[AutoSwitch] #{self._auto_switch_idx}/{total} -> {name} ({key})")
+        self._switch_to_shape(category, key)
 
     # ── 外星人装饰 ──
 
@@ -794,50 +826,31 @@ class FloatingPlanet(QWidget):
     # ── AI 对话 ──
 
     def _open_chat(self):
-        """将悬浮球展开为内嵌 AI 对话窗口（不改变窗口标志，避免重建原生句柄）"""
+        """打开独立的 AI 对话窗口（悬浮球保持可见且功能完整）"""
         self.wake()
 
-        # 保存当前几何状态
-        self._pre_chat_geometry = self.geometry()
+        try:
+            from modules.intelligence.ai_chat_window import AIChatWindow
 
-        # 移除圆形遮罩
-        self.clearMask()
+            # 如果已有对话窗口，则聚焦
+            if hasattr(self, '_standalone_chat') and self._standalone_chat is not None:
+                try:
+                    if self._standalone_chat.isVisible():
+                        self._standalone_chat.raise_()
+                        self._standalone_chat.activateWindow()
+                        return
+                except RuntimeError:
+                    pass  # 已销毁，重新创建
 
-        # 暂停星球动画，避免重绘干扰
-        self._timer.stop()
-
-        # 展开尺寸并居中到屏幕（保持 FramelessWindowHint | WindowStaysOnTopHint 不变）
-        self.setFixedSize(780, 580)
-        screen = QApplication.primaryScreen()
-        if screen:
-            geom = screen.availableGeometry()
-            x = geom.center().x() - 390
-            y = geom.center().y() - 290
-            self.move(x, y)
-
-        # 隐藏星球提示，显示聊天组件
-        self._tooltip.hide()
-        self._chat_widget.setGeometry(0, 0, 780, 580)
-        self._chat_widget.raise_()
-        self._chat_widget.show()
-
-        # 连接关闭信号
-        self._chat_widget.chat_close_requested.connect(self._close_embedded_chat)
-
-    def _close_embedded_chat(self):
-        """从内嵌对话恢复到星球模式（不改变窗口标志）"""
-        self._chat_widget.chat_close_requested.disconnect(self._close_embedded_chat)
-        self._chat_widget.hide()
-
-        # 恢复之前的位置和尺寸
-        if self._pre_chat_geometry:
-            self.setGeometry(self._pre_chat_geometry)
-
-        # 恢复圆形遮罩和动画
-        self._apply_circular_mask()
-        self._timer.start(16)
-
-        self.sleep()
+            self._standalone_chat = AIChatWindow(
+                opcclaw_engine=self._engine,
+                embedded=False,
+            )
+            self._standalone_chat.setAttribute(Qt.WA_DeleteOnClose)
+            self._standalone_chat.show()
+        except Exception as e:
+            print(f"[FloatingPlanet] Failed to open chat: {e}")
+            traceback.print_exc()
 
     # ── 退出 ──
 

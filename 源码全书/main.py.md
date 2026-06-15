@@ -1,6 +1,6 @@
 # `main.py`
 
-> 路径：`main.py` | 行数：61
+> 路径：`main.py` | 行数：82
 
 
 ---
@@ -58,11 +58,32 @@ sys.excepthook = _global_excepthook
 threading.excepthook = _thread_excepthook
 
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QPainterPath
+from PyQt5.QtCore import Qt
 from modules.auth.login_window import LoginWindow
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
+
+    # 任务栏图标：一人公司 logo，带圆角裁剪
+    _logo_path = os.path.join(os.path.dirname(__file__), "logo.jpg")
+    if os.path.isfile(_logo_path):
+        _src = QPixmap(_logo_path)
+        if not _src.isNull():
+            _sz = 128
+            _src = _src.scaled(_sz, _sz, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            _rounded = QPixmap(_sz, _sz)
+            _rounded.fill(Qt.transparent)
+            _p = QPainter(_rounded)
+            _p.setRenderHint(QPainter.Antialiasing)
+            _path = QPainterPath()
+            _r = int(_sz * 0.2237)  # macOS 标准圆角比例
+            _path.addRoundedRect(0, 0, _sz, _sz, _r, _r)
+            _p.setClipPath(_path)
+            _p.drawPixmap(0, 0, _src)
+            _p.end()
+            app.setWindowIcon(QIcon(_rounded))
 
     win = LoginWindow()
     win.show()

@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-15 10:15
-> 共 587 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-15 12:50
+> 共 588 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -192,6 +192,8 @@
 │   │   ├── system_hub_window.py
 │   │   ├── system_window.py
 │   │   └── update_dialog.py
+│   ├── tools/
+│   │   ├── orbital_sphere.py
 │   └── __init__.py
 ├── opcclaw/
 │   ├── agent/
@@ -1127,6 +1129,7 @@
 - [`modules/system/system_hub_window.py`](./modules/system/system_hub_window.py.md)
 - [`modules/system/system_window.py`](./modules/system/system_window.py.md)
 - [`modules/system/update_dialog.py`](./modules/system/update_dialog.py.md)
+- [`modules/tools/orbital_sphere.py`](./modules/tools/orbital_sphere.py.md)
 - [`opcclaw/__init__.py`](./opcclaw/__init__.py.md)
 - [`opcclaw/__init___20260613_080428_724.py`](./opcclaw/__init___20260613_080428_724.py.md)
 - [`opcclaw/agent/__init__.py`](./opcclaw/agent/__init__.py.md)

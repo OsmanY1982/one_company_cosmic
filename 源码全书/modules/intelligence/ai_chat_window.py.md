@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_chat_window.py`
 
-> 路径：`modules/intelligence/ai_chat_window.py` | 行数：567
+> 路径：`modules/intelligence/ai_chat_window.py` | 行数：586
 
 
 ---
@@ -20,7 +20,7 @@ from datetime import datetime
 
 from PyQt5.QtWidgets import (
     QWidget, QDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QLineEdit,
-    QPushButton, QLabel, QComboBox,
+    QPushButton, QLabel, QComboBox, QApplication,
 )
 from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -82,7 +82,8 @@ class AIChatWindow(QWidget):
             )
             self.setAttribute(Qt.WA_DeleteOnClose)
             self.setWindowTitle("AI助手 · NEURAL v5")
-            self.setMinimumSize(780, 580)
+            self.setMinimumSize(600, 400)
+            self.resize(780, 580)
 
         self.setStyleSheet("background: rgba(10,5,20,240);")
 
@@ -98,6 +99,14 @@ class AIChatWindow(QWidget):
         self._build_ui()
         self._populate_provider_combo()
         self._refresh_model_list()
+
+        # standalone 模式：窗口居中显示
+        if not embedded:
+            screen = QApplication.primaryScreen()
+            if screen:
+                geom = screen.availableGeometry()
+                self.move((geom.width() - self.width()) // 2,
+                           (geom.height() - self.height()) // 2)
 
     # ─── UI ───
     def _build_ui(self):
@@ -486,6 +495,8 @@ class AIChatWindow(QWidget):
         )
 
     def _stream_chunk(self, chunk: str):
+        import sys, datetime
+        print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._stream_chunk len={len(chunk)}", flush=True)
         self._stream_buffer += chunk
         # 用 QTextCursor 替换最后一个段落（避免 QTextEdit.toHtml() 重排破坏 id）
         cursor = self.ai_chat.textCursor()
@@ -506,6 +517,8 @@ class AIChatWindow(QWidget):
         )
 
     def _stream_done(self, full_text: str):
+        import sys, datetime
+        print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._stream_done len={len(full_text)}", flush=True)
         self._streaming = False
         # 用 QTextCursor 替换最后一个段落，移除闪烁光标
         cursor = self.ai_chat.textCursor()
@@ -517,6 +530,8 @@ class AIChatWindow(QWidget):
         self._stream_buffer = ""
 
     def _stream_error(self, err_msg: str):
+        import sys, datetime
+        print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._stream_error: {err_msg}", flush=True)
         self._streaming = False
         self.ai_chat.append(f'<p style="color:#ff6644;font-size:10px;">{err_msg}</p>')
         self._stream_buffer = ""
@@ -538,13 +553,17 @@ class AIChatWindow(QWidget):
         # ── 优先级 1: AgentBridge 流式输出 ──
         if self._bridge is not None and hasattr(self._bridge, "chat_stream"):
             try:
+                import sys, datetime
+                print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._ai_send — calling bridge.chat_stream()...", flush=True)
                 self._stream_begin()
                 self._bridge.chat_stream(
                     text,
                     on_chunk=self._stream_chunk,
                     on_done=self._stream_done,
                     on_tool=self._stream_tool,
+                    on_error=self._stream_error,
                 )
+                print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._ai_send — bridge.chat_stream() returned (thread started)", flush=True)
                 return
             except Exception as e:
                 self.ai_chat.append(

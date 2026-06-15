@@ -298,10 +298,13 @@ class ChatEngine(QObject):
                 self.on_thinking()
             if tools:
                 try:
+                    import datetime, sys
+                    print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] ChatEngine.chat_stream round={round_idx} calling backend.chat()...", flush=True)
                     if force_tools:
                         check_response = self.backend.chat(self.messages, tools, tool_choice="required")
                     else:
                         check_response = self.backend.chat(self.messages, tools)
+                    print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] ChatEngine.chat_stream round={round_idx} backend.chat() returned — content_len={len(check_response.content or '')}, tool_calls={'YES' if check_response.tool_calls else 'NO'}", flush=True)
                 except Exception as e:
                     logger.error(f'LLM API failed: {e}', exc_info=True)
                     self._maybe_save()
@@ -348,6 +351,17 @@ class ChatEngine(QObject):
                         yield chunk.content
                     if hasattr(chunk, 'usage') and chunk.usage:
                         last_usage = chunk.usage
+                # Fallback: streaming 返回空时降级到非 streaming 调用（某些本地模型上下文较长时 stream 会直接返回 0 chunk）
+                if not accumulated:
+                    try:
+                        fallback_resp = self.backend.chat(self.messages, None)
+                        if fallback_resp.content:
+                            accumulated = fallback_resp.content
+                            yield accumulated
+                            if fallback_resp.usage:
+                                last_usage = fallback_resp.usage
+                    except Exception:
+                        pass
                 self.messages.append({'role': 'assistant', 'content': accumulated})
                 self._maybe_save()
                 if last_usage:

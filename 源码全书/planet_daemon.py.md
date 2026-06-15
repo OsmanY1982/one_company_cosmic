@@ -1,6 +1,6 @@
 # `planet_daemon.py`
 
-> 路径：`planet_daemon.py` | 行数：332
+> 路径：`planet_daemon.py` | 行数：337
 
 
 ---
@@ -208,24 +208,29 @@ def main():
         logger.info("正在创建 QApplication 实例...")
         app = QApplication(sys.argv)
         app.setApplicationName("FloatingPlanet Daemon")
-        # 任务栏图标：使用一人公司 logo，带圆角裁剪
+        # 任务栏图标：一人公司 logo，带圆角裁剪
         _logo_path = os.path.join(PROJECT_ROOT, "logo.jpg")
         if os.path.isfile(_logo_path):
             _src = QPixmap(_logo_path)
-            _sz = 128
-            _src = _src.scaled(_sz, _sz, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-            _rounded = QPixmap(_sz, _sz)
-            _rounded.fill(Qt.transparent)
-            _p = QPainter(_rounded)
-            _p.setRenderHint(QPainter.Antialiasing)
-            _path = QPainterPath()
-            _r = int(_sz * 0.2237)  # macOS 标准圆角比例
-            _path.addRoundedRect(0, 0, _sz, _sz, _r, _r)
-            _p.setClipPath(_path)
-            _p.drawPixmap(0, 0, _src)
-            _p.end()
-            app.setWindowIcon(QIcon(_rounded))
-            logger.info("任务栏图标已设置为一人公司 logo（圆角）")
+            if not _src.isNull():
+                _sz = 128
+                _src = _src.scaled(_sz, _sz, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                _rounded = QPixmap(_sz, _sz)
+                _rounded.fill(Qt.transparent)
+                _p = QPainter(_rounded)
+                _p.setRenderHint(QPainter.Antialiasing)
+                _path = QPainterPath()
+                _r = int(_sz * 0.2237)  # macOS 标准圆角比例
+                _path.addRoundedRect(0, 0, _sz, _sz, _r, _r)
+                _p.setClipPath(_path)
+                _p.drawPixmap(0, 0, _src)
+                _p.end()
+                app.setWindowIcon(QIcon(_rounded))
+                logger.info("任务栏图标已设置（圆角）")
+            else:
+                logger.warning("logo.jpg 加载失败，使用默认图标")
+        else:
+            logger.warning("logo.jpg 未找到: %s", _logo_path)
         app.setQuitOnLastWindowClosed(False)  # 守护进程：关闭窗口不退出
 
         # Cmd+Q 彻底退出：删除 plist + bootout，双保险防止 KeepAlive 重启
