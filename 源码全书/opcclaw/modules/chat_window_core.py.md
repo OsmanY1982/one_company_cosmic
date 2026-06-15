@@ -1,6 +1,6 @@
 # `opcclaw/modules/chat_window_core.py`
 
-> 路径：`opcclaw/modules/chat_window_core.py` | 行数：1598
+> 路径：`opcclaw/modules/chat_window_core.py` | 行数：1600
 
 
 ---
@@ -1460,6 +1460,8 @@ class ChatWindow(QWidget):
         if self.engine:
             self.engine.session_id = self._session_id
             self.engine.reset()
+        # 显式落盘空会话，不依赖 engine.reset() 的 auto_save 副作用
+        self.memory_store.save_session([], self._session_id)
         self._refresh_sessions()
 
     def _on_session_switch(self, idx: int):
