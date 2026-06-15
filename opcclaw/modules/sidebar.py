@@ -3,8 +3,9 @@
 """
 
 from PyQt5.QtWidgets import (
-    QFrame, QVBoxLayout, QLabel, QPushButton, QFont
+    QFrame, QVBoxLayout, QLabel, QPushButton
 )
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, pyqtSignal
 
 # 颜色常量

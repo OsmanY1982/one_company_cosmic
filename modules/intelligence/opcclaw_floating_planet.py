@@ -111,7 +111,7 @@ class FloatingPlanet(QWidget):
         self._auto_move = True           # 是否启用自动漫游
         self._vx = 0.0                   # 水平速度 (px/frame)
         self._vy = 0.0                   # 垂直速度
-        self._gravity = 0.015            # 重力加速度（降低，更柔和）
+        self._gravity = 0.0              # 重力加速度（关闭，自由漫游）
         self._bounce_factor = 0.3        # 碰撞能量保留率（降低，快速停稳）
         self._drag_pause = False         # 拖拽时暂停物理
         self._drag_trail = []            # 拖拽轨迹点 (用于 fling)
@@ -251,10 +251,10 @@ class FloatingPlanet(QWidget):
             self._wander_timer += 1
             if self._wander_timer >= self._next_wander:
                 self._wander_timer = 0
-                self._next_wander = random.randint(600, 1500)  # 10-25 秒
-                # 极轻微的随机扰动，只是让球不"死"
-                kick_vx = random.uniform(-0.6, 0.6)
-                kick_vy = random.uniform(-0.8, 0.4)  # 偏向上方
+                self._next_wander = random.randint(180, 480)  # 3-8 秒
+                # 全向随机扰动，自由漫游
+                kick_vx = random.uniform(-1.8, 1.8)
+                kick_vy = random.uniform(-1.8, 1.8)
                 self._vx += kick_vx
                 self._vy += kick_vy
 
@@ -293,8 +293,8 @@ class FloatingPlanet(QWidget):
 
             # 超低速时给一个极轻微的随机速度（防止完全静止）
             if abs(self._vx) < 0.3 and abs(self._vy) < 0.3:
-                self._vx = random.uniform(-0.5, 0.5)
-                self._vy = random.uniform(-1.5, -0.3)  # 轻微向上
+                self._vx = random.uniform(-1.5, 1.5)
+                self._vy = random.uniform(-1.5, 1.5)  # 全向启动
 
             self.move(new_x, new_y)
 
@@ -642,10 +642,6 @@ class FloatingPlanet(QWidget):
         self._tooltip.setText(f"opcclaw · {name}")
         print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
 
-        # 同步自动切换索引
-        if key in self._all_shape_keys:
-            self._auto_switch_idx = self._all_shape_keys.index(key)
-
         # 切换到外星人形态时语音自我介绍
         if category == "alien" and self._voice:
             try:
@@ -669,6 +665,11 @@ class FloatingPlanet(QWidget):
             self._current_alien_idx = idx
         key = keys[idx]
         self._switch_to_shape(self._current_category, key)
+        # 手动切换后同步自动切换索引
+        try:
+            self._auto_switch_idx = self._all_shape_keys.index(key)
+        except (AttributeError, ValueError):
+            pass
 
     def _auto_cycle_shape(self):
         """每隔7秒自动在所有28种形态中循环切换"""
@@ -684,9 +685,9 @@ class FloatingPlanet(QWidget):
             category = "alien"
         else:
             category = "starship"
+        self._switch_to_shape(category, key)
         name = SHAPE_MODES.get(key, {}).get("name", key)
         print(f"[AutoSwitch] #{self._auto_switch_idx}/{total} -> {name} ({key})")
-        self._switch_to_shape(category, key)
 
     # ── 外星人装饰 ──
 

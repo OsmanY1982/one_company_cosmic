@@ -1,6 +1,6 @@
 # `opcclaw/core/skill_loader.py`
 
-> 路径：`opcclaw/core/skill_loader.py` | 行数：306
+> 路径：`opcclaw/core/skill_loader.py` | 行数：372
 
 
 ---
@@ -15,6 +15,7 @@ Skill Loader - 动态加载技能系统
 - 自动发现所有 skills
 - 根据用户请求智能推荐相关技能
 - 生成技能上下文注入 prompt
+- 兼容两种技能格式：opcclaw 自有格式（YAML frontmatter）和 Anthropic Skills 格式（metadata.yaml）
 """
 
 import os
@@ -25,8 +26,13 @@ from pathlib import Path
 
 
 class SkillLoader:
-    """技能加载器 - 管理所有 SKILL.md 文件"""
-    
+    """技能加载器 - 管理所有 SKILL.md 文件
+
+    支持两种技能格式，自动识别：
+    1. opcclaw 自有格式：SKILL.md 内嵌 YAML frontmatter
+    2. Anthropic Skills 格式：独立的 metadata.yaml + SKILL.md（纯正文）
+    """
+
     def __init__(self, skills_base_path: str = None):
         """
         Args:
@@ -45,7 +51,7 @@ class SkillLoader:
                 Path.home() / ".opcclaw" / "skills",
             ]
             self.skills_path = next((p for p in possible_paths if p.exists()), None)
-            
+
         if not self.skills_path or not self.skills_path.exists():
             # 最后尝试：直接打印可用路径供调试
             print(f"⚠️ 技能目录未找到，已检查:")
@@ -53,40 +59,99 @@ class SkillLoader:
                 exists = "✅" if p.exists() else "❌"
                 print(f"   {exists} {p}")
             raise FileNotFoundError(f"技能目录不存在：{self.skills_path}")
-            
+
         self._skills_cache: Dict[str, Dict] = {}
         self._load_all_skills()
-    
+
     def _load_all_skills(self):
         """扫描并加载所有 SKILL.md"""
-        for skill_dir in self.skills_path.rglob("*/SKILL.md"):
-            skill_name = skill_dir.parent.name.replace("_", "-")
+        for skill_md in self.skills_path.rglob("*/SKILL.md"):
+            skill_name = skill_md.parent.name.replace("_", "-")
             try:
-                skill_data = self._parse_skill_file(skill_dir)
+                skill_data = self._parse_skill_file(skill_md)
                 if skill_data:
                     self._skills_cache[skill_name] = skill_data
-                    self._skills_cache[skill_dir.parent.stem] = skill_data  # 也存带下划线的名字
+                    self._skills_cache[skill_md.parent.stem] = skill_data  # 也存带下划线的名字
             except Exception as e:
-                print(f"加载技能 {skill_dir} 失败：{e}")
-    
+                print(f"加载技能 {skill_md} 失败：{e}")
+
     def _parse_skill_file(self, filepath: Path) -> Optional[Dict]:
-        """解析单个 SKILL.md 文件"""
+        """解析单个 SKILL.md 文件。
+
+        自动识别格式：
+        - 若同级目录存在 metadata.yaml → Anthropic Skills 格式
+        - 否则 → opcclaw 自有格式（YAML frontmatter）
+        """
         content = filepath.read_text(encoding='utf-8')
-        
-        # 提取 YAML frontmatter
+
+        # === 检测 Anthropic Skills 格式（metadata.yaml） ===
+        metadata_yaml = filepath.parent / "metadata.yaml"
+        if not metadata_yaml.exists():
+            metadata_yaml = filepath.parent / "metadata.yml"
+
+        if metadata_yaml.exists():
+            return self._parse_anthropic_skill(filepath, metadata_yaml, content)
+
+        # === opcclaw 自有格式（YAML frontmatter） ===
+        return self._parse_opcclaw_skill(filepath, content)
+
+    def _parse_anthropic_skill(
+        self, filepath: Path, metadata_yaml: Path, sk_content: str
+    ) -> Optional[Dict]:
+        """解析 Anthropic Skills 格式：metadata.yaml + SKILL.md（纯正文无 frontmatter）。
+
+        metadata.yaml 示例::
+
+            name: my-skill
+            version: "1.0.0"
+            description: "A cool skill"
+            tools: [read, write]
+            triggers: [keyword1, keyword2]
+            platforms: [linux, macos, windows]
+        """
+        try:
+            metadata = yaml.safe_load(metadata_yaml.read_text(encoding='utf-8')) or {}
+        except yaml.YAMLError:
+            return None
+        if not isinstance(metadata, dict):
+            return None
+
+        # Anthropic 格式的 SKILL.md 不含 frontmatter，全文即为 body
+        body = sk_content.strip()
+
+        # 构建与 opcclaw 格式一致的输出结构，兼容下游调用
+        name = metadata.get("name", filepath.parent.name)
+
+        return {
+            "name": name,
+            "description": metadata.get("description", ""),
+            "version": str(metadata.get("version", "1.0")),
+            "emoji": metadata.get("emoji", "📚"),
+            "tools": metadata.get("tools", []),
+            "path": str(filepath),
+            "directory": str(filepath.parent),
+            "full_content": sk_content,
+            "body": body,
+            "metadata": metadata,
+            # Anthropic 特有字段（不影响现有代码，供将来扩展用）
+            "format": "anthropic",
+            "triggers": metadata.get("triggers", []),
+            "platforms": metadata.get("platforms", []),
+        }
+
+    def _parse_opcclaw_skill(self, filepath: Path, content: str) -> Optional[Dict]:
+        """解析 opcclaw 自有格式：SKILL.md 内嵌 YAML frontmatter。"""
         yaml_match = re.search(r'^---\s*\n(.*?)\n---', content, re.DOTALL)
         if not yaml_match:
             return None
-            
+
         metadata = yaml.safe_load(yaml_match.group(1)) or {}
-        
-        # 提取正文内容（去除 frontmatter）
         body = content[yaml_match.end():].strip()
-        
+
         return {
             "name": metadata.get("name", filepath.parent.name),
             "description": metadata.get("description", ""),
-            "version": metadata.get("version", "1.0"),
+            "version": str(metadata.get("version", "1.0")),
             "emoji": metadata.get("emoji", "📚"),
             "tools": metadata.get("tools", []),
             "path": str(filepath),
@@ -94,6 +159,7 @@ class SkillLoader:
             "full_content": content,
             "body": body,
             "metadata": metadata,
+            "format": "opcclaw",
         }
     
     def list_skills(self) -> List[Dict]:

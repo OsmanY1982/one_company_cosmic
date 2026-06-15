@@ -157,10 +157,11 @@ class OPCclawCore:
             f"{self.config.skills_path}/builtin"
         )
         
-        # 增强记忆
+        # 增强记忆 — 统一使用 SmartMemoryStore 门面
         if self.config.memory_enabled:
-            self.memory = EnhancedMemory(
-                storage_path=self.config.memory_storage_path
+            from .smart_memory_adapter import SmartMemoryStore
+            self.memory = SmartMemoryStore(
+                base_dir=self.config.memory_storage_path
             )
         else:
             self.memory = None

@@ -1,6 +1,6 @@
 # `modules/intelligence/agent_bridge.py`
 
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：1857
+> 路径：`modules/intelligence/agent_bridge.py` | 行数：1833
 
 
 ---
@@ -44,7 +44,7 @@ from opcclaw.core.chat_engine import ChatEngine
 from opcclaw.core.tool_registry import ToolRegistry
 from opcclaw.core.llm_backend import BaseLLMBackend
 from opcclaw.core.agent_loop import AgentLoop, AgentEvent, AgentEventType, AgentResult
-from opcclaw.core.memory_store import MemoryStore
+from opcclaw.core.smart_memory_adapter import SmartMemoryStore
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 # ── 引擎模块（try/except，缺失不阻塞启动）──
@@ -164,16 +164,6 @@ try:
 except ImportError:
     _HAVE_TOKEN_SAVER = False
 try:
-    from opcclaw.core.smart_memory import SmartMemory
-    _HAVE_SMART_MEMORY = True
-except ImportError:
-    _HAVE_SMART_MEMORY = False
-try:
-    from opcclaw.core.smart_memory_adapter import SmartMemoryStore
-    _HAVE_SMART_ADAPTER = True
-except ImportError:
-    _HAVE_SMART_ADAPTER = False
-try:
     from opcclaw.core.opcclaw_logging import get_logger, install as install_logging
     _HAVE_LOGGING = True
 except ImportError:
@@ -257,7 +247,7 @@ class AgentBridge:
                 os.path.expanduser("~"), ".opcclaw", "sessions"
             )
         os.makedirs(persistence_dir, exist_ok=True)
-        self._memory_store = MemoryStore(
+        self._memory = SmartMemoryStore(
             base_dir=persistence_dir,
         )
 
@@ -277,7 +267,7 @@ class AgentBridge:
             backend=backend,
             registry=self.registry,
             system_prompt=full_prompt,
-            memory_store=self._memory_store,
+            memory_store=self._memory,
             auto_save=True,
             session_id=session_id,
         )
@@ -456,20 +446,6 @@ class AgentBridge:
             except Exception:
                 pass
 
-        # ── 智能记忆分层 ──
-        self._smart_memory = None
-        if _HAVE_SMART_MEMORY:
-            try:
-                project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                self._smart_memory = SmartMemory(project_root=project_root)
-            except Exception:
-                pass
-        if _HAVE_SMART_ADAPTER and self._memory_store:
-            try:
-                self._smart_memory_store = SmartMemoryStore(self._memory_store)
-            except Exception:
-                pass
-
         # ── 云端同步 ──
         self._sync_bridge = SyncBridge() if _HAVE_SYNC_BRIDGE else None
 
@@ -557,7 +533,7 @@ class AgentBridge:
     def save_session(self) -> bool:
         """手动保存当前会话到磁盘"""
         try:
-            self._memory_store.save_session(
+            self._memory.save_session(
                 self._engine.messages, self.session_id
             )
             return True
@@ -568,7 +544,7 @@ class AgentBridge:
     def load_session(self) -> int:
         """从磁盘恢复会话历史，返回恢复的消息数"""
         try:
-            msgs = self._memory_store.load_session(self.session_id)
+            msgs = self._memory.load_session(self.session_id)
             if msgs:
                 self._engine.messages = msgs
                 return len(msgs)
@@ -579,7 +555,7 @@ class AgentBridge:
     def list_sessions(self) -> List[Dict[str, Any]]:
         """列出所有已保存的会话"""
         try:
-            return self._memory_store.list_sessions()
+            return self._memory.list_sessions()
         except Exception:
             return []
 
@@ -728,7 +704,7 @@ class AgentBridge:
             backend=self.backend,
             registry=self.registry,
             system_prompt=self._build_system_prompt(""),
-            memory_store=self._memory_store,
+            memory_store=self._memory,
             auto_save=True,
             session_id=self.session_id,
         )

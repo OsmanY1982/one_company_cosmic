@@ -1,6 +1,6 @@
 # `opcclaw/modules/config_manager.py`
 
-> 路径：`opcclaw/modules/config_manager.py` | 行数：258
+> 路径：`opcclaw/modules/config_manager.py` | 行数：259
 
 
 ---
@@ -23,8 +23,9 @@ import string
 from typing import Optional
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, 
-    QHBoxLayout, QApplication, QFont
+    QHBoxLayout, QApplication
 )
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
 from opcclaw.core.llm_backend import ProviderConfig

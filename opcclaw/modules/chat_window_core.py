@@ -775,6 +775,11 @@ class ChatWindow(QWidget):
         register_developer_tools(self.registry)
         register_git_tools(self.registry)
         register_code_tools(self.registry)
+        # MarkItDown: document-to-Markdown converter (P0)
+        try:
+            import opcclaw.tools.markitdown_tool  # noqa: F811 — side-effect registration
+        except Exception:
+            pass
     def _register_business_tools(self):
         data_dir = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "..", "..", "data"

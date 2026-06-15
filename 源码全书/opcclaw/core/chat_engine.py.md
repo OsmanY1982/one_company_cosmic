@@ -1,6 +1,6 @@
 # `opcclaw/core/chat_engine.py`
 
-> 路径：`opcclaw/core/chat_engine.py` | 行数：394
+> 路径：`opcclaw/core/chat_engine.py` | 行数：399
 
 
 ---
@@ -91,8 +91,8 @@ class ChatEngine(QObject):
                     parts.append(skills_index)
             except Exception:
                 pass
-        if self.smart_memory:
-            personalized = self.smart_memory.get_personalized_context()
+        if self.memory_store:
+            personalized = self.memory_store.get_personalized_context()
             if personalized:
                 parts.append(f'[User Preferences]\n{personalized}')
         if parts:
@@ -206,6 +206,8 @@ class ChatEngine(QObject):
 
     def chat(self, user_message: str) -> str:
         logger.debug(f'chat() called msg_len={len(user_message)}')
+        if self.memory_store:
+            self.memory_store.on_turn_start(turn_number=len(self.messages), message=user_message)
         self.messages.append({'role': 'user', 'content': user_message})
         self._trim_context()
         # 自动注入与当前问题最相关的技能（按需加载，节省 token）
@@ -288,6 +290,8 @@ class ChatEngine(QObject):
 
     def chat_stream(self, user_message: str) -> Iterator[str]:
         logger.debug(f'chat_stream() called msg_len={len(user_message)} tools={self.registry.count()}')
+        if self.memory_store:
+            self.memory_store.on_turn_start(turn_number=len(self.messages), message=user_message)
         self.messages.append({'role': 'user', 'content': user_message})
         self._trim_context()
         # 自动注入与当前问题最相关的技能
@@ -392,6 +396,7 @@ class ChatEngine(QObject):
 
     def reset(self) -> None:
         if self.auto_save and self.memory_store:
+            self.memory_store.on_session_end(self.session_id)
             self.memory_store.save_session([], self.session_id)
         self.messages = []
         self.initialize_session()

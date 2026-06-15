@@ -1,0 +1,14 @@
+name: test-anthropic-skill
+version: "1.0.0"
+description: "A test skill in Anthropic Skills format — demonstrates metadata.yaml based loading"
+emoji: "🧪"
+tools:
+  - read_text
+  - write_file
+triggers:
+  - test
+  - anthropic
+  - metadata
+platforms:
+  - linux
+  - macos

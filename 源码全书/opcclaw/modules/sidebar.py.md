@@ -1,6 +1,6 @@
 # `opcclaw/modules/sidebar.py`
 
-> 路径：`opcclaw/modules/sidebar.py` | 行数：144
+> 路径：`opcclaw/modules/sidebar.py` | 行数：145
 
 
 ---
@@ -12,8 +12,9 @@
 """
 
 from PyQt5.QtWidgets import (
-    QFrame, QVBoxLayout, QLabel, QPushButton, QFont
+    QFrame, QVBoxLayout, QLabel, QPushButton
 )
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, pyqtSignal
 
 # 颜色常量

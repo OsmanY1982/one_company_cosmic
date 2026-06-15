@@ -1,6 +1,6 @@
 # `opcclaw/core/enhanced_core.py`
 
-> 路径：`opcclaw/core/enhanced_core.py` | 行数：543
+> 路径：`opcclaw/core/enhanced_core.py` | 行数：549
 
 
 ---
@@ -34,9 +34,12 @@ if str(opcclaw_root) not in sys.path:
 class OPCclawEnhanced:
     """OPCclaw 增强核心"""
     
-    def __init__(self, skills_dir: str = None, data_dir: str = None):
+    def __init__(self, skills_dir: str = None, data_dir: str = None, memory_store=None):
         self.skills_dir = skills_dir or str(opcclaw_root / "skills")
         self.data_dir = data_dir or str(opcclaw_root.parent / "data")
+        
+        # 接收外部 SmartMemoryStore（统一门面），否则降级为独立 OPCclawMemory
+        self._injected_memory_store = memory_store
         
         # 初始化各模块
         self.skill_system = None
@@ -72,10 +75,13 @@ class OPCclawEnhanced:
         except ImportError as e:
             print(f"⚠️ 任务调度器加载失败: {e}")
         
-        # 持久化记忆
+        # 持久化记忆 — 优先使用注入的 SmartMemoryStore，降级为独立 OPCclawMemory
         try:
-            from opcclaw.core.memory import get_memory
-            self.memory = get_memory(os.path.join(self.data_dir, "memory.db"))
+            if self._injected_memory_store is not None:
+                self.memory = self._injected_memory_store
+            else:
+                from opcclaw.core.memory import get_memory
+                self.memory = get_memory(os.path.join(self.data_dir, "memory.db"))
         except ImportError as e:
             print(f"⚠️ 记忆系统加载失败: {e}")
         

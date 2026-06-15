@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-15 12:50
-> 共 588 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-15 13:54
+> 共 589 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -303,6 +303,9 @@
 │   │   └── workspace_indexer.py
 │   ├── data/
 │   │   ├── opcclaw/
+│   │   │   ├── data/
+│   │   │   │   └── smart_memory/
+│   │   │   ├── exports/
 │   │   │   ├── memory/
 │   │   │   ├── metrics/
 │   │   │   ├── sessions/
@@ -810,6 +813,7 @@
 │   │   │   ├── systematic-debugging/
 │   │   │   ├── test-driven-development/
 │   │   │   └── writing-plans/
+│   │   ├── test_anthropic_skill/
 │   │   ├── yuanbao/
 │   │   ├── __init__.py
 │   │   └── dual_ai.py
@@ -898,6 +902,7 @@
 │   │   ├── local_dev_tools.py
 │   │   ├── managed_tool_gateway.py
 │   │   ├── marketing_tools.py
+│   │   ├── markitdown_tool.py
 │   │   ├── mcp_oauth.py
 │   │   ├── mcp_oauth_manager.py
 │   │   ├── mcp_tool.py
@@ -1496,6 +1501,7 @@
 - [`opcclaw/tools/local_dev_tools.py`](./opcclaw/tools/local_dev_tools.py.md)
 - [`opcclaw/tools/managed_tool_gateway.py`](./opcclaw/tools/managed_tool_gateway.py.md)
 - [`opcclaw/tools/marketing_tools.py`](./opcclaw/tools/marketing_tools.py.md)
+- [`opcclaw/tools/markitdown_tool.py`](./opcclaw/tools/markitdown_tool.py.md)
 - [`opcclaw/tools/mcp_oauth.py`](./opcclaw/tools/mcp_oauth.py.md)
 - [`opcclaw/tools/mcp_oauth_manager.py`](./opcclaw/tools/mcp_oauth_manager.py.md)
 - [`opcclaw/tools/mcp_tool.py`](./opcclaw/tools/mcp_tool.py.md)

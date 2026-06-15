@@ -177,3 +177,41 @@ gen_book.py 自动扫描项目所有 .py 文件，清空并重建 `源码全书/
 - [ ] 受影响模块导入验证通过
 （内容由AI生成，仅供参考）
 （内容由AI生成，仅供参考）
+
+---
+
+## 备份流程（每次重大改动后执行）
+
+**三步流程，顺序执行，不可跳过：**
+
+### 1. 更新全书
+执行 `python3 gen_book.py`，重新生成源码全书（`源码全书/` 目录）
+
+### 2. D盘备份
+将整个项目目录同步到 `/Volumes/D盘工作区/一人公司宇宙版/`，替换旧备份：
+```bash
+rsync -a --delete /Volumes/D盘工作区/一人公司/one_company_cosmic/ /Volumes/D盘工作区/一人公司宇宙版/
+```
+
+### 3. Git 备份
+推送到远程仓库（`origin` 已配置双 push URL，同时推送到 Gitee 和 GitHub）：
+```bash
+git add -A
+git commit -m "备份: 描述改动内容"
+git push origin main
+```
+
+### 一键执行示例
+```bash
+cd /Volumes/D盘工作区/一人公司/one_company_cosmic
+python3 gen_book.py
+rsync -a --delete . /Volumes/D盘工作区/一人公司宇宙版/
+git add -A
+git commit -m "备份: $(date '+%Y-%m-%d %H:%M') 描述改动"
+git push origin main
+```
+
+### 自检
+- [ ] gen_book.py 执行成功（源码全书已重新生成）
+- [ ] rsync 目标目录大小与源目录一致（`du -sh` 对比）
+- [ ] git push 无报错（origin 已推送到 Gitee + GitHub）

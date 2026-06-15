@@ -6,8 +6,9 @@ import os
 import sys
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, 
-    QMessageBox, QFrame, QFont
+    QMessageBox, QFrame
 )
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, pyqtSignal
 
 from opcclaw.core.secure_storage import SecureStorage
