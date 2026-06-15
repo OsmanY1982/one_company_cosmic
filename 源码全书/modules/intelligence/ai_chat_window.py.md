@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_chat_window.py`
 
-> 路径：`modules/intelligence/ai_chat_window.py` | 行数：847
+> 路径：`modules/intelligence/ai_chat_window.py` | 行数：1083
 
 
 ---
@@ -20,9 +20,11 @@ from datetime import datetime
 
 from PyQt5.QtWidgets import (
     QWidget, QDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QLineEdit,
-    QPushButton, QLabel, QComboBox, QApplication, QSplitter,
+    QPushButton, QLabel, QComboBox, QApplication, QSplitter, QFileDialog,
+    QMenu, QAction,
 )
 from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QDragEnterEvent, QDropEvent
 
 from modules.intelligence.ai_chat_styles import (
     INPUT_STYLE, BTN_PRIMARY, BTN_DANGER, BTN_SETTINGS,
@@ -69,6 +71,44 @@ BTN_GEAR = """
     QPushButton:hover { background: rgba(120,160,220,60); }
 """
 
+BTN_STOP = """
+    QPushButton {
+        background: #aa2222;
+        color: #ffffff;
+        border: 2px solid #ff4444;
+        border-radius: 16px;
+        padding: 6px 18px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    QPushButton:hover { background: #cc3333; }
+"""
+
+BTN_UPLOAD = """
+    QPushButton {
+        background: rgba(120,100,180,40);
+        color: #bbaaee;
+        border: 1px solid rgba(140,110,200,60);
+        border-radius: 15px;
+        padding: 0 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    QPushButton:hover { background: rgba(140,120,200,65); }
+"""
+
+FILE_PILL_STYLE = """
+    QPushButton {
+        background: rgba(255,170,80,40);
+        color: #ffbb66;
+        border: 1px solid rgba(255,170,80,70);
+        border-radius: 10px;
+        padding: 2px 8px;
+        font-size: 10px;
+    }
+    QPushButton:hover { background: rgba(255,100,60,70); color: #ffffff; }
+"""
+
 
 class AIChatWindow(QWidget):
     """AI助手 · NEURAL v5 — 统一 AgentBridge，顶部嵌入紧凑模型选择器"""
@@ -113,6 +153,13 @@ class AIChatWindow(QWidget):
         # 语音输入
         self._voice_input = None   # 语音输入实例（点击录音时懒加载）
         self._voice_recording = False
+
+        # 文件上传
+        self._attached_files = []       # [(filepath, basename), ...]
+        self._file_pills = []           # 附件标签按钮引用
+
+        # 流式控制
+        self._stop_requested = False    # 用户请求停止生成
 
         self._all_models = []  # 全量模型列表（云端+本地）
         self._current_model = ""
@@ -254,6 +301,11 @@ class AIChatWindow(QWidget):
 
         self.ai_chat = QTextEdit()
         self.ai_chat.setReadOnly(True)
+        self.ai_chat.setAcceptDrops(True)
+        self.ai_chat.dragEnterEvent = self._drag_enter_event
+        self.ai_chat.dropEvent = self._drop_event
+        self.ai_chat.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.ai_chat.customContextMenuRequested.connect(self._on_chat_context_menu)
         self.ai_chat.setStyleSheet("""
             QTextEdit {
                 background: rgba(8,4,16,230); color: #bb99dd;
@@ -263,34 +315,59 @@ class AIChatWindow(QWidget):
         """)
         right_layout.addWidget(self.ai_chat, 1)
 
+        # 附件标签行（拖拽/上传文件后显示）
+        self._pills_container = QWidget()
+        self._pills_layout = QHBoxLayout(self._pills_container)
+        self._pills_layout.setContentsMargins(0, 0, 0, 0)
+        self._pills_layout.setSpacing(4)
+        self._pills_layout.addStretch()
+        self._pills_container.setVisible(False)
+        right_layout.addWidget(self._pills_container)
+
         # 输入行
         ir = QHBoxLayout()
+
+        self.btn_upload = QPushButton("文件")
+        self.btn_upload.setToolTip("上传文件或图片（支持拖拽到对话区）")
+        self.btn_upload.setFixedSize(50, 30)
+        self.btn_upload.setStyleSheet(BTN_UPLOAD)
+        self.btn_upload.clicked.connect(self._on_upload_clicked)
+        ir.addWidget(self.btn_upload)
+
         self.ai_input = QLineEdit()
-        self.ai_input.setPlaceholderText("输入问题，如：分析本月销售趋势...")
+        self.ai_input.setPlaceholderText("输入问题，或拖拽文件到对话区...")
         self.ai_input.setStyleSheet(INPUT_STYLE)
         self.ai_input.returnPressed.connect(self._ai_send)
         ir.addWidget(self.ai_input, 1)
 
-        self.btn_mic = QPushButton("🎤")
-        self.btn_mic.setToolTip("点击开始语音输入（6秒超时自动发送）")
-        self.btn_mic.setFixedSize(36, 36)
+        self.btn_mic = QPushButton("语音")
+        self.btn_mic.setToolTip("点击开始语音输入（Apple 语音识别，6秒超时自动发送）")
+        self.btn_mic.setFixedSize(60, 30)
         self.btn_mic.setStyleSheet("""
             QPushButton {
-                background: rgba(100,140,200,45);
-                color: #99bbee;
-                border: 1px solid rgba(100,140,200,70);
-                border-radius: 18px;
-                font-size: 14px;
+                background: #2d8a4e;
+                color: #ffffff;
+                border: 2px solid #44cc66;
+                border-radius: 15px;
+                font-size: 13px;
+                font-weight: 700;
             }
-            QPushButton:hover { background: rgba(130,170,230,70); }
+            QPushButton:hover { background: #3aa85e; }
+            QPushButton:pressed { background: #1e6b3a; }
         """)
         self.btn_mic.clicked.connect(self._toggle_voice_input)
         ir.addWidget(self.btn_mic)
 
-        send = QPushButton("发送")
-        send.setStyleSheet(BTN_PRIMARY)
-        send.clicked.connect(self._ai_send)
-        ir.addWidget(send)
+        self.btn_send = QPushButton("发送")
+        self.btn_send.setStyleSheet(BTN_PRIMARY)
+        self.btn_send.clicked.connect(self._ai_send)
+        ir.addWidget(self.btn_send)
+
+        self.btn_stop = QPushButton("停止")
+        self.btn_stop.setStyleSheet(BTN_STOP)
+        self.btn_stop.clicked.connect(self._on_stop_generation)
+        self.btn_stop.setVisible(False)
+        ir.addWidget(self.btn_stop)
 
         clear_btn = QPushButton("清屏")
         clear_btn.setStyleSheet(BTN_DANGER)
@@ -724,6 +801,7 @@ class AIChatWindow(QWidget):
     def _stream_begin(self):
         self._streaming = True
         self._stream_buffer = ""
+        self._enter_streaming_ui()
         now = datetime.now().strftime("%H:%M:%S")
         # 先添加 AI 标签行，再添加流式占位行
         self.ai_chat.append(
@@ -760,6 +838,7 @@ class AIChatWindow(QWidget):
         import sys, datetime
         print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._stream_done len={len(full_text)}", flush=True)
         self._streaming = False
+        self._exit_streaming_ui()
         # 用 QTextCursor 替换最后一个段落，移除闪烁光标
         cursor = self.ai_chat.textCursor()
         cursor.movePosition(cursor.End)
@@ -780,6 +859,7 @@ class AIChatWindow(QWidget):
         import sys, datetime
         print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._stream_error: {err_msg}", flush=True)
         self._streaming = False
+        self._exit_streaming_ui()
         self.ai_chat.append(f'<p style="color:#ff6644;font-size:10px;">{err_msg}</p>')
         self._stream_buffer = ""
 
@@ -804,6 +884,21 @@ class AIChatWindow(QWidget):
             except Exception:
                 pass
 
+        # 附带文件内容（如已上传）
+        prompt = text
+        if self._attached_files:
+            file_contexts = []
+            for fp, bn in self._attached_files:
+                try:
+                    with open(fp, "r", encoding="utf-8", errors="replace") as f:
+                        content = f.read(4000)  # 截断长文件
+                    file_contexts.append(f"[文件: {bn}]\n{content}")
+                except Exception:
+                    file_contexts.append(f"[文件: {bn}] (二进制/不可读)")
+            if file_contexts:
+                prompt = text + "\n\n--- 附件内容 ---\n" + "\n\n".join(file_contexts)
+            self._clear_file_pills()
+
         # ── 优先级 1: AgentBridge 流式输出 ──
         if self._bridge is not None and hasattr(self._bridge, "chat_stream"):
             try:
@@ -811,7 +906,7 @@ class AIChatWindow(QWidget):
                 print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._ai_send — calling bridge.chat_stream()...", flush=True)
                 self._stream_begin()
                 self._bridge.chat_stream(
-                    text,
+                    prompt,
                     on_chunk=self._stream_chunk,
                     on_done=self._stream_done,
                     on_tool=self._stream_tool,
@@ -829,9 +924,9 @@ class AIChatWindow(QWidget):
             try:
                 reply = ""
                 if hasattr(self._bridge, "chat"):
-                    reply = self._bridge.chat(text)
+                    reply = self._bridge.chat(prompt)
                 elif hasattr(self._bridge, "query"):
-                    reply = self._bridge.query(text)
+                    reply = self._bridge.query(prompt)
                 if reply:
                     self._append_ai_msg(reply)
                     self._messages.append({"role": "assistant", "content": reply})
@@ -848,11 +943,152 @@ class AIChatWindow(QWidget):
 
         # ── 优先级 3: 离线分析兜底 ──
         try:
-            offline_resp = offline_analysis(text)
+            offline_resp = offline_analysis(prompt)
             self._append_ai_msg(offline_resp, offline=True)
             self._messages.append({"role": "assistant", "content": offline_resp})
         except Exception as e:
             self.ai_chat.append(f'<p style="color:#ff6666;">错误: {e}</p>')
             traceback.print_exc()
+
+    # ─── 停止生成 ───
+    def _on_stop_generation(self):
+        """用户点击停止按钮"""
+        self._stop_requested = True
+        if hasattr(self, '_bridge') and self._bridge and hasattr(self._bridge, 'cancel'):
+            try:
+                self._bridge.cancel()
+            except Exception:
+                pass
+
+    # ─── 文件上传 ───
+    def _on_upload_clicked(self):
+        """打开文件选择对话框"""
+        paths, _ = QFileDialog.getOpenFileNames(
+            self, "选择文件", "",
+            "所有文件 (*.*);;图片 (*.png *.jpg *.jpeg *.gif *.bmp *.webp);;文档 (*.pdf *.txt *.md *.py *.json *.csv *.xlsx *.docx)"
+        )
+        if paths:
+            for p in paths:
+                self._add_file_pill(p)
+
+    def _add_file_pill(self, filepath):
+        """添加附件标签到 pills 行"""
+        basename = os.path.basename(filepath)
+        # 去重
+        if any(fp == filepath for fp, _ in self._attached_files):
+            return
+        self._attached_files.append((filepath, basename))
+
+        pill = QPushButton(f" {basename} ×")
+        pill.setToolTip(filepath)
+        pill.setStyleSheet(FILE_PILL_STYLE)
+        pill.clicked.connect(lambda checked, fp=filepath: self._remove_file_pill(fp))
+        # 插入到 stretch 之前
+        self._pills_layout.insertWidget(self._pills_layout.count() - 1, pill)
+        self._file_pills.append(pill)
+        self._pills_container.setVisible(True)
+
+    def _remove_file_pill(self, filepath):
+        """移除指定附件"""
+        for i, (fp, _) in enumerate(self._attached_files):
+            if fp == filepath:
+                self._attached_files.pop(i)
+                pill = self._file_pills.pop(i)
+                pill.deleteLater()
+                break
+        if not self._attached_files:
+            self._pills_container.setVisible(False)
+
+    def _clear_file_pills(self):
+        """清空所有附件标签"""
+        for pill in self._file_pills:
+            pill.deleteLater()
+        self._file_pills.clear()
+        self._attached_files.clear()
+        self._pills_container.setVisible(False)
+
+    # ─── 拖拽文件支持 ───
+    def _drag_enter_event(self, event: QDragEnterEvent):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+            self.ai_chat.setStyleSheet("""
+                QTextEdit {
+                    background: rgba(20,10,40,230); color: #bb99dd;
+                    border: 2px dashed rgba(255,170,80,180); border-radius: 10px;
+                    padding: 12px; font-size: 12px; line-height: 1.6;
+                }
+            """)
+
+    def _drop_event(self, event: QDropEvent):
+        self.ai_chat.setStyleSheet("""
+            QTextEdit {
+                background: rgba(8,4,16,230); color: #bb99dd;
+                border: 1px solid rgba(170,80,255,35); border-radius: 10px;
+                padding: 12px; font-size: 12px; line-height: 1.6;
+            }
+        """)
+        for url in event.mimeData().urls():
+            filepath = url.toLocalFile()
+            if filepath and os.path.isfile(filepath):
+                self._add_file_pill(filepath)
+        event.acceptProposedAction()
+
+    # ─── 右键菜单 ───
+    def _on_chat_context_menu(self, pos):
+        menu = QMenu(self)
+        copy_action = QAction("复制选中文本", self)
+        copy_action.triggered.connect(self.ai_chat.copy)
+        menu.addAction(copy_action)
+
+        copy_all_action = QAction("复制全部对话", self)
+        copy_all_action.triggered.connect(lambda: QApplication.clipboard().setText(
+            self.ai_chat.toPlainText()
+        ))
+        menu.addAction(copy_all_action)
+
+        menu.addSeparator()
+
+        regen_action = QAction("重新生成", self)
+        regen_action.triggered.connect(self._on_regenerate)
+        menu.addAction(regen_action)
+
+        menu.exec_(self.ai_chat.mapToGlobal(pos))
+
+    def _on_regenerate(self):
+        """重新生成：移除最后一条 AI 回复，重新发送上一条用户消息"""
+        if not self._messages:
+            return
+        # 找到最后一条 user 消息
+        last_user_msg = None
+        for i in range(len(self._messages) - 1, -1, -1):
+            if self._messages[i]["role"] == "user":
+                last_user_msg = self._messages[i]["content"]
+                # 移除该 user 之后的所有消息
+                self._messages = self._messages[:i]
+                break
+        if last_user_msg is None:
+            return
+        # 清屏重绘（简化：清空并重新 append 剩余消息）
+        self.ai_chat.clear()
+        for msg in self._messages:
+            if msg["role"] == "user":
+                self._append_user_msg(msg["content"])
+            elif msg["role"] == "assistant":
+                self._append_ai_msg(msg["content"])
+        # 重新发送
+        self.ai_input.setText(last_user_msg)
+        self._ai_send()
+
+    # ─── 流式状态切换 ───
+    def _enter_streaming_ui(self):
+        """进入流式输出 UI：发送变停止"""
+        self.btn_send.setVisible(False)
+        self.btn_stop.setVisible(True)
+        self._stop_requested = False
+
+    def _exit_streaming_ui(self):
+        """退出流式输出 UI：停止变发送"""
+        self.btn_stop.setVisible(False)
+        self.btn_send.setVisible(True)
 
 ```

@@ -167,7 +167,7 @@ class FloatingPlanet(QWidget):
         self._auto_switch_idx = 0
         self._auto_switch_timer = QTimer(self)
         self._auto_switch_timer.timeout.connect(self._auto_cycle_shape)
-        self._auto_switch_timer.start(7000)  # 每7秒自动切换
+        # self._auto_switch_timer.start(7000)  # DEBUG: 临时禁用以排查退出问题
 
         # 窗口配置 — 无边框置顶独立窗口
         self.setWindowFlags(
