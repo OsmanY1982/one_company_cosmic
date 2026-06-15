@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_chat_window.py`
 
-> 路径：`modules/intelligence/ai_chat_window.py` | 行数：734
+> 路径：`modules/intelligence/ai_chat_window.py` | 行数：847
 
 
 ---
@@ -30,6 +30,7 @@ from modules.intelligence.ai_chat_styles import (
 from modules.intelligence.chat_session_manager import ChatSessionManager
 from modules.intelligence.offline_analyzer import gather_context, offline_analysis
 from modules.intelligence.session_context import session_ctx
+from modules.intelligence.voice_interface import VoiceInterface
 from modules.auth.model_config_panel import (
     PRESET_PROVIDERS, LOCAL_SERVICES, PROVIDER_MODELS, ModelConfigDialog,
 )
@@ -108,6 +109,10 @@ class AIChatWindow(QWidget):
 
         # 监听外部消息（语音等入口）实时同步到当前窗口
         session_ctx.add_message_listener(self._on_external_message)
+
+        # 语音输入
+        self._voice_input = None   # 语音输入实例（点击录音时懒加载）
+        self._voice_recording = False
 
         self._all_models = []  # 全量模型列表（云端+本地）
         self._current_model = ""
@@ -266,6 +271,22 @@ class AIChatWindow(QWidget):
         self.ai_input.returnPressed.connect(self._ai_send)
         ir.addWidget(self.ai_input, 1)
 
+        self.btn_mic = QPushButton("🎤")
+        self.btn_mic.setToolTip("点击开始语音输入（6秒超时自动发送）")
+        self.btn_mic.setFixedSize(36, 36)
+        self.btn_mic.setStyleSheet("""
+            QPushButton {
+                background: rgba(100,140,200,45);
+                color: #99bbee;
+                border: 1px solid rgba(100,140,200,70);
+                border-radius: 18px;
+                font-size: 14px;
+            }
+            QPushButton:hover { background: rgba(130,170,230,70); }
+        """)
+        self.btn_mic.clicked.connect(self._toggle_voice_input)
+        ir.addWidget(self.btn_mic)
+
         send = QPushButton("发送")
         send.setStyleSheet(BTN_PRIMARY)
         send.clicked.connect(self._ai_send)
@@ -304,7 +325,99 @@ class AIChatWindow(QWidget):
         # 注销全局上下文
         session_ctx.unregister_window(self)
         session_ctx.remove_message_listener(self._on_external_message)
+        # 清理语音输入
+        if self._voice_input:
+            try:
+                self._voice_input.stop_listening()
+            except Exception:
+                pass
         super().closeEvent(event)
+
+    # ─── 语音输入 ───
+    def _toggle_voice_input(self):
+        """切换语音输入状态"""
+        if self._voice_recording:
+            self._stop_voice_input()
+        else:
+            self._start_voice_input()
+
+    def _start_voice_input(self):
+        """开始语音输入"""
+        if self._voice_recording:
+            return
+
+        if self._voice_input is None:
+            self._voice_input = VoiceInterface(stt_engine="apple")
+            self._voice_input.recognition_result.connect(self._on_voice_input_result)
+            self._voice_input.recognition_status.connect(self._on_voice_input_status)
+            self._voice_input.error_occurred.connect(self._on_voice_input_error)
+
+        self._voice_recording = True
+        self.btn_mic.setText("⏹")
+        self.btn_mic.setToolTip("录音中…点击停止")
+        self.btn_mic.setStyleSheet("""
+            QPushButton {
+                background: rgba(220,60,50,60);
+                color: #ff6666;
+                border: 1px solid rgba(255,80,70,120);
+                border-radius: 18px;
+                font-size: 14px;
+            }
+            QPushButton:hover { background: rgba(240,70,60,80); }
+        """)
+
+        self.ai_chat.append(
+            '<p style="color:#ffaa44;font-size:10px;">🎤 语音输入中…请说话（最长6秒）</p>'
+        )
+
+        try:
+            self._voice_input.start_listening(timeout=6.0)
+        except Exception as e:
+            self._on_voice_input_error(f"启动语音输入失败: {e}")
+
+    def _stop_voice_input(self):
+        """停止语音输入"""
+        self._voice_recording = False
+        self.btn_mic.setText("🎤")
+        self.btn_mic.setToolTip("点击开始语音输入（6秒超时自动发送）")
+        self.btn_mic.setStyleSheet("""
+            QPushButton {
+                background: rgba(100,140,200,45);
+                color: #99bbee;
+                border: 1px solid rgba(100,140,200,70);
+                border-radius: 18px;
+                font-size: 14px;
+            }
+            QPushButton:hover { background: rgba(130,170,230,70); }
+        """)
+        if self._voice_input:
+            try:
+                self._voice_input.stop_listening()
+            except Exception:
+                pass
+
+    def _on_voice_input_result(self, text: str):
+        """语音识别结果 → 填入输入框并自动发送"""
+        text = text.strip()
+        if not text:
+            return
+        self._stop_voice_input()
+        self.ai_chat.append(
+            f'<p style="color:#88aa88;font-size:10px;">🎤 识别: {text}</p>'
+        )
+        self.ai_input.setText(text)
+        self._ai_send()
+
+    def _on_voice_input_status(self, status: str):
+        """语音输入状态回调"""
+        pass
+
+    def _on_voice_input_error(self, error: str):
+        """语音输入错误回调"""
+        self._stop_voice_input()
+        self.ai_chat.append(
+            f'<p style="color:#ff6644;font-size:10px;">语音输入错误: {error}</p>'
+        )
 
     # ─── 会话切换 ───
     def _on_session_selected(self, session_id: str, title: str):
