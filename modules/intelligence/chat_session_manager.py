@@ -8,7 +8,7 @@ from datetime import datetime
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QListWidget,
     QListWidgetItem, QPushButton, QLineEdit, QLabel, QMenu,
-    QMessageBox, QFileDialog,
+    QMessageBox, QFileDialog, QDialog, QInputDialog,
 )
 from PyQt5.QtCore import pyqtSignal, Qt
 
@@ -118,7 +118,6 @@ class ChatSessionManager(QWidget):
         # 会话列表
         self._list_widget = QListWidget()
         self._list_widget.setObjectName("session_list")
-        self._list_widget.itemClicked.connect(self._on_item_clicked)
         self._list_widget.setContextMenuPolicy(Qt.CustomContextMenu)
         self._list_widget.customContextMenuRequested.connect(self._show_context_menu)
         layout.addWidget(self._list_widget, 1)
@@ -173,6 +172,8 @@ class ChatSessionManager(QWidget):
             # 自定义行控件: 标题 + 信息 + 操作按钮
             row = QWidget()
             row.setStyleSheet("background: transparent;")
+            row.setCursor(Qt.PointingHandCursor)
+            row.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
             row_layout = QHBoxLayout(row)
             row_layout.setContentsMargins(8, 4, 4, 4)
             row_layout.setSpacing(4)
@@ -195,35 +196,20 @@ class ChatSessionManager(QWidget):
 
             row_layout.addWidget(text_widget, 1)
 
-            # ⧉ 复制按钮
-            copy_btn = QPushButton("⧉")
-            copy_btn.setFixedSize(20, 18)
-            copy_btn.setCursor(Qt.PointingHandCursor)
-            copy_btn.setToolTip(f"复制会话 {sid}")
-            copy_btn.setStyleSheet("""
+            # ⋮ 三点菜单按钮
+            menu_btn = QPushButton("⋮")
+            menu_btn.setFixedSize(24, 20)
+            menu_btn.setCursor(Qt.PointingHandCursor)
+            menu_btn.setToolTip("更多操作")
+            menu_btn.setStyleSheet("""
                 QPushButton {
                     background: transparent; color: #666688; border: none;
-                    border-radius: 2px; font-size: 11px;
+                    border-radius: 4px; font-size: 14px; font-weight: bold;
                 }
-                QPushButton:hover { background: rgba(100,180,255,30); color: #88aaff; }
+                QPushButton:hover { background: rgba(120,140,200,30); color: #8899cc; }
             """)
-            copy_btn.clicked.connect(lambda checked, ses=sid: self.session_copy_requested.emit(ses))
-            row_layout.addWidget(copy_btn)
-
-            # ✕ 删除按钮
-            del_btn = QPushButton("✕")
-            del_btn.setFixedSize(18, 18)
-            del_btn.setCursor(Qt.PointingHandCursor)
-            del_btn.setToolTip(f"删除会话 {sid}")
-            del_btn.setStyleSheet("""
-                QPushButton {
-                    background: transparent; color: #664444; border: none;
-                    border-radius: 2px; font-size: 11px;
-                }
-                QPushButton:hover { background: rgba(255,100,100,30); color: #ff6666; }
-            """)
-            del_btn.clicked.connect(lambda checked, ses=sid: self._delete_session(ses))
-            row_layout.addWidget(del_btn)
+            menu_btn.clicked.connect(lambda checked, ses=sid, btn=menu_btn: self._show_session_menu(ses, btn))
+            row_layout.addWidget(menu_btn)
 
             item = QListWidgetItem()
             item.setData(Qt.UserRole, sid)
@@ -236,15 +222,6 @@ class ChatSessionManager(QWidget):
     def _on_search(self, text: str):
         self._refresh_list(text)
 
-    def _on_item_clicked(self, item: QListWidgetItem):
-        session_id = item.data(Qt.UserRole)
-        title = "对话"
-        for s in self._sessions:
-            if s.get("session_id") == session_id:
-                title = s.get("title", "对话")
-                break
-        self.session_selected.emit(session_id, title)
-
     def _on_new_chat(self):
         self.new_chat_requested.emit()
 
@@ -253,24 +230,93 @@ class ChatSessionManager(QWidget):
         self.session_selected.emit(session_id, title)
 
     def _delete_session(self, session_id: str):
-        """删除会话（从删除按钮触发）"""
-        reply = QMessageBox.question(
-            self, "确认删除",
-            "确定要删除这个会话吗？\n删除后不可恢复。",
-            QMessageBox.Yes | QMessageBox.No, QMessageBox.No,
-        )
-        if reply == QMessageBox.Yes:
+        """删除会话（从删除按钮触发）—— 自定义暗色确认弹窗"""
+        print(f"[Delete] _delete_session called, session_id={session_id}", flush=True)
+        try:
+            self._do_delete_session(session_id)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            print(f"[Delete] 删除异常: {e}", flush=True)
+
+    def _do_delete_session(self, session_id: str):
+        # 获取会话标题
+        sess_title = "未知对话"
+        for s in self._sessions:
+            if s.get("session_id") == session_id or s.get("id") == session_id:
+                sess_title = s.get("title", "对话")
+                break
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle("确认删除")
+        dlg.setFixedSize(380, 130)
+        dlg.setAttribute(Qt.WA_StyledBackground, True)
+        dlg.setWindowModality(Qt.ApplicationModal)
+        dlg.setStyleSheet("""
+            QDialog { background-color: #1e1e3a; }
+            QLabel { color: #ccccdd; font-size: 13px; }
+            QPushButton { border: none; border-radius: 4px; padding: 6px 20px;
+                font-size: 12px; min-width: 70px; }
+            QPushButton#del_confirm { background-color: #aa3333; color: #ffcccc; }
+            QPushButton#del_confirm:hover { background-color: #cc4444; }
+            QPushButton#del_cancel { background-color: #2a2a4a; color: #ccccdd;
+                border: 1px solid #3a3a5a; }
+            QPushButton#del_cancel:hover { background-color: #3a3a6a; }
+        """)
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(20, 16, 20, 12)
+        layout.addWidget(QLabel(
+            f"确定要删除会话「{sess_title}」吗？\n删除后不可恢复。"
+        ))
+
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        btn_cancel = QPushButton("取消")
+        btn_cancel.setObjectName("del_cancel")
+        btn_cancel.clicked.connect(dlg.reject)
+        btn_row.addWidget(btn_cancel)
+        btn_confirm = QPushButton("确认删除")
+        btn_confirm.setObjectName("del_confirm")
+        btn_confirm.clicked.connect(dlg.accept)
+        btn_row.addWidget(btn_confirm)
+        layout.addLayout(btn_row)
+
+        print(f"[Delete] 显示确认弹窗, result={dlg.exec_()}", flush=True)
+        if dlg.result() == QDialog.Accepted:
+            print(f"[Delete] 用户确认删除, 调用后端 delete_session({session_id})", flush=True)
+            success = False
             try:
-                self._agent._memory.delete_session(session_id)
+                success = self._agent._memory.delete_session(session_id)
             except Exception as e:
-                print(f"[ChatSessionManager] 删除会话失败: {e}")
+                print(f"[Delete] delete_session 异常: {e}", flush=True)
+                QMessageBox.warning(self, "删除失败", f"无法删除会话:\n{e}")
+                return
+            if not success:
+                print(f"[Delete] delete_session 返回 False", flush=True)
+                QMessageBox.warning(self, "删除失败", "无法删除该会话（可能已被移除）")
+                self._load_sessions()
+                return
+            print(f"[Delete] 删除成功, 刷新列表", flush=True)
             self._load_sessions()
             self.session_deleted.emit(session_id)
 
-    def _show_context_menu(self, pos):
-        item = self._list_widget.itemAt(pos)
-        if not item:
-            return
+    def _show_session_menu(self, session_id: str, anchor_btn: QPushButton):
+        """点击 ⋮ 弹出的操作菜单"""
+        print(f"[Menu] _show_session_menu, session_id={session_id}", flush=True)
+        # 获取当前置顶状态
+        pinned = False
+        sess_title = "对话"
+        for s in self._sessions:
+            if s.get("id") == session_id or s.get("session_id") == session_id:
+                pinned = s.get("pinned", False)
+                sess_title = s.get("title", "对话")
+                break
+
+        menu = self._build_context_menu(session_id, pinned)
+        menu.exec_(anchor_btn.mapToGlobal(anchor_btn.rect().bottomLeft()))
+
+    def _build_context_menu(self, session_id: str, pinned: bool = False) -> QMenu:
+        """构建统一的操作菜单（供 ⋮ 按钮和右键共用）"""
         menu = QMenu(self)
         menu.setStyleSheet("""
             QMenu {
@@ -286,61 +332,170 @@ class ChatSessionManager(QWidget):
             QMenu::item:selected {
                 background-color: #2a2a5a;
             }
+            QMenu::separator {
+                height: 1px; background: #2a2a4a; margin: 4px 8px;
+            }
         """)
 
-        export_action = menu.addAction("导出会话")
+        pin_action = menu.addAction("📌 取消置顶" if pinned else "📌 置顶")
+        rename_action = menu.addAction("✏️ 重命名")
+        menu.addSeparator()
+        copy_action = menu.addAction("📋 复制会话ID")
+        export_action = menu.addAction("📤 导出会话")
+        menu.addSeparator()
+        delete_action = menu.addAction("🗑 删除")
 
-        action = menu.exec_(self._list_widget.mapToGlobal(pos))
+        # 信号连接
+        print(f"[Menu] 构建菜单 session_id={session_id}, pinned={pinned}", flush=True)
+        pin_action.triggered.connect(lambda: self._toggle_pin_session(session_id))
+        rename_action.triggered.connect(lambda: self._rename_session(session_id))
+        copy_action.triggered.connect(lambda: self._copy_session_id(session_id))
+        export_action.triggered.connect(lambda: self._export_session(session_id))
+        delete_action.triggered.connect(lambda: self._delete_session(session_id))
+
+        return menu
+
+    def _copy_session_id(self, session_id: str):
+        """复制会话ID到剪贴板并反馈"""
+        from PyQt5.QtWidgets import QApplication
+        clipboard = QApplication.clipboard()
+        clipboard.setText(session_id)
+        self._count_label.setText("已复制")
+        from PyQt5.QtCore import QTimer
+        QTimer.singleShot(1500, lambda: self._count_label.setText(
+            f"共 {len(self._sessions)} 个会话"
+        ))
+
+    def _toggle_pin_session(self, session_id: str):
+        """切换置顶状态"""
+        try:
+            now_pinned = self._agent.toggle_pin_session(session_id)
+            self._load_sessions()
+            status = "已置顶" if now_pinned else "已取消置顶"
+            # 简洁提示：用状态栏而非弹窗
+            self._count_label.setText(f"{status}")
+            # 1.5秒后恢复计数
+            from PyQt5.QtCore import QTimer
+            QTimer.singleShot(1500, lambda: self._count_label.setText(
+                f"共 {len(self._sessions)} 个会话"
+            ))
+        except Exception as e:
+            QMessageBox.warning(self, "操作失败", f"无法执行置顶操作:\n{e}")
+
+    def _rename_session(self, session_id: str):
+        """重命名会话"""
+        # 获取当前标题
+        old_title = "对话"
+        for s in self._sessions:
+            sid = s.get("id") or s.get("session_id", "")
+            if sid == session_id:
+                old_title = s.get("title", "对话")
+                break
+
+        new_title, ok = QInputDialog.getText(
+            self, "重命名会话", "新名称:",
+            text=old_title
+        )
+        if ok and new_title.strip():
+            new_title = new_title.strip()[:50]  # 限长 50
+            try:
+                success = self._agent.rename_session(session_id, new_title)
+                if success:
+                    self._load_sessions()
+                else:
+                    QMessageBox.warning(self, "重命名失败", "无法重命名该会话")
+            except Exception as e:
+                QMessageBox.warning(self, "重命名失败", str(e))
+
+    def _export_session(self, session_id: str):
+        """导出会话（从菜单触发）"""
+        try:
+            default_name = f"chat_{session_id}"
+            path, selected_filter = QFileDialog.getSaveFileName(
+                self, "导出会话",
+                default_name,
+                "JSON文件 (*.json);;Markdown文件 (*.md)",
+            )
+            if not path:
+                return
+            msgs = self._agent.load_session(session_id)
+            info = None
+            for s in self._sessions:
+                sid = s.get("id") or s.get("session_id", "")
+                if sid == session_id:
+                    info = s
+                    break
+
+            if path.endswith(".md"):
+                lines = [
+                    f"# {info.get('title', session_id) if info else session_id}\n",
+                    f"*Exported: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n",
+                    "---\n",
+                ]
+                for msg in msgs:
+                    role = msg.get("role", "unknown").upper()
+                    content = msg.get("content", "")
+                    if isinstance(content, str):
+                        lines.append(f"\n### {role}\n")
+                        lines.append(content)
+                        lines.append("")
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write("\n".join(lines))
+            else:
+                import json
+                data = {
+                    "session_id": session_id,
+                    "title": info.get("title", "Untitled") if info else "Untitled",
+                    "exported_at": datetime.now().isoformat(),
+                    "messages": msgs,
+                }
+                with open(path, "w", encoding="utf-8") as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+
+            self._show_export_result_dialog(True, path)
+        except Exception as e:
+            self._show_export_result_dialog(False, str(e))
+
+    def _show_context_menu(self, pos):
+        """右键菜单（复用统一菜单构建器）"""
+        item = self._list_widget.itemAt(pos)
+        if not item:
+            return
         session_id = item.data(Qt.UserRole)
 
-        if action == export_action:
-            try:
-                default_name = f"chat_{session_id}"
-                path, selected_filter = QFileDialog.getSaveFileName(
-                    self, "导出会话",
-                    default_name,
-                    "JSON文件 (*.json);;Markdown文件 (*.md)",
-                )
-                if not path:
-                    return
+        pinned = False
+        for s in self._sessions:
+            sid = s.get("id") or s.get("session_id", "")
+            if sid == session_id:
+                pinned = s.get("pinned", False)
+                break
 
-                # 读取会话数据
-                msgs = self._agent.load_session(session_id)
-                # 查找会话元信息
-                info = None
-                for s in self._sessions:
-                    if s.get("session_id") == session_id:
-                        info = s
-                        break
+        menu = self._build_context_menu(session_id, pinned)
+        menu.exec_(self._list_widget.mapToGlobal(pos))
 
-                if path.endswith(".md"):
-                    # 导出为 Markdown
-                    lines = [
-                        f"# {info.get('title', session_id) if info else session_id}\n",
-                        f"*Exported: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n",
-                        "---\n",
-                    ]
-                    for msg in msgs:
-                        role = msg.get("role", "unknown").upper()
-                        content = msg.get("content", "")
-                        if isinstance(content, str):
-                            lines.append(f"\n### {role}\n")
-                            lines.append(content)
-                            lines.append("")
-                    with open(path, "w", encoding="utf-8") as f:
-                        f.write("\n".join(lines))
-                else:
-                    # 导出为 JSON
-                    import json
-                    data = {
-                        "session_id": session_id,
-                        "title": info.get("title", "Untitled") if info else "Untitled",
-                        "exported_at": datetime.now().isoformat(),
-                        "messages": msgs,
-                    }
-                    with open(path, "w", encoding="utf-8") as f:
-                        json.dump(data, f, ensure_ascii=False, indent=2)
-
-                QMessageBox.information(self, "导出成功", f"已导出到:\n{path}")
-            except Exception as e:
-                QMessageBox.warning(self, "导出失败", str(e))
+    def _show_export_result_dialog(self, success: bool, detail: str):
+        """自定义暗色主题导出结果弹窗（替代 QMessageBox，macOS 原生按钮不可靠）"""
+        dlg = QDialog(self)
+        dlg.setWindowTitle("导出成功" if success else "导出失败")
+        dlg.setFixedSize(420, 120)
+        dlg.setAttribute(Qt.WA_StyledBackground, True)
+        dlg.setModal(True)
+        dlg.setStyleSheet("""
+            QDialog { background-color: #1e1e3a; }
+            QLabel { color: #ccccdd; font-size: 13px; }
+            QPushButton { background-color: #2a2a4a; color: #ccccdd;
+                border: 1px solid #3a3a5a; border-radius: 4px;
+                padding: 6px 20px; font-size: 12px; min-width: 70px; }
+            QPushButton:hover { background-color: #3a3a6a; }
+        """)
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(20, 16, 20, 12)
+        text = f"已导出到:\n{detail}" if success else f"导出失败:\n{detail}"
+        layout.addWidget(QLabel(text))
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        btn_ok = QPushButton("确定")
+        btn_ok.clicked.connect(dlg.accept)
+        btn_row.addWidget(btn_ok)
+        layout.addLayout(btn_row)
+        dlg.exec_()

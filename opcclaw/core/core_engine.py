@@ -658,7 +658,7 @@ class OPCclawCoreEngine:
                 base_url="http://localhost:11434/v1",
                 model="qwen2.5:7b",
                 temperature=0.7,
-                max_tokens=4096
+                max_tokens=262144
             )
         self.provider_config = provider_config
         self.backend = OpenAICompatibleBackend(provider_config)
@@ -827,7 +827,7 @@ def create_engine(model: str = "qwen2.5:7b", base_url: str = "http://localhost:1
         base_url=base_url,
         model=model,
         temperature=0.7,
-        max_tokens=4096
+        max_tokens=262144
     )
     return OPCclawCoreEngine(config)
 

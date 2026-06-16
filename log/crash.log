@@ -671,3 +671,4 @@ RuntimeError: [Ollama] 请求异常: timed out
 2026-06-15 21:25:31,471 [Dummy-4] Token optimization failed: 'NoneType' object has no attribute 'lower'
 2026-06-15 21:26:31,119 [Dummy-4] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6098825216.
 2026-06-15 21:26:31,123 [Dummy-4] Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-16 06:51:43,196 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)

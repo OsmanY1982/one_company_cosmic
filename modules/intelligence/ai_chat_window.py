@@ -12,7 +12,7 @@ import threading
 from datetime import datetime
 
 from PyQt5.QtWidgets import (
-    QWidget, QDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QLineEdit,
+    QWidget, QDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QTextBrowser, QLineEdit,
     QPushButton, QLabel, QComboBox, QApplication, QSplitter, QFileDialog,
     QMenu, QAction,
 )
@@ -139,6 +139,8 @@ class AIChatWindow(QWidget):
         if self._bridge:
             session_ctx.set_agent_bridge(self._bridge)
         self._messages = []       # [{role, content}, ...] 当前会话消息缓存
+        self._msg_copy_map = {}  # {msg_id: text} 消息按钮复制用
+        self._next_msg_id = 0    # 递增消息ID
 
         # 监听外部消息（语音等入口）实时同步到当前窗口
         session_ctx.add_message_listener(self._on_external_message)
@@ -174,6 +176,7 @@ class AIChatWindow(QWidget):
         print(f"[AIChatWindow DEBUG] btn_send: visible={self.btn_send.isVisible()} size={self.btn_send.size()} geo={self.btn_send.geometry()}")
         print(f"[AIChatWindow DEBUG] btn_stop: visible={self.btn_stop.isVisible()} size={self.btn_stop.size()} geo={self.btn_stop.geometry()}")
         print(f"[AIChatWindow DEBUG] ai_input: visible={self.ai_input.isVisible()} size={self.ai_input.size()} geo={self.ai_input.geometry()}")
+        print(f"[AIChatWindow DEBUG] btn_speak: visible={self.btn_speak.isVisible()} enabled={self.btn_speak.isEnabled()} size={self.btn_speak.size()} geo={self.btn_speak.geometry()}")
 
         # standalone 模式：窗口居中显示
         if not embedded:
@@ -350,15 +353,17 @@ class AIChatWindow(QWidget):
         right_layout.setContentsMargins(0, 0, 0, 0)
         right_layout.setSpacing(10)
 
-        self.ai_chat = QTextEdit()
+        self.ai_chat = QTextBrowser()
         self.ai_chat.setReadOnly(True)
+        self.ai_chat.setOpenLinks(False)
+        self.ai_chat.anchorClicked.connect(self._on_anchor_clicked)
         self.ai_chat.setAcceptDrops(True)
         self.ai_chat.dragEnterEvent = self._drag_enter_event
         self.ai_chat.dropEvent = self._drop_event
         self.ai_chat.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ai_chat.customContextMenuRequested.connect(self._on_chat_context_menu)
         self.ai_chat.setStyleSheet("""
-            QTextEdit {
+            QTextBrowser {
                 background: rgba(8,4,16,230); color: #bb99dd;
                 border: 1px solid rgba(170,80,255,35); border-radius: 10px;
                 padding: 12px; font-size: 12px; line-height: 1.6;
@@ -441,6 +446,24 @@ class AIChatWindow(QWidget):
         clear_btn.setStyleSheet(BTN_DANGER)
         clear_btn.clicked.connect(self._on_clear_chat)
         ir.addWidget(clear_btn)
+
+        self.btn_export = QPushButton("导出")
+        self.btn_export.setToolTip("导出当前对话（Markdown / JSON）")
+        self.btn_export.setStyleSheet("""
+            QPushButton {
+                background: rgba(60,160,200,40);
+                color: #88ccff;
+                border: 1px solid rgba(80,180,220,60);
+                border-radius: 16px;
+                padding: 6px 14px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            QPushButton:hover { background: rgba(80,200,240,65); }
+        """)
+        self.btn_export.clicked.connect(self._on_export_chat)
+        ir.addWidget(self.btn_export)
+
         right_layout.addLayout(ir)
 
         self._splitter.addWidget(right_widget)
@@ -454,8 +477,78 @@ class AIChatWindow(QWidget):
         self.ai_chat.clear()
         self._messages = []
 
+    def _on_export_chat(self):
+        """导出当前对话为 Markdown 或 JSON"""
+        import json
+        if not self._messages:
+            # 尝试从 bridge 加载
+            if self._bridge:
+                try:
+                    self._messages = self._bridge.load_session(self._current_session_id)
+                except Exception:
+                    pass
+        if not self._messages:
+            self.ai_chat.append(
+                '<p style="color:#ff6644;font-size:10px;">当前对话为空，无需导出</p>'
+            )
+            return
+
+        default_name = f"chat_{self._current_session_id}"
+        path, selected_filter = QFileDialog.getSaveFileName(
+            self, "导出当前对话", default_name,
+            "Markdown文件 (*.md);;JSON文件 (*.json)",
+        )
+        if not path:
+            return
+
+        try:
+            if path.endswith(".md"):
+                lines = [
+                    f"# {self._current_title}\n",
+                    f"*导出于: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n",
+                    "---\n",
+                ]
+                for msg in self._messages:
+                    role = msg.get("role", "unknown").upper()
+                    content = msg.get("content", "")
+                    if isinstance(content, str):
+                        lines.append(f"\n### {role}\n")
+                        lines.append(content)
+                        lines.append("")
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write("\n".join(lines))
+            else:
+                data = {
+                    "session_id": self._current_session_id,
+                    "title": self._current_title,
+                    "exported_at": datetime.now().isoformat(),
+                    "messages": self._messages,
+                }
+                with open(path, "w", encoding="utf-8") as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+
+            self._session_manager._show_export_result_dialog(True, path)
+        except Exception as e:
+            self._session_manager._show_export_result_dialog(False, str(e))
+
     def _on_speak_clicked(self):
         """朗读最后一条 AI 回复（macOS say 命令，中文语音 Tingting）"""
+        print("[Speak] _on_speak_clicked called", flush=True)
+        try:
+            self._do_speak()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            print(f"[Speak] 按钮回调异常: {e}", flush=True)
+            try:
+                self.ai_chat.append(
+                    f'<p style="color:#ff6644;font-size:10px;">[系统] 朗读失败: {e}</p>'
+                )
+            except Exception:
+                pass
+
+    def _do_speak(self):
+        """执行朗读逻辑"""
         # 找到最后一条 assistant 消息
         last_ai = None
         for msg in reversed(self._messages):
@@ -471,20 +564,52 @@ class AIChatWindow(QWidget):
         # 终止之前的朗读进程
         self._terminate_speak()
 
-        # 清理文本：去除 HTML 标签（简单处理）
+        # 清理文本：去除 HTML 标签
         import re
-        clean_text = re.sub(r'<[^>]+>', '', last_ai)
+        clean_text = re.sub(r'<[^>]+>', '', last_ai).strip()
 
+        # 即时反馈：正在朗读（强制刷新 UI）
+        self._set_speak_button("朗读中...", """
+            QPushButton {
+                background: rgba(255,180,60,60); color: #ffaa44;
+                border: 1px solid rgba(255,180,60,100); border-radius: 16px;
+                padding: 6px 14px; font-size: 11px; font-weight: 600;
+            }
+        """)
+
+        from PyQt5.QtCore import QTimer
         def _run():
             try:
-                proc = subprocess.Popen(['say', '-v', 'Tingting', clean_text])
+                proc = subprocess.Popen(
+                    ['say', '-v', 'Tingting'],
+                    stdin=subprocess.PIPE,
+                )
                 self._speak_process = proc
-                proc.wait()
+                proc.communicate(input=clean_text.encode('utf-8'))
             except Exception as e:
                 print(f"[Speak] 朗读失败: {e}")
+            # 在主线程恢复按钮
+            QTimer.singleShot(0, self._restore_speak_button)
 
-        t = threading.Thread(target=_run, daemon=True)
-        t.start()
+        threading.Thread(target=_run, daemon=True).start()
+
+    def _set_speak_button(self, text, style):
+        """安全设置朗读按钮文字（先刷事件队列确保立即可见）"""
+        self.btn_speak.setText(text)
+        self.btn_speak.setStyleSheet(style)
+        QApplication.processEvents()
+
+    def _restore_speak_button(self):
+        """朗读完成后在主线程恢复按钮"""
+        self.btn_speak.setText("朗读")
+        self.btn_speak.setStyleSheet("""
+            QPushButton {
+                background: rgba(80,200,160,40); color: #88ffcc;
+                border: 1px solid rgba(80,220,160,60); border-radius: 16px;
+                padding: 6px 14px; font-size: 11px; font-weight: 600;
+            }
+            QPushButton:hover { background: rgba(100,230,180,65); }
+        """)
 
     def _terminate_speak(self):
         """终止后台朗读进程"""
@@ -629,8 +754,14 @@ class AIChatWindow(QWidget):
         self._session_manager._load_sessions()
 
     def _on_session_deleted(self, session_id: str):
-        """外部删除会话后：若为当前会话则切换到新会话"""
-        if self._current_session_id == session_id:
+        """外部删除会话后：若为当前会话则切换到剩余的第一个，无剩余才新建"""
+        if self._current_session_id != session_id:
+            return
+        sessions = self._session_manager._sessions
+        if sessions:
+            s = sessions[0]
+            self._switch_to_session(s.get("session_id", ""), s.get("title", "对话"))
+        else:
             self._on_new_session()
 
     def _switch_to_session(self, session_id: str, title: str):
@@ -908,20 +1039,63 @@ class AIChatWindow(QWidget):
             self._messages.append({"role": "assistant", "content": content})
             self._append_ai_msg(content)
 
+    # ─── 消息按钮 ───
+    def _msg_action_row(self, mid: int, text: str) -> str:
+        """生成消息操作行 HTML：复制 | 👍 | 👎"""
+        self._msg_copy_map[mid] = text
+        return (
+            f'<p style="font-size:10px;color:#666;margin:2px 0;">'
+            f'<a href="cmd:copy:{mid}" style="color:#888;text-decoration:none;">复制</a>'
+            f' &nbsp;|&nbsp; '
+            f'<a href="cmd:like:{mid}" style="color:#888;text-decoration:none;">👍</a>'
+            f' &nbsp;|&nbsp; '
+            f'<a href="cmd:dislike:{mid}" style="color:#888;text-decoration:none;">👎</a>'
+            f'</p>'
+        )
+
+    def _on_anchor_clicked(self, url):
+        """消息按钮点击处理：cmd:copy:MID / cmd:like:MID / cmd:dislike:MID"""
+        scheme = url.toString()
+        if not scheme.startswith("cmd:"):
+            return
+        _, action, mid_str = scheme.split(":", 2)
+        mid = int(mid_str)
+        text = self._msg_copy_map.get(mid, "")
+
+        if action == "copy":
+            QApplication.clipboard().setText(text)
+            self.ai_chat.append(
+                f'<p style="color:#44cc88;font-size:10px;">已复制到剪贴板 ✓</p>'
+            )
+        elif action == "like":
+            self.ai_chat.append(
+                f'<p style="color:#88ccff;font-size:10px;">已记录：这条回答有帮助 ✓</p>'
+            )
+        elif action == "dislike":
+            self.ai_chat.append(
+                f'<p style="color:#ff8866;font-size:10px;">已记录：这条回答不满意 ✗</p>'
+            )
+
     # ─── 交互逻辑 ───
     def _append_user_msg(self, text):
         now = datetime.now().strftime("%H:%M:%S")
+        mid = self._next_msg_id
+        self._next_msg_id += 1
         self.ai_chat.append(
             f'<p style="color:#ffaa44;font-weight:700;">[{now}] 你:</p>'
             f'<p style="color:#ddccff;">{text}</p>'
+            f'{self._msg_action_row(mid, text)}'
         )
 
     def _append_ai_msg(self, text, offline=False):
         now = datetime.now().strftime("%H:%M:%S")
         tag = "AI(离线)" if offline else "AI"
+        mid = self._next_msg_id
+        self._next_msg_id += 1
         self.ai_chat.append(
             f'<p style="color:#44ccff;font-weight:700;">[{now}] {tag}:</p>'
             f'<p style="color:#ccaaff;">{text}</p>'
+            f'{self._msg_action_row(mid, text)}'
         )
 
     # ─── 流式输出方法 ───
@@ -972,7 +1146,9 @@ class AIChatWindow(QWidget):
         cursor.movePosition(cursor.StartOfBlock, cursor.KeepAnchor)
         cursor.removeSelectedText()
         escaped = full_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
-        cursor.insertHtml(f'<p style="color:#ccaaff;">{escaped}</p>')
+        mid = self._next_msg_id
+        self._next_msg_id += 1
+        cursor.insertHtml(f'<p style="color:#ccaaff;">{escaped}</p>{self._msg_action_row(mid, full_text)}')
         self._stream_buffer = ""
         # 消息跟踪 + 增量保存
         self._messages.append({"role": "assistant", "content": full_text})
@@ -1161,7 +1337,7 @@ class AIChatWindow(QWidget):
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
             self.ai_chat.setStyleSheet("""
-                QTextEdit {
+                QTextBrowser {
                     background: rgba(20,10,40,230); color: #bb99dd;
                     border: 2px dashed rgba(255,170,80,180); border-radius: 10px;
                     padding: 12px; font-size: 12px; line-height: 1.6;
@@ -1170,7 +1346,7 @@ class AIChatWindow(QWidget):
 
     def _drop_event(self, event: QDropEvent):
         self.ai_chat.setStyleSheet("""
-            QTextEdit {
+            QTextBrowser {
                 background: rgba(8,4,16,230); color: #bb99dd;
                 border: 1px solid rgba(170,80,255,35); border-radius: 10px;
                 padding: 12px; font-size: 12px; line-height: 1.6;

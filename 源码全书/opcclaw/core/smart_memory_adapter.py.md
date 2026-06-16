@@ -1,6 +1,6 @@
 # `opcclaw/core/smart_memory_adapter.py`
 
-> 路径：`opcclaw/core/smart_memory_adapter.py` | 行数：456
+> 路径：`opcclaw/core/smart_memory_adapter.py` | 行数：464
 
 
 ---
@@ -174,6 +174,14 @@ class SmartMemoryStore:
     def delete_session(self, session_id: str) -> bool:
         """删除会话（旧版）"""
         return self._legacy.delete_session(session_id)
+
+    def rename_session(self, session_id: str, new_title: str) -> bool:
+        """重命名会话（旧版）"""
+        return self._legacy.rename_session(session_id, new_title)
+
+    def toggle_pin_session(self, session_id: str) -> bool:
+        """置顶/取消置顶会话（旧版）。返回 True=已置顶, False=已取消"""
+        return self._legacy.toggle_pin_session(session_id)
 
     def read_memory(self, name: str) -> str:
         """读取记忆（旧版）"""

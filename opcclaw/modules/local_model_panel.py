@@ -55,8 +55,6 @@ class LocalModelPanel(QWidget):
         self.ollama_model = QComboBox()
         self.ollama_model.setEditable(True)
         self.ollama_model.setMinimumWidth(200)
-        self.ollama_model.addItems(["qwen2.5:7b", "qwen2.5:14b", "deepseek-r1:8b",
-                                     "llama3.1:8b", "mistral:7b", "gemma2:9b"])
         ollama_row.addWidget(QLabel("模型:"))
         ollama_row.addWidget(self.ollama_model, stretch=1)
 
@@ -64,6 +62,10 @@ class LocalModelPanel(QWidget):
         self.ollama_url.setMinimumHeight(32)
         ollama_row.addWidget(QLabel("地址:"))
         ollama_row.addWidget(self.ollama_url)
+
+        refresh_ollama_btn = _styled_btn("刷新", COLORS["primary"])
+        refresh_ollama_btn.clicked.connect(self._refresh_ollama_models)
+        ollama_row.addWidget(refresh_ollama_btn)
 
         ollama_btn = _styled_btn("连接 Ollama", COLORS["success"])
         ollama_btn.clicked.connect(self._connect_ollama)
@@ -143,6 +145,8 @@ class LocalModelPanel(QWidget):
         self.custom_url = custom_url
         self.custom_model = custom_model
         self._refresh()
+        # 初始化时自动从 Ollama 拉取已安装模型列表
+        self._refresh_ollama_models()
 
     def _connect_ollama(self):
         self._add_local("Ollama", self.ollama_url.text().strip(),
@@ -229,3 +233,27 @@ class LocalModelPanel(QWidget):
             self.config.remove_provider("local", pid)
             self._refresh()
             self.providers_changed.emit()
+
+    def _refresh_ollama_models(self):
+        """从 Ollama API 动态获取已安装的模型列表"""
+        import urllib.request
+        import json
+
+        current_text = self.ollama_model.currentText()
+        self.ollama_model.clear()
+
+        try:
+            url = "http://localhost:11434/api/tags"
+            req = urllib.request.Request(url)
+            with urllib.request.urlopen(req, timeout=3) as resp:
+                data = json.loads(resp.read().decode())
+                models = [m["name"] for m in data.get("models", [])]
+            if models:
+                self.ollama_model.addItems(models)
+                idx = self.ollama_model.findText(current_text)
+                if idx >= 0:
+                    self.ollama_model.setCurrentIndex(idx)
+            else:
+                self.ollama_model.addItem("(未找到模型)")
+        except Exception:
+            self.ollama_model.addItem("(Ollama 未运行)")

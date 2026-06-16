@@ -24,7 +24,7 @@ class ModelConfig:
     base_url: str = "http://localhost:11434"
     model_name: str = "qwen2.5:7b-64k"
     temperature: float = 0.7
-    max_tokens: int = 2048
+    max_tokens: int = 262144
     extra_headers: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:

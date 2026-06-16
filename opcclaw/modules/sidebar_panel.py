@@ -2,11 +2,29 @@
 OPCclaw - 侧栏导航（含对话列表）
 """
 
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel, QListWidget, QListWidgetItem, QHBoxLayout, QWidget
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel, QListWidget, QListWidgetItem, QHBoxLayout, QWidget, QApplication
+from PyQt5.QtCore import Qt, pyqtSignal, QEvent, QPointF
+from PyQt5.QtGui import QFont, QMouseEvent
 
 from ._shared import COLORS
+
+
+class SessionListWidget(QListWidget):
+    """QListWidget 子类：点击嵌入按钮时不触发 itemClicked"""
+
+    def event(self, e):
+        """拦截鼠标事件，如落在 QPushButton 上则转发给按钮，避免触发 itemClicked"""
+        if e.type() in (QEvent.MouseButtonPress, QEvent.MouseButtonRelease, QEvent.MouseButtonDblClick):
+            child = self.childAt(e.pos())
+            if isinstance(child, QPushButton):
+                local = child.mapFrom(self, e.pos())
+                new_e = QMouseEvent(
+                    e.type(), local,
+                    e.windowPos(), e.screenPos(),
+                    e.button(), e.buttons(), e.modifiers(),
+                )
+                return QApplication.sendEvent(child, new_e)
+        return super().event(e)
 
 
 class Sidebar(QFrame):
@@ -110,7 +128,7 @@ class Sidebar(QFrame):
         layout.addLayout(session_header)
 
         # 对话 QListWidget
-        self._session_list = QListWidget()
+        self._session_list = SessionListWidget()
         self._session_list.setStyleSheet(f"""
             QListWidget {{
                 background: transparent;
@@ -162,7 +180,12 @@ class Sidebar(QFrame):
         """从外部推送会话列表，sessions 为 [{'id': str, 'updated_at': str, ...}]"""
         print(f"[SIDEBAR] set_sessions: {len(sessions)} sessions, current={current_id}")
         self._session_list.blockSignals(True)
-        self._session_list.clear()
+        # Qt 缺陷：clear() 不自动删除 setItemWidget 设置的 widget，导致泄漏和点击失效
+        # 必须先逐个 removeItemWidget，再清空列表
+        while self._session_list.count():
+            item = self._session_list.takeItem(0)
+            if item:
+                self._session_list.removeItemWidget(item)
         self._session_items.clear()
         self._current_session_id = current_id
         self._debug_banner.setText(f" SIDEBAR v2 [{len(sessions)} sessions]" if sessions else " SIDEBAR v2 [EMPTY!]")
@@ -239,7 +262,7 @@ class Sidebar(QFrame):
                 border-radius: 3px;
             }}
         """)
-        del_btn.clicked.connect(lambda: self.session_delete_requested.emit(sid))
+        del_btn.clicked.connect(lambda checked, s=sid: self.session_delete_requested.emit(s))
         layout.addWidget(del_btn)
 
         return widget

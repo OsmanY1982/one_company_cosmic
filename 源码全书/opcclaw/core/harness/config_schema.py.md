@@ -46,7 +46,7 @@ class ModelConfig:
     """模型配置"""
     model_name: str = "gpt-4o"        # 模型名
     temperature: float = 0.7          # 温度
-    max_tokens: int = 8192            # 最大输出 token
+    max_tokens: int = 262144           # 最大输出 token
 
     def validate(self) -> List[str]:
         errors = []

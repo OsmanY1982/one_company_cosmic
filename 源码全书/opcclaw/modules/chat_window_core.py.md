@@ -1,6 +1,6 @@
 # `opcclaw/modules/chat_window_core.py`
 
-> 路径：`opcclaw/modules/chat_window_core.py` | 行数：1693
+> 路径：`opcclaw/modules/chat_window_core.py` | 行数：1739
 
 
 ---
@@ -18,7 +18,7 @@ from typing import Optional, Union
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton,
     QLabel, QFrame, QScrollArea, QApplication, QFileDialog,
-    QComboBox, QMessageBox, QStackedWidget, QCheckBox, QGroupBox,
+    QComboBox, QMessageBox, QStackedWidget, QCheckBox, QGroupBox, QDialog,
 )
 from PyQt5.QtCore import (
     Qt, QThread, pyqtSignal, QTimer, QEvent,
@@ -191,6 +191,8 @@ class ChatWindow(QWidget):
         
         # ── Token 统计 ──
         self._session_tokens = {"prompt": 0, "completion": 0, "total": 0}  # 当前会话累计
+        self._deleting = False  # 删除操作进行中，阻塞 itemClicked 连锁
+        self._session_cleared = False  # 当前会话已清屏，禁止切换时写回非空消息
         self._token_label: QLabel = None  # Token 显示标签
 
         # ── 语音功能 ──
@@ -1346,6 +1348,8 @@ class ChatWindow(QWidget):
         text = self.input_field.toPlainText().strip()
         if not text:
             return
+        # 清屏后首次发消息：清除标记，后续会话保存恢复正常
+        self._session_cleared = False
         if not self.engine:
             self._add_message("⚠️ 请先在侧栏配置 LLM 模型 (云端或本地)", "error")
             return
@@ -1471,9 +1475,10 @@ class ChatWindow(QWidget):
 
     def _on_new_session(self):
         """创建新会话"""
-        # 先保存当前会话
-        if self.engine:
+        # 先保存当前会话（清屏或删除操作中跳过）
+        if self.engine and not self._session_cleared and not self._deleting:
             self.memory_store.save_session(self.engine.get_history(), self._session_id)
+        self._session_cleared = False
         # 切换到新会话
         self._session_id = self._gen_session_id()
         self._save_last_session(self._session_id)
@@ -1497,33 +1502,70 @@ class ChatWindow(QWidget):
 
     def _on_session_selected(self, session_id: str):
         """侧边栏选中会话回调"""
+        if self._deleting:
+            return
         if not session_id or session_id == self._session_id:
+            return
+        # 防止切换到已被并发删除的会话（itemClicked 在 del 按钮点击时也会触发）
+        existing = self.memory_store.list_sessions()
+        existing_ids = {s["id"] for s in existing}
+        if session_id not in existing_ids:
             return
         self._switch_to_session(session_id)
 
     def _on_session_delete(self, session_id: str):
         """侧边栏删除会话回调"""
-        reply = QMessageBox.question(
-            self, "删除确认",
-            f"确定要删除会话 {session_id} 吗？\n此操作不可撤销。",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No,
-        )
-        if reply != QMessageBox.Yes:
-            return
+        # 必须在弹窗之前设标记——QDialog.exec() 的嵌套事件循环会处理 itemClicked 信号
+        self._deleting = True
+        try:
+            # 自定义暗色确认弹窗（QMessageBox 在 macOS 暗色主题下显示为黑片）
+            dlg = QDialog(self)
+            dlg.setWindowTitle("删除确认")
+            dlg.setFixedSize(400, 160)
+            dlg.setAttribute(Qt.WA_StyledBackground, True)
+            dlg.setModal(True)
+            dlg.setStyleSheet("""
+                QDialog { background: #1e1e3a; border: 1px solid #3a3a5c; border-radius: 8px; }
+                QLabel { color: #ccccdd; font-size: 14px; }
+                QPushButton { padding: 6px 20px; border-radius: 4px; font-size: 13px; }
+                QPushButton#confirm_btn { background: #c0392b; color: white; }
+                QPushButton#confirm_btn:hover { background: #e74c3c; }
+                QPushButton#cancel_btn { background: #3a3a5c; color: #ccccdd; }
+                QPushButton#cancel_btn:hover { background: #4a4a6c; }
+            """)
 
-        self.memory_store.delete_session(session_id)
+            layout = QVBoxLayout(dlg)
+            label = QLabel(f"确定要删除会话吗？\n{session_id}\n此操作不可撤销。")
+            label.setWordWrap(True)
+            layout.addWidget(label)
 
-        # 如果删除的是当前会话，切换到第一个可用会话或新建
-        if session_id == self._session_id:
-            sessions = self.memory_store.list_sessions()
-            if sessions:
-                next_id = sessions[0]["id"]
-                self._switch_to_session(next_id)
-            else:
-                self._on_new_session()
-        else:
+            btn_layout = QHBoxLayout()
+            btn_layout.addStretch()
+            cancel_btn = QPushButton("取消")
+            cancel_btn.setObjectName("cancel_btn")
+            cancel_btn.clicked.connect(dlg.reject)
+            confirm_btn = QPushButton("确认删除")
+            confirm_btn.setObjectName("confirm_btn")
+            confirm_btn.clicked.connect(dlg.accept)
+            btn_layout.addWidget(cancel_btn)
+            btn_layout.addWidget(confirm_btn)
+            layout.addLayout(btn_layout)
+
+            if dlg.exec_() != QDialog.Accepted:
+                return
+
+            self.memory_store.delete_session(session_id)
+            # 如果删除的是当前会话，切换到第一个可用会话或新建
+            if session_id == self._session_id:
+                sessions = self.memory_store.list_sessions()
+                if sessions:
+                    next_id = sessions[0]["id"]
+                    self._switch_to_session(next_id)
+                else:
+                    self._on_new_session()
             self._refresh_sessions()
+        finally:
+            self._deleting = False
 
     def _on_session_copy(self, session_id: str):
         """复制会话：读源会话消息 → 写入新 ID → 刷新列表"""
@@ -1564,9 +1606,10 @@ class ChatWindow(QWidget):
 
     def _switch_to_session(self, new_id: str):
         """切换会话核心逻辑"""
-        # 保存当前会话
-        if self.engine:
+        # 保存当前会话（清屏或删除操作中跳过，避免写回无效数据）
+        if self.engine and not self._session_cleared and not self._deleting:
             self.memory_store.save_session(self.engine.get_history(), self._session_id)
+        self._session_cleared = False
         # 切换
         self._session_id = new_id
         self._save_last_session(self._session_id)
@@ -1616,6 +1659,9 @@ class ChatWindow(QWidget):
             self._clear_chat_messages()
             if self.engine:
                 self.engine.reset()
+                # engine.reset() 已保存空消息，但 initialize_session() 会给 self.messages 加系统消息。
+                # 标记此会话已清屏，_switch_to_session 在切换前不再重新保存非空内容。
+                self._session_cleared = True
             self._add_message("🧹 对话已清空", "tool")
 
     def _set_quick_btns_enabled(self, enabled: bool):
@@ -1685,8 +1731,8 @@ class ChatWindow(QWidget):
                 self._voice_manager.stop_listening()
             except Exception:
                 pass
-        # 2. 保存当前会话
-        if self.engine and self.memory_store:
+        # 2. 保存当前会话（已清屏的跳过）
+        if self.engine and self.memory_store and not self._session_cleared:
             try:
                 self.memory_store.save_session(self.engine.get_history(), self._session_id)
                 self._save_last_session(self._session_id)

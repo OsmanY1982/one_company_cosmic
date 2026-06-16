@@ -103,6 +103,11 @@ class VoiceManager(QObject):
         except ImportError:
             pass
 
+        # macOS 原生 say 命令
+        import shutil
+        if shutil.which("say"):
+            return True
+
         return False
 
     def _check_stt(self) -> bool:
@@ -195,19 +200,33 @@ class VoiceManager(QObject):
             engine = pyttsx3.init()
             engine.say(text)
             engine.runAndWait()
+            return
         except Exception as e1:
-            try:
-                # 回退到 edge-tts
-                import asyncio
-                import edge_tts
+            pass
 
-                async def _speak():
-                    communicate = edge_tts.Communicate(text, "zh-CN-XiaoxiaoNeural")
-                    await communicate.save(tempfile.mktemp(suffix=".mp3"))
+        try:
+            # 回退到 edge-tts
+            import asyncio
+            import edge_tts
 
-                asyncio.run(_speak())
-            except Exception as e2:
-                self.tts_error.emit(f"语音合成失败: {e1}, {e2}")
+            async def _speak():
+                communicate = edge_tts.Communicate(text, "zh-CN-XiaoxiaoNeural")
+                await communicate.save(tempfile.mktemp(suffix=".mp3"))
+
+            asyncio.run(_speak())
+            return
+        except Exception as e2:
+            pass
+
+        try:
+            # macOS 原生 say 命令（通过 stdin 传文本避免命令注入）
+            import subprocess
+            proc = subprocess.Popen(
+                ["say"], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            )
+            proc.communicate(input=text.encode("utf-8"), timeout=60)
+        except Exception as e3:
+            self.tts_error.emit(f"语音合成失败: {e3}")
         finally:
             self._is_speaking = False
 

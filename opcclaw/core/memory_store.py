@@ -105,6 +105,7 @@ class MemoryStore:
                 "id": data.get("session_id", session_id),
                 "title": data.get("title", "Untitled"),
                 "tags": data.get("tags", []),
+                "pinned": data.get("pinned", False),
                 "created_at": data.get("created_at", ""),
                 "updated_at": data.get("updated_at", ""),
                 "message_count": data.get("message_count", 0),
@@ -122,7 +123,8 @@ class MemoryStore:
                 info = self.get_session_info(fname[:-5])
                 if info:
                     sessions.append(info)
-        return sorted(sessions, key=lambda x: x.get("updated_at", ""), reverse=True)
+        sessions.sort(key=lambda x: (x.get("pinned", False), x.get("updated_at", "")), reverse=True)
+        return sessions
 
     def delete_session(self, session_id: str) -> bool:
         """Delete a session file."""
@@ -148,6 +150,24 @@ class MemoryStore:
             return True
         except Exception as e:
             logger.error(f"Failed to rename session {session_id}: {e}")
+            return False
+
+    def toggle_pin_session(self, session_id: str) -> bool:
+        """Toggle the pinned state of a session. Returns True if now pinned, False if unpinned."""
+        filepath = os.path.join(self.sessions_dir, f"{session_id}.json")
+        if not os.path.exists(filepath):
+            return False
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            current = data.get("pinned", False)
+            data["pinned"] = not current
+            data["updated_at"] = datetime.now().isoformat()
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            return not current
+        except Exception as e:
+            logger.error(f"Failed to toggle pin session {session_id}: {e}")
             return False
 
     def tag_session(self, session_id: str, tags: List[str]) -> bool:

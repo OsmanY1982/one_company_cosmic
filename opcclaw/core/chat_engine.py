@@ -16,6 +16,7 @@ class ChatEngine(QObject):
     on_tool_result = pyqtSignal(str, bool, str)
     MAX_TOOL_ROUNDS = 5
     MAX_CONTEXT_MSGS = 40
+    _PROMPT_TOOLS_MARKER = '<!--PROMPT_TOOLS_INJECTED-->'
 
     def __init__(self, backend, registry=None, system_prompt='', skill_loader=None,
                  memory_store=None, auto_save=True, session_id='default'):
@@ -228,24 +229,52 @@ class ChatEngine(QObject):
         
         # 强制使用工具：如果用户消息包含操作关键词，强制 tool_choice="required"
         force_tools = self._should_force_tools(user_message)
+        use_prompt_tools = False  # True: LLM 不支持 native function calling，用 prompt 方式驱动工具
         
         for _ in range(self.MAX_TOOL_ROUNDS):
             try:
-                if force_tools and tools:
+                if use_prompt_tools:
+                    response = self.backend.chat(self.messages, None)
+                elif force_tools and tools:
                     response = self.backend.chat(self.messages, tools, tool_choice="required")
                 else:
                     response = self.backend.chat(self.messages, tools)
             except Exception as e:
                 logger.error(f'LLM API failed: {e}', exc_info=True)
+                self._remove_prompt_tools()
                 self.messages.append({'role': 'assistant', 'content': f'Sorry, AI service unavailable: {e}'})
                 self._maybe_save()
                 if self.obs:
                     self.obs.trace_end()
                 return f'Sorry, AI service unavailable: {e}'
+
+            # ── Prompt-based 工具调用路径 ──
+            if use_prompt_tools:
+                visible_text, parsed_tc = self._parse_prompt_tool_calls(response.content or '')
+                if parsed_tc:
+                    # LLM 调用了工具：执行并追加到消息历史
+                    self.messages.append({'role': 'assistant', 'content': visible_text or None})
+                    exec_results = self._execute_parsed_tool_calls(parsed_tc)
+                    for ptc, result in exec_results:
+                        tool_msg = {'role': 'tool', 'tool_call_id': ptc['id'],
+                            'content': json.dumps(result, ensure_ascii=False)}
+                        self.messages.append(tool_msg)
+                    continue  # 下一轮让 LLM 看到工具结果后继续
+                # 没有工具调用，最终回复
+                final_text = visible_text or response.content or ''
+                self.messages.append({'role': 'assistant', 'content': final_text})
+                self._remove_prompt_tools()
+                self._maybe_save()
+                if self.obs:
+                    self.obs.trace_end()
+                return final_text
+
+            # ── 原生 Function Calling 路径 ──
             if not response.tool_calls:
-                # 如果强制使用工具但 LLM 没调用，添加提示并重试
+                # 本地模型可能不支持 native function calling：降级到 prompt-based
                 if force_tools and tools:
-                    self.messages.append({'role': 'system', 'content': '你必须使用工具来完成用户的请求。不要只是聊天，请调用合适的工具。'})
+                    use_prompt_tools = True
+                    self._inject_prompt_tools(tools)
                     continue
                 assistant_msg = response.content or ''
                 self.messages.append({'role': 'assistant', 'content': assistant_msg})
@@ -279,11 +308,102 @@ class ChatEngine(QObject):
                     self.messages.append({'role': 'tool', 'tool_call_id': tc.id,
                         'content': json.dumps({'success': False, 'error': 'Result cannot be serialized'}, ensure_ascii=False)})
             self.messages.append(assistant_msg)
+        self._remove_prompt_tools()
         if self.auto_save and self.memory_store:
             self.memory_store.save_session(self.messages, self.session_id)
         if self.obs:
             self.obs.trace_end()
         return 'Sorry, processing encountered a loop. Please try a different approach.'
+
+    # ── Prompt-based Tool Calling (本地模型降级) ──
+
+    def _generate_prompt_tools_desc(self, tools: list) -> str:
+        """为 prompt-based tool calling 生成工具描述和 XML 格式指令"""
+        tool_descs = []
+        for t in tools:
+            func = t.get('function', {})
+            name = func.get('name', '?')
+            desc = func.get('description', '')
+            params = func.get('parameters', {})
+            tool_descs.append(f'- {name}: {desc}')
+            for pname, pinfo in params.get('properties', {}).items():
+                required = ' [必填]' if pname in params.get('required', []) else ''
+                tool_descs.append(f'    {pname}{required}: {pinfo.get("description", "")}')
+        desc_block = '\n'.join(tool_descs)
+        return (
+            f'你需要使用工具来完成任务。不要只是聊天或给建议，必须调用工具执行操作。\n'
+            f'要调用工具，在回复中插入以下格式的 XML 块：\n'
+            f'\n'
+            f'<tool>\n'
+            f'{{"name": "工具名", "arguments": {{"参数名": "参数值"}}}}\n'
+            f'</tool>\n'
+            f'\n'
+            f'一次可以调用多个工具，使用多个 <tool> 块。不要在 <tool> 块之外输出工具调用指令。\n'
+            f'\n'
+            f'可用工具：\n'
+            f'{desc_block}\n'
+            f'\n'
+            f'{self._PROMPT_TOOLS_MARKER}'
+        )
+
+    def _parse_prompt_tool_calls(self, text: str) -> tuple:
+        """从 LLM 回复中解析 <tool> XML 块，返回 (visible_text, tool_calls_list)。
+        tool_calls_list 中每个元素为 {'id': str, 'name': str, 'arguments': dict}"""
+        import re as _re
+        tool_calls = []
+        def _replace_tool(match):
+            content = match.group(1).strip()
+            try:
+                parsed = json.loads(content)
+                if isinstance(parsed, dict):
+                    parsed = [parsed]
+                for item in parsed:
+                    tc_id = f'ptc_{len(tool_calls):04d}'
+                    tool_calls.append({
+                        'id': tc_id,
+                        'name': item.get('name', ''),
+                        'arguments': item.get('arguments', {}),
+                    })
+            except json.JSONDecodeError:
+                pass
+            return ''
+        visible = _re.sub(r'<tool>\s*(.*?)\s*</tool>', _replace_tool, text, flags=_re.DOTALL).strip()
+        return visible, tool_calls
+
+    def _inject_prompt_tools(self, tools: list) -> None:
+        """在消息列表末尾注入 prompt-based 工具描述（带标记，可追踪移除）"""
+        desc = self._generate_prompt_tools_desc(tools)
+        self.messages.append({'role': 'system', 'content': desc})
+
+    def _remove_prompt_tools(self) -> int:
+        """移除所有带 _PROMPT_TOOLS_MARKER 标记的系统消息，返回移除数量"""
+        removed = 0
+        self.messages = [
+            m for m in self.messages
+            if not (m['role'] == 'system' and self._PROMPT_TOOLS_MARKER in m.get('content', ''))
+        ]
+        # 实际 removed count 由前后长度差算出
+        return removed
+
+    def _execute_parsed_tool_calls(self, parsed_tool_calls: list) -> list:
+        """执行解析出的工具调用，返回 (assistant_msg_parts, tool_result_msgs) 的元组列表。
+        同时发射 on_tool_start / on_tool_result 信号。"""
+        results = []
+        for ptc in parsed_tool_calls:
+            self.on_tool_start.emit(ptc['name'], ptc['arguments'])
+            tc = ToolCall(id=ptc['id'], name=ptc['name'], arguments=ptc['arguments'])
+            try:
+                result = self.registry.execute(tc)
+            except Exception as e:
+                logger.error(f'Tool failed {ptc["name"]}: {e}', exc_info=True)
+                result = {'success': False, 'error': f'Tool error: {e}'}
+            self.on_tool_result.emit(
+                ptc['name'],
+                result.get('success', False),
+                str(result.get('result', result.get('error', '')))[:200],
+            )
+            results.append((ptc, result))
+        return results
 
     def _should_force_tools(self, user_message: str) -> bool:
         """判断是否应该强制使用工具。跳过纯能力询问（以"吗？"/"吗"/"？"结尾的寒暄句）"""
@@ -319,6 +439,7 @@ class ChatEngine(QObject):
         self._save_counter += 1
         tools = self.registry.to_openai_tools() if self.registry.count() > 0 else None
         force_tools = self._should_force_tools(user_message)
+        use_prompt_tools = False  # True: LLM 不支持 native function calling
         
         for round_idx in range(self.MAX_TOOL_ROUNDS):
             if self.on_thinking:
@@ -326,19 +447,51 @@ class ChatEngine(QObject):
             if tools:
                 try:
                     import datetime, sys
-                    print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] ChatEngine.chat_stream round={round_idx} calling backend.chat()...", flush=True)
-                    if force_tools:
+                    if use_prompt_tools:
+                        check_response = self.backend.chat(self.messages, None)
+                    elif force_tools:
                         check_response = self.backend.chat(self.messages, tools, tool_choice="required")
                     else:
                         check_response = self.backend.chat(self.messages, tools)
-                    print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] ChatEngine.chat_stream round={round_idx} backend.chat() returned — content_len={len(check_response.content or '')}, tool_calls={'YES' if check_response.tool_calls else 'NO'}", flush=True)
+                    print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] ChatEngine.chat_stream round={round_idx} backend.chat() returned — content_len={len(check_response.content or '')}, tool_calls={'YES' if check_response.tool_calls else 'NO'}, prompt_mode={use_prompt_tools}", flush=True)
                 except Exception as e:
                     logger.error(f'LLM API failed: {e}', exc_info=True)
+                    self._remove_prompt_tools()
                     self._maybe_save()
                     if self.obs:
                         self.obs.trace_end()
                     yield '\nSorry, AI service unavailable: {}\n'.format(e)
                     return
+
+                # ── Prompt-based 工具调用路径 ──
+                if use_prompt_tools:
+                    visible_text, parsed_tc = self._parse_prompt_tool_calls(check_response.content or '')
+                    if parsed_tc:
+                        # LLM 调用了工具
+                        self.messages.append({'role': 'assistant', 'content': visible_text or None})
+                        yield (visible_text + '\n') if visible_text else '\n'
+                        exec_results = self._execute_parsed_tool_calls(parsed_tc)
+                        for ptc, result in exec_results:
+                            self.on_tool_start.emit(ptc['name'], ptc['arguments'])
+                            status = 'OK' if result.get('success') else 'Failed'
+                            yield f'\n[{ptc["name"]}: {status}]\n'
+                            tool_msg = {'role': 'tool', 'tool_call_id': ptc['id'],
+                                'content': json.dumps(result, ensure_ascii=False)}
+                            self.messages.append(tool_msg)
+                        continue  # 下一轮让 LLM 看到工具结果后继续
+                    # 没有工具调用，最终回复
+                    final_text = visible_text or check_response.content or ''
+                    self.messages.append({'role': 'assistant', 'content': final_text})
+                    self._remove_prompt_tools()
+                    self._maybe_save()
+                    if self.obs:
+                        self.obs.trace_end()
+                    yield final_text
+                    if check_response.usage:
+                        yield json.dumps({'usage': check_response.usage}, ensure_ascii=False)
+                    return
+
+                # ── 原生 Function Calling 路径 ──
                 if check_response.tool_calls:
                     for tc in check_response.tool_calls:
                         self.on_tool_start.emit(tc.name, tc.arguments)
@@ -364,15 +517,21 @@ class ChatEngine(QObject):
                         except (TypeError, ValueError) as e:
                             logger.warning(f'Serialization failed: {e}')
                     continue
-                return_text = check_response.content or ''
-                self.messages.append({'role': 'assistant', 'content': return_text})
-                self._maybe_save()
-                if self.obs:
-                    self.obs.trace_end()
-                yield return_text
-                if check_response.usage:
-                    yield json.dumps({'usage': check_response.usage}, ensure_ascii=False)
-                return
+                # 没有 tool_calls：如果不是强制工具模式则直接返回，否则降级到 prompt-based
+                if not force_tools:
+                    return_text = check_response.content or ''
+                    self.messages.append({'role': 'assistant', 'content': return_text})
+                    self._maybe_save()
+                    if self.obs:
+                        self.obs.trace_end()
+                    yield return_text
+                    if check_response.usage:
+                        yield json.dumps({'usage': check_response.usage}, ensure_ascii=False)
+                    return
+                # 降级到 prompt-based
+                use_prompt_tools = True
+                self._inject_prompt_tools(tools)
+                continue
             try:
                 accumulated = ''
                 last_usage = {}
@@ -408,6 +567,7 @@ class ChatEngine(QObject):
                     self.obs.trace_end()
                 yield f'\nSorry, AI service unavailable: {e}\n'
                 return
+        self._remove_prompt_tools()
         self._maybe_save()
         self._trim_context()
         yield '\n[Max processing rounds reached, please simplify your question]'

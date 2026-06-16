@@ -1,5 +1,5 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-16 06:01
+> 自动生成于 2026-06-16 20:51
 > 共 648 个模块，每个 `.py` 文件独立为一个文档
 
 ---
@@ -66,10 +66,8 @@
 │   └── voice.py
 ├── D:/
 │   └── one_company_desktop/
-│       ├── data/
-│       │   ├── sync/
-│       └── opcclaw/
-│           └── skills/
+│       └── data/
+│           ├── sync/
 ├── data/
 │   ├── drafts/
 │   ├── enhanced/
@@ -1048,6 +1046,7 @@
 │   ├── start_opcclaw.py
 │   ├── utils.py
 │   ├── verify_sync.py
+├── rules_project/
 ├── tests/
 │   └── test_semantic_search.py
 ├── gen_book.py

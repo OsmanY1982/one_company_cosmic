@@ -1,6 +1,6 @@
 # `modules/intelligence/agent_bridge.py`
 
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：1875
+> 路径：`modules/intelligence/agent_bridge.py` | 行数：1889
 
 
 ---
@@ -600,6 +600,20 @@ class AgentBridge:
             return self._memory.list_sessions()
         except Exception:
             return []
+
+    def rename_session(self, session_id: str, new_title: str) -> bool:
+        """重命名会话"""
+        try:
+            return self._memory.rename_session(session_id, new_title)
+        except Exception:
+            return False
+
+    def toggle_pin_session(self, session_id: str) -> bool:
+        """置顶/取消置顶会话。返回 True=已置顶, False=已取消"""
+        try:
+            return self._memory.toggle_pin_session(session_id)
+        except Exception:
+            return False
 
     # ═══════════════════════════════════════════
     # 模型管理（统一配置入口，替代分散的 llm_config.json）

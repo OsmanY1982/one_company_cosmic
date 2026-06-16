@@ -1,6 +1,6 @@
 # `modules/intelligence/opcclaw_floating_planet.py`
 
-> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1484
+> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：1480
 
 
 ---
@@ -132,21 +132,17 @@ class FloatingPlanet(QWidget):
         self._wander_timer = 0           # 漫游计时器（帧计数）
         self._next_wander = 120          # 下次随机扰动的帧间隔（初始值，后续按 10-25s 随机）
 
-        # ── 语音接口 ──
-        self._voice = VoiceInterface(stt_engine="whisper")
-        print(f"[FloatingPlanet] VoiceInterface stt={self._voice.stt_engine}, tts={self._voice.tts_engine}")
-        self._voice.recognition_result.connect(self._on_voice_result)
-        self._voice.recognition_status.connect(self._on_voice_status)
-        self._voice.error_occurred.connect(self._on_voice_error)
+        # ── 语音接口（延迟初始化，避免 TCC 崩溃） ──
+        self._voice = None
         self._last_voice_text = ""
-        self._voice_enabled = True  # 可动态禁用
-        self._voice_handlers_active = True  # 信号连接状态
+        self._voice_enabled = False  # 待 Info.plist 修复后启用
+        self._voice_handlers_active = False
 
         # 朗读进程
         self._speak_process = None  # 后台 say 朗读进程
 
         # ── 语音唤醒 ──
-        self._wake_word_mode = True        # 默认启用持续监听唤醒
+        self._wake_word_mode = False       # 临时禁用（TCC 权限未修复）
         self._wake_words = ["球球", "星仔", "球球在吗", "小助手", "助理"]
         self._wake_pending = False           # 已检测到唤醒词，等待命令
         self._exit_words = ["退出", "关闭", "再见", "拜拜", "睡觉", "休息", "退下"]
@@ -960,7 +956,7 @@ class FloatingPlanet(QWidget):
 
     def _enable_voice_handlers(self):
         """重新连接悬浮球的语音信号"""
-        if self._voice_handlers_active:
+        if self._voice_handlers_active or self._voice is None:
             return
         self._voice.recognition_result.connect(self._on_voice_result)
         self._voice.recognition_status.connect(self._on_voice_status)

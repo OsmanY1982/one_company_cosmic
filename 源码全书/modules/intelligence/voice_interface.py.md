@@ -1,6 +1,6 @@
 # `modules/intelligence/voice_interface.py`
 
-> 路径：`modules/intelligence/voice_interface.py` | 行数：403
+> 路径：`modules/intelligence/voice_interface.py` | 行数：407
 
 
 ---
@@ -90,7 +90,11 @@ class AppleSpeechRecognizer(QThread):
             native_format = input_node.outputFormatForBus_(bus)
 
             request = SFSpeechAudioBufferRecognitionRequest.alloc().init()
-            request.shouldReportPartialResults = True
+            # macOS 26+ 中 shouldReportPartialResults 为只读属性
+            try:
+                request.shouldReportPartialResults = True
+            except (AttributeError, Exception):
+                pass  # 新版 SDK 默认已启用部分结果
             request.requiresOnDeviceRecognition = recognizer.supportsOnDeviceRecognition()
 
             input_node.installTapOnBus_bufferSize_format_block_(
