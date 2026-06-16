@@ -144,6 +144,17 @@ class ChatSessionManager(QWidget):
             print(f"[ChatSessionManager] 加载会话列表失败: {e}")
             self._sessions = []
 
+    def set_sessions(self, sessions: list, current_id: str = ""):
+        """兼容 OPCclaw Sidebar 的推送式 API"""
+        self._sessions = sessions
+        self._refresh_list()
+        if current_id:
+            for i in range(self._list_widget.count()):
+                item = self._list_widget.item(i)
+                if item and item.data(Qt.UserRole) == current_id:
+                    self._list_widget.setCurrentItem(item)
+                    break
+
     def _refresh_list(self, filter_text: str = ""):
         """刷新列表显示"""
         self._list_widget.clear()

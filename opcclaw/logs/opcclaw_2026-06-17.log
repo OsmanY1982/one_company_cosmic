@@ -1757,3 +1757,8 @@ NameError: name 'QRectF' is not defined
 2026-06-17 01:38:24 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
 2026-06-17 01:57:17 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6179860480.
 2026-06-17 01:57:17 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 02:00:08 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6178713600.
+2026-06-17 02:00:08 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 02:02:49 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6178713600.
+2026-06-17 02:02:50 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 02:05:36 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)

@@ -364,6 +364,8 @@ class EnhancedChatWidget(QWidget):
                 tool_name = 'file_write'
             elif '浏览器' in message or '网页' in message:
                 tool_name = 'browser_navigate'
+            elif '爬虫' in message or '抓取' in message or '爬取' in message:
+                tool_name = 'web_scrape' if '批量' not in message else 'batch_scrape'
             elif '任务' in message or '定时' in message:
                 tool_name = 'schedule_task'
             elif '记忆' in message:
