@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (
     QListWidgetItem, QPushButton, QLineEdit, QLabel, QMenu,
     QMessageBox, QFileDialog, QDialog, QInputDialog,
 )
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtCore import pyqtSignal, Qt, QSize
 
 
 class ChatSessionManager(QWidget):
@@ -157,7 +157,13 @@ class ChatSessionManager(QWidget):
 
     def _refresh_list(self, filter_text: str = ""):
         """刷新列表显示"""
-        self._list_widget.clear()
+        # 必须先逐个 removeItemWidget，再清空列表。
+        # Qt 的 clear() 只删除 QListWidgetItem，不会自动清理 setItemWidget 设置的 QWidget，
+        # 导致孤立 widget 累积在 viewport 下，干扰后续 item 的鼠标事件和信号连接。
+        while self._list_widget.count():
+            item = self._list_widget.takeItem(0)
+            if item:
+                self._list_widget.removeItemWidget(item)
         filtered = self._sessions
         if filter_text:
             ft = filter_text.lower()
@@ -224,7 +230,10 @@ class ChatSessionManager(QWidget):
 
             item = QListWidgetItem()
             item.setData(Qt.UserRole, sid)
-            item.setSizeHint(row.sizeHint())
+            # 补偿样式表 QListWidget::item { padding: 8px 10px; } 的垂直 padding (8+8=16px)，
+            # 否则 row widget 的文本会被上下截断，只显示一半。
+            sh = row.sizeHint()
+            item.setSizeHint(QSize(sh.width(), sh.height() + 16))
             self._list_widget.addItem(item)
             self._list_widget.setItemWidget(item, row)
 
