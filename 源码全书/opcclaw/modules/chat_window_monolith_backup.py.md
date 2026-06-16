@@ -2194,7 +2194,7 @@ class ChatWindow(QWidget):
         )
         data_dir = os.path.join(project_root, "data")
         self.config = ConfigManager(data_dir)
-        self.memory_store = MemoryStore()
+        self.memory_store = MemoryStore(base_dir=os.path.expanduser("~/.opcclaw"))
         self.skill_loader = SkillLoader()
         self.registry = ToolRegistry()
 

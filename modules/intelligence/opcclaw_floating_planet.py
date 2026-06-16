@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
     QMessageBox, QSystemTrayIcon,
 )
 from PyQt5.QtCore import (
-    Qt, QTimer, QPoint, QRect, QSize, QPointF,
+    Qt, QTimer, QPoint, QRect, QSize, QPointF, QRectF,
     QPropertyAnimation, QEasingCurve, pyqtProperty,
     QThread, QObject, pyqtSignal,
 )
@@ -88,6 +88,10 @@ class FloatingPlanet(QWidget):
         self._current_size = self.SLEEP_SIZE
         self._target_size = self.SLEEP_SIZE
 
+        # 昵称
+        self._tooltip_text = "🌍 经典星球"
+        self.TOOLTIP_H = 26
+
         # 拖拽
         self._dragging = False
         self._drag_start = QPoint()
@@ -126,7 +130,7 @@ class FloatingPlanet(QWidget):
         # ── 语音接口（延迟初始化，避免 TCC 崩溃） ──
         self._voice = None
         self._last_voice_text = ""
-        self._voice_enabled = False  # 待 Info.plist 修复后启用
+        self._voice_enabled = True  # 启用语音接口
         self._voice_handlers_active = False
 
         # 朗读进程
@@ -168,7 +172,7 @@ class FloatingPlanet(QWidget):
         self._auto_switch_idx = 0
         self._auto_switch_timer = QTimer(self)
         self._auto_switch_timer.timeout.connect(self._auto_cycle_shape)
-        # self._auto_switch_timer.start(7000)  # DEBUG: 临时禁用以排查退出问题
+        self._auto_switch_timer.start(7000)  # 每7秒自动循环切换形态
 
         # 窗口配置 — 无边框置顶独立窗口
         self.setWindowFlags(
@@ -178,35 +182,22 @@ class FloatingPlanet(QWidget):
         )
         self.setAttribute(Qt.WA_TranslucentBackground)
 
-        # 初始位置：右下角
+        # 初始位置：右下角偏中
         screen = QApplication.primaryScreen()
         if screen:
             geom = screen.availableGeometry()
-            x = geom.right() - self.ACTIVE_SIZE - 30
-            y = geom.bottom() - self.ACTIVE_SIZE - 30
+            x = geom.right() - self.ACTIVE_SIZE - 80
+            y = geom.center().y() - self.ACTIVE_SIZE // 2
         else:
-            x, y = 1300, 700
+            x, y = 1300, 400
 
-        self.setGeometry(x, y, self.ACTIVE_SIZE, self.ACTIVE_SIZE)
+        self.setGeometry(x, y, self.ACTIVE_SIZE, self.ACTIVE_SIZE + self.TOOLTIP_H)
         self._apply_circular_mask()
 
         # 动画定时器
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
         self._timer.start(16)  # ~60fps (原 30ms → 16ms)
-
-        # 提示标签（休眠态悬浮显示）
-        self._tooltip = QLabel("opcclaw", self)
-        self._tooltip.setAlignment(Qt.AlignCenter)
-        self._tooltip.setStyleSheet(
-            "color: rgba(255,255,255,180); font-size: 10px; background: transparent;"
-        )
-        s = self._scaled_widget_size()
-        self._tooltip.setGeometry(0, s // 2 - 10, s, 20)
-        self._tooltip.setAttribute(Qt.WA_TransparentForMouseEvents)
-        self._tooltip.hide()
-
-
 
         # 默认启用语音唤醒
         if self._wake_word_mode:
@@ -217,6 +208,10 @@ class FloatingPlanet(QWidget):
         # 守护进程清理回调（由 planet_daemon.py 注入）
         self._daemon_cleanup = None
         self._cleanup_done = False
+
+        # 延迟初始化语音接口（避免 TCC 崩溃）
+        print("[FloatingPlanet] 3秒后将初始化语音接口...")
+        QTimer.singleShot(3000, self._init_voice_lazy)
 
     def _start_wake_on_init(self):
         """初始化时启动语音唤醒"""
@@ -238,9 +233,10 @@ class FloatingPlanet(QWidget):
         return max(16, int(self.ACTIVE_SIZE * self._scale_multiplier))
 
     def _apply_circular_mask(self):
-        """应用圆形裁剪区域"""
+        """应用圆形裁剪区域 + 下方文本区域"""
         s = self._scaled_widget_size()
         region = QRegion(0, 0, s, s, QRegion.Ellipse)
+        region = region.united(QRegion(0, s, s, self.TOOLTIP_H))
         self.setMask(region)
 
     # ── 动画 ──
@@ -277,7 +273,7 @@ class FloatingPlanet(QWidget):
                 geom = screen.availableGeometry()
                 s = self._scaled_widget_size()
                 left, top = geom.left(), geom.top()
-                right, bottom = geom.right() - s, geom.bottom() - s
+                right, bottom = geom.right() - s, geom.bottom() - s - self.TOOLTIP_H
 
                 if new_x < left:
                     new_x = left
@@ -324,16 +320,22 @@ class FloatingPlanet(QWidget):
         self.update()
 
     def _center_on_current_pos(self):
-        """保持窗口中心不变的情况下调整尺寸（含缩放倍数）"""
-        old_center = self.geometry().center()
+        """保持球体圆形中心不变的情况下调整尺寸（含缩放倍数）"""
+        old_s = self._scaled_widget_size()
+        circle_cx = self.x() + old_s // 2
+        circle_cy = self.y() + old_s // 2
         base_s = max(int(self._current_size), self.ACTIVE_SIZE)
         s = max(base_s, self._scaled_widget_size())
-        new_rect = QRect(0, 0, s, s)
-        new_rect.moveCenter(old_center)
-        self.setFixedSize(s, s)
+        new_rect = QRect(
+            circle_cx - s // 2,
+            circle_cy - s // 2,
+            s, s + self.TOOLTIP_H
+        )
+        self.setFixedSize(s, s + self.TOOLTIP_H)
         self.setGeometry(new_rect)
 
         region = QRegion(0, 0, s, s, QRegion.Ellipse)
+        region = region.united(QRegion(0, s, s, self.TOOLTIP_H))
         self.setMask(region)
 
     # ── 状态切换 ──
@@ -379,7 +381,8 @@ class FloatingPlanet(QWidget):
         if event.button() == Qt.LeftButton:
             # 优先检测外星人点击
             pos = event.pos()
-            cx, cy = self.width() / 2, self.height() / 2
+            s = self._scaled_widget_size()
+            cx, cy = s / 2, s / 2
             radius = self._current_size / 2
             hit_alien = self._check_alien_click(cx, cy, radius, pos.x(), pos.y())
             if hit_alien is not None:
@@ -648,15 +651,12 @@ class FloatingPlanet(QWidget):
         else:
             return
         name = SHAPE_MODES.get(key, {}).get("name", key)
-        self._tooltip.setText(f"opcclaw · {name}")
+        self._tooltip_text = name
         print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
 
         # 切换到外星人形态时语音自我介绍
-        if category == "alien" and self._voice:
-            try:
-                self._voice.speak(f"我是{name}")
-            except Exception:
-                pass
+        if category == "alien":
+            self._speak_alien(name, key)
 
     def _cycle_shape(self, direction: int):
         """在当前分类内循环切换形态（+1 下一个, -1 上一个）"""
@@ -914,13 +914,17 @@ class FloatingPlanet(QWidget):
         value = max(0.5, min(value, max_scale))
         if abs(self._scale_multiplier - value) < 0.01:
             return  # 没变，不操作
+        old_s = self._scaled_widget_size()  # 旧尺寸（更新前）
         self._scale_multiplier = value
-        # 重新设置窗口大小
-        old_center = self.geometry().center()
-        s = self._scaled_widget_size()
-        self.setFixedSize(s, s)
-        new_rect = QRect(0, 0, s, s)
-        new_rect.moveCenter(old_center)
+        s = self._scaled_widget_size()       # 新尺寸
+        circle_cx = self.x() + old_s // 2
+        circle_cy = self.y() + old_s // 2
+        self.setFixedSize(s, s + self.TOOLTIP_H)
+        new_rect = QRect(
+            circle_cx - s // 2,
+            circle_cy - s // 2,
+            s, s + self.TOOLTIP_H
+        )
         self.setGeometry(new_rect)
         self._apply_circular_mask()
         self.update()
@@ -1363,7 +1367,8 @@ class FloatingPlanet(QWidget):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
 
-        center = QPointF(self.width() / 2.0, self.height() / 2.0)
+        s = self._scaled_widget_size()
+        center = QPointF(s / 2.0, s / 2.0)
         r = self._current_size * self._scale_multiplier / 2
 
         # ── 悬停缩放 ──
@@ -1452,12 +1457,7 @@ class FloatingPlanet(QWidget):
         # 渲染形态：优先 shapes 系统，否则回退 planet_painter
         if self._shape_mode and self._shape_mode in SHAPE_PAINTERS:
             painter_fn = SHAPE_PAINTERS[self._shape_mode]
-            if self._shape_mode == "classic":
-                mode_name = SHAPE_MODES.get(self._shape_mode, {}).get("name", self._shape_mode)
-                painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0,
-                           style=self._style, label=mode_name)
-            else:
-                painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0)
+            painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0)
         else:
             paint_planet(p, center, scaled_r, self._style, hovered=self._hover,
                          anim_t=self._anim_t)
@@ -1472,9 +1472,89 @@ class FloatingPlanet(QWidget):
         # ── 外星人装饰 ──
         self._draw_aliens(p, center.x(), center.y(), scaled_r)
 
+        # ── 昵称文本（悬浮球底部下方）──
+        if self._tooltip_text:
+            s = self._scaled_widget_size()
+            tip_y = max(s, int(self._current_size)) + 4
+            p.setFont(QFont("PingFang SC", 9))
+            p.setPen(QColor(255, 255, 255, 180))
+            p.drawText(QRectF(0, tip_y, self.width(), self.TOOLTIP_H - 4),
+                       Qt.AlignCenter, self._tooltip_text)
+
         p.end()
 
 
 # ═══════════ AI 对话弹窗（内嵌） ═══════════
 
 
+
+    # ── 外星人个性语音 ──
+    ALIEN_VOICES = {
+        "alien":          ("Rocko", 200, "嘿嘿，"),       # 小绿人 → 粗犷男声 + 怪笑
+        "grey_alien":     ("Shelley", 190, "嘶——"),       # 灰人 → 气声女声
+        "reptilian":      ("Grandpa", 170, "嗯哼，"),      # 蜥蜴人 → 爷爷沙哑声
+        "energy_being":   ("Sandy", 220, "嗡嗡——"),        # 能量体 → 甜美快速女声
+        "crystal_alien":  ("Tingting", 200, "叮——"),       # 水晶 → 清脆婷婷
+        "octopus_alien":  ("Grandma", 160, "咕噜咕噜，"),   # 章鱼 → 奶奶悠闲声
+        "ghost_alien":    ("Shelley", 160, "呜——"),        # 幽灵 → 低沉Shelley
+        "jellyfish_alien":("Meijia", 190, "飘——"),         # 水母 → 美佳温柔声
+        "robot_alien":    ("Reed", 220, "哔——"),           # 机器人 → Reed快语速
+    }
+
+    def _speak_alien(self, name: str, key: str):
+        """外星人形态语音播报，每个种族有独特声音和口头禅"""
+        voice_info = self.ALIEN_VOICES.get(key)
+        if not voice_info:
+            voice_info = ("Flo", 180, "")
+        voice, rate, prefix = voice_info
+        text = f"{prefix}我是{name}"
+
+        import os
+        os.environ.pop("PYTHONUNBUFFERED", None)
+
+        try:
+            proc = subprocess.Popen(
+                ["say", "-v", voice, "-r", str(rate), text],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            # 非阻塞检查：1 秒后若进程已结束就读 stderr
+            def _check_result():
+                try:
+                    proc.wait(timeout=0.8)
+                    err = proc.stderr.read()
+                    if err:
+                        print(f"[FloatingPlanet] say stderr: {err.strip()}")
+                except subprocess.TimeoutExpired:
+                    pass  # 进程仍在运行，正常
+
+            import threading
+            threading.Thread(target=_check_result, daemon=True).start()
+            print(f"[FloatingPlanet] 外星人播报: {text} (voice={voice}, rate={rate})")
+        except FileNotFoundError:
+            print(f"[FloatingPlanet] say 命令不可用: /usr/bin/say 未找到")
+        except Exception as e:
+            print(f"[FloatingPlanet] 外星人播报异常: {e}")
+            import traceback
+            traceback.print_exc()
+    def _init_voice_lazy(self):
+        """延迟初始化语音接口，避免 TCC 权限弹窗导致启动崩溃"""
+        print("[FloatingPlanet] _init_voice_lazy 开始初始化...")
+        try:
+            self._voice = VoiceInterface(stt_engine="apple", tts_engine="apple")
+            if self._voice:
+                print("[FloatingPlanet] 语音接口初始化成功")
+
+                # 连接语音信号
+                self._enable_voice_handlers()
+
+                # 如果有唤醒词模式，则启动语音唤醒
+                if self._wake_word_mode:
+                    self._wake_pending = False
+                    self._start_wake_on_init()
+        except Exception as e:
+            print(f"[FloatingPlanet] 语音接口初始化失败: {e}")
+            import traceback
+            traceback.print_exc()
+            self._voice = None

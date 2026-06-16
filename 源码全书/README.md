@@ -1,5 +1,5 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-16 21:08
+> 自动生成于 2026-06-17 01:20
 > 共 648 个模块，每个 `.py` 文件独立为一个文档
 
 ---
@@ -8,8 +8,6 @@
 
 ```
 .
-├── cache/
-│   └── firecrawl/
 ├── config/
 │   └── agents/
 ├── core/
@@ -396,6 +394,7 @@
 │   ├── modules/
 │   │   ├── __init__.py
 │   │   ├── _shared.py
+│   │   ├── agent_event_panel.py
 │   │   ├── animations.py
 │   │   ├── chat_window.py
 │   │   ├── chat_window_core.py
@@ -1047,8 +1046,6 @@
 │   ├── utils.py
 │   ├── verify_sync.py
 ├── rules_project/
-├── tests/
-│   └── test_semantic_search.py
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
@@ -1389,6 +1386,7 @@
 - [`opcclaw/main.py`](./opcclaw/main.py.md)
 - [`opcclaw/modules/__init__.py`](./opcclaw/modules/__init__.py.md)
 - [`opcclaw/modules/_shared.py`](./opcclaw/modules/_shared.py.md)
+- [`opcclaw/modules/agent_event_panel.py`](./opcclaw/modules/agent_event_panel.py.md)
 - [`opcclaw/modules/animations.py`](./opcclaw/modules/animations.py.md)
 - [`opcclaw/modules/chat_window.py`](./opcclaw/modules/chat_window.py.md)
 - [`opcclaw/modules/chat_window_core.py`](./opcclaw/modules/chat_window_core.py.md)
@@ -1708,4 +1706,3 @@
 - [`rollback_control.py`](./rollback_control.py.md)
 - [`siri_command_handler.py`](./siri_command_handler.py.md)
 - [`temp_test_stream.py`](./temp_test_stream.py.md)
-- [`tests/test_semantic_search.py`](./tests/test_semantic_search.py.md)

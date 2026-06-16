@@ -18,8 +18,16 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
-import requests
-from bs4 import BeautifulSoup
+try:
+    import requests
+except ImportError:
+    requests = None
+    logger.warning("requests 未安装，OPCclaw 爬虫功能不可用")
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    BeautifulSoup = None
+    logger.warning("beautifulsoup4 未安装，OPCclaw 爬虫功能不可用")
 
 logger = logging.getLogger(__name__)
 

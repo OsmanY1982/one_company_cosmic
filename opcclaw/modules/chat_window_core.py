@@ -10,11 +10,13 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton,
     QLabel, QFrame, QScrollArea, QApplication, QFileDialog,
     QComboBox, QMessageBox, QStackedWidget, QCheckBox, QGroupBox, QDialog,
+    QGraphicsDropShadowEffect,
 )
 from PyQt5.QtCore import (
     Qt, QThread, pyqtSignal, QTimer, QEvent,
+    QPropertyAnimation, QEasingCurve,
 )
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QColor
 
 # ── OPCclaw 核心 ──
 from opcclaw.core.llm_backend import (
@@ -147,7 +149,7 @@ class ChatWindow(QWidget):
         )
         data_dir = os.path.join(project_root, "data")
         self.config = ConfigManager(data_dir)
-        self.memory_store = MemoryStore()
+        self.memory_store = MemoryStore(base_dir=os.path.expanduser("~/.opcclaw"))
         self.skill_loader = SkillLoader()
         self.registry = ToolRegistry()
 
@@ -157,6 +159,7 @@ class ChatWindow(QWidget):
         self.worker: ChatWorker = None
         self.current_bubble: MessageBubble = None
         self.accumulated_text = ""
+        self._current_agent_panel = None  # AgentEventPanel 实例
 
         # ── 多模型 ──
         self.multi_model_router: MultiModelRouter = None
@@ -189,6 +192,9 @@ class ChatWindow(QWidget):
         # ── 语音功能 ──
         self._voice_manager = None
         self._tts_enabled = True
+
+        # ── 重新生成 ──
+        self._last_user_message = ""  # 缓存最后一轮用户消息
         try:
             self._voice_manager = VoiceManager()
             self._voice_manager.text_ready.connect(self._on_voice_text)
@@ -400,6 +406,8 @@ class ChatWindow(QWidget):
         self.sidebar.new_chat_requested.connect(self._on_new_session)
         self.sidebar.session_delete_requested.connect(self._on_session_delete)
         self.sidebar.session_copy_requested.connect(self._on_session_copy)
+        self.sidebar.session_pin_requested.connect(self._on_session_pin)
+        self.sidebar.session_rename_requested.connect(self._on_session_rename)
         body_layout.addWidget(self.sidebar)
 
         self.stack = QStackedWidget()
@@ -477,15 +485,15 @@ class ChatWindow(QWidget):
         quick_layout.setSpacing(8)
 
         quick_actions = [
-            ("📊 营收", "#27AE60", "帮我查询营收概况"),
-            ("📝 订单", "#2980B9", "帮我查询最近的订单"),
-            ("📦 库存", "#8E44AD", "帮我查询产品库存"),
-            ("👥 会员", "#E67E22", "帮我查询会员到期情况"),
-            ("💰 财务", "#2C3E50", "帮我查询财务收支概况"),
-            ("👷 员工", "#16A085", "帮我查询员工列表"),
+            ("📊 营收", "#27AE60", "#1E8449", "帮我查询营收概况"),
+            ("📝 订单", "#2980B9", "#1F618D", "帮我查询最近的订单"),
+            ("📦 库存", "#8E44AD", "#6C3483", "帮我查询产品库存"),
+            ("👥 会员", "#E67E22", "#CA6F1E", "帮我查询会员到期情况"),
+            ("💰 财务", "#2C3E50", "#1A252F", "帮我查询财务收支概况"),
+            ("👷 员工", "#16A085", "#0E7C63", "帮我查询员工列表"),
         ]
 
-        for label, color, prompt in quick_actions:
+        for label, color, hover_color, prompt in quick_actions:
             btn = QPushButton(label)
             btn.setMinimumHeight(34)
             btn.setFont(QFont("PingFang SC", 11))
@@ -495,17 +503,23 @@ class ChatWindow(QWidget):
                     background: {color};
                     color: white;
                     border: none;
-                    border-radius: 6px;
+                    border-radius: 8px;
                     padding: 6px 14px;
                 }}
-                QPushButton:hover {{ opacity: 0.85; }}
+                QPushButton:hover {{ background: {hover_color}; }}
                 QPushButton:disabled {{ background: #BDC3C7; color: #999; }}
                 QPushButton:pressed {{ padding-top: 7px; padding-bottom: 5px; }}
             """)
             btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
             btn.setEnabled(False)
             self._quick_btns.append(btn)
-            # 添加悬停缩放动画
+            # 阴影效果
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(6)
+            shadow.setOffset(0, 2)
+            shadow.setColor(QColor(0, 0, 0, 40))
+            btn.setGraphicsEffect(shadow)
+            # 悬停缩放动画
             ButtonAnimationHelper.apply_scale_animation(btn, 1.05)
             quick_layout.addWidget(btn)
 
@@ -574,9 +588,30 @@ class ChatWindow(QWidget):
         """)
         self.send_btn.clicked.connect(self._send_message)
         self.send_btn.setEnabled(False)
-        # 添加悬停缩放动画
         ButtonAnimationHelper.apply_scale_animation(self.send_btn, 1.03)
         input_layout.addWidget(self.send_btn)
+
+        # ── 文件附件按钮 ──
+        self.attach_btn = QPushButton("📎")
+        self.attach_btn.setFixedSize(40, 40)
+        self.attach_btn.setToolTip("附加文件")
+        self.attach_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: {COLORS['bg_alt']};
+                color: {COLORS['text_light']};
+                border: 1px solid {COLORS['border']};
+                border-radius: 10px;
+                font-size: 16px;
+            }}
+            QPushButton:hover {{
+                background: {COLORS['primary']};
+                color: white;
+                border-color: {COLORS['primary']};
+            }}
+            QPushButton:pressed {{ padding-top: 1px; padding-bottom: -1px; }}
+        """)
+        self.attach_btn.clicked.connect(self._on_attach_file)
+        input_layout.addWidget(self.attach_btn)
 
         # 语音输入按钮
         self.voice_btn = QPushButton("🎤")
@@ -771,6 +806,12 @@ class ChatWindow(QWidget):
         self.engine.on_tool_start.connect(self._on_tool_start)
         self.engine.on_tool_result.connect(self._on_tool_result)
 
+        # Agent 事件面板信号（仅 AgentLoop 有此信号，向后兼容）
+        if hasattr(self.engine, 'on_event'):
+            self.engine.on_event.connect(self._on_agent_event)
+        if hasattr(self.engine, 'on_progress'):
+            self.engine.on_progress.connect(self._on_agent_progress)
+
         # 模型标签
         if self.multi_model_enabled:
             self.model_label.setText(f"🧠 多模型 · {type_label} {cfg.name}")
@@ -816,6 +857,48 @@ class ChatWindow(QWidget):
     def _on_tool_result(self, name: str, success: bool, preview: str):
         tag = "✅" if success else "❌"
         self._add_message(f"{tag} [{name}] {preview[:300]}", "tool" if success else "error")
+
+    # ── Agent 事件面板回调 ──
+
+    def _on_agent_event(self, event):
+        """接收 AgentLoop 的 on_event 信号，渲染到 AgentEventPanel 中"""
+        from opcclaw.modules.agent_event_panel import AgentEventPanel
+
+        # 创建新面板（如果还没有）
+        if self._current_agent_panel is None:
+            self._current_agent_panel = AgentEventPanel()
+            # 插入到 msg_layout 中（放在最后，stretch 之前）
+            if self.msg_layout.count() > 0:
+                # 移除末尾 stretch
+                last_item = self.msg_layout.itemAt(self.msg_layout.count() - 1)
+                if last_item.spacerItem():
+                    self.msg_layout.removeItem(last_item)
+            self.msg_layout.addWidget(self._current_agent_panel)
+            self.msg_layout.addStretch()
+            QTimer.singleShot(50, self._scroll_bottom)
+
+        # 构建事件字典
+        event_type = event.type.name if hasattr(event.type, 'name') else str(event.type)
+        evt_dict = {
+            'type': event_type,
+            'step': event.step,
+            'total_steps': event.total_steps,
+            'message': event.message,
+            'data': event.data,
+        }
+
+        self._current_agent_panel.add_event(evt_dict)
+        QTimer.singleShot(50, self._scroll_bottom)
+
+        # 终结事件：置空面板引用
+        if event_type in ('COMPLETE', 'ERROR', 'CANCELLED'):
+            self._current_agent_panel = None
+
+    def _on_agent_progress(self, pct: int):
+        """接收 AgentLoop 的 on_progress 信号，转发到面板"""
+        if self._current_agent_panel is not None:
+            self._current_agent_panel.add_event({'type': 'PROGRESS', 'value': pct})
+            QTimer.singleShot(50, self._scroll_bottom)
 
     # ── 多模型回调 ──
 
@@ -1226,6 +1309,10 @@ class ChatWindow(QWidget):
             if item.spacerItem():
                 self.msg_layout.removeItem(item)
 
+        # 缓存最后一轮用户消息（用于重新生成）
+        if sender == "user":
+            self._last_user_message = text
+
         bubble = MessageBubble(text, sender)
 
         # AI 消息的操作按钮信号连接
@@ -1234,6 +1321,7 @@ class ChatWindow(QWidget):
             bubble.dislike_clicked.connect(self._on_dislike_message)
             bubble.play_clicked.connect(self._on_play_message)
             bubble.share_clicked.connect(self._on_share_message)
+            bubble.regenerate_requested.connect(self._on_regenerate_requested)
 
         # 使用水平布局包装，让气泡能获得合理的宽度（word-wrap 正常工作）
         wrapper = QHBoxLayout()
@@ -1299,6 +1387,31 @@ class ChatWindow(QWidget):
         except Exception as e:
             logger.error(f"[Chat] Error in share: {e}")
 
+    def _on_regenerate_requested(self):
+        """重新生成：自动重新发送上一轮用户消息"""
+        if not self._last_user_message:
+            self._add_message("⚠️ 没有可重新生成的消息", "tool")
+            return
+        if not self.engine or not self.send_btn.isEnabled():
+            self._add_message("⚠️ 请先配置 LLM 模型", "tool")
+            return
+        # 直接用缓存的消息触发发送流程
+        self._add_message(self._last_user_message, "user")
+        self.send_btn.setEnabled(False)
+        self.send_btn.setText("思考中...")
+        self.current_bubble = None
+        self.accumulated_text = ""
+
+        if self.worker and self.worker.isRunning():
+            self.worker.quit()
+            self.worker.wait(2000)
+
+        self.worker = ChatWorker(self.engine, self._last_user_message)
+        self.worker.text_chunk.connect(self._append_streaming_text)
+        self.worker.finished.connect(self._on_chat_finished)
+        self.worker.error.connect(self._on_chat_error)
+        self.worker.start()
+
     def _ensure_streaming_bubble(self):
         if self.current_bubble and self.current_bubble.sender == "ai":
             return
@@ -1317,9 +1430,21 @@ class ChatWindow(QWidget):
         self.accumulated_text = ""
 
     def _scroll_bottom(self):
+        """平滑滚动到底部（QPropertyAnimation）"""
         vbar = self.scroll_area.verticalScrollBar()
-        vbar.setValue(vbar.maximum())
-        # 确保 viewport 正确更新，避免按钮点击无响应
+        target = vbar.maximum()
+        # 如果已在底部附近，直接跳转；否则动画过渡
+        if abs(vbar.value() - target) < 40:
+            vbar.setValue(target)
+        else:
+            if not hasattr(self, '_scroll_anim'):
+                self._scroll_anim = QPropertyAnimation(vbar, b"value")
+                self._scroll_anim.setDuration(250)
+                self._scroll_anim.setEasingCurve(QEasingCurve.OutCubic)
+            self._scroll_anim.stop()
+            self._scroll_anim.setStartValue(vbar.value())
+            self._scroll_anim.setEndValue(target)
+            self._scroll_anim.start()
         self.scroll_area.viewport().update()
 
     def _append_streaming_text(self, chunk: str):
@@ -1357,6 +1482,8 @@ class ChatWindow(QWidget):
         if self.worker and self.worker.isRunning():
             self.worker.quit()
             self.worker.wait(2000)
+
+        self._current_agent_panel = None  # 新一轮对话，重置 Agent 面板
 
         self.worker = ChatWorker(self.engine, text)
         self.worker.text_chunk.connect(self._append_streaming_text)
@@ -1565,6 +1692,25 @@ class ChatWindow(QWidget):
         self.memory_store.save_session(messages, new_id)
         self._refresh_sessions()
 
+    def _on_session_pin(self, session_id: str):
+        """置顶/取消置顶会话"""
+        new_state = self.memory_store.toggle_pin_session(session_id)
+        verb = "置顶" if new_state else "取消置顶"
+        self._add_message(f"📌 会话已{verb}", "info")
+        self._refresh_sessions()
+
+    def _on_session_rename(self, session_id: str, old_title: str):
+        """重命名会话（弹出输入框）"""
+        from PyQt5.QtWidgets import QInputDialog
+        new_title, ok = QInputDialog.getText(
+            self, "重命名会话", f"请输入新名称:",
+            text=old_title
+        )
+        if ok and new_title.strip() and new_title.strip() != old_title:
+            if self.memory_store.rename_session(session_id, new_title.strip()):
+                self._add_message(f"✏️ 会话已重命名为: {new_title.strip()}", "info")
+                self._refresh_sessions()
+
     def _export_current_session(self):
         """导出当前会话为 Markdown 文件到桌面"""
         import os as _os
@@ -1639,6 +1785,22 @@ class ChatWindow(QWidget):
             return
         self.input_field.setPlainText(prompt)
         self._send_message()
+
+    def _on_attach_file(self):
+        """文件附件按钮：弹出文件选择对话框，在输入框显示文件名"""
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "选择文件", os.path.expanduser("~"),
+            "所有文件 (*.*);;文本文件 (*.txt *.md *.py);;文档 (*.pdf *.docx *.xlsx)"
+        )
+        if not file_path:
+            return
+        fname = os.path.basename(file_path)
+        current = self.input_field.toPlainText().strip()
+        if current:
+            self.input_field.setPlainText(f"{current}\n[附件: {fname}]")
+        else:
+            self.input_field.setPlainText(f"[附件: {fname}]")
+        self._attach_file_path = file_path
 
     def _clear_chat(self):
         """清空对话"""
