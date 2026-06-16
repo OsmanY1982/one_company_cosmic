@@ -106,6 +106,7 @@ class ToolCall:
 class LLMResponse:
     """LLM 响应"""
     content: Optional[str] = None          # 文本内容
+    reasoning: Optional[str] = None        # 推理内容（qwen3.6 等 reasoning 模型）
     tool_calls: Optional[list[ToolCall]] = None  # 工具调用列表
     finish_reason: str = "stop"
     model: str = ""
@@ -354,15 +355,137 @@ class OpenAICompatibleBackend(BaseLLMBackend):
         token_saver_mode: str = "balanced",  # Token 节约模式
         tool_choice: Optional[str] = None,
     ) -> LLMResponse:
-        """聊天接口，可选 Token 优化和强制工具调用"""
+        """聊天接口，可选 Token 优化和强制工具调用
+        
+        对本地模型（如 Ollama）使用内部流式读取，防止大模型（35b+）生成长链推理时
+        因 ollama 全量缓存导致 socket 超时。
+        """
+        is_local = self._is_local_provider()
         
         # 应用 Token 优化
         if token_saver_mode != "disabled":
             messages = optimize_messages(messages, mode=token_saver_mode)
         
+        if is_local and not tools:
+            # 本地模型走内部流式，逐 chunk 消费防止 socket timeout
+            return self._chat_stream_accumulate(
+                messages, tools, token_saver_mode, tool_choice
+            )
+        
         payload = self._build_payload(messages, tools, stream=False, tool_choice=tool_choice)
         data = self._make_request(payload)
         return self._parse_response(data)
+    
+    def _is_local_provider(self) -> bool:
+        """检测是否为本地供应商（Ollama/localhost）"""
+        try:
+            return (
+                self.config.name == "Ollama"
+                or "ollama" in self.config.provider_type.lower()
+                or "localhost" in self.config.base_url
+                or "127.0.0.1" in self.config.base_url
+                or "11434" in self.config.base_url
+            )
+        except Exception:
+            return False
+    
+    def _chat_stream_accumulate(
+        self,
+        messages: list[dict],
+        tools: Optional[list[dict]] = None,
+        token_saver_mode: str = "balanced",
+        tool_choice: Optional[str] = None,
+    ) -> LLMResponse:
+        """内部流式读取（逐 chunk 消费防止 socket timeout），
+        聚合完整响应后以 LLMResponse 返回。"""
+        import json as _json
+        
+        if token_saver_mode != "disabled":
+            messages = optimize_messages(messages, mode=token_saver_mode)
+        
+        payload = self._build_payload(messages, tools, stream=True, tool_choice=tool_choice)
+        url = self._build_url()
+        headers = self._build_headers()
+        data_bytes = _json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        
+        req = urllib.request.Request(url, data=data_bytes, headers=headers, method="POST")
+        
+        accumulated_content = ""
+        accumulated_reasoning = ""
+        model_name = ""
+        usage = {}
+        finish_reason = "stop"
+        tool_calls_raw = []
+        
+        try:
+            with urllib.request.urlopen(req, context=self._ssl_context, timeout=600) as resp:
+                for line_bytes in resp:
+                    line = line_bytes.decode("utf-8", errors="replace").strip()
+                    if not line or not line.startswith("data: "):
+                        continue
+                    data_str = line[6:]
+                    if data_str == "[DONE]":
+                        break
+                    try:
+                        chunk = _json.loads(data_str)
+                    except _json.JSONDecodeError:
+                        continue
+                    
+                    choice = chunk.get("choices", [{}])[0]
+                    delta = choice.get("delta", {})
+                    if "content" in delta and delta["content"]:
+                        accumulated_content += delta["content"]
+                    if "reasoning_content" in delta and delta["reasoning_content"]:
+                        accumulated_reasoning += delta["reasoning_content"]
+                    if "tool_calls" in delta:
+                        tool_calls_raw = delta["tool_calls"]
+                    if choice.get("finish_reason"):
+                        finish_reason = choice.get("finish_reason", "stop")
+                    if chunk.get("model"):
+                        model_name = chunk.get("model", "")
+                    if chunk.get("usage"):
+                        usage = chunk.get("usage", {})
+        
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode("utf-8", errors="replace")
+            raise RuntimeError(
+                f"[{self.config.name}] API error {e.code}: {error_body[:500]}"
+            )
+        except urllib.error.URLError as e:
+            raise RuntimeError(
+                f"[{self.config.name}] 连接失败: {e.reason}\n"
+                f"请检查: 1) 网络连接 2) base_url 是否正确 ({self.config.base_url})"
+            )
+        except Exception as e:
+            raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+        
+        # 构造返回
+        parsed_tool_calls = None
+        if tool_calls_raw:
+            parsed = []
+            for tc in tool_calls_raw:
+                func = tc.get("function", {})
+                try:
+                    args = _json.loads(func.get("arguments", "{}"))
+                except (_json.JSONDecodeError, TypeError):
+                    args = {}
+                parsed.append(ToolCall(
+                    id=tc.get("id", ""),
+                    name=func.get("name", ""),
+                    arguments=args,
+                ))
+            if parsed:
+                parsed_tool_calls = parsed
+        
+        return LLMResponse(
+            content=accumulated_content or None,
+            reasoning=accumulated_reasoning or None,
+            tool_calls=parsed_tool_calls,
+            finish_reason=finish_reason,
+            model=model_name or self.config.model,
+            usage=usage,
+            is_tool_call=finish_reason == "tool_calls" or bool(parsed_tool_calls),
+        )
 
     def chat_stream(
         self,
