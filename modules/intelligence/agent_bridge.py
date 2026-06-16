@@ -288,7 +288,7 @@ class AgentBridge:
             engine=self._engine,
             max_iterations=50,
             max_retries=3,
-            timeout_seconds=600,  # 10 分钟
+            timeout_seconds=900,  # 15 分钟（35b+ 大模型需要更长推理时间）
             verbose=True,
         )
 
@@ -761,7 +761,7 @@ class AgentBridge:
             engine=self._engine,
             max_iterations=50,
             max_retries=3,
-            timeout_seconds=600,
+            timeout_seconds=900,
             verbose=True,
         )
         print(f"[AgentBridge] 模型切换: {old_model} → {model} (供应商: {cfg.name})")

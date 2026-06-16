@@ -224,7 +224,7 @@ class OpenAICompatibleBackend(BaseLLMBackend):
 
     # ── HTTP 请求 ──
 
-    def _make_request(self, payload: dict, timeout: int = 300) -> dict:
+    def _make_request(self, payload: dict, timeout: int = 600) -> dict:
         """发送 HTTP POST 请求并返回解析后的 JSON"""
         url = self._build_url()
         headers = self._build_headers()
@@ -391,7 +391,7 @@ class OpenAICompatibleBackend(BaseLLMBackend):
 
         accumulated = ""
         try:
-            with urllib.request.urlopen(req, context=self._ssl_context, timeout=300) as resp:
+            with urllib.request.urlopen(req, context=self._ssl_context, timeout=600) as resp:
                 for line_bytes in resp:
                     line = line_bytes.decode("utf-8", errors="replace").strip()
                     if not line or not line.startswith("data: "):

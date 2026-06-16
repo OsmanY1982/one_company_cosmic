@@ -1859,3 +1859,13 @@ Traceback (most recent call last):
   File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 265, in _make_request
     raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
 RuntimeError: [Ollama] 请求异常: timed out
+2026-06-17 07:09:35 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6108672000.
+2026-06-17 07:09:35 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 07:09:44 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:09:52 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:10:05 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:11:51 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:11:59 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:12:22 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:12:31 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:12:46 [INFO] opcclaw.core.memory_store: Session deleted: 

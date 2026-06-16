@@ -75,7 +75,7 @@ class OpenAICompatibleBackend:
             payload["tool_choice"] = "auto"
 
         try:
-            resp = self._session.post(url, json=payload, timeout=120)
+            resp = self._session.post(url, json=payload, timeout=600)
             resp.raise_for_status()
             data = resp.json()
 
