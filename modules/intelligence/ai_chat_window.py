@@ -764,6 +764,31 @@ class AIChatWindow(QWidget):
         else:
             self._on_new_session()
 
+    def _on_session_copy(self, session_id: str):
+        """复制会话：深拷贝消息列表并保存为新会话"""
+        if not self._bridge:
+            return
+        try:
+            msgs = self._bridge.load_session(session_id)
+            if not msgs:
+                self.ai_chat.append(
+                    '<p style="color:#ffaa44;font-size:10px;">[系统] 源会话为空，无法复制</p>'
+                )
+                return
+            from datetime import datetime
+            new_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}_copy"
+            import copy
+            copied_msgs = copy.deepcopy(msgs)
+            self._bridge.save_session(copied_msgs, new_id)
+            self._session_manager._load_sessions()
+            self.ai_chat.append(
+                f'<p style="color:#44cc88;font-size:10px;">[系统] 已复制会话 → {new_id}</p>'
+            )
+        except Exception as e:
+            self.ai_chat.append(
+                f'<p style="color:#ff6644;font-size:10px;">[系统] 复制会话失败: {e}</p>'
+            )
+
     def _switch_to_session(self, session_id: str, title: str):
         """切换到指定会话：保存当前 → 清屏 → 加载新会话"""
         # 保存当前会话
@@ -1131,6 +1156,8 @@ class AIChatWindow(QWidget):
     def _stream_tool(self, tool_name: str, status: str):
         color = {"running": "#99bbee", "OK": "#44cc88", "Failed": "#ff6644"}.get(status, "#888")
         icon = {"running": "⚙", "OK": "✓", "Failed": "✗"}.get(status, "?")
+        if tool_name in ("web_scrape", "batch_scrape"):
+            icon = {"running": "🕷", "OK": "🌐", "Failed": "⚠"}.get(status, "🕸")
         self.ai_chat.append(
             f'<p style="color:{color};font-size:10px;margin:0;">{icon} 工具: {tool_name} [{status}]</p>'
         )

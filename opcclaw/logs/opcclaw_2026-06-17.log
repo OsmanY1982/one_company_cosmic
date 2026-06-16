@@ -1745,3 +1745,13 @@ NameError: name 'QRectF' is not defined
 2026-06-17 01:06:02 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-17 01:06:56 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-17 01:17:13 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 01:23:44 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6178140160.
+2026-06-17 01:23:57 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 01:24:16 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 01:26:22 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6178713600.
+2026-06-17 01:26:22 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 01:27:02 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 01:33:01 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6160740352.
+2026-06-17 01:33:01 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 01:38:24 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6178713600.
+2026-06-17 01:38:24 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()

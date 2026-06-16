@@ -407,6 +407,19 @@ class ChatSessionManager(QWidget):
             except Exception as e:
                 QMessageBox.warning(self, "重命名失败", str(e))
 
+    def rename_session(self, session_id: str, new_title: str) -> bool:
+        """公共重命名方法（供外部信号直接调用）"""
+        if not self._agent:
+            return False
+        try:
+            success = self._agent.rename_session(session_id, new_title.strip()[:50])
+            if success:
+                self._load_sessions()
+            return success
+        except Exception as e:
+            print(f"[ChatSessionManager] rename_session failed: {e}")
+            return False
+
     def _export_session(self, session_id: str):
         """导出会话（从菜单触发）"""
         try:

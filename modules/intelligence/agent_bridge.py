@@ -38,6 +38,7 @@ from opcclaw.core.tool_registry import ToolRegistry
 from opcclaw.core.llm_backend import BaseLLMBackend
 from opcclaw.core.agent_loop import AgentLoop, AgentEvent, AgentEventType, AgentResult
 from opcclaw.core.smart_memory_adapter import SmartMemoryStore
+from opcclaw import OPCclaw, OPCclawConfig
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 # ── 引擎模块（try/except，缺失不阻塞启动）──
@@ -1073,6 +1074,8 @@ class AgentBridge:
         # ── 网络 ──
         self._reg_web_search()
         self._reg_web_fetch_page()
+        self._reg_web_scrape()
+        self._reg_batch_scrape()
         # ── opcclaw 高级工具 ──
         self._reg_execute_python()
         self._reg_analyze_code()
@@ -1563,6 +1566,77 @@ class AgentBridge:
                     "url": {"type": "string", "description": "网页 URL（含 https://）"},
                 },
                 "required": ["url"],
+            },
+            category="web",
+        )(handler)
+
+    # ── 12b. web_scrape（OPCclaw 智能爬虫）──
+    def _reg_web_scrape(self):
+        """OPCclaw 智能单页爬虫：JS 渲染 + 代理轮转 + 频率限制 + 重试"""
+        def handler(url: str, use_selenium: bool = False, max_paragraphs: int = 20) -> dict:
+            try:
+                config = OPCclawConfig(
+                    use_selenium=use_selenium,
+                    output_format="dict",
+                    timeout=30,
+                )
+                scraper = OPCclaw(config)
+                result = scraper.scrape_url(url)
+                scraper.close()
+                if isinstance(result, dict) and "paragraphs" in result:
+                    result["paragraphs"] = result["paragraphs"][:max_paragraphs]
+                return result
+            except Exception as e:
+                return {"url": url, "error": str(e), "status": "failed"}
+
+        self.registry.register(
+            name="web_scrape",
+            description="OPCclaw 智能网页爬虫：带 JS 渲染、代理轮转、频率限制、指数退避重试。返回标题/元描述/段落。适合需要 JS 渲染的动态页面。",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "url": {"type": "string", "description": "目标网页 URL（含 https://）"},
+                    "use_selenium": {"type": "boolean", "description": "是否启用 Selenium JS 渲染", "default": False},
+                    "max_paragraphs": {"type": "integer", "description": "最大返回段落数", "default": 20},
+                },
+                "required": ["url"],
+            },
+            category="web",
+        )(handler)
+
+    # ── 12c. batch_scrape（OPCclaw 批量爬虫）──
+    def _reg_batch_scrape(self):
+        """OPCclaw 批量爬虫：一次抓取多个 URL"""
+        def handler(urls: list, use_selenium: bool = False) -> dict:
+            try:
+                config = OPCclawConfig(
+                    use_selenium=use_selenium,
+                    output_format="dict",
+                    timeout=30,
+                )
+                scraper = OPCclaw(config)
+                results = scraper.batch_scrape(urls)
+                scraper.close()
+                success_count = sum(1 for r in results if isinstance(r, dict) and r.get("status") == "success")
+                return {
+                    "total": len(urls),
+                    "success": success_count,
+                    "failed": len(urls) - success_count,
+                    "results": results,
+                }
+            except Exception as e:
+                return {"error": str(e)}
+
+        self.registry.register(
+            name="batch_scrape",
+            description="OPCclaw 批量网页爬虫：一次性抓取多个 URL，返回汇总统计和逐页结果。",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "urls": {"type": "array", "items": {"type": "string"}, "description": "目标网页 URL 列表"},
+                    "use_selenium": {"type": "boolean", "description": "是否启用 Selenium JS 渲染", "default": False},
+                },
+                "required": ["urls"],
             },
             category="web",
         )(handler)
