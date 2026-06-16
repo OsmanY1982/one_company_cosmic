@@ -10,6 +10,7 @@
   browser_navigate — 在默认浏览器中打开 URL
   browser_screenshot — 网页截图（需 Playwright，降级提示）
   browser_extract   — 提取网页文本（urllib 级别）
+  web_fetch_page    — 抓取网页正文（纯文本提取，过滤脚本/样式）
   exec           — 通用命令执行
   schedule_task  — 简单任务提醒
   memory_save    — 持久化记忆存储（JSON）
@@ -109,6 +110,14 @@ class EnhancedAIAssistant:
                 "description": "提取网页文本内容（使用 urllib）",
                 "parameters": {
                     "url": {"type": "string", "description": "目标 URL", "default": ""},
+                },
+            },
+            {
+                "name": "web_fetch_page",
+                "icon": "🌐",
+                "description": "抓取网页正文内容（提取纯文本，过滤脚本/样式）",
+                "parameters": {
+                    "url": {"type": "string", "description": "网页 URL（含 https://）", "required": True},
                 },
             },
             {
@@ -341,6 +350,61 @@ class EnhancedAIAssistant:
             return {"success": True, "url": url, "message": f"已在浏览器中打开: {url}"}
         except Exception as e:
             return {"success": False, "error": str(e)}
+
+    def _tool_web_fetch_page(self, url: str) -> Dict[str, Any]:
+        """抓取网页正文内容"""
+        if not url.startswith(("http://", "https://")):
+            url = "https://" + url
+
+        try:
+            import urllib.request
+            import urllib.error
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+            })
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                html = resp.read().decode("utf-8", errors="ignore")
+        except urllib.error.URLError as e:
+            return {"success": False, "error": f"网络错误: {e.reason}"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+        # 简易正文提取：去除 script/style/noscript 标签
+        from html.parser import HTMLParser
+
+        class TextExtractor(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.text = []
+                self._skip = False
+
+            def handle_starttag(self, tag, attrs):
+                if tag in ("script", "style", "noscript"):
+                    self._skip = True
+
+            def handle_endtag(self, tag):
+                if tag in ("script", "style", "noscript"):
+                    self._skip = False
+
+            def handle_data(self, data):
+                if not self._skip:
+                    t = data.strip()
+                    if t:
+                        self.text.append(t)
+
+        ex = TextExtractor()
+        ex.feed(html)
+        content = "\n".join(ex.text)
+
+        if len(content) > 8000:
+            content = content[:8000] + "\n\n... [已截断]"
+
+        return {
+            "success": True,
+            "url": url,
+            "chars": len(content),
+            "content": content,
+        }
 
     def _tool_browser_screenshot(self) -> Dict[str, Any]:
         """网页截图"""

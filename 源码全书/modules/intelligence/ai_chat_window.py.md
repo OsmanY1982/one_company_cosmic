@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_chat_window.py`
 
-> 路径：`modules/intelligence/ai_chat_window.py` | 行数：1444
+> 路径：`modules/intelligence/ai_chat_window.py` | 行数：1445
 
 
 ---
@@ -352,6 +352,7 @@ class AIChatWindow(QWidget):
         self._session_manager.session_selected.connect(self._on_session_selected)
         self._session_manager.new_chat_requested.connect(self._on_new_session)
         self._session_manager.session_deleted.connect(self._on_session_deleted)
+        self._session_manager.session_copy_requested.connect(self._on_session_copy)
 
         self._splitter = QSplitter(Qt.Horizontal)
         self._splitter.addWidget(self._session_manager)
