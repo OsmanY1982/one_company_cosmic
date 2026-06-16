@@ -1915,3 +1915,15 @@ RuntimeError: [Ollama] 请求异常: timed out
 2026-06-17 07:21:22 [INFO] opcclaw.core.memory_store: Session deleted: 
 2026-06-17 07:21:28 [INFO] opcclaw.core.memory_store: Session deleted: 
 2026-06-17 07:21:35 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:24:27 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 07:24:37 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:25:11 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6092664832.
+2026-06-17 07:25:11 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 07:25:20 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:25:29 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:25:34 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:27:19 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:28:11 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 07:28:26 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 07:29:11 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6163394560.
+2026-06-17 07:29:11 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()

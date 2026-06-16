@@ -157,87 +157,93 @@ class ChatSessionManager(QWidget):
 
     def _refresh_list(self, filter_text: str = ""):
         """刷新列表显示"""
-        # 必须先逐个 removeItemWidget，再清空列表。
-        # Qt 的 clear() 只删除 QListWidgetItem，不会自动清理 setItemWidget 设置的 QWidget，
-        # 导致孤立 widget 累积在 viewport 下，干扰后续 item 的鼠标事件和信号连接。
-        while self._list_widget.count():
-            item = self._list_widget.takeItem(0)
-            if item:
-                self._list_widget.removeItemWidget(item)
-        filtered = self._sessions
-        if filter_text:
-            ft = filter_text.lower()
-            filtered = [
-                s for s in self._sessions
-                if ft in s.get("title", "").lower()
-            ]
+        # 阻塞信号，避免 takeItem/addItem 过程中的信号抖动导致重入（参考 sidebar_panel.set_sessions）
+        self._list_widget.blockSignals(True)
+        try:
+            # 必须逐个 removeItemWidget 再清空列表。
+            # Qt 的 clear() 只删除 QListWidgetItem，不自动清理 setItemWidget 设置的 QWidget，
+            # 导致孤立 widget 累积在 viewport 下，干扰后续 item 的鼠标事件和信号连接。
+            while self._list_widget.count():
+                item = self._list_widget.takeItem(0)
+                if item:
+                    self._list_widget.removeItemWidget(item)
 
-        for s in filtered:
-            sid = s.get("session_id", "")
-            title = s.get("title", "未命名对话")[:30]
-            msg_count = s.get("message_count", 0)
-            updated = s.get("updated_at", "")
-            try:
-                dt = datetime.fromisoformat(updated)
-                if dt.date() == datetime.now().date():
-                    time_str = dt.strftime("今天 %H:%M")
-                else:
-                    time_str = dt.strftime("%m-%d %H:%M")
-            except Exception:
-                time_str = ""
+            filtered = self._sessions
+            if filter_text:
+                ft = filter_text.lower()
+                filtered = [
+                    s for s in self._sessions
+                    if ft in s.get("title", "").lower()
+                ]
 
-            # 自定义行控件: 标题 + 信息 + 操作按钮
-            row = QWidget()
-            row.setStyleSheet("background: transparent;")
-            row.setCursor(Qt.PointingHandCursor)
-            row.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
-            row_layout = QHBoxLayout(row)
-            row_layout.setContentsMargins(8, 4, 4, 4)
-            row_layout.setSpacing(4)
+            for s in filtered:
+                sid = s.get("session_id", "")
+                title = s.get("title", "未命名对话")[:30]
+                msg_count = s.get("message_count", 0)
+                updated = s.get("updated_at", "")
+                try:
+                    dt = datetime.fromisoformat(updated)
+                    if dt.date() == datetime.now().date():
+                        time_str = dt.strftime("今天 %H:%M")
+                    else:
+                        time_str = dt.strftime("%m-%d %H:%M")
+                except Exception:
+                    time_str = ""
 
-            # 左侧文本区域
-            text_widget = QWidget()
-            text_layout = QVBoxLayout(text_widget)
-            text_layout.setContentsMargins(0, 0, 0, 0)
-            text_layout.setSpacing(1)
+                # 自定义行控件: 标题 + 信息 + 操作按钮
+                row = QWidget()
+                row.setStyleSheet("background: transparent;")
+                row.setCursor(Qt.PointingHandCursor)
+                row.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
+                row_layout = QHBoxLayout(row)
+                row_layout.setContentsMargins(8, 4, 4, 4)
+                row_layout.setSpacing(4)
 
-            title_lbl = QLabel(title)
-            title_lbl.setStyleSheet("color: #ccccdd; font-size: 12px; font-weight: bold; background: transparent;")
-            title_lbl.setCursor(Qt.PointingHandCursor)
-            title_lbl.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
-            text_layout.addWidget(title_lbl)
+                # 左侧文本区域
+                text_widget = QWidget()
+                text_layout = QVBoxLayout(text_widget)
+                text_layout.setContentsMargins(0, 0, 0, 0)
+                text_layout.setSpacing(1)
 
-            info_lbl = QLabel(f"{msg_count}条消息 · {time_str}")
-            info_lbl.setStyleSheet("color: #666688; font-size: 10px; background: transparent;")
-            text_layout.addWidget(info_lbl)
+                title_lbl = QLabel(title)
+                title_lbl.setStyleSheet("color: #ccccdd; font-size: 12px; font-weight: bold; background: transparent;")
+                title_lbl.setCursor(Qt.PointingHandCursor)
+                title_lbl.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
+                text_layout.addWidget(title_lbl)
 
-            row_layout.addWidget(text_widget, 1)
+                info_lbl = QLabel(f"{msg_count}条消息 · {time_str}")
+                info_lbl.setStyleSheet("color: #666688; font-size: 10px; background: transparent;")
+                text_layout.addWidget(info_lbl)
 
-            # ⋮ 三点菜单按钮
-            menu_btn = QPushButton("⋮")
-            menu_btn.setFixedSize(24, 20)
-            menu_btn.setCursor(Qt.PointingHandCursor)
-            menu_btn.setToolTip("更多操作")
-            menu_btn.setStyleSheet("""
-                QPushButton {
-                    background: transparent; color: #666688; border: none;
-                    border-radius: 4px; font-size: 14px; font-weight: bold;
-                }
-                QPushButton:hover { background: rgba(120,140,200,30); color: #8899cc; }
-            """)
-            menu_btn.clicked.connect(lambda checked, ses=sid, btn=menu_btn: self._show_session_menu(ses, btn))
-            row_layout.addWidget(menu_btn)
+                row_layout.addWidget(text_widget, 1)
 
-            item = QListWidgetItem()
-            item.setData(Qt.UserRole, sid)
-            # 补偿样式表 QListWidget::item { padding: 8px 10px; } 的垂直 padding (8+8=16px)，
-            # 否则 row widget 的文本会被上下截断，只显示一半。
-            sh = row.sizeHint()
-            item.setSizeHint(QSize(sh.width(), sh.height() + 16))
-            self._list_widget.addItem(item)
-            self._list_widget.setItemWidget(item, row)
+                # ⋮ 三点菜单按钮
+                menu_btn = QPushButton("⋮")
+                menu_btn.setFixedSize(24, 20)
+                menu_btn.setCursor(Qt.PointingHandCursor)
+                menu_btn.setToolTip("更多操作")
+                menu_btn.setStyleSheet("""
+                    QPushButton {
+                        background: transparent; color: #666688; border: none;
+                        border-radius: 4px; font-size: 14px; font-weight: bold;
+                    }
+                    QPushButton:hover { background: rgba(120,140,200,30); color: #8899cc; }
+                """)
+                menu_btn.clicked.connect(lambda checked, ses=sid, btn=menu_btn: self._show_session_menu(ses, btn))
+                row_layout.addWidget(menu_btn)
 
-        self._count_label.setText(f"共 {len(filtered)} 个会话")
+                item = QListWidgetItem()
+                item.setData(Qt.UserRole, sid)
+                self._list_widget.addItem(item)
+                self._list_widget.setItemWidget(item, row)
+                # 补偿样式表 QListWidget::item { padding: 8px 10px; } 的垂直 padding (8+8=16px)，
+                # 否则 row widget 的文本会被上下截断，只显示一半。
+                sh = row.sizeHint()
+                item.setSizeHint(QSize(max(sh.width(), 200), max(sh.height(), 40) + 16))
+
+            self._count_label.setText(f"共 {len(filtered)} 个会话")
+        finally:
+            self._list_widget.blockSignals(False)
 
     def _on_search(self, text: str):
         self._refresh_list(text)
