@@ -1,6 +1,6 @@
 # `modules/intelligence/enhanced/enhanced_tools.py`
 
-> 路径：`modules/intelligence/enhanced/enhanced_tools.py` | 行数：611
+> 路径：`modules/intelligence/enhanced/enhanced_tools.py` | 行数：738
 
 
 ---
@@ -127,6 +127,14 @@ class EnhancedAIAssistant:
                 "description": "抓取网页正文内容（提取纯文本，过滤脚本/样式）",
                 "parameters": {
                     "url": {"type": "string", "description": "网页 URL（含 https://）", "required": True},
+                },
+            },
+            {
+                "name": "web_search",
+                "icon": "🔍",
+                "description": "网页搜索（通过 DuckDuckGo HTML 搜索结果，返回标题/链接/摘要）",
+                "parameters": {
+                    "query": {"type": "string", "description": "搜索关键词", "required": True},
                 },
             },
             {
@@ -413,6 +421,125 @@ class EnhancedAIAssistant:
             "url": url,
             "chars": len(content),
             "content": content,
+        }
+
+    def _tool_web_search(self, query: str) -> Dict[str, Any]:
+        """网页搜索 — 通过 DuckDuckGo HTML 搜索结果页获取标题/链接/摘要"""
+        import urllib.request
+        import urllib.parse
+        import urllib.error
+        from html.parser import HTMLParser
+
+        encoded_query = urllib.parse.quote(query)
+        search_url = f"https://html.duckduckgo.com/html/?q={encoded_query}"
+
+        try:
+            req = urllib.request.Request(search_url, headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+            })
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                html = resp.read().decode("utf-8", errors="ignore")
+        except urllib.error.URLError as e:
+            return {"success": False, "error": f"网络错误: {e.reason}"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+        # 解析 DuckDuckGo HTML 搜索结果
+        results = []
+        in_result = False
+        current_title = ""
+        current_link = ""
+        current_snippet = ""
+        tag_stack = []
+
+        class DDGParser(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.results = []
+                self._current = {"title": "", "link": "", "snippet": ""}
+                self._in_result = False
+                self._in_title = False
+                self._in_snippet = False
+                self._snippet_div_depth = 0
+                self._pending_link = ""
+
+            def handle_starttag(self, tag, attrs):
+                attr_dict = dict(attrs)
+                cls = attr_dict.get("class", "")
+
+                if tag == "a" and "result__a" in cls:
+                    self._in_title = True
+                    self._pending_link = attr_dict.get("href", "")
+                elif tag == "a" and "result__snippet" in cls:
+                    self._in_snippet = True
+                elif tag == "div" and "result__body" in cls:
+                    self._in_result = True
+                    self._current = {"title": "", "link": "", "snippet": ""}
+
+            def handle_endtag(self, tag):
+                if self._in_title and tag == "a":
+                    self._in_title = False
+                    self._current["title"] = self._current["title"].strip()
+                    self._current["link"] = self._pending_link
+                    self._pending_link = ""
+                if self._in_snippet and tag == "a":
+                    self._in_snippet = False
+                    self._current["snippet"] = self._current["snippet"].strip()
+                if self._in_result and tag == "div" and self._current["title"]:
+                    self._in_result = False
+                    self.results.append(dict(self._current))
+                    self._current = {"title": "", "link": "", "snippet": ""}
+
+            def handle_data(self, data):
+                if self._in_title:
+                    self._current["title"] += data
+                if self._in_snippet:
+                    self._current["snippet"] += data
+
+        parser = DDGParser()
+        parser.feed(html)
+
+        results = parser.results[:20]  # 最多 20 条
+
+        if not results:
+            # 降级：尝试用正则简单提取 <a class="result__a" href="..."> 模式
+            import re
+            fallback = re.findall(
+                r'<a[^>]*class="result__a"[^>]*href="([^"]*)"[^>]*>(.*?)</a>',
+                html, re.DOTALL
+            )
+            snippets = re.findall(
+                r'<a[^>]*class="result__snippet"[^>]*>(.*?)</a>',
+                html, re.DOTALL
+            )
+            for i, (link, title) in enumerate(fallback[:20]):
+                t = re.sub(r"<[^>]+>", "", title).strip()
+                snippet = re.sub(r"<[^>]+>", "", snippets[i]).strip() if i < len(snippets) else ""
+                results.append({"title": t, "link": link, "snippet": snippet})
+
+        if not results:
+            return {"success": False, "error": "未获取到搜索结果", "query": query}
+
+        # 格式化为可读文本
+        lines = [f"搜索: {query}", f"共 {len(results)} 条结果", ""]
+        for i, r in enumerate(results, 1):
+            lines.append(f"{i}. {r['title']}")
+            lines.append(f"   {r['link']}")
+            if r.get("snippet"):
+                lines.append(f"   {r['snippet']}")
+            lines.append("")
+
+        formatted = "\n".join(lines)
+        if len(formatted) > 8000:
+            formatted = formatted[:8000] + "\n\n... [已截断]"
+
+        return {
+            "success": True,
+            "query": query,
+            "source": "duckduckgo",
+            "results": results,
+            "count": len(results),
+            "formatted": formatted,
         }
 
     def _tool_browser_screenshot(self) -> Dict[str, Any]:

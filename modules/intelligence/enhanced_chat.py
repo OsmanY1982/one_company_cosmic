@@ -356,7 +356,12 @@ class EnhancedChatWidget(QWidget):
         # 如果没有智能选择，尝试直接匹配
         if not tool_name:
             # 简单关键词匹配
-            if '搜索' in message or '查找' in message:
+            if 'web_search' in message.lower():
+                tool_name = 'web_search'
+            elif ('网页搜索' in message or '网络搜索' in message or 
+                  ('搜索' in message and ('网页' in message or '网络' in message or '在线' in message))):
+                tool_name = 'web_search'
+            elif '搜索' in message or '查找' in message:
                 tool_name = 'multi_search'
             elif '文件' in message or '读取' in message:
                 tool_name = 'file_read'
