@@ -1,6 +1,6 @@
 # `modules/intelligence/enhanced_chat.py`
 
-> 路径：`modules/intelligence/enhanced_chat.py` | 行数：459
+> 路径：`modules/intelligence/enhanced_chat.py` | 行数：460
 
 
 ---
@@ -120,8 +120,8 @@ class EnhancedChatWidget(QWidget):
         self._chat_history.setReadOnly(True)
         self._chat_history.setStyleSheet("""
             QTextEdit {
-                background: #f8f9fa;
-                border: 1px solid #e0e4ea;
+                background: rgba(8,4,16,220); color: #bb99dd;
+                border: 1px solid rgba(170,80,255,35);
                 border-radius: 8px;
                 padding: 10px;
             }
@@ -138,13 +138,12 @@ class EnhancedChatWidget(QWidget):
         send_btn = QPushButton("发送")
         send_btn.setStyleSheet("""
             QPushButton {
-                background: #3498db;
-                color: white;
+                background: rgba(150,60,220,40); color: #ddaaff;
                 padding: 8px 20px;
-                border-radius: 6px;
-                font-weight: bold;
+                border: 1px solid rgba(170,80,240,60);
+                border-radius: 6px; font-weight: bold;
             }
-            QPushButton:hover { background: #2980b9; }
+            QPushButton:hover { background: rgba(170,80,240,70); }
         """)
         send_btn.clicked.connect(self._send_message)
         input_layout.addWidget(send_btn)
@@ -161,17 +160,18 @@ class EnhancedChatWidget(QWidget):
         self._tool_list = QListWidget()
         self._tool_list.setStyleSheet("""
             QListWidget {
-                border: 1px solid #e0e4ea;
+                background: rgba(8,4,16,200); color: #bb99dd;
+                border: 1px solid rgba(170,80,255,35);
                 border-radius: 8px;
                 padding: 5px;
             }
             QListWidget::item {
                 padding: 8px;
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid rgba(170,80,255,25);
             }
             QListWidget::item:selected {
-                background: #3498db;
-                color: white;
+                background: rgba(150,60,220,60);
+                color: #ddaaff;
             }
         """)
         right_layout.addWidget(self._tool_list)
@@ -187,14 +187,13 @@ class EnhancedChatWidget(QWidget):
         self._exec_btn = QPushButton("▶ 执行选中工具")
         self._exec_btn.setStyleSheet("""
             QPushButton {
-                background: #27ae60;
-                color: white;
+                background: rgba(60,180,100,40); color: #88ffbb;
                 padding: 10px;
-                border-radius: 6px;
-                font-weight: bold;
+                border: 1px solid rgba(80,200,120,55);
+                border-radius: 6px; font-weight: bold;
             }
-            QPushButton:hover { background: #219a52; }
-            QPushButton:disabled { background: #95a5a6; }
+            QPushButton:hover { background: rgba(80,200,120,70); }
+            QPushButton:disabled { background: rgba(80,80,100,40); }
         """)
         self._exec_btn.clicked.connect(self._execute_selected_tool)
         right_layout.addWidget(self._exec_btn)
@@ -206,7 +205,7 @@ class EnhancedChatWidget(QWidget):
 
         # 状态栏
         self._status_label = QLabel("就绪")
-        self._status_label.setStyleSheet("color: #666; padding: 5px;")
+        self._status_label.setStyleSheet("color: #776699; padding: 5px; background: transparent;")
         layout.addWidget(self._status_label)
 
         # 进度条
@@ -381,8 +380,10 @@ class EnhancedChatWidget(QWidget):
             elif '会话' in message:
                 tool_name = 'session_create'
             else:
-                tool_name = 'exec'
-                params = {"command": message}
+                self._append_message("AI", f"未识别到匹配工具，请在工具面板中手动选择工具执行。\n您的输入: {message}")
+                self._progress.setVisible(False)
+                self._status_label.setText("就绪")
+                return
 
         # 执行工具
         self._execute_tool_async(tool_name, params)
@@ -433,20 +434,20 @@ class EnhancedChatWidget(QWidget):
     def _append_message(self, sender, message):
         """添加消息到历史"""
         colors = {
-            "用户": "#2c3e50",
-            "AI": "#3498db",
-            "🧠 AI": "#9b59b6",
-            "💡 洞察": "#f39c12",
-            "🛠️ 结果": "#27ae60",
-            "🛠️ 执行": "#27ae60",
-            "❌ 错误": "#e74c3c",
+            "用户": "#ffaa44",
+            "AI": "#44ccff",
+            "🧠 AI": "#aa88dd",
+            "💡 洞察": "#ffcc44",
+            "🛠️ 结果": "#44cc88",
+            "🛠️ 执行": "#44cc88",
+            "❌ 错误": "#ff6666",
         }
-        color = colors.get(sender, "#666")
+        color = colors.get(sender, "#776699")
 
         self._chat_history.append(f"""
 <div style='margin: 8px 0;'>
     <span style='color: {color}; font-weight: bold;'>{sender}:</span>
-    <span style='color: #333;'>{message}</span>
+    <span style='color: #ccbbdd;'>{message}</span>
 </div>
 """)
 

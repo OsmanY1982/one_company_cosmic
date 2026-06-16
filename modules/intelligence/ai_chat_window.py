@@ -545,7 +545,7 @@ class AIChatWindow(QWidget):
                     f'<p style="color:#ff6644;font-size:10px;">[系统] 朗读失败: {e}</p>'
                 )
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
     def _do_speak(self):
         """执行朗读逻辑"""
@@ -638,7 +638,7 @@ class AIChatWindow(QWidget):
             try:
                 self._session_manager._load_sessions()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         # 注销全局上下文
         session_ctx.unregister_window(self)
         session_ctx.remove_message_listener(self._on_external_message)
@@ -647,7 +647,7 @@ class AIChatWindow(QWidget):
             try:
                 self._voice_input.stop_listening()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         super().closeEvent(event)
 
     # ─── 语音输入 ───
@@ -711,7 +711,7 @@ class AIChatWindow(QWidget):
             try:
                 self._voice_input.stop_listening()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
     def _on_voice_input_result(self, text: str):
         """语音识别结果 → 填入输入框并自动发送"""
@@ -750,7 +750,7 @@ class AIChatWindow(QWidget):
             try:
                 self._bridge.save_session([], new_id)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
         self._session_manager._load_sessions()
 
     def _on_session_deleted(self, session_id: str):
@@ -892,7 +892,7 @@ class AIChatWindow(QWidget):
                     if lm and lm not in models:
                         models.append(lm)
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
         # 填充模型下拉
         self.cb_model.blockSignals(True)
@@ -1010,7 +1010,7 @@ class AIChatWindow(QWidget):
             try:
                 self._all_models = self._bridge.list_all_models()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
         # 重新触发供应商变化（刷新模型列表）
         current_idx = self.cb_provider.currentIndex()
@@ -1159,7 +1159,7 @@ class AIChatWindow(QWidget):
                 self._bridge.notify_message_added()
                 self._suppress_self_notify = False
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
     def _stream_error(self, err_msg: str):
         import sys, datetime
@@ -1191,7 +1191,7 @@ class AIChatWindow(QWidget):
                 self._bridge.notify_message_added()
                 self._suppress_self_notify = False
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
         # 附带文件内容（如已上传）
         prompt = text
@@ -1283,7 +1283,7 @@ class AIChatWindow(QWidget):
             try:
                 self._bridge.cancel()
             except Exception:
-                pass
+                import traceback; traceback.print_exc()
 
     # ─── 文件上传 ───
     def _on_upload_clicked(self):

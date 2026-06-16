@@ -1,6 +1,6 @@
 # `modules/intelligence/ai_center_window.py`
 
-> 路径：`modules/intelligence/ai_center_window.py` | 行数：355
+> 路径：`modules/intelligence/ai_center_window.py` | 行数：342
 
 
 ---
@@ -37,21 +37,8 @@ TABLE_STYLE = """
         font-weight: 700; font-size: 11px; letter-spacing: 1px;
     }
 """
-INPUT_STYLE = """
-    QTextEdit {
-        background: rgba(12,6,22,230); color: #ccbbdd;
-        border: 1px solid rgba(170,80,255,35); border-radius: 6px;
-        padding: 6px 10px; font-size: 12px;
-    }
-"""
-BTN_PRIMARY = """
-    QPushButton {
-        background: rgba(150,60,220,40); color: #ddaaff;
-        border: 1px solid rgba(170,80,240,60); border-radius: 16px;
-        padding: 6px 18px; font-size: 11px; font-weight: 600;
-    }
-    QPushButton:hover { background: rgba(170,80,240,70); }
-"""
+# 从 ai_chat_styles 继承通用样式（避免重复定义）
+from modules.intelligence.ai_chat_styles import INPUT_STYLE, BTN_PRIMARY
 SECTION_TITLE = "color: #aa88dd; font-size: 13px; font-weight: 700; background: transparent; padding: 4px 0;"
 SECTION_FRAME = "background: rgba(12,6,22,200); border: 1px solid rgba(170,80,255,25); border-radius: 10px;"
 

@@ -430,7 +430,30 @@ class OPCclawChatDialog(QDialog):
                 )
                 return
             except Exception:
-                pass  # 回退同步
+                import traceback; traceback.print_exc()
+                # 流式失败，回退同步
+
+        # 同步模式（回退 / 非流式引擎）
+        try:
+            reply = self._opcclaw.chat(text)
+        except Exception as e:
+            reply = f"OPCclaw 异常: {e}"
+
+        self._chat_log.append(
+            f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
+            f'<p style="color:#ccaaff;">{reply}</p>'
+        )
+        self._chat_input.setEnabled(True)
+        self._chat_input.setFocus()
+        # 实时保存 AI 回复
+        self._messages.append({"role": "assistant", "content": reply})
+        if self._session_id and hasattr(self._opcclaw, "append_message"):
+            try:
+                self._opcclaw.append_message("assistant", reply, self._session_id)
+            except Exception:
+                pass
+        sb = self._chat_log.verticalScrollBar()
+        sb.setValue(sb.maximum())
 
     # ═══ 流式回调（实例方法 — 确保 QueuedConnection 派发到主线程） ═══
 
@@ -500,21 +523,6 @@ class OPCclawChatDialog(QDialog):
             f'<span style="color:#888888;"> {name} {icon}</span> '
             f'<span style="color:#88ff88;">_</span></p>'
         )
-
-        # 同步模式（回退）
-        try:
-            reply = self._opcclaw.chat(text)
-        except Exception as e:
-            reply = f"OPCclaw 异常: {e}"
-
-        self._chat_log.append(
-            f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
-            f'<p style="color:#ccaaff;">{reply}</p>'
-        )
-        self._chat_input.setEnabled(True)
-        self._chat_input.setFocus()
-        sb = self._chat_log.verticalScrollBar()
-        sb.setValue(sb.maximum())
 
     # ═══ 悬浮球模式专属方法 ═══
 

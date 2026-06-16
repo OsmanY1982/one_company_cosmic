@@ -194,9 +194,9 @@ gen_book.py 自动扫描项目所有 .py 文件，清空并重建 `源码全书/
 执行 `python3 gen_book.py`，重新生成源码全书（`源码全书/` 目录）
 
 ### 2. D盘备份
-将整个项目目录同步到 `/Volumes/D盘工作区/一人公司宇宙版/`，替换旧备份：
+将整个项目目录同步到 `/Volumes/D盘工作区/一人公司宇宙版_备份/`（带 `_备份` 后缀，避免被当成源文件代码），替换旧备份：
 ```bash
-rsync -a --delete /Volumes/D盘工作区/一人公司/one_company_cosmic/ /Volumes/D盘工作区/一人公司宇宙版/
+rsync -a --delete /Volumes/D盘工作区/一人公司/one_company_cosmic/ /Volumes/D盘工作区/一人公司宇宙版_备份/
 ```
 
 ### 3. Git 备份
@@ -214,7 +214,7 @@ cd /Volumes/D盘工作区/一人公司/one_company_cosmic
 # 第1步：更新源码全书
 python3 gen_book.py
 # 第2步：D盘备份
-rsync -a --delete . /Volumes/D盘工作区/一人公司宇宙版/
+rsync -a --delete . /Volumes/D盘工作区/一人公司宇宙版_备份/
 # 第3步：Git备份
 git add -A
 git commit -m "备份: $(date '+%Y-%m-%d %H:%M') 描述改动"
