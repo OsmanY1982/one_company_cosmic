@@ -1997,3 +1997,67 @@ RuntimeError: [Ollama] 请求异常: timed out
 2026-06-17 09:27:06 [INFO] opcclaw.core.memory_store: Session deleted: 
 2026-06-17 09:27:14 [INFO] opcclaw.core.memory_store: Session deleted: 
 2026-06-17 09:27:27 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 09:28:10 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 09:32:25 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6141063168.
+2026-06-17 09:33:35 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":400,\"message\":\"Unable to generate parser for this template. Automatic parser generation failed: \\n------------\\nWhile executing CallExpression at line 85, column 32 in source:\\n...first %}↵            {{- raise_exception('System message must be at the beginnin...\\n                                           ^\\nError: Jinja Exception: System message must be at the beginning.\",\"type\":\"invalid_request_error\"}}","type":"invalid_request_error","pa
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 421, in _chat_stream_accumulate
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=600) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 451, in chat_stream
+    check_response = self.backend.chat(self.messages, None)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 371, in chat
+    return self._chat_stream_accumulate(
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 451, in _chat_stream_accumulate
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":400,\"message\":\"Unable to generate parser for this template. Automatic parser generation failed: \\n------------\\nWhile executing CallExpression at line 85, column 32 in source:\\n...first %}↵            {{- raise_exception('System message must be at the beginnin...\\n                                           ^\\nError: Jinja Exception: System message must be at the beginning.\",\"type\":\"invalid_request_error\"}}","type":"invalid_request_error","pa
+2026-06-17 09:34:02 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6140489728.
+2026-06-17 09:34:17 [ERROR] opcclaw: LLM API failed: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":400,\"message\":\"Unable to generate parser for this template. Automatic parser generation failed: \\n------------\\nWhile executing CallExpression at line 85, column 32 in source:\\n...first %}↵            {{- raise_exception('System message must be at the beginnin...\\n                                           ^\\nError: Jinja Exception: System message must be at the beginning.\",\"type\":\"invalid_request_error\"}}","type":"invalid_request_error","pa
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 237, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 455, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 376, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 257, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":400,\"message\":\"Unable to generate parser for this template. Automatic parser generation failed: \\n------------\\nWhile executing CallExpression at line 85, column 32 in source:\\n...first %}↵            {{- raise_exception('System message must be at the beginnin...\\n                                           ^\\nError: Jinja Exception: System message must be at the beginning.\",\"type\":\"invalid_request_error\"}}","type":"invalid_request_error","pa
+2026-06-17 09:35:28 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6142210048.

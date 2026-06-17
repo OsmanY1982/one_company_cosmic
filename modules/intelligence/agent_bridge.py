@@ -636,6 +636,17 @@ class AgentBridge:
             pass
         return {"cloud_providers": {}, "local_providers": {}}
 
+    @staticmethod
+    def _save_config(config_dict: dict):
+        """持久化 opcclaw_config.json"""
+        try:
+            cfg_path = AgentBridge._config_path()
+            os.makedirs(os.path.dirname(cfg_path), exist_ok=True)
+            with open(cfg_path, "w", encoding="utf-8") as f:
+                json.dump(config_dict, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"[AgentBridge] 保存配置失败: {e}")
+
     def get_model(self) -> str:
         """获取当前使用的模型名"""
         return getattr(self.backend.config, "model", "") if hasattr(self.backend, "config") else ""
@@ -768,6 +779,19 @@ class AgentBridge:
             timeout_seconds=900,
             verbose=True,
         )
+
+        # ── 持久化当前模型选择，重启后自动恢复 ──
+        is_cloud = provider_id in config.get("cloud_providers", {})
+        is_local = provider_id in config.get("local_providers", {})
+        config["active_provider_id"] = provider_id
+        if is_cloud:
+            config["active_provider_type"] = "cloud"
+            config["cloud_providers"][provider_id]["model"] = model
+        elif is_local:
+            config["active_provider_type"] = "local"
+            config["local_providers"][provider_id]["model"] = model
+        AgentBridge._save_config(config)
+
         print(f"[AgentBridge] 模型切换: {old_model} → {model} (供应商: {cfg.name})")
         return True
 
