@@ -122,6 +122,30 @@ class ChatSessionManager(QWidget):
         self._list_widget.customContextMenuRequested.connect(self._show_context_menu)
         layout.addWidget(self._list_widget, 1)
 
+        # 打开对话文件夹按钮
+        folder_btn_layout = QHBoxLayout()
+        folder_btn_layout.setContentsMargins(10, 4, 10, 4)
+        self._open_folder_btn = QPushButton("打开对话文件夹")
+        self._open_folder_btn.setCursor(Qt.PointingHandCursor)
+        self._open_folder_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #1e1e3a;
+                color: #8888aa;
+                border: 1px solid #2a2a4a;
+                border-radius: 4px;
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+            QPushButton:hover {
+                background-color: #2a2a5a;
+                color: #aaaacc;
+                border-color: #3a3a6a;
+            }
+        """)
+        self._open_folder_btn.clicked.connect(self._on_open_folder)
+        folder_btn_layout.addWidget(self._open_folder_btn)
+        layout.addLayout(folder_btn_layout)
+
         # 底部信息
         bottom = QHBoxLayout()
         bottom.setContentsMargins(10, 6, 10, 8)
@@ -250,6 +274,23 @@ class ChatSessionManager(QWidget):
 
     def _on_new_chat(self):
         self.new_chat_requested.emit()
+
+    def _on_open_folder(self):
+        """打开对话文件存储目录"""
+        import subprocess
+        import platform
+        try:
+            sessions_dir = self._agent.get_sessions_dir()
+            if not os.path.exists(sessions_dir):
+                os.makedirs(sessions_dir, exist_ok=True)
+            if platform.system() == "Darwin":
+                subprocess.Popen(["open", sessions_dir])
+            elif platform.system() == "Windows":
+                os.startfile(sessions_dir)
+            else:
+                subprocess.Popen(["xdg-open", sessions_dir])
+        except Exception as e:
+            QMessageBox.warning(self, "打开失败", f"无法打开对话文件夹:\n{e}")
 
     def _select_session(self, session_id: str, title: str):
         """选中会话（从自定义 item widget 触发）"""

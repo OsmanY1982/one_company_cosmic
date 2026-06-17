@@ -607,6 +607,10 @@ class AgentBridge:
         except Exception:
             return False
 
+    def get_sessions_dir(self) -> str:
+        """返回会话文件的存储目录路径"""
+        return self._memory.get_sessions_dir()
+
     # ═══════════════════════════════════════════
     # 模型管理（统一配置入口，替代分散的 llm_config.json）
     # ═══════════════════════════════════════════

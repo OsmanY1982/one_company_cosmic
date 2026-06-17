@@ -174,6 +174,10 @@ class SmartMemoryStore:
         """置顶/取消置顶会话（旧版）。返回 True=已置顶, False=已取消"""
         return self._legacy.toggle_pin_session(session_id)
 
+    def get_sessions_dir(self) -> str:
+        """返回会话文件的存储目录路径"""
+        return self._legacy.sessions_dir
+
     def read_memory(self, name: str) -> str:
         """读取记忆（旧版）"""
         return self._legacy.read_memory(name)
