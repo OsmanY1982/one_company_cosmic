@@ -1,6 +1,6 @@
 # `modules/intelligence/chat_session_manager.py`
 
-> 路径：`modules/intelligence/chat_session_manager.py` | 行数：525
+> 路径：`modules/intelligence/chat_session_manager.py` | 行数：506
 
 
 ---
@@ -19,14 +19,13 @@ from PyQt5.QtWidgets import (
     QListWidgetItem, QPushButton, QLineEdit, QLabel, QMenu,
     QMessageBox, QFileDialog, QDialog, QInputDialog,
 )
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtCore import pyqtSignal, Qt, QSize
 
 
 class ChatSessionManager(QWidget):
     """AI对话 — 会话列表管理面板（左侧边栏）"""
 
     session_selected = pyqtSignal(str, str)     # session_id, title
-    session_deleted = pyqtSignal(str)            # session_id（通知外部）
     new_chat_requested = pyqtSignal()            # 请求新建会话
     session_copy_requested = pyqtSignal(str)     # session_id（请求复制会话）
 
@@ -131,6 +130,30 @@ class ChatSessionManager(QWidget):
         self._list_widget.customContextMenuRequested.connect(self._show_context_menu)
         layout.addWidget(self._list_widget, 1)
 
+        # 打开对话文件夹按钮
+        folder_btn_layout = QHBoxLayout()
+        folder_btn_layout.setContentsMargins(10, 4, 10, 4)
+        self._open_folder_btn = QPushButton("打开对话文件夹")
+        self._open_folder_btn.setCursor(Qt.PointingHandCursor)
+        self._open_folder_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #1e1e3a;
+                color: #8888aa;
+                border: 1px solid #2a2a4a;
+                border-radius: 4px;
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+            QPushButton:hover {
+                background-color: #2a2a5a;
+                color: #aaaacc;
+                border-color: #3a3a6a;
+            }
+        """)
+        self._open_folder_btn.clicked.connect(self._on_open_folder)
+        folder_btn_layout.addWidget(self._open_folder_btn)
+        layout.addLayout(folder_btn_layout)
+
         # 底部信息
         bottom = QHBoxLayout()
         bottom.setContentsMargins(10, 6, 10, 8)
@@ -166,78 +189,93 @@ class ChatSessionManager(QWidget):
 
     def _refresh_list(self, filter_text: str = ""):
         """刷新列表显示"""
-        self._list_widget.clear()
-        filtered = self._sessions
-        if filter_text:
-            ft = filter_text.lower()
-            filtered = [
-                s for s in self._sessions
-                if ft in s.get("title", "").lower()
-            ]
+        # 阻塞信号，避免 takeItem/addItem 过程中的信号抖动导致重入（参考 sidebar_panel.set_sessions）
+        self._list_widget.blockSignals(True)
+        try:
+            # 必须逐个 removeItemWidget 再清空列表。
+            # Qt 的 clear() 只删除 QListWidgetItem，不自动清理 setItemWidget 设置的 QWidget，
+            # 导致孤立 widget 累积在 viewport 下，干扰后续 item 的鼠标事件和信号连接。
+            while self._list_widget.count():
+                item = self._list_widget.takeItem(0)
+                if item:
+                    self._list_widget.removeItemWidget(item)
 
-        for s in filtered:
-            sid = s.get("session_id", "")
-            title = s.get("title", "未命名对话")[:30]
-            msg_count = s.get("message_count", 0)
-            updated = s.get("updated_at", "")
-            try:
-                dt = datetime.fromisoformat(updated)
-                if dt.date() == datetime.now().date():
-                    time_str = dt.strftime("今天 %H:%M")
-                else:
-                    time_str = dt.strftime("%m-%d %H:%M")
-            except Exception:
-                time_str = ""
+            filtered = self._sessions
+            if filter_text:
+                ft = filter_text.lower()
+                filtered = [
+                    s for s in self._sessions
+                    if ft in s.get("title", "").lower()
+                ]
 
-            # 自定义行控件: 标题 + 信息 + 操作按钮
-            row = QWidget()
-            row.setStyleSheet("background: transparent;")
-            row.setCursor(Qt.PointingHandCursor)
-            row.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
-            row_layout = QHBoxLayout(row)
-            row_layout.setContentsMargins(8, 4, 4, 4)
-            row_layout.setSpacing(4)
+            for s in filtered:
+                sid = s.get("session_id", "")
+                title = s.get("title", "未命名对话")[:30]
+                msg_count = s.get("message_count", 0)
+                updated = s.get("updated_at", "")
+                try:
+                    dt = datetime.fromisoformat(updated)
+                    if dt.date() == datetime.now().date():
+                        time_str = dt.strftime("今天 %H:%M")
+                    else:
+                        time_str = dt.strftime("%m-%d %H:%M")
+                except Exception:
+                    time_str = ""
 
-            # 左侧文本区域
-            text_widget = QWidget()
-            text_layout = QVBoxLayout(text_widget)
-            text_layout.setContentsMargins(0, 0, 0, 0)
-            text_layout.setSpacing(1)
+                # 自定义行控件: 标题 + 信息 + 操作按钮
+                row = QWidget()
+                row.setStyleSheet("background: transparent;")
+                row.setCursor(Qt.PointingHandCursor)
+                row.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
+                row_layout = QHBoxLayout(row)
+                row_layout.setContentsMargins(8, 4, 4, 4)
+                row_layout.setSpacing(4)
 
-            title_lbl = QLabel(title)
-            title_lbl.setStyleSheet("color: #ccccdd; font-size: 12px; font-weight: bold; background: transparent;")
-            title_lbl.setCursor(Qt.PointingHandCursor)
-            title_lbl.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
-            text_layout.addWidget(title_lbl)
+                # 左侧文本区域
+                text_widget = QWidget()
+                text_layout = QVBoxLayout(text_widget)
+                text_layout.setContentsMargins(0, 0, 0, 0)
+                text_layout.setSpacing(1)
 
-            info_lbl = QLabel(f"{msg_count}条消息 · {time_str}")
-            info_lbl.setStyleSheet("color: #666688; font-size: 10px; background: transparent;")
-            text_layout.addWidget(info_lbl)
+                title_lbl = QLabel(title)
+                title_lbl.setStyleSheet("color: #ccccdd; font-size: 12px; font-weight: bold; background: transparent;")
+                title_lbl.setCursor(Qt.PointingHandCursor)
+                title_lbl.mousePressEvent = lambda e, sid=sid, t=title: self._select_session(sid, t)
+                text_layout.addWidget(title_lbl)
 
-            row_layout.addWidget(text_widget, 1)
+                info_lbl = QLabel(f"{msg_count}条消息 · {time_str}")
+                info_lbl.setStyleSheet("color: #666688; font-size: 10px; background: transparent;")
+                text_layout.addWidget(info_lbl)
 
-            # ⋮ 三点菜单按钮
-            menu_btn = QPushButton("⋮")
-            menu_btn.setFixedSize(24, 20)
-            menu_btn.setCursor(Qt.PointingHandCursor)
-            menu_btn.setToolTip("更多操作")
-            menu_btn.setStyleSheet("""
-                QPushButton {
-                    background: transparent; color: #666688; border: none;
-                    border-radius: 4px; font-size: 14px; font-weight: bold;
-                }
-                QPushButton:hover { background: rgba(120,140,200,30); color: #8899cc; }
-            """)
-            menu_btn.clicked.connect(lambda checked, ses=sid, btn=menu_btn: self._show_session_menu(ses, btn))
-            row_layout.addWidget(menu_btn)
+                row_layout.addWidget(text_widget, 1)
 
-            item = QListWidgetItem()
-            item.setData(Qt.UserRole, sid)
-            item.setSizeHint(row.sizeHint())
-            self._list_widget.addItem(item)
-            self._list_widget.setItemWidget(item, row)
+                # ⋮ 三点菜单按钮
+                menu_btn = QPushButton("⋮")
+                menu_btn.setFixedSize(24, 20)
+                menu_btn.setCursor(Qt.PointingHandCursor)
+                menu_btn.setToolTip("更多操作")
+                menu_btn.setStyleSheet("""
+                    QPushButton {
+                        background: transparent; color: #666688; border: none;
+                        border-radius: 4px; font-size: 14px; font-weight: bold;
+                    }
+                    QPushButton:hover { background: rgba(120,140,200,30); color: #8899cc; }
+                """)
+                menu_btn.clicked.connect(lambda checked, ses=sid, btn=menu_btn: self._show_session_menu(ses, btn))
+                row_layout.addWidget(menu_btn)
 
-        self._count_label.setText(f"共 {len(filtered)} 个会话")
+                item = QListWidgetItem()
+                item.setData(Qt.UserRole, sid)
+                self._list_widget.addItem(item)
+                self._list_widget.setItemWidget(item, row)
+                # 补偿样式表 QListWidget::item { padding: 8px 10px; } 的垂直 padding (8+8=16px)，
+                # 否则 row widget 的文本会被上下截断，只显示一半。
+                sh = row.sizeHint()
+                item.setSizeHint(QSize(max(sh.width(), 200), max(sh.height(), 40) + 16))
+
+            self._count_label.setText(f"共 {len(filtered)} 个会话")
+        finally:
+            self._list_widget.blockSignals(False)
 
     def _on_search(self, text: str):
         self._refresh_list(text)
@@ -245,80 +283,26 @@ class ChatSessionManager(QWidget):
     def _on_new_chat(self):
         self.new_chat_requested.emit()
 
+    def _on_open_folder(self):
+        """打开对话文件存储目录"""
+        import subprocess
+        import platform
+        try:
+            sessions_dir = self._agent.get_sessions_dir()
+            if not os.path.exists(sessions_dir):
+                os.makedirs(sessions_dir, exist_ok=True)
+            if platform.system() == "Darwin":
+                subprocess.Popen(["open", sessions_dir])
+            elif platform.system() == "Windows":
+                os.startfile(sessions_dir)
+            else:
+                subprocess.Popen(["xdg-open", sessions_dir])
+        except Exception as e:
+            QMessageBox.warning(self, "打开失败", f"无法打开对话文件夹:\n{e}")
+
     def _select_session(self, session_id: str, title: str):
         """选中会话（从自定义 item widget 触发）"""
         self.session_selected.emit(session_id, title)
-
-    def _delete_session(self, session_id: str):
-        """删除会话（从删除按钮触发）—— 自定义暗色确认弹窗"""
-        print(f"[Delete] _delete_session called, session_id={session_id}", flush=True)
-        try:
-            self._do_delete_session(session_id)
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            print(f"[Delete] 删除异常: {e}", flush=True)
-
-    def _do_delete_session(self, session_id: str):
-        # 获取会话标题
-        sess_title = "未知对话"
-        for s in self._sessions:
-            if s.get("session_id") == session_id or s.get("id") == session_id:
-                sess_title = s.get("title", "对话")
-                break
-
-        dlg = QDialog(self)
-        dlg.setWindowTitle("确认删除")
-        dlg.setFixedSize(380, 130)
-        dlg.setAttribute(Qt.WA_StyledBackground, True)
-        dlg.setWindowModality(Qt.ApplicationModal)
-        dlg.setStyleSheet("""
-            QDialog { background-color: #1e1e3a; }
-            QLabel { color: #ccccdd; font-size: 13px; }
-            QPushButton { border: none; border-radius: 4px; padding: 6px 20px;
-                font-size: 12px; min-width: 70px; }
-            QPushButton#del_confirm { background-color: #aa3333; color: #ffcccc; }
-            QPushButton#del_confirm:hover { background-color: #cc4444; }
-            QPushButton#del_cancel { background-color: #2a2a4a; color: #ccccdd;
-                border: 1px solid #3a3a5a; }
-            QPushButton#del_cancel:hover { background-color: #3a3a6a; }
-        """)
-        layout = QVBoxLayout(dlg)
-        layout.setContentsMargins(20, 16, 20, 12)
-        layout.addWidget(QLabel(
-            f"确定要删除会话「{sess_title}」吗？\n删除后不可恢复。"
-        ))
-
-        btn_row = QHBoxLayout()
-        btn_row.addStretch()
-        btn_cancel = QPushButton("取消")
-        btn_cancel.setObjectName("del_cancel")
-        btn_cancel.clicked.connect(dlg.reject)
-        btn_row.addWidget(btn_cancel)
-        btn_confirm = QPushButton("确认删除")
-        btn_confirm.setObjectName("del_confirm")
-        btn_confirm.clicked.connect(dlg.accept)
-        btn_row.addWidget(btn_confirm)
-        layout.addLayout(btn_row)
-
-        print(f"[Delete] 显示确认弹窗, result={dlg.exec_()}", flush=True)
-        if dlg.result() == QDialog.Accepted:
-            print(f"[Delete] 用户确认删除, 调用后端 delete_session({session_id})", flush=True)
-            success = False
-            try:
-                success = self._agent._memory.delete_session(session_id)
-            except Exception as e:
-                print(f"[Delete] delete_session 异常: {e}", flush=True)
-                QMessageBox.warning(self, "删除失败", f"无法删除会话:\n{e}")
-                return
-            if not success:
-                print(f"[Delete] delete_session 返回 False", flush=True)
-                QMessageBox.warning(self, "删除失败", "无法删除该会话（可能已被移除）")
-                self._load_sessions()
-                return
-            print(f"[Delete] 删除成功, 刷新列表", flush=True)
-            self._load_sessions()
-            self.session_deleted.emit(session_id)
 
     def _show_session_menu(self, session_id: str, anchor_btn: QPushButton):
         """点击 ⋮ 弹出的操作菜单"""
@@ -362,8 +346,6 @@ class ChatSessionManager(QWidget):
         menu.addSeparator()
         copy_action = menu.addAction("📋 复制会话ID")
         export_action = menu.addAction("📤 导出会话")
-        menu.addSeparator()
-        delete_action = menu.addAction("🗑 删除")
 
         # 信号连接
         print(f"[Menu] 构建菜单 session_id={session_id}, pinned={pinned}", flush=True)
@@ -371,7 +353,6 @@ class ChatSessionManager(QWidget):
         rename_action.triggered.connect(lambda: self._rename_session(session_id))
         copy_action.triggered.connect(lambda: self._copy_session_id(session_id))
         export_action.triggered.connect(lambda: self._export_session(session_id))
-        delete_action.triggered.connect(lambda: self._delete_session(session_id))
 
         return menu
 

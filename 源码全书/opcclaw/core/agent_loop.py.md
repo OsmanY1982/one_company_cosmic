@@ -163,7 +163,7 @@ class AgentLoop(QObject):
     # 默认配置
     DEFAULT_MAX_ITERATIONS = 50
     DEFAULT_MAX_RETRIES = 3
-    DEFAULT_TIMEOUT_SECONDS = 300  # 5 分钟
+    DEFAULT_TIMEOUT_SECONDS = 600  # 10 分钟
 
     def __init__(
         self,

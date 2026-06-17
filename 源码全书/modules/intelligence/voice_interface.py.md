@@ -1,6 +1,6 @@
 # `modules/intelligence/voice_interface.py`
 
-> 路径：`modules/intelligence/voice_interface.py` | 行数：407
+> 路径：`modules/intelligence/voice_interface.py` | 行数：417
 
 
 ---
@@ -260,13 +260,23 @@ class VoiceInterface(QObject):
     # ── 合成 ──
 
     def speak(self, text: str, voice: str = None):
-        """朗读文本（直接播放）"""
+        """朗读文本（直接播放），自动停止旧播报防止重叠"""
+        # 终止旧的合成器，防止重叠播报
+        self.stop_speaking()
+
         v = voice or self.CHINESE_VOICES[self._voice_index][0]
         r = self.CHINESE_VOICES[self._voice_index][1]
         self._synthesizer = AppleSpeechSynthesizer(text, voice=v, rate=r)
         self._synthesizer.finished.connect(lambda: self.synthesis_done.emit())
         self._synthesizer.error_occurred.connect(lambda e: self.error_occurred.emit(e))
         self._synthesizer.start()
+
+    def stop_speaking(self):
+        """停止当前语音合成（如果有的话）"""
+        if self._synthesizer and self._synthesizer.isRunning():
+            self._synthesizer.terminate()
+            self._synthesizer.wait(500)
+            self._synthesizer = None
 
     # ── 切换语音 ──
 

@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-17 02:27
-> 共 648 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-17 10:07
+> 共 647 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -82,7 +82,6 @@
 │   │   ├── login_window.py
 │   │   ├── model_config_panel.py
 │   │   ├── model_setup_window.py
-│   │   ├── model_setup_window.py 14-25-19-598.py
 │   │   ├── upgrade_window.py
 │   ├── business/
 │   │   ├── __init__.py
@@ -1046,6 +1045,8 @@
 │   ├── utils.py
 │   ├── verify_sync.py
 ├── rules_project/
+├── ~/
+│   └── Desktop/
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
@@ -1119,7 +1120,6 @@
 - [`modules/auth/login_window.py`](./modules/auth/login_window.py.md)
 - [`modules/auth/model_config_panel.py`](./modules/auth/model_config_panel.py.md)
 - [`modules/auth/model_setup_window.py`](./modules/auth/model_setup_window.py.md)
-- [`modules/auth/model_setup_window.py 14-25-19-598.py`](./modules/auth/model_setup_window.py 14-25-19-598.py.md)
 - [`modules/auth/upgrade_window.py`](./modules/auth/upgrade_window.py.md)
 - [`modules/business/__init__.py`](./modules/business/__init__.py.md)
 - [`modules/business/business_window.py`](./modules/business/business_window.py.md)

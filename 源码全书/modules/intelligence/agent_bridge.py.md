@@ -1,6 +1,6 @@
 # `modules/intelligence/agent_bridge.py`
 
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：1963
+> 路径：`modules/intelligence/agent_bridge.py` | 行数：1991
 
 
 ---
@@ -297,7 +297,7 @@ class AgentBridge:
             engine=self._engine,
             max_iterations=50,
             max_retries=3,
-            timeout_seconds=600,  # 10 分钟
+            timeout_seconds=900,  # 15 分钟（35b+ 大模型需要更长推理时间）
             verbose=True,
         )
 
@@ -616,6 +616,10 @@ class AgentBridge:
         except Exception:
             return False
 
+    def get_sessions_dir(self) -> str:
+        """返回会话文件的存储目录路径"""
+        return self._memory.get_sessions_dir()
+
     # ═══════════════════════════════════════════
     # 模型管理（统一配置入口，替代分散的 llm_config.json）
     # ═══════════════════════════════════════════
@@ -640,6 +644,17 @@ class AgentBridge:
         except Exception:
             pass
         return {"cloud_providers": {}, "local_providers": {}}
+
+    @staticmethod
+    def _save_config(config_dict: dict):
+        """持久化 opcclaw_config.json"""
+        try:
+            cfg_path = AgentBridge._config_path()
+            os.makedirs(os.path.dirname(cfg_path), exist_ok=True)
+            with open(cfg_path, "w", encoding="utf-8") as f:
+                json.dump(config_dict, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"[AgentBridge] 保存配置失败: {e}")
 
     def get_model(self) -> str:
         """获取当前使用的模型名"""
@@ -770,9 +785,22 @@ class AgentBridge:
             engine=self._engine,
             max_iterations=50,
             max_retries=3,
-            timeout_seconds=600,
+            timeout_seconds=900,
             verbose=True,
         )
+
+        # ── 持久化当前模型选择，重启后自动恢复 ──
+        is_cloud = provider_id in config.get("cloud_providers", {})
+        is_local = provider_id in config.get("local_providers", {})
+        config["active_provider_id"] = provider_id
+        if is_cloud:
+            config["active_provider_type"] = "cloud"
+            config["cloud_providers"][provider_id]["model"] = model
+        elif is_local:
+            config["active_provider_type"] = "local"
+            config["local_providers"][provider_id]["model"] = model
+        AgentBridge._save_config(config)
+
         print(f"[AgentBridge] 模型切换: {old_model} → {model} (供应商: {cfg.name})")
         return True
 
