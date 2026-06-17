@@ -5595,3 +5595,4 @@
 {"timestamp": "2026-06-17T15:25:12.254592", "level": "INFO", "logger": "opcclaw", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "config_manager", "function": "_restore_api_keys", "line": 182}
 {"timestamp": "2026-06-17T15:26:35.275117", "level": "INFO", "logger": "opcclaw", "message": "OPCclaw 日志系统已启动 (level=INFO, json=False)", "module": "opcclaw_logging", "function": "install", "line": 246}
 {"timestamp": "2026-06-17T16:04:07.916833", "level": "INFO", "logger": "opcclaw", "message": "OPCclaw 日志系统已启动 (level=INFO, json=False)", "module": "opcclaw_logging", "function": "install", "line": 246}
+{"timestamp": "2026-06-17T16:12:59.203252", "level": "INFO", "logger": "opcclaw", "message": "OPCclaw 日志系统已启动 (level=INFO, json=False)", "module": "opcclaw_logging", "function": "install", "line": 246}

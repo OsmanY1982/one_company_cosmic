@@ -2675,3 +2675,4 @@ RuntimeError: [Ollama] 请求异常: Remote end closed connection without respon
 2026-06-17 15:25:12 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
 2026-06-17 15:26:35 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-17 16:04:07 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 16:12:59 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
