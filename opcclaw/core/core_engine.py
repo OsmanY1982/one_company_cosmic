@@ -650,13 +650,13 @@ class OPCclawCoreEngine:
         self.registry = ToolRegistry()
         init_builtin_tools(self.registry)
         
-        # 默认使用 Ollama 本地模型
+        # 默认使用 llama.cpp 本地模型
         if provider_config is None:
             provider_config = ProviderConfig(
-                name="Ollama",
+                name="llama.cpp",
                 provider_type="openai_compatible",
-                base_url="http://localhost:11434/v1",
-                model="qwen2.5:7b",
+                base_url="http://localhost:8080/v1",
+                model="Qwen3.6-35B-A3B-IQ2_M.gguf",
                 temperature=0.7,
                 max_tokens=262144
             )
@@ -819,7 +819,7 @@ class OPCclawCoreEngine:
 # 快捷函数
 # ═══════════════════════════════════════════
 
-def create_engine(model: str = "qwen2.5:7b", base_url: str = "http://localhost:11434/v1") -> OPCclawCoreEngine:
+def create_engine(model: str = "/Users/opc/.llama-models/Qwen3.6-35B-A3B-IQ2_M.gguf", base_url: str = "http://localhost:8080/v1") -> OPCclawCoreEngine:
     """创建引擎实例"""
     config = ProviderConfig(
         name="Ollama",

@@ -81,6 +81,7 @@ class ToolDefinition:
     description: str                 # 功能描述
     parameters: dict                 # JSON Schema 参数定义
     handler: Optional[callable] = None  # 实际执行的 Python 函数
+    category: str = ""               # 工具分类（可选）
 
     def to_openai_schema(self) -> dict:
         """转为 OpenAI function calling 格式"""
@@ -395,11 +396,12 @@ class OpenAICompatibleBackend(BaseLLMBackend):
         """检测是否为本地供应商（Ollama/localhost）"""
         try:
             return (
-                self.config.name == "Ollama"
+                self.config.name == "llama.cpp"
                 or "ollama" in self.config.provider_type.lower()
+                or "llama.cpp" in self.config.name.lower()
                 or "localhost" in self.config.base_url
                 or "127.0.0.1" in self.config.base_url
-                or "11434" in self.config.base_url
+                or "8080" in self.config.base_url
             )
         except Exception:
             return False
@@ -729,12 +731,12 @@ PROVIDER_TEMPLATES = {
     ),
     # ── 本地模型 (Ollama / LM Studio / vLLM 等) ──
     "ollama": ProviderConfig(
-        name="Ollama (本地)",
+        name="llama.cpp (本地)",
         provider_type="openai_compatible",
-        base_url="http://localhost:11434/v1",
-        model="qwen2.5:7b-64k",
+        base_url="http://localhost:8080/v1",
+        model="Qwen3.6-35B-A3B-IQ2_M.gguf",
         max_tokens=131072,            # 本地模型取 128K，实际由模型参数控制
-        description="Ollama 本地大模型运行时 - 一键启动, 支持数十种模型",
+        description="llama.cpp server - 本地大模型运行时",
         available_models=[],  # 模型列表由 /api/tags 动态获取
     ),
     "lmstudio": ProviderConfig(

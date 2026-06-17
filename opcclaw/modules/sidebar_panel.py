@@ -4,7 +4,7 @@ OPCclaw - 侧栏导航（含对话列表）
 
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel, QListWidget, QListWidgetItem, QHBoxLayout, QWidget, QApplication
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QCursor
+from PyQt5.QtGui import QCursor, QFont
 
 from ._shared import COLORS
 

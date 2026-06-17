@@ -2642,3 +2642,34 @@ RuntimeError: [Ollama] 请求异常: Remote end closed connection without respon
 2026-06-17 11:33:02 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
 2026-06-17 12:26:57 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-17 12:27:49 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6184579072.
+2026-06-17 14:27:20 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 15:05:48 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 15:09:24 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 15:15:24 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 15:18:17 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 15:18:17 [INFO] opcclaw.main: Initializing OPCclaw...
+2026-06-17 15:18:17 [INFO] opcclaw.main: Initializing OPCclaw...
+2026-06-17 15:18:17 [WARNING] opcclaw.main: 当前 Provider (ollama) 的 api_key 为空，AI 功能可能无法使用
+2026-06-17 15:18:17 [WARNING] opcclaw.main: 当前 Provider (ollama) 的 api_key 为空，AI 功能可能无法使用
+2026-06-17 15:18:18 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-06-17 15:19:38 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 15:19:38 [INFO] opcclaw.main: Initializing OPCclaw...
+2026-06-17 15:19:38 [INFO] opcclaw.main: Initializing OPCclaw...
+2026-06-17 15:19:39 [WARNING] opcclaw.main: 当前 Provider (ollama) 的 api_key 为空，AI 功能可能无法使用
+2026-06-17 15:19:39 [WARNING] opcclaw.main: 当前 Provider (ollama) 的 api_key 为空，AI 功能可能无法使用
+2026-06-17 15:19:39 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-06-17 15:22:30 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 15:22:30 [INFO] opcclaw.main: Initializing OPCclaw...
+2026-06-17 15:22:30 [INFO] opcclaw.main: Initializing OPCclaw...
+2026-06-17 15:22:31 [WARNING] opcclaw.main: 当前 Provider (ollama) 的 api_key 为空，AI 功能可能无法使用
+2026-06-17 15:22:31 [WARNING] opcclaw.main: 当前 Provider (ollama) 的 api_key 为空，AI 功能可能无法使用
+2026-06-17 15:22:31 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-06-17 15:23:29 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-06-17 15:24:19 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-06-17 15:25:02 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-06-17 15:25:11 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 15:25:11 [INFO] opcclaw.main: Initializing OPCclaw...
+2026-06-17 15:25:11 [INFO] opcclaw.main: Initializing OPCclaw...
+2026-06-17 15:25:12 [WARNING] opcclaw.main: 当前 Provider (ollama) 的 api_key 为空，AI 功能可能无法使用
+2026-06-17 15:25:12 [WARNING] opcclaw.main: 当前 Provider (ollama) 的 api_key 为空，AI 功能可能无法使用
+2026-06-17 15:25:12 [INFO] opcclaw: [ConfigManager] 已恢复 local:ollama 的 API Key

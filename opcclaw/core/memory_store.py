@@ -405,6 +405,16 @@ class MemoryStore:
             return True
         return False
 
+    def get_personalized_context(self) -> Optional[str]:
+        """获取用户个性化上下文（称呼、人设偏好等）"""
+        try:
+            ctx = self.read_memory("user_persona")
+            if ctx and ctx.strip():
+                return ctx.strip()
+        except Exception:
+            pass
+        return None
+
     # ── Helpers ─────────────────────────────────────────────
 
     @staticmethod

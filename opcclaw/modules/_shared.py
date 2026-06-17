@@ -12,6 +12,7 @@ from PyQt5.QtGui import QFont
 
 COLORS = {
     "bg": "#F5F6FA",
+    "bg_alt": "#EBEDF3",
     "sidebar": "#1E2A3A",
     "sidebar_hover": "#2C3E50",
     "sidebar_active": "#3498DB",
