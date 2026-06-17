@@ -1,6 +1,6 @@
 # `opcclaw/core/llm_backend.py`
 
-> 路径：`opcclaw/core/llm_backend.py` | 行数：1085
+> 路径：`opcclaw/core/llm_backend.py` | 行数：1100
 
 
 ---
@@ -213,6 +213,21 @@ class OpenAICompatibleBackend(BaseLLMBackend):
         headers.update(self.config.extra_headers)
         return headers
 
+    def _sanitize_messages(self, messages: list[dict]) -> list[dict]:
+        """清洗消息列表，确保 content 字段不为 None/null。
+        
+        Ollama 及部分 OpenAI 兼容端点拒绝 content=null 的请求体（400），
+        但 ChatEngine 在 tool_calls 场景下会将 assistant 消息的 content 置为 None。
+        此处将 None 转为空字符串 ""，保留其他字段不变。
+        """
+        cleaned = []
+        for m in messages:
+            msg = dict(m)
+            if msg.get("content") is None:
+                msg["content"] = ""
+            cleaned.append(msg)
+        return cleaned
+
     def _build_payload(
         self,
         messages: list[dict],
@@ -222,7 +237,7 @@ class OpenAICompatibleBackend(BaseLLMBackend):
     ) -> dict:
         payload = {
             "model": self.config.model,
-            "messages": messages,
+            "messages": self._sanitize_messages(messages),
             "temperature": self.config.temperature,
             "max_tokens": self.config.max_tokens,
             "stream": stream,
