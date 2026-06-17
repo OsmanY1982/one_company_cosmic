@@ -22,7 +22,7 @@ from core.llm_client import LLMClient, ModelConfig, PROVIDERS
 from modules.intelligence.ai_chat_styles import INPUT_STYLE, BTN_SETTINGS, BTN_PRIMARY
 
 
-def _discover_ollama_models() -> list:
+def _discover_local_models() -> list:
     """自动发现本地 llama.cpp 已加载的模型"""
     try:
         import urllib.request, json
@@ -83,15 +83,15 @@ class LLMConfigDialog(QDialog):
         self.cb_model.setStyleSheet(INPUT_STYLE)
         self.cb_model.setMinimumWidth(260)
 
-        # 如果当前是 Ollama，填充发现模型
-        if self._config.provider == "ollama":
-            self._discovered_models = _discover_ollama_models()
+        # 如果当前是 llama_proxy，填充发现模型
+        if self._config.provider == "llama_proxy":
+            self._discovered_models = _discover_local_models()
             for m in self._discovered_models:
                 self.cb_model.addItem(m)
             self.cb_model.setCurrentText(self._config.model_name)
 
         self._refresh_model_btn = QPushButton("发现")
-        self._refresh_model_btn.setToolTip("从本地 Ollama / 远程 API 拉取可用模型列表")
+        self._refresh_model_btn.setToolTip("从本地 llama.cpp / 远程 API 拉取可用模型列表")
         self._refresh_model_btn.setFixedSize(50, 28)
         self._refresh_model_btn.setStyleSheet("""
             QPushButton {
@@ -159,16 +159,16 @@ class LLMConfigDialog(QDialog):
         if base_url:
             self.le_url.setText(base_url)
 
-        # Ollama 提供商：显示刷新按钮；其他隐藏或弱化
-        self._refresh_model_btn.setVisible(provider == "ollama")
+        # llama_proxy 提供商：显示刷新按钮；其他隐藏或弱化
+        self._refresh_model_btn.setVisible(provider == "llama_proxy")
 
     def _discover_models(self):
         """手动触发模型发现"""
         self.lbl_status.setText("正在发现模型...")
         try:
             provider = self.cb_provider.currentData()
-            if provider == "ollama":
-                models = _discover_ollama_models()
+            if provider == "llama_proxy":
+                models = _discover_local_models()
                 self.cb_model.clear()
                 if models:
                     for m in models:
@@ -179,7 +179,7 @@ class LLMConfigDialog(QDialog):
                 else:
                     self.cb_model.setEditText(self._config.model_name)
                     self.lbl_status.setText(
-                        '<span style="color:#ffaa44;">⚠ 未发现本地模型，请确认 Ollama 已启动</span>'
+                        '<span style="color:#ffaa44;">⚠ 未发现本地模型，请确认 llama.cpp 已启动</span>'
                     )
             else:
                 # 对其他提供商，尝试通过测试连接获取
@@ -233,7 +233,7 @@ class LLMConfigDialog(QDialog):
                 model_info = f"，可用模型: {', '.join(models[:8])}" if models else ""
 
                 # 自动填充发现模型到下拉框
-                if models and provider == "ollama":
+                if models and provider == "llama_proxy":
                     self.cb_model.clear()
                     for m in models:
                         self.cb_model.addItem(m)

@@ -1299,18 +1299,18 @@ CLOUD_MODELS = [
 # ── 本地模型（Ollama，免费）───────────────────────
 LOCAL_MODELS = [
     {
-        "id": "ollama_qwen25_1.5b",
+        "id": "llama_qwen25_1.5b",
         "name": "💻 本地 qwen2.5:1.5b",
-        "provider": "ollama",
+        "provider": "llama_proxy",
         "model_name": "qwen2.5:1.5b",
-        "hint": "需先安装 Ollama 并下载模型",
+        "hint": "需先启动 llama.cpp server 并下载模型",
     },
     {
-        "id": "ollama_qwen25_0.5b",
+        "id": "llama_qwen25_0.5b",
         "name": "💻 本地 qwen2.5:0.5b",
-        "provider": "ollama",
+        "provider": "llama_proxy",
         "model_name": "qwen2.5:0.5b",
-        "hint": "需先安装 Ollama 并下载模型",
+        "hint": "需先启动 llama.cpp server 并下载模型",
     },
 ]
 
@@ -1329,13 +1329,13 @@ def get_model_by_id(model_id: str) -> dict | None:
 def is_cloud_model(model_id: str) -> bool:
     """判断是否为云端模型（需要 API Key）"""
     m = get_model_by_id(model_id)
-    return m is not None and m["provider"] != "ollama"
+    return m is not None and m["provider"] != "llama_proxy"
 
 
 def is_local_model(model_id: str) -> bool:
     """判断是否为本地模型"""
     m = get_model_by_id(model_id)
-    return m is not None and m["provider"] == "ollama"
+    return m is not None and m["provider"] == "llama_proxy"
 
 
 def get_system_prompt() -> str:
