@@ -19,7 +19,7 @@ import threading
 class SyncBridge:
     """双端数据同步桥"""
     
-    DATA_DIR = Path("D:/one_company_desktop/data/sync")
+    DATA_DIR = Path(__file__).parent.parent.parent / "data" / "sync"
     SYNC_FILE = DATA_DIR / "panel_sync.json"
     LOCK_FILE = DATA_DIR / "sync.lock"
     VERSION_FILE = DATA_DIR / "sync.version"

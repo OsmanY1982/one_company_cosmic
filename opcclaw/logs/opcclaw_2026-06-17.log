@@ -2283,3 +2283,362 @@ Traceback (most recent call last):
 RuntimeError: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":400,\"message\":\"Unable to generate parser for this template. Automatic parser generation failed: \\n------------\\nWhile executing CallExpression at line 85, column 32 in source:\\n...first %}↵            {{- raise_exception('System message must be at the beginnin...\\n                                           ^\\nError: Jinja Exception: System message must be at the beginning.\",\"type\":\"invalid_request_error\"}}","type":"invalid_request_error","pa
 2026-06-17 10:49:00 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6151499776.
 2026-06-17 10:49:00 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:13:12 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 11:13:39 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6125580288.
+2026-06-17 11:13:39 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:13:39 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b-64k' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b-64k' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:14:20 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6118699008.
+2026-06-17 11:14:20 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:14:20 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b-64k' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b-64k' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:14:42 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6118699008.
+2026-06-17 11:14:42 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:14:42 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'gemma4-hermes:latest' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'gemma4-hermes:latest' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:15:07 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6118699008.
+2026-06-17 11:15:07 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:15:07 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b-64k' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b-64k' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:15:18 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6120419328.
+2026-06-17 11:15:18 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:15:18 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:15:29 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6118699008.
+2026-06-17 11:15:29 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:15:29 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'qwen3.6-35b-iq2m:latest' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'qwen3.6-35b-iq2m:latest' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:17:51 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 11:18:12 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6156316672.
+2026-06-17 11:18:12 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'qwen3.6-35b-iq2m:latest' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'qwen3.6-35b-iq2m:latest' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:18:26 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6130888704.
+2026-06-17 11:18:26 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'gemma4-hermes:latest' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'gemma4-hermes:latest' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:18:36 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6130888704.
+2026-06-17 11:18:36 [ERROR] opcclaw: LLM API failed: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b-64k' not found","type":"not_found_error","param":null,"code":null}}
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 252, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 453, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 391, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 272, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 404: {"error":{"message":"model 'qwen2.5:7b-64k' not found","type":"not_found_error","param":null,"code":null}}
+
+2026-06-17 11:18:45 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6130888704.
+2026-06-17 11:19:00 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:19:17 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:19:17 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:19:31 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:19:31 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:19:36 [ERROR] opcclaw: LLM API failed: [Ollama] 请求异常: Remote end closed connection without response
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 436, in _chat_stream_accumulate
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=600) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 285, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/chat_engine.py", line 451, in chat_stream
+    check_response = self.backend.chat(self.messages, None)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 386, in chat
+    return self._chat_stream_accumulate(
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/core/llm_backend.py", line 475, in _chat_stream_accumulate
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: Remote end closed connection without response
+2026-06-17 11:24:04 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 11:24:59 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6115405824.
+2026-06-17 11:26:15 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6098006016.
+2026-06-17 11:27:09 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6118273024.
+2026-06-17 11:27:48 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:28:16 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:28:16 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:29:08 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6116552704.
+2026-06-17 11:29:08 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:30:24 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6097432576.
+2026-06-17 11:30:24 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:30:46 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:31:04 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 11:31:21 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:31:40 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:32:27 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6117126144.
+2026-06-17 11:32:27 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:33:02 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 11:33:02 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-17 12:26:57 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-17 12:27:49 [WARNING] opcclaw: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6184579072.
