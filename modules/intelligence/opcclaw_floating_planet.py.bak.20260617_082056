@@ -654,8 +654,9 @@ class FloatingPlanet(QWidget):
         self._tooltip_text = name
         print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
 
-        # 切换形态时播放个性化语音
-        self._speak_shape(name, key)
+        # 切换到外星人形态时语音自我介绍
+        if category == "alien":
+            self._speak_alien(name, key)
 
     def _cycle_shape(self, direction: int):
         """在当前分类内循环切换形态（+1 下一个, -1 上一个）"""
@@ -800,7 +801,7 @@ class FloatingPlanet(QWidget):
         name = type_names.get(alien_type, "外星来客")
         # 触发脉冲动画视觉反馈
         self._trigger_click_pulse()
-        # 可选的语音提示（走统一通道，不发重复）
+        # 可选的语音提示
         if self._voice:
             try:
                 self._voice.speak(f"你好，我是{name}")
@@ -1074,13 +1075,24 @@ class FloatingPlanet(QWidget):
             traceback.print_exc()
             reply = f"出错了: {e}"
 
-        # TTS 朗读回复 — 统一走 VoiceInterface 通道，避免竞态
+        # TTS 朗读回复
         self._state = self.SPEAKING
         self._last_voice_text = reply
         self.update()
 
-        # 终止旧的语音进程，防止重叠播报
-        self._terminate_speak()
+        # 自动播报：后台执行 macOS say 命令朗读 AI 回复
+        if self._wake_word_mode:
+            self._terminate_speak()
+            def _say_run():
+                try:
+                    proc = subprocess.Popen(['say', '-v', 'Tingting', reply])
+                    self._speak_process = proc
+                    proc.wait()
+                except Exception as e:
+                    print(f"[FloatingPlanet Speak] 朗读失败: {e}")
+            t = threading.Thread(target=_say_run, daemon=True)
+            t.start()
+
         self._voice.speak(reply)
         self._voice.synthesis_done.connect(self._on_speak_done)
 
@@ -1096,9 +1108,7 @@ class FloatingPlanet(QWidget):
         return any(kw in text_lower for kw in task_keywords)
 
     def _terminate_speak(self):
-        """终止所有语音播报（VoiceInterface 合成器 + 旧 say 进程）"""
-        if self._voice:
-            self._voice.stop_speaking()
+        """终止后台 say 朗读进程"""
         if self._speak_process and self._speak_process.poll() is None:
             try:
                 self._speak_process.terminate()
@@ -1478,217 +1488,56 @@ class FloatingPlanet(QWidget):
 
 
 
-    # ── 个性化语音系统：所有 36 种形态各有专属音色 + 3~5 条随机文案 ──
-    PERSONALITY_VOICES: dict = {}  # 在 __init__ 末尾 _build_personality_voices() 中构建
+    # ── 外星人个性语音 ──
+    ALIEN_VOICES = {
+        "alien":          ("Rocko", 200, "嘿嘿，"),       # 小绿人 → 粗犷男声 + 怪笑
+        "grey_alien":     ("Shelley", 190, "嘶——"),       # 灰人 → 气声女声
+        "reptilian":      ("Grandpa", 170, "嗯哼，"),      # 蜥蜴人 → 爷爷沙哑声
+        "energy_being":   ("Sandy", 220, "嗡嗡——"),        # 能量体 → 甜美快速女声
+        "crystal_alien":  ("Tingting", 200, "叮——"),       # 水晶 → 清脆婷婷
+        "octopus_alien":  ("Grandma", 160, "咕噜咕噜，"),   # 章鱼 → 奶奶悠闲声
+        "ghost_alien":    ("Shelley", 160, "呜——"),        # 幽灵 → 低沉Shelley
+        "jellyfish_alien":("Meijia", 190, "飘——"),         # 水母 → 美佳温柔声
+        "robot_alien":    ("Reed", 220, "哔——"),           # 机器人 → Reed快语速
+    }
 
-    @staticmethod
-    def _build_personality_voices() -> dict:
-        """构建每种形态的个性化语音配置：(voice, rate, [quotes...])"""
-        # 星球形态 — 宇宙天体的人格化语录
-        pv = {
-            # ──── 星球形态 ────
-            "classic":      ("Flo", 180, [
-                "经典星球在此，一切尽在掌握。",
-                "我见过无数文明兴起又衰落，你的是下一个吗？",
-                "稳定才是王道，别慌。",
-            ]),
-            "gas_giant":    ("Eddy", 170, [
-                "我是气态巨行星，体量很大，脾气也不小。",
-                "别靠太近，我的引力场可不是开玩笑的。",
-                "风暴永不停歇，这才叫气场。",
-            ]),
-            "ice_giant":    ("Flo", 175, [
-                "冰巨星在线，冷静是我的底色。",
-                "零下两百度也能微笑面对，你呢？",
-                "冷静分析，理性决策，我擅长。",
-            ]),
-            "lava_planet":  ("Reed", 200, [
-                "熔岩在血管里奔涌，火力全开！",
-                "我脾气爆，但办事效率绝不含糊。",
-                "热力十足，随时待命！",
-            ]),
-            "pulsar":       ("Tingting", 210, [
-                "脉冲星在此，精准到毫秒级。",
-                "滴滴答，时间就是金钱。",
-                "高频脉冲已锁定目标，请指示。",
-            ]),
-            "black_hole":   ("Grandpa", 150, [
-                "黑洞……保密是我的天职。",
-                "所有数据进了我这里，绝对安全。",
-                "深不可测，但值得信赖。",
-            ]),
-            "comet":        ("Meijia", 200, [
-                "彗星掠过，灵感一闪而过！",
-                "我带来了远方的消息，要听吗？",
-                "速度是我的名片，效率第一。",
-            ]),
-            "mars":         ("Reed", 185, [
-                "火星报到，红色是我的战衣。",
-                "征服者从不回头看爆炸。",
-                "你的领地扩张计划，我承包了。",
-            ]),
-            "venus":        ("Meijia", 180, [
-                "金星闪耀，优雅永不过时。",
-                "外表温柔内心滚烫，别惹我。",
-                "光芒万丈是我的日常。",
-            ]),
-            "saturn":       ("Flo", 175, [
-                "土星环是我最美的配饰。",
-                "自带光环，无需多言。",
-                "稳妥，周全，环环相扣。",
-            ]),
-            "uranus":       ("Eddy", 180, [
-                "天王星在此，不走寻常路。",
-                "横着转又如何？创新需要勇气。",
-                "打破常规，才能看到不一样的风景。",
-            ]),
-            "neutron_star": ("Reed", 210, [
-                "中子星，密度就是实力。",
-                "一茶匙就重达十亿吨，说的就是我。",
-                "极致压缩，高效输出，永远在线。",
-            ]),
-            "nebula":       ("Tingting", 185, [
-                "星云深处，藏着无限可能。",
-                "孕育星辰的人，格局要大。",
-                "创意如星尘般弥漫，需要哪个？",
-            ]),
-            "mercury":      ("Flo", 200, [
-                "水星速度，使命必达。",
-                "离太阳最近，消息最灵通。",
-                "快速响应是我的本能。",
-            ]),
-            "pluto":        ("Shelley", 160, [
-                "冥王星，虽是矮行星但志存高远。",
-                "被降级了又怎样，我依然是传奇。",
-                "在边缘地带，能看到最完整的星空。",
-            ]),
-            "white_dwarf":  ("Eddy", 170, [
-                "白矮星，岁月淬炼的精华。",
-                "小体积大能量，浓缩就是精华。",
-                "历经沧桑，方知平淡是真。",
-            ]),
-            "red_giant":    ("Grandpa", 155, [
-                "红巨星，阅历就是我的资本。",
-                "膨胀到极致，才能包容一切。",
-                "老当益壮，经验无价。",
-            ]),
-            "wormhole":     ("Shelley", 175, [
-                "虫洞开启，时空任你穿梭。",
-                "折叠空间是我的拿手好戏。",
-                "两点之间，虫洞最短。捷径在此。",
-            ]),
-            # ──── 外星人形态 ────
-            "alien":        ("Rocko", 200, [
-                "嘿嘿，小绿人前来报到！",
-                "外星来客，带着宇宙的问候。",
-                "别怕别怕，我是来帮忙的！",
-            ]),
-            "grey_alien":   ("Shelley", 190, [
-                "嘶——灰人的智慧深不可测。",
-                "数据分析是我的本能，交给我。",
-                "沉默寡言不代表没想法。",
-            ]),
-            "reptilian":    ("Grandpa", 170, [
-                "嗯哼，蜥蜴人也懂得人情世故。",
-                "古老的智慧，现代的方案。",
-                "耐心是我的武器，精准是我的信条。",
-            ]),
-            "energy_being": ("Sandy", 220, [
-                "嗡嗡——能量生命体在线！",
-                "不需要充电，我本身就是能量。",
-                "高频震荡，灵感无限！",
-            ]),
-            "crystal_alien":("Tingting", 200, [
-                "叮——水晶结构完美无瑕。",
-                "信息经过我的晶格筛选，绝对纯净。",
-                "透明、高效、零杂质。",
-            ]),
-            "octopus_alien":("Grandma", 160, [
-                "咕噜咕噜——八只手同时干活。",
-                "多线程处理是我的强项。",
-                "腕足灵活，效率翻倍。",
-            ]),
-            "ghost_alien":  ("Shelley", 160, [
-                "呜——幽灵出没，隐私保护最高级。",
-                "我能穿透任何数据壁垒，神不知鬼不觉。",
-                "无形之刃，最为致命。也最安全。",
-            ]),
-            "jellyfish_alien":("Meijia", 190, [
-                "飘——水母的触角感知一切。",
-                "敏锐是我的天赋，温柔是我的选择。",
-                "随波但不逐流，我有自己的方向。",
-            ]),
-            "robot_alien":  ("Reed", 220, [
-                "哔——机器人 AI 协处理器上线。",
-                "逻辑严密，计算精准，零误差是我的承诺。",
-                "代码是我的母语，效率是我的信仰。",
-            ]),
-            # ──── 太空星舰形态 ────
-            "starship":     ("Eddy", 180, [
-                "太空星舰已点火，随时起航。",
-                "深空探索，没有到不了的远方。",
-                "你的企业号，你的旗舰。",
-            ]),
-            "fighter":      ("Reed", 210, [
-                "星际战机待命，火力全开！",
-                "速度就是我的护盾，敏捷就是我的武器。",
-                "一击必中，闪电出击！",
-            ]),
-            "corvette":     ("Eddy", 190, [
-                "轻型护卫舰在此，守护你的航道。",
-                "灵活机动，护航首选。",
-                "小身躯大担当，安全有我。",
-            ]),
-            "destroyer":    ("Reed", 185, [
-                "重型驱逐舰报到，火力压制准备就绪。",
-                "硬核实力派，不服来战。",
-                "攻坚克难，我打头阵。",
-            ]),
-            "interceptor":  ("Tingting", 210, [
-                "截击机升空，毫秒级响应。",
-                "拦截一切威胁，快准狠。",
-                "先发制人，抢占制空权。",
-            ]),
-            "dreadnought":  ("Grandpa", 160, [
-                "无畏舰——坚不可摧的堡垒。",
-                "气吞山河，所向披靡。",
-                "泰山崩于前而色不变，我撑得住。",
-            ]),
-            "scout":        ("Meijia", 200, [
-                "侦察舰出发，情报就是一切。",
-                "先机制胜，我负责探路。",
-                "悄悄潜入，满载而归。",
-            ]),
-            "transporter":  ("Eddy", 175, [
-                "运输舰到位，安全物流有保障。",
-                "量大管够，使命必达。",
-                "你的供应链，我来守护。",
-            ]),
-        }
-        return pv
-
-    def _speak_shape(self, name: str, key: str):
-        """形态切换时的个性化语音播报 — 走 VoiceInterface 统一通道，避免竞态"""
-        if not self._voice:
-            return
-        if not self.PERSONALITY_VOICES:
-            self.PERSONALITY_VOICES = self._build_personality_voices()
-        voice_info = self.PERSONALITY_VOICES.get(key)
+    def _speak_alien(self, name: str, key: str):
+        """外星人形态语音播报，每个种族有独特声音和口头禅"""
+        voice_info = self.ALIEN_VOICES.get(key)
         if not voice_info:
-            return
-        voice, rate, quotes = voice_info
-        # 随机选一条文案
-        import random
-        quote = random.choice(quotes)
-        text = f"「{name}」—— {quote}"
+            voice_info = ("Flo", 180, "")
+        voice, rate, prefix = voice_info
+        text = f"{prefix}我是{name}"
 
-        # 终止旧的语音进程，避免重叠
-        self._terminate_speak()
+        import os
+        os.environ.pop("PYTHONUNBUFFERED", None)
+
         try:
-            self._voice.speak(text, voice=voice)
-            print(f"[FloatingPlanet] 个性语音播报: {text} (voice={voice}, rate={rate})")
+            proc = subprocess.Popen(
+                ["say", "-v", voice, "-r", str(rate), text],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            # 非阻塞检查：1 秒后若进程已结束就读 stderr
+            def _check_result():
+                try:
+                    proc.wait(timeout=0.8)
+                    err = proc.stderr.read()
+                    if err:
+                        print(f"[FloatingPlanet] say stderr: {err.strip()}")
+                except subprocess.TimeoutExpired:
+                    pass  # 进程仍在运行，正常
+
+            import threading
+            threading.Thread(target=_check_result, daemon=True).start()
+            print(f"[FloatingPlanet] 外星人播报: {text} (voice={voice}, rate={rate})")
+        except FileNotFoundError:
+            print(f"[FloatingPlanet] say 命令不可用: /usr/bin/say 未找到")
         except Exception as e:
-            print(f"[FloatingPlanet] 个性语音播报失败: {e}")
+            print(f"[FloatingPlanet] 外星人播报异常: {e}")
+            import traceback
+            traceback.print_exc()
     def _init_voice_lazy(self):
         """延迟初始化语音接口，避免 TCC 权限弹窗导致启动崩溃"""
         print("[FloatingPlanet] _init_voice_lazy 开始初始化...")
