@@ -557,15 +557,15 @@ class QuickToolsWidget(QWidget):
             config = ConfigManager(data_dir)
             
             cfg = {
-                "name": f"Ollama ({model_name})",
+                "name": f"llama.cpp ({model_name})",
                 "provider_type": "openai_compatible",
-                "base_url": "http://localhost:11434/v1",
+                "base_url": "http://localhost:8080/v1",
                 "model": model_name,
-                "api_key": "ollama",  # Ollama 不需要真实 key
+                "api_key": "not-needed",
             }
             
-            config.add_provider("local", "ollama", cfg)
-            config.set_active_provider("ollama", "local")
+            config.add_provider("local", "llama_proxy", cfg)
+            config.set_active_provider("llama_proxy", "local")
             
             QMessageBox.information(self, "成功", f"已切换到本地模型: {model_name}\n请刷新 AI 对话标签页")
             self.use_local_model.emit(model_name)

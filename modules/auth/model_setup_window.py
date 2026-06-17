@@ -44,7 +44,6 @@ PRESET_PROVIDERS = [
 ]
 
 LOCAL_SERVICES = [
-    {"id": "ollama",    "name": "Ollama",     "base_url": "http://localhost:11434/v1", "desc": "本地 Ollama 推理引擎", "models": []},
     {"id": "lmstudio",  "name": "LM Studio",  "base_url": "http://localhost:1234/v1",  "desc": "图形界面管理模型，开箱即用",                       "models": ["local-model"]},
     {"id": "vllm",      "name": "vLLM",       "base_url": "http://localhost:8000/v1",  "desc": "高性能推理引擎，适合生产环境",                      "models": ["default"]},
     {"id": "llamacpp",  "name": "llama.cpp",  "base_url": "http://localhost:8080/v1",  "desc": "轻量 GGUF 模型推理",                              "models": ["local"]},

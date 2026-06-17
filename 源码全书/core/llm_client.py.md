@@ -1,6 +1,6 @@
 # `core/llm_client.py`
 
-> 路径：`core/llm_client.py` | 行数：247
+> 路径：`core/llm_client.py` | 行数：246
 
 
 ---
@@ -23,10 +23,10 @@ import httpx
 
 @dataclass
 class ModelConfig:
-    provider: str = "ollama"        # ollama / openai / deepseek / claude / qwen / custom
+    provider: str = "llama_proxy"        # llama_proxy / openai / deepseek / claude / qwen / custom
     api_key: str = ""
-    base_url: str = "http://localhost:11434"
-    model_name: str = "qwen2.5:7b"
+    base_url: str = "http://localhost:8080"
+    model_name: str = "qwen3.6-35b-iq2m"
     temperature: float = 0.7
     max_tokens: int = 2048
     extra_headers: dict = field(default_factory=dict)
@@ -49,13 +49,13 @@ class ModelConfig:
 
 # ── 预置提供商 ──
 PROVIDERS = {
-    "ollama": {
-        "name": "Ollama (本地)",
-        "base_url": "http://localhost:11434",
+    "llama_proxy": {
+        "name": "llama.cpp (本地)",
+        "base_url": "http://localhost:8080",
         "api_path": "/v1/chat/completions",
         "needs_key": False,
         "needs_model_list": True,
-        "list_path": "/api/tags",
+        "list_path": "/v1/models",
         "description": "本地运行，数据不出设备",
     },
     "openai": {
@@ -221,11 +221,11 @@ class LLMClient:
             return data["choices"][0]["message"]["content"]
 
     def fetch_ollama_models(self) -> List[str]:
-        """获取 Ollama 已安装的模型列表"""
+        """获取 llama.cpp 已加载的模型列表"""
         try:
-            resp = self.client.get("/api/tags")
+            resp = self.client.get("/v1/models")
             if resp.status_code == 200:
-                models = [m["name"] for m in resp.json().get("models", [])]
+                models = [m["id"] for m in resp.json().get("data", [])]
                 return models
         except Exception:
             traceback.print_exc()
@@ -233,21 +233,20 @@ class LLMClient:
 
     @staticmethod
     def discover_ollama_models() -> List[dict]:
-        """静态方法：自动发现本地 Ollama 模型，返回含名称/大小/参数量/能力的列表"""
+        """静态方法：自动发现本地 llama.cpp 模型，返回含名称/大小的列表"""
         try:
             import urllib.request
-            resp = urllib.request.urlopen("http://localhost:11434/api/tags", timeout=3)
+            resp = urllib.request.urlopen("http://localhost:8080/v1/models", timeout=3)
             raw = json.loads(resp.read())
             result = []
-            for m in raw.get("models", []):
-                details = m.get("details", {})
+            for m in raw.get("data", []):
                 entry = {
-                    "name": m["name"],
-                    "size_mb": round(m.get("size", 0) / (1024 * 1024), 1),
-                    "param_size": details.get("parameter_size", "?"),
-                    "context_length": details.get("context_length", 0),
-                    "capabilities": m.get("capabilities", []),
-                    "modified": m.get("modified_at", ""),
+                    "name": m["id"],
+                    "size_mb": 0,
+                    "param_size": "?",
+                    "context_length": 0,
+                    "capabilities": [],
+                    "modified": "",
                 }
                 result.append(entry)
             return result

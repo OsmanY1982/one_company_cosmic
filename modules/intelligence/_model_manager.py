@@ -50,41 +50,22 @@ from ._ai_shared import ButtonAnimationHelper
 # ═══════════════════════════════════════════
 
 class OllamaManager:
-    """管理 Ollama 本地模型"""
+    """管理本地 LLM 模型（llama.cpp server / llama-proxy）"""
     
-    OLLAMA_URL = "http://localhost:11434"
+    SERVER_URL = "http://localhost:8080"
     
     @classmethod
     def is_installed(cls) -> bool:
-        """检查 Ollama 是否已安装（跨平台）"""
-        try:
-            # Windows 用 where，macOS/Linux 用 which
-            cmd = "where" if sys.platform == "win32" else "which"
-            result = subprocess.run(
-                [cmd, "ollama"],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
-            return result.returncode == 0 and result.stdout.strip()
-        except Exception:
-            # 兜底：直接尝试运行 ollama --version
-            try:
-                subprocess.run(
-                    ["ollama", "--version"],
-                    capture_output=True,
-                    timeout=5
-                )
-                return True
-            except Exception:
-                return False
+        """检查 llama.cpp server 或 llama-proxy 是否可用"""
+        # 检查端口 8080 上的 llama.cpp 服务是否在运行
+        return cls.is_running()
     
     @classmethod
     def is_running(cls) -> bool:
-        """检查 Ollama 服务是否运行"""
+        """检查 llama.cpp 服务是否运行"""
         try:
             req = urllib.request.Request(
-                f"{cls.OLLAMA_URL}/api/tags",
+                f"{cls.SERVER_URL}/v1/models",
                 method="GET"
             )
             with urllib.request.urlopen(req, timeout=3) as resp:
@@ -94,74 +75,41 @@ class OllamaManager:
     
     @classmethod
     def start_service(cls) -> bool:
-        """启动 Ollama 服务"""
-        try:
-            # Windows: 使用 start 命令后台运行
-            subprocess.Popen(
-                ["ollama", "serve"],
-                creationflags=subprocess.CREATE_NEW_CONSOLE,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
+        """llama.cpp server 应手动启动，此处仅检查状态"""
+        if cls.is_running():
             return True
-        except Exception as e:
-            print(f"[OllamaManager] 启动失败: {e}")
-            return False
+        print("[OllamaManager] llama.cpp server 未运行，请手动启动 llama-proxy.py")
+        return False
     
     @classmethod
     def list_models(cls) -> list:
-        """获取已安装的模型列表"""
+        """获取已加载的模型列表（通过 /v1/models）"""
         try:
             req = urllib.request.Request(
-                f"{cls.OLLAMA_URL}/api/tags",
+                f"{cls.SERVER_URL}/v1/models",
                 method="GET"
             )
             with urllib.request.urlopen(req, timeout=5) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
-                return data.get("models", [])
+                # OpenAI 兼容格式: {"data": [{"id": "model-name", ...}]}
+                # 转为 Ollama 兼容格式: [{"name": "model-name", ...}]
+                raw_models = data.get("data", [])
+                return [{"name": m.get("id", ""), "size": 0} for m in raw_models]
         except Exception as e:
             print(f"[OllamaManager] 获取模型列表失败: {e}")
             return []
     
     @classmethod
     def delete_model(cls, model_name: str) -> bool:
-        """删除模型"""
-        try:
-            req = urllib.request.Request(
-                f"{cls.OLLAMA_URL}/api/delete",
-                data=json.dumps({"name": model_name}).encode("utf-8"),
-                headers={"Content-Type": "application/json"},
-                method="DELETE"
-            )
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                return resp.status == 200
-        except Exception as e:
-            print(f"[OllamaManager] 删除模型失败: {e}")
-            return False
+        """删除模型（llama-proxy 不支持，请手动删除 gguf 文件）"""
+        print(f"[OllamaManager] llama-proxy 不支持远程删除模型，请手动删除 ~/.llama-models/ 下的 {model_name}.gguf")
+        return False
 
     @classmethod
     def pull_model(cls, model_name: str, progress_callback=None) -> bool:
-        """下载模型"""
-        try:
-            req = urllib.request.Request(
-                f"{cls.OLLAMA_URL}/api/pull",
-                data=json.dumps({"name": model_name}).encode("utf-8"),
-                headers={"Content-Type": "application/json"},
-                method="POST"
-            )
-            
-            with urllib.request.urlopen(req, timeout=300) as resp:
-                for line in resp:
-                    try:
-                        data = json.loads(line.decode("utf-8"))
-                        if progress_callback:
-                            progress_callback(data)
-                    except Exception as e:
-                        print(f"[_model_manager] 流式 JSON 解析异常: {e}")
-            return True
-        except Exception as e:
-            print(f"[OllamaManager] 下载模型失败: {e}")
-            return False
+        """下载模型（llama-proxy 不支持，请手动下载 gguf）"""
+        print(f"[OllamaManager] llama-proxy 不支持远程下载模型，请手动下载 gguf 到 ~/.llama-models/")
+        return False
 
 
 # ═══════════════════════════════════════════
@@ -241,7 +189,7 @@ class DownloadModelDialog(QDialog):
         layout.setSpacing(20)
         
         # 标题
-        title = QLabel("⬇️ 下载 Ollama 模型")
+        title = QLabel("⬇️ 下载本地模型")
         title.setFont(QFont("PingFang SC", 20, QFont.Bold))
         title.setStyleSheet("color: #2c3e50;")
         layout.addWidget(title)

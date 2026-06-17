@@ -48,8 +48,8 @@ def init_system():
     config = ProviderConfig(
         name="Ollama",
         provider_type="openai_compatible",
-        base_url="http://localhost:11434/v1",
-        model="qwen2.5:7b",
+        base_url="http://localhost:8080/v1",
+        model="qwen3.6-35b-iq2m",
         temperature=0.7,
         max_tokens=2048
     )

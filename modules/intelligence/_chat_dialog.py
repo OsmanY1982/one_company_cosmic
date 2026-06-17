@@ -301,7 +301,12 @@ class OPCclawChatDialog(QDialog):
             except Exception:
                 all_models = []
         else:
-            all_models = []
+            # 兜底：直接调 AgentBridge 静态方法
+            try:
+                from modules.intelligence.agent_bridge import AgentBridge
+                all_models = AgentBridge.list_all_models()
+            except Exception:
+                all_models = []
 
         cloud_models = [m for m in all_models if m.get("category") == "cloud"]
         local_models = [m for m in all_models if m.get("category") == "local"]

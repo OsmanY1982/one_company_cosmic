@@ -266,7 +266,7 @@ class ConnectWindow(QMainWindow):
         al.setStyleSheet("color: #8899bb; font-size: 12px; background: transparent;")
         am_row.addWidget(al)
         self._url_input = QLineEdit()
-        self._url_input.setPlaceholderText("http://localhost:11434")
+        self._url_input.setPlaceholderText("http://localhost:8080")
         self._url_input.setStyleSheet(INPUT_STYLE)
         am_row.addWidget(self._url_input, 2)
 

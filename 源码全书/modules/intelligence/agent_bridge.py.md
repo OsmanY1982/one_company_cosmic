@@ -702,8 +702,8 @@ class AgentBridge:
             model = pdata.get("model", "")
             base_url = pdata.get("base_url", "")
 
-            # Ollama: 动态发现已安装模型
-            if pid == "ollama":
+            # 本地 provider：通过 /v1/models 动态发现模型
+            if base_url and "localhost" in base_url:
                 discovered = AgentBridge.discover_local_models()
                 if discovered:
                     for m in discovered:
@@ -730,14 +730,14 @@ class AgentBridge:
 
     @staticmethod
     def discover_local_models() -> list:
-        """自动发现本地 Ollama 已安装的模型（含大小）"""
+        """自动发现本地 llama.cpp 已加载的模型"""
         try:
             import urllib.request
-            resp = urllib.request.urlopen("http://localhost:11434/api/tags", timeout=3)
+            resp = urllib.request.urlopen("http://localhost:8080/v1/models", timeout=3)
             data = json.loads(resp.read())
             return [
-                {"name": m["name"], "size": m.get("size", 0)}
-                for m in data.get("models", [])
+                {"name": m["id"], "size": 0}
+                for m in data.get("data", [])
             ]
         except Exception:
             return []

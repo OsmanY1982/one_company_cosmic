@@ -14,12 +14,12 @@ from modules.intelligence.ai_chat_styles import INPUT_STYLE, BTN_SETTINGS, BTN_P
 
 
 def _discover_ollama_models() -> list:
-    """自动发现本地 Ollama 已安装的模型"""
+    """自动发现本地 llama.cpp 已加载的模型"""
     try:
         import urllib.request, json
-        resp = urllib.request.urlopen("http://localhost:11434/api/tags", timeout=3)
+        resp = urllib.request.urlopen("http://localhost:8080/v1/models", timeout=3)
         data = json.loads(resp.read())
-        return [m["name"] for m in data.get("models", [])]
+        return [m["id"] for m in data.get("data", [])]
     except Exception:
         return []
 

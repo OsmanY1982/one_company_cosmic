@@ -13,7 +13,7 @@ class ProviderConfig:
     """LLM 提供商配置"""
     name: str = "Ollama"
     provider_type: str = "openai_compatible"
-    base_url: str = "http://localhost:11434/v1"
+    base_url: str = "http://localhost:8080/v1"
     model: str = "qwen2.5:7b"
     temperature: float = 0.7
     max_tokens: int = 4096
