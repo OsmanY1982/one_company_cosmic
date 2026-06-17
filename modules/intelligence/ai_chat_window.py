@@ -342,7 +342,6 @@ class AIChatWindow(QWidget):
         self._session_manager = ChatSessionManager(self._bridge)
         self._session_manager.session_selected.connect(self._on_session_selected)
         self._session_manager.new_chat_requested.connect(self._on_new_session)
-        self._session_manager.session_deleted.connect(self._on_session_deleted)
         self._session_manager.session_copy_requested.connect(self._on_session_copy)
 
         self._splitter = QSplitter(Qt.Horizontal)
@@ -753,17 +752,6 @@ class AIChatWindow(QWidget):
             except Exception:
                 import traceback; traceback.print_exc()
         self._session_manager._load_sessions()
-
-    def _on_session_deleted(self, session_id: str):
-        """外部删除会话后：若为当前会话则切换到剩余的第一个，无剩余才新建"""
-        if self._current_session_id != session_id:
-            return
-        sessions = self._session_manager._sessions
-        if sessions:
-            s = sessions[0]
-            self._switch_to_session(s.get("session_id", ""), s.get("title", "对话"))
-        else:
-            self._on_new_session()
 
     def _on_session_copy(self, session_id: str):
         """复制会话：深拷贝消息列表并保存为新会话"""

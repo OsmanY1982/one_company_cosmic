@@ -17,7 +17,6 @@ class ChatSessionManager(QWidget):
     """AI对话 — 会话列表管理面板（左侧边栏）"""
 
     session_selected = pyqtSignal(str, str)     # session_id, title
-    session_deleted = pyqtSignal(str)            # session_id（通知外部）
     new_chat_requested = pyqtSignal()            # 请求新建会话
     session_copy_requested = pyqtSignal(str)     # session_id（请求复制会话）
 
@@ -296,77 +295,6 @@ class ChatSessionManager(QWidget):
         """选中会话（从自定义 item widget 触发）"""
         self.session_selected.emit(session_id, title)
 
-    def _delete_session(self, session_id: str):
-        """删除会话（从删除按钮触发）—— 自定义暗色确认弹窗"""
-        print(f"[Delete] _delete_session called, session_id={session_id}", flush=True)
-        try:
-            self._do_delete_session(session_id)
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            print(f"[Delete] 删除异常: {e}", flush=True)
-
-    def _do_delete_session(self, session_id: str):
-        # 获取会话标题
-        sess_title = "未知对话"
-        for s in self._sessions:
-            if s.get("session_id") == session_id or s.get("id") == session_id:
-                sess_title = s.get("title", "对话")
-                break
-
-        dlg = QDialog(self)
-        dlg.setWindowTitle("确认删除")
-        dlg.setFixedSize(380, 130)
-        dlg.setAttribute(Qt.WA_StyledBackground, True)
-        dlg.setWindowModality(Qt.ApplicationModal)
-        dlg.setStyleSheet("""
-            QDialog { background-color: #1e1e3a; }
-            QLabel { color: #ccccdd; font-size: 13px; }
-            QPushButton { border: none; border-radius: 4px; padding: 6px 20px;
-                font-size: 12px; min-width: 70px; }
-            QPushButton#del_confirm { background-color: #aa3333; color: #ffcccc; }
-            QPushButton#del_confirm:hover { background-color: #cc4444; }
-            QPushButton#del_cancel { background-color: #2a2a4a; color: #ccccdd;
-                border: 1px solid #3a3a5a; }
-            QPushButton#del_cancel:hover { background-color: #3a3a6a; }
-        """)
-        layout = QVBoxLayout(dlg)
-        layout.setContentsMargins(20, 16, 20, 12)
-        layout.addWidget(QLabel(
-            f"确定要删除会话「{sess_title}」吗？\n删除后不可恢复。"
-        ))
-
-        btn_row = QHBoxLayout()
-        btn_row.addStretch()
-        btn_cancel = QPushButton("取消")
-        btn_cancel.setObjectName("del_cancel")
-        btn_cancel.clicked.connect(dlg.reject)
-        btn_row.addWidget(btn_cancel)
-        btn_confirm = QPushButton("确认删除")
-        btn_confirm.setObjectName("del_confirm")
-        btn_confirm.clicked.connect(dlg.accept)
-        btn_row.addWidget(btn_confirm)
-        layout.addLayout(btn_row)
-
-        print(f"[Delete] 显示确认弹窗, result={dlg.exec_()}", flush=True)
-        if dlg.result() == QDialog.Accepted:
-            print(f"[Delete] 用户确认删除, 调用后端 delete_session({session_id})", flush=True)
-            success = False
-            try:
-                success = self._agent._memory.delete_session(session_id)
-            except Exception as e:
-                print(f"[Delete] delete_session 异常: {e}", flush=True)
-                QMessageBox.warning(self, "删除失败", f"无法删除会话:\n{e}")
-                return
-            if not success:
-                print(f"[Delete] delete_session 返回 False", flush=True)
-                QMessageBox.warning(self, "删除失败", "无法删除该会话（可能已被移除）")
-                self._load_sessions()
-                return
-            print(f"[Delete] 删除成功, 刷新列表", flush=True)
-            self._load_sessions()
-            self.session_deleted.emit(session_id)
-
     def _show_session_menu(self, session_id: str, anchor_btn: QPushButton):
         """点击 ⋮ 弹出的操作菜单"""
         print(f"[Menu] _show_session_menu, session_id={session_id}", flush=True)
@@ -409,8 +337,6 @@ class ChatSessionManager(QWidget):
         menu.addSeparator()
         copy_action = menu.addAction("📋 复制会话ID")
         export_action = menu.addAction("📤 导出会话")
-        menu.addSeparator()
-        delete_action = menu.addAction("🗑 删除")
 
         # 信号连接
         print(f"[Menu] 构建菜单 session_id={session_id}, pinned={pinned}", flush=True)
@@ -418,7 +344,6 @@ class ChatSessionManager(QWidget):
         rename_action.triggered.connect(lambda: self._rename_session(session_id))
         copy_action.triggered.connect(lambda: self._copy_session_id(session_id))
         export_action.triggered.connect(lambda: self._export_session(session_id))
-        delete_action.triggered.connect(lambda: self._delete_session(session_id))
 
         return menu
 
