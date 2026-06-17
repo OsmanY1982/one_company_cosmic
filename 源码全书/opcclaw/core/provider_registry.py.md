@@ -1,6 +1,6 @@
 # `opcclaw/core/provider_registry.py`
 
-> 路径：`opcclaw/core/provider_registry.py` | 行数：170
+> 路径：`opcclaw/core/provider_registry.py` | 行数：179
 
 
 ---
@@ -19,10 +19,10 @@ import json
 import httpx
 
 class ModelConfig:
-    provider: str = "ollama"        # ollama / openai / deepseek / claude / qwen / custom
+    provider: str = "custom"        # ollama / openai / deepseek / claude / qwen / custom
     api_key: str = ""
-    base_url: str = "http://localhost:11434"
-    model_name: str = "qwen2.5:7b-64k"
+    base_url: str = "http://localhost:8080/v1"
+    model_name: str = "/Users/opc/.llama-models/Qwen3.6-35B-A3B-IQ2_M.gguf"
     temperature: float = 0.7
     max_tokens: int = 262144
     extra_headers: dict = field(default_factory=dict)
@@ -48,13 +48,13 @@ class ModelConfig:
 
 PROVIDERS = {
     "ollama": {
-        "name": "Ollama (本地)",
-        "base_url": "http://localhost:11434",
+        "name": "llama.cpp (本地)",
+        "base_url": "http://localhost:8080",
         "api_path": "/v1/chat/completions",
         "needs_key": False,
         "needs_model_list": True,
-        "list_path": "/api/tags",
-        "description": "本地运行，数据不出设备",
+        "list_path": "/v1/models",
+        "description": "本地 llama.cpp 运行，数据不出设备",
     },
     "openai": {
         "name": "OpenAI",
@@ -100,25 +100,34 @@ PROVIDERS = {
 
 
 def discover_ollama_models() -> List[dict]:
-    """静态方法：自动发现本地 Ollama 模型，返回含名称/大小/参数量/能力的列表"""
+    """静态方法：自动发现本地 llama.cpp 模型（兼容 OpenAI /v1/models 格式）"""
     try:
         import urllib.request
-        resp = urllib.request.urlopen("http://localhost:11434/api/tags", timeout=3)
+        import os
+        resp = urllib.request.urlopen("http://localhost:8080/v1/models", timeout=3)
         raw = json.loads(resp.read())
         result = []
-        for m in raw.get("models", []):
-            details = m.get("details", {})
+        for m in raw.get("data", []):
+            model_id = m.get("id", "")
+            # 从文件路径提取模型名
+            model_name = os.path.basename(model_id) if model_id else model_id
+            # 获取文件大小
+            size_mb = 0
+            if model_id and os.path.exists(model_id):
+                size_mb = round(os.path.getsize(model_id) / (1024 * 1024), 1)
             entry = {
-                "name": m["name"],
-                "size_mb": round(m.get("size", 0) / (1024 * 1024), 1),
-                "param_size": details.get("parameter_size", "?"),
-                "context_length": details.get("context_length", 0),
-                "capabilities": m.get("capabilities", []),
-                "modified": m.get("modified_at", ""),
+                "name": model_id,
+                "display_name": model_name,
+                "size_mb": size_mb,
+                "param_size": "?",
+                "context_length": 16384,
+                "capabilities": [],
+                "modified": "",
             }
             result.append(entry)
         return result
     except Exception:
+        import traceback
         traceback.print_exc()
     return []
 
