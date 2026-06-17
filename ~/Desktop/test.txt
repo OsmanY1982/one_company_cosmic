@@ -1,0 +1,2 @@
+Hello from OPCclaw! This is a test file created on your desktop.
+Here are some words to show that OPCclaw can create files on the desktop.

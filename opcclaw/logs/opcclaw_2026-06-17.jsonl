@@ -5450,3 +5450,7 @@
 {"timestamp": "2026-06-17T09:19:27.649293", "level": "INFO", "logger": "opcclaw.core.memory_store", "message": "Session deleted: ", "module": "memory_store", "function": "delete_session", "line": 134}
 {"timestamp": "2026-06-17T09:19:47.374738", "level": "INFO", "logger": "opcclaw.core.memory_store", "message": "Session deleted: ", "module": "memory_store", "function": "delete_session", "line": 134}
 {"timestamp": "2026-06-17T09:19:53.414632", "level": "INFO", "logger": "opcclaw.core.memory_store", "message": "Session deleted: ", "module": "memory_store", "function": "delete_session", "line": 134}
+{"timestamp": "2026-06-17T09:24:34.610815", "level": "WARNING", "logger": "opcclaw.core.token_optimizer", "message": "Token optimization failed: 'NoneType' object has no attribute 'lower'", "module": "token_optimizer", "function": "optimize", "line": 44}
+{"timestamp": "2026-06-17T09:27:06.500988", "level": "INFO", "logger": "opcclaw.core.memory_store", "message": "Session deleted: ", "module": "memory_store", "function": "delete_session", "line": 134}
+{"timestamp": "2026-06-17T09:27:14.578476", "level": "INFO", "logger": "opcclaw.core.memory_store", "message": "Session deleted: ", "module": "memory_store", "function": "delete_session", "line": 134}
+{"timestamp": "2026-06-17T09:27:27.968809", "level": "INFO", "logger": "opcclaw.core.memory_store", "message": "Session deleted: ", "module": "memory_store", "function": "delete_session", "line": 134}

@@ -1993,3 +1993,7 @@ RuntimeError: [Ollama] 请求异常: timed out
 2026-06-17 09:19:27 [INFO] opcclaw.core.memory_store: Session deleted: 
 2026-06-17 09:19:47 [INFO] opcclaw.core.memory_store: Session deleted: 
 2026-06-17 09:19:53 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 09:24:34 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-17 09:27:06 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 09:27:14 [INFO] opcclaw.core.memory_store: Session deleted: 
+2026-06-17 09:27:27 [INFO] opcclaw.core.memory_store: Session deleted: 
