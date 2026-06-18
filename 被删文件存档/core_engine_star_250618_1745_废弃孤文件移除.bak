@@ -1,12 +1,3 @@
-# `modules/intelligence/core_engine_star.py`
-
-> 路径：`modules/intelligence/core_engine_star.py` | 行数：860
-
-
----
-
-
-```python
 """
 OPCclaw Core Engine v2.0 - 智能核心引擎
 支持 Function Calling、多轮工具调用、任务规划、代码执行
@@ -867,5 +858,3 @@ if __name__ == "__main__":
     
     response = engine.chat("帮我查询一下产品数据库，看看有哪些产品")
     print(f"AI: {response}")
-
-```

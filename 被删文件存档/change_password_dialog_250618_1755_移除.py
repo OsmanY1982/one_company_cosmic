@@ -1,12 +1,3 @@
-# `modules/auth/change_password_dialog.py`
-
-> 路径：`modules/auth/change_password_dialog.py` | 行数：194
-
-
----
-
-
-```python
 """
 修改密码对话框 — 通用（管理员和注册用户均可使用）
 宇宙主题风格
@@ -201,5 +192,3 @@ class ChangePasswordDialog(QDialog):
         painter.setPen(QPen(QBrush(g), 1))
         painter.drawLine(36, 1, w - 36, 1)
         painter.end()
-
-```

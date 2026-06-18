@@ -1,12 +1,3 @@
-# `modules/intelligence/opcclaw_employee.py`
-
-> 路径：`modules/intelligence/opcclaw_employee.py` | 行数：389
-
-
----
-
-
-```python
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -396,5 +387,3 @@ class BallCEOEngine:
                 if emp.status == EmployeeStatus.THINKING:
                     emp.status = EmployeeStatus.WORKING
                     emp.progress = 60
-
-```

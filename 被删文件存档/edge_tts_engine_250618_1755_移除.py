@@ -1,12 +1,3 @@
-# `modules/intelligence/edge_tts_engine.py`
-
-> 路径：`modules/intelligence/edge_tts_engine.py` | 行数：189
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 TTS 语音合成 — edge-tts（微软免费神经网络语音）
@@ -196,5 +187,3 @@ class TTSInterface:
             if v[0] == self._voice:
                 return f"{v[1]} ({v[0]})"
         return self._voice
-
-```

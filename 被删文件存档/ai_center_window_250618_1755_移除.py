@@ -1,12 +1,3 @@
-# `modules/intelligence/ai_center_window.py`
-
-> 路径：`modules/intelligence/ai_center_window.py` | 行数：342
-
-
----
-
-
-```python
 """
 智能中心 · NEURAL — 独立子窗口
 统计卡片（读取 order.db + product.db）+ 数据分析 + 智能报表 + 业务洞察
@@ -349,5 +340,3 @@ class AICenterWindow(QDialog):
     def _now_str():
         from datetime import datetime
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-```

@@ -1,12 +1,3 @@
-# `modules/intelligence/starship_painter.py`
-
-> 路径：`modules/intelligence/starship_painter.py` | 行数：2031
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 星舰舰桥 3D 渲染器 — QPainter 纯 2D API 模拟立体纵深感
@@ -2038,5 +2029,3 @@ class Starship4DWidget(QOpenGLWidget):
         delta = event.angleDelta().y() / 120.0
         self._cam_dist -= delta * 0.3
         self._cam_dist = max(1.5, min(10.0, self._cam_dist))
-
-```

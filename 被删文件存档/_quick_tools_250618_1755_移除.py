@@ -1,12 +1,3 @@
-# `modules/intelligence/_quick_tools.py`
-
-> 路径：`modules/intelligence/_quick_tools.py` | 行数：612
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 AI 助手模块 v3 — 支持本地模型管理
@@ -619,5 +610,3 @@ PLANETS = [
 
 
 
-
-```

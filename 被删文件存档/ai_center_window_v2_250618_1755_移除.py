@@ -1,12 +1,3 @@
-# `modules/intelligence/ai_center_window_v2.py`
-
-> 路径：`modules/intelligence/ai_center_window_v2.py` | 行数：664
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 智能中心 - 统一AI功能入口 (V2增强版)
@@ -671,4 +662,3 @@ if __name__ == '__main__':
     window = AICenterWindow()
     window.show()
     sys.exit(app.exec_())
-```

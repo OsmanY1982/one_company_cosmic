@@ -1,12 +1,3 @@
-# `modules/intelligence/bridge_window.py`
-
-> 路径：`modules/intelligence/bridge_window.py` | 行数：198
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 星舰舰桥窗口 — 全尺寸可缩放/全屏的舰桥内景
@@ -205,5 +196,3 @@ class CockpitWindow(QWidget):
     def closeEvent(self, event):
         self._anim_timer.stop()
         super().closeEvent(event)
-
-```

@@ -1,12 +1,3 @@
-# `modules/intelligence/llm_config_dialog.py`
-
-> 路径：`modules/intelligence/llm_config_dialog.py` | 行数：243
-
-
----
-
-
-```python
 """
 大模型配置对话框 — LLMConfigDialog v2
 v2 新增：Ollama 自动发现模型、测试连接后自动填充可用模型列表
@@ -250,5 +241,3 @@ class LLMConfigDialog(QDialog):
 
     def get_config(self) -> ModelConfig:
         return self._config
-
-```

@@ -1,12 +1,3 @@
-# `modules/intelligence/morning_briefing.py`
-
-> 路径：`modules/intelligence/morning_briefing.py` | 行数：131
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 每日早报生成器 — 自动汇总经营数据、异常告警、知识库状态
@@ -138,5 +129,3 @@ def generate_briefing_html() -> str:
         f'<div style="color:#666688;font-size:8px;margin-top:8px;">{data["date"]}</div>'
     )
     return "".join(lines)
-
-```

@@ -1,12 +1,3 @@
-# `modules/intelligence/ai_assistant_window_monolith_backup.py`
-
-> 路径：`modules/intelligence/ai_assistant_window_monolith_backup.py` | 行数：3148
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 AI 助手模块 v3 — 支持本地模型管理
@@ -3155,5 +3146,3 @@ class BusinessAIWidget(QWidget):
                 self._output.append("✅ 业务 AI 助手已就绪，可通过 query() 方法执行自然语言查询")
         except Exception as e:
             self._output.append(f"❌ 查询出错: {e}")
-
-```

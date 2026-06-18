@@ -1,12 +1,3 @@
-# `modules/intelligence/digital_employee_panel.py`
-
-> 路径：`modules/intelligence/digital_employee_panel.py` | 行数：433
-
-
----
-
-
-```python
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -440,5 +431,3 @@ class DigitalEmployeePanel(QDialog):
         super().showEvent(event)
         if not self._timer.isActive():
             self._timer.start(100)
-
-```

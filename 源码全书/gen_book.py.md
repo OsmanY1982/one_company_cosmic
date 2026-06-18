@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parent
 OUT_DIR = ROOT / "源码全书"
 
 SKIP_DIRS = {"__pycache__", "deps", ".git", "build", "dist", "assets", ".venv", "env",
-             "docs", "resources", "temp", "output", "项目全书", "源码全书"}
+             "docs", "resources", "temp", "output", "项目全书", "源码全书", "被删文件存档"}
 SKIP_EXT = {".pyc", ".pyo", ".whl", ".png", ".jpg", ".jpeg", ".gif", ".ico", ".icns",
             ".qrc", ".db", ".sqlite", ".log", ".bak"}
 

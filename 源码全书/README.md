@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-18 17:42
-> 共 660 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-18 18:02
+> 共 640 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -74,7 +74,6 @@
 │   │   ├── __init__.py
 │   │   ├── admin_login_dialog.py
 │   │   ├── auth_service.py
-│   │   ├── change_password_dialog.py
 │   │   ├── connect_window.py
 │   │   ├── login_window.py
 │   │   ├── model_config_panel.py
@@ -122,25 +121,19 @@
 │   │   ├── _ai_widgets_recommendation.py
 │   │   ├── _ai_widgets_visualization.py
 │   │   ├── _ai_widgets_workflow.py
-│   │   ├── _api_key_dialog.py
 │   │   ├── _chat_dialog.py
 │   │   ├── _compat.py
 │   │   ├── _model_manager.py
 │   │   ├── _model_manager_download.py
 │   │   ├── _model_manager_ollama.py
 │   │   ├── _navigation_hud.py
-│   │   ├── _quick_tools.py
 │   │   ├── _shell_dialogs.py
 │   │   ├── _stubs.py
-│   │   ├── advanced_features.py
 │   │   ├── agent_bridge.py
 │   │   ├── agent_bridge_models.py
 │   │   ├── agent_bridge_tools.py
 │   │   ├── agent_bridge_workers.py
 │   │   ├── ai_assistant_window.py
-│   │   ├── ai_assistant_window_monolith_backup.py
-│   │   ├── ai_center_window.py
-│   │   ├── ai_center_window_v2.py
 │   │   ├── ai_chat_styles.py
 │   │   ├── ai_chat_window.py
 │   │   ├── ai_dashboard_window.py
@@ -151,19 +144,14 @@
 │   │   ├── ai_features_sales_ai.py
 │   │   ├── analysis_tools.py
 │   │   ├── anomaly_detector.py
-│   │   ├── bridge_window.py
 │   │   ├── business_ai_assistant.py
 │   │   ├── business_tools.py
 │   │   ├── chat_session_manager.py
-│   │   ├── core_engine_star.py
 │   │   ├── crm_tools.py
 │   │   ├── data_import_tools.py
 │   │   ├── data_visualization.py
-│   │   ├── digital_display.py
 │   │   ├── digital_emp_window.py
 │   │   ├── digital_employee.py
-│   │   ├── digital_employee_panel.py
-│   │   ├── edge_tts_engine.py
 │   │   ├── editor_window.py
 │   │   ├── enhanced_chat.py
 │   │   ├── finance_analysis_tools.py
@@ -173,12 +161,9 @@
 │   │   ├── inventory_tools.py
 │   │   ├── key_manager.py
 │   │   ├── knowledge_base.py
-│   │   ├── llm_config_dialog.py
 │   │   ├── marketing_tools.py
 │   │   ├── model_config.py
-│   │   ├── morning_briefing.py
 │   │   ├── offline_analyzer.py
-│   │   ├── opcclaw_employee.py
 │   │   ├── opcclaw_floating_planet.py
 │   │   ├── performance_monitor.py
 │   │   ├── quick_actions.py
@@ -190,7 +175,6 @@
 │   │   ├── session_context.py
 │   │   ├── smart_report_tools.py
 │   │   ├── smart_workflow.py
-│   │   ├── starship_painter.py
 │   │   ├── super_intelligence.py
 │   │   ├── system_hub_window.py
 │   │   ├── system_monitor.py
@@ -217,7 +201,6 @@
 │   │   ├── system_window.py
 │   │   └── update_dialog.py
 │   ├── tools/
-│   │   ├── orbital_sphere.py
 │   └── __init__.py
 ├── opcclaw/
 │   ├── adapters/
@@ -406,7 +389,6 @@
 │   │   ├── animations.py
 │   │   ├── chat_window.py
 │   │   ├── chat_window_core.py
-│   │   ├── chat_window_monolith_backup.py
 │   │   ├── chat_worker.py
 │   │   ├── cloud_model_panel.py
 │   │   ├── config_manager.py
@@ -418,7 +400,6 @@
 │   │   ├── sidebar.py
 │   │   ├── sidebar_panel.py
 │   │   ├── skills_panel.py
-│   │   ├── styled_widgets.py
 │   │   ├── voice_manager.py
 │   │   └── widgets.py
 │   ├── plugins/
@@ -1058,10 +1039,6 @@
 ├── rules_project/
 ├── ~/
 │   └── Desktop/
-├── 被删文件存档/
-│   ├── modules/
-│   │   └── intelligence/
-│   ├── _model_manager_250618_1730_原文件移入存档.py
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
@@ -1129,7 +1106,6 @@
 - [`modules/auth/__init__.py`](./modules/auth/__init__.py.md)
 - [`modules/auth/admin_login_dialog.py`](./modules/auth/admin_login_dialog.py.md)
 - [`modules/auth/auth_service.py`](./modules/auth/auth_service.py.md)
-- [`modules/auth/change_password_dialog.py`](./modules/auth/change_password_dialog.py.md)
 - [`modules/auth/connect_window.py`](./modules/auth/connect_window.py.md)
 - [`modules/auth/login_window.py`](./modules/auth/login_window.py.md)
 - [`modules/auth/model_config_panel.py`](./modules/auth/model_config_panel.py.md)
@@ -1156,25 +1132,19 @@
 - [`modules/intelligence/_ai_widgets_recommendation.py`](./modules/intelligence/_ai_widgets_recommendation.py.md)
 - [`modules/intelligence/_ai_widgets_visualization.py`](./modules/intelligence/_ai_widgets_visualization.py.md)
 - [`modules/intelligence/_ai_widgets_workflow.py`](./modules/intelligence/_ai_widgets_workflow.py.md)
-- [`modules/intelligence/_api_key_dialog.py`](./modules/intelligence/_api_key_dialog.py.md)
 - [`modules/intelligence/_chat_dialog.py`](./modules/intelligence/_chat_dialog.py.md)
 - [`modules/intelligence/_compat.py`](./modules/intelligence/_compat.py.md)
 - [`modules/intelligence/_model_manager.py`](./modules/intelligence/_model_manager.py.md)
 - [`modules/intelligence/_model_manager_download.py`](./modules/intelligence/_model_manager_download.py.md)
 - [`modules/intelligence/_model_manager_ollama.py`](./modules/intelligence/_model_manager_ollama.py.md)
 - [`modules/intelligence/_navigation_hud.py`](./modules/intelligence/_navigation_hud.py.md)
-- [`modules/intelligence/_quick_tools.py`](./modules/intelligence/_quick_tools.py.md)
 - [`modules/intelligence/_shell_dialogs.py`](./modules/intelligence/_shell_dialogs.py.md)
 - [`modules/intelligence/_stubs.py`](./modules/intelligence/_stubs.py.md)
-- [`modules/intelligence/advanced_features.py`](./modules/intelligence/advanced_features.py.md)
 - [`modules/intelligence/agent_bridge.py`](./modules/intelligence/agent_bridge.py.md)
 - [`modules/intelligence/agent_bridge_models.py`](./modules/intelligence/agent_bridge_models.py.md)
 - [`modules/intelligence/agent_bridge_tools.py`](./modules/intelligence/agent_bridge_tools.py.md)
 - [`modules/intelligence/agent_bridge_workers.py`](./modules/intelligence/agent_bridge_workers.py.md)
 - [`modules/intelligence/ai_assistant_window.py`](./modules/intelligence/ai_assistant_window.py.md)
-- [`modules/intelligence/ai_assistant_window_monolith_backup.py`](./modules/intelligence/ai_assistant_window_monolith_backup.py.md)
-- [`modules/intelligence/ai_center_window.py`](./modules/intelligence/ai_center_window.py.md)
-- [`modules/intelligence/ai_center_window_v2.py`](./modules/intelligence/ai_center_window_v2.py.md)
 - [`modules/intelligence/ai_chat_styles.py`](./modules/intelligence/ai_chat_styles.py.md)
 - [`modules/intelligence/ai_chat_window.py`](./modules/intelligence/ai_chat_window.py.md)
 - [`modules/intelligence/ai_dashboard_window.py`](./modules/intelligence/ai_dashboard_window.py.md)
@@ -1189,21 +1159,16 @@
 - [`modules/intelligence/backup_p02/ai_chat_window.py`](./modules/intelligence/backup_p02/ai_chat_window.py.md)
 - [`modules/intelligence/backup_p02/intelligence_window.py`](./modules/intelligence/backup_p02/intelligence_window.py.md)
 - [`modules/intelligence/backup_p02/opcclaw_floating_planet.py`](./modules/intelligence/backup_p02/opcclaw_floating_planet.py.md)
-- [`modules/intelligence/bridge_window.py`](./modules/intelligence/bridge_window.py.md)
 - [`modules/intelligence/business_ai_assistant.py`](./modules/intelligence/business_ai_assistant.py.md)
 - [`modules/intelligence/business_tools.py`](./modules/intelligence/business_tools.py.md)
 - [`modules/intelligence/chat_session_manager.py`](./modules/intelligence/chat_session_manager.py.md)
 - [`modules/intelligence/core/__init__.py`](./modules/intelligence/core/__init__.py.md)
 - [`modules/intelligence/core/llm_backend.py`](./modules/intelligence/core/llm_backend.py.md)
-- [`modules/intelligence/core_engine_star.py`](./modules/intelligence/core_engine_star.py.md)
 - [`modules/intelligence/crm_tools.py`](./modules/intelligence/crm_tools.py.md)
 - [`modules/intelligence/data_import_tools.py`](./modules/intelligence/data_import_tools.py.md)
 - [`modules/intelligence/data_visualization.py`](./modules/intelligence/data_visualization.py.md)
-- [`modules/intelligence/digital_display.py`](./modules/intelligence/digital_display.py.md)
 - [`modules/intelligence/digital_emp_window.py`](./modules/intelligence/digital_emp_window.py.md)
 - [`modules/intelligence/digital_employee.py`](./modules/intelligence/digital_employee.py.md)
-- [`modules/intelligence/digital_employee_panel.py`](./modules/intelligence/digital_employee_panel.py.md)
-- [`modules/intelligence/edge_tts_engine.py`](./modules/intelligence/edge_tts_engine.py.md)
 - [`modules/intelligence/editor_window.py`](./modules/intelligence/editor_window.py.md)
 - [`modules/intelligence/enhanced/__init__.py`](./modules/intelligence/enhanced/__init__.py.md)
 - [`modules/intelligence/enhanced/enhanced_tools.py`](./modules/intelligence/enhanced/enhanced_tools.py.md)
@@ -1215,12 +1180,9 @@
 - [`modules/intelligence/inventory_tools.py`](./modules/intelligence/inventory_tools.py.md)
 - [`modules/intelligence/key_manager.py`](./modules/intelligence/key_manager.py.md)
 - [`modules/intelligence/knowledge_base.py`](./modules/intelligence/knowledge_base.py.md)
-- [`modules/intelligence/llm_config_dialog.py`](./modules/intelligence/llm_config_dialog.py.md)
 - [`modules/intelligence/marketing_tools.py`](./modules/intelligence/marketing_tools.py.md)
 - [`modules/intelligence/model_config.py`](./modules/intelligence/model_config.py.md)
-- [`modules/intelligence/morning_briefing.py`](./modules/intelligence/morning_briefing.py.md)
 - [`modules/intelligence/offline_analyzer.py`](./modules/intelligence/offline_analyzer.py.md)
-- [`modules/intelligence/opcclaw_employee.py`](./modules/intelligence/opcclaw_employee.py.md)
 - [`modules/intelligence/opcclaw_floating_planet.py`](./modules/intelligence/opcclaw_floating_planet.py.md)
 - [`modules/intelligence/performance_monitor.py`](./modules/intelligence/performance_monitor.py.md)
 - [`modules/intelligence/quick_actions.py`](./modules/intelligence/quick_actions.py.md)
@@ -1232,7 +1194,6 @@
 - [`modules/intelligence/session_context.py`](./modules/intelligence/session_context.py.md)
 - [`modules/intelligence/smart_report_tools.py`](./modules/intelligence/smart_report_tools.py.md)
 - [`modules/intelligence/smart_workflow.py`](./modules/intelligence/smart_workflow.py.md)
-- [`modules/intelligence/starship_painter.py`](./modules/intelligence/starship_painter.py.md)
 - [`modules/intelligence/super_intelligence.py`](./modules/intelligence/super_intelligence.py.md)
 - [`modules/intelligence/system_hub_window.py`](./modules/intelligence/system_hub_window.py.md)
 - [`modules/intelligence/system_monitor.py`](./modules/intelligence/system_monitor.py.md)
@@ -1256,7 +1217,6 @@
 - [`modules/system/system_hub_window.py`](./modules/system/system_hub_window.py.md)
 - [`modules/system/system_window.py`](./modules/system/system_window.py.md)
 - [`modules/system/update_dialog.py`](./modules/system/update_dialog.py.md)
-- [`modules/tools/orbital_sphere.py`](./modules/tools/orbital_sphere.py.md)
 - [`opcclaw/__init__.py`](./opcclaw/__init__.py.md)
 - [`opcclaw/__init___20260613_080428_724.py`](./opcclaw/__init___20260613_080428_724.py.md)
 - [`opcclaw/adapters/__init__.py`](./opcclaw/adapters/__init__.py.md)
@@ -1416,7 +1376,6 @@
 - [`opcclaw/modules/animations.py`](./opcclaw/modules/animations.py.md)
 - [`opcclaw/modules/chat_window.py`](./opcclaw/modules/chat_window.py.md)
 - [`opcclaw/modules/chat_window_core.py`](./opcclaw/modules/chat_window_core.py.md)
-- [`opcclaw/modules/chat_window_monolith_backup.py`](./opcclaw/modules/chat_window_monolith_backup.py.md)
 - [`opcclaw/modules/chat_worker.py`](./opcclaw/modules/chat_worker.py.md)
 - [`opcclaw/modules/cloud_model_panel.py`](./opcclaw/modules/cloud_model_panel.py.md)
 - [`opcclaw/modules/config_manager.py`](./opcclaw/modules/config_manager.py.md)
@@ -1428,7 +1387,6 @@
 - [`opcclaw/modules/sidebar.py`](./opcclaw/modules/sidebar.py.md)
 - [`opcclaw/modules/sidebar_panel.py`](./opcclaw/modules/sidebar_panel.py.md)
 - [`opcclaw/modules/skills_panel.py`](./opcclaw/modules/skills_panel.py.md)
-- [`opcclaw/modules/styled_widgets.py`](./opcclaw/modules/styled_widgets.py.md)
 - [`opcclaw/modules/voice_manager.py`](./opcclaw/modules/voice_manager.py.md)
 - [`opcclaw/modules/widgets.py`](./opcclaw/modules/widgets.py.md)
 - [`opcclaw/plugins/__init__.py`](./opcclaw/plugins/__init__.py.md)
@@ -1732,4 +1690,3 @@
 - [`planet_daemon.py`](./planet_daemon.py.md)
 - [`rollback_control.py`](./rollback_control.py.md)
 - [`siri_command_handler.py`](./siri_command_handler.py.md)
-- [`被删文件存档/_model_manager_250618_1730_原文件移入存档.py`](./被删文件存档/_model_manager_250618_1730_原文件移入存档.py.md)

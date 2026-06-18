@@ -1,12 +1,3 @@
-# `modules/intelligence/advanced_features.py`
-
-> 路径：`modules/intelligence/advanced_features.py` | 行数：510
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 高级功能面板 - 集成工作流、知识库、语音、可视化
@@ -517,5 +508,3 @@ if __name__ == "__main__":
     widget.resize(900, 700)
     widget.show()
     sys.exit(app.exec_())
-
-```

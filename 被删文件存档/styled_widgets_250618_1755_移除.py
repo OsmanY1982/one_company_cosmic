@@ -1,12 +1,3 @@
-# `opcclaw/modules/styled_widgets.py`
-
-> 路径：`opcclaw/modules/styled_widgets.py` | 行数：48
-
-
----
-
-
-```python
 """
 OPCclaw - 通用样式工具函数
 """
@@ -55,5 +46,3 @@ def _styled_input(placeholder: str = "", password: bool = False,
         QLineEdit:focus {{ border-color: {COLORS['primary']}; background: white; }}
     """)
     return inp
-
-```

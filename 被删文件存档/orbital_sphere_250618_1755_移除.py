@@ -1,12 +1,3 @@
-# `modules/tools/orbital_sphere.py`
-
-> 路径：`modules/tools/orbital_sphere.py` | 行数：282
-
-
----
-
-
-```python
 #!/usr/bin/env python3
 """
 桌面悬浮球 — 透明画布全屏渲染几十个球，鼠标穿透不挡操作。
@@ -289,5 +280,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-```

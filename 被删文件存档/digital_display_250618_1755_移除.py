@@ -1,12 +1,3 @@
-# `modules/intelligence/digital_display.py`
-
-> 路径：`modules/intelligence/digital_display.py` | 行数：586
-
-
----
-
-
-```python
 # -*- coding: utf-8 -*-
 """
 数字显示大屏样式 — 所有模块面板的 HUD/指挥中心主题
@@ -593,5 +584,3 @@ def make_hud_dialog(dialog_cls):
 
     dialog_cls.closeEvent = new_close
     return dialog_cls
-
-```
