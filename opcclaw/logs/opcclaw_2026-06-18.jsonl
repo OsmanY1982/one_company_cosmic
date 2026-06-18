@@ -72,3 +72,4 @@
 {"timestamp": "2026-06-18T08:36:30.732385", "level": "WARNING", "logger": "opcclaw.core.token_optimizer", "message": "Token optimization failed: object of type 'NoneType' has no len()", "module": "token_optimizer", "function": "optimize", "line": 44}
 {"timestamp": "2026-06-18T08:37:10.878387", "level": "WARNING", "logger": "opcclaw.core.token_optimizer", "message": "Token optimization failed: object of type 'NoneType' has no len()", "module": "token_optimizer", "function": "optimize", "line": 44}
 {"timestamp": "2026-06-18T09:28:30.877100", "level": "INFO", "logger": "opcclaw", "message": "OPCclaw 日志系统已启动 (level=INFO, json=False)", "module": "opcclaw_logging", "function": "install", "line": 246}
+{"timestamp": "2026-06-18T09:34:33.117196", "level": "INFO", "logger": "opcclaw", "message": "OPCclaw 日志系统已启动 (level=INFO, json=False)", "module": "opcclaw_logging", "function": "install", "line": 246}
