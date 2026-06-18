@@ -1,6 +1,6 @@
 # `opcclaw/core/task_scheduler.py`
 
-> 路径：`opcclaw/core/task_scheduler.py` | 行数：266
+> 路径：`opcclaw/core/task_scheduler.py` | 行数：268
 
 
 ---
@@ -44,8 +44,10 @@ class ScheduledTask:
 class TaskScheduler:
     """任务调度器"""
     
+    _DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "scheduler.db")
+
     def __init__(self, db_path: str = None):
-        self.db_path = db_path or "D:/one_company_desktop/data/scheduler.db"
+        self.db_path = db_path or self._DEFAULT_DB
         self.tasks: Dict[str, ScheduledTask] = {}
         self._handlers: Dict[str, Callable] = {}
         self._init_db()

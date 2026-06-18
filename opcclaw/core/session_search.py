@@ -19,8 +19,10 @@ from typing import Dict, List, Any, Optional
 class SessionSearch:
     """历史会话搜索引擎"""
     
+    _DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "sessions.db")
+
     def __init__(self, db_path: str = None):
-        self.db_path = db_path or "D:/one_company_desktop/data/sessions.db"
+        self.db_path = db_path or self._DEFAULT_DB
         self._init_db()
     
     def _init_db(self):

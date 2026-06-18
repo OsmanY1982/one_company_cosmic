@@ -1,6 +1,6 @@
 # `opcclaw/skills/flybook_bot/server_minimal.py`
 
-> 路径：`opcclaw/skills/flybook_bot/server_minimal.py` | 行数：203
+> 路径：`opcclaw/skills/flybook_bot/server_minimal.py` | 行数：204
 
 
 ---
@@ -22,7 +22,8 @@ import sys
 from datetime import datetime
 
 # 添加项目根目录到路径
-sys.path.insert(0, "D:/one_company_desktop")
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 
 from opcclaw.core.tool_registry import ToolRegistry
 from opcclaw.core.llm_backend import ProviderConfig, OpenAICompatibleBackend

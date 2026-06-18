@@ -9,16 +9,105 @@ Enhanced features:
 - Tool categories and metadata
 - Enable/disable tools dynamically
 - Batch execution with error isolation
+- Class-level shared result cache (256 entries, LRU)
 """
 
 import json
 import time
+import hashlib
+import threading
 import traceback
 import logging
+from collections import OrderedDict
 from typing import Optional, Any, List, Dict, Callable
 from .llm_backend import ToolDefinition, ToolCall
 
 logger = logging.getLogger(__name__)
+
+
+# ═══════════════════════════════════════════
+# 工具结果缓存（类级共享，LRU 淘汰）
+# ═══════════════════════════════════════════
+
+class ToolResultCache:
+    """
+    工具调用结果 LRU 缓存（线程安全）
+
+    缓存键 = hash(tool_name + 规范化参数)
+    所有 ToolRegistry 实例共享同一个类级缓存（默认 256 条），
+    使 agent_loop / agent_delegate 并行子代理均可享受缓存加速。
+    """
+
+    def __init__(self, max_size: int = 256):
+        self._cache: OrderedDict[str, Dict] = OrderedDict()
+        self._max_size = max_size
+        self._hits = 0
+        self._misses = 0
+        self._lock = threading.Lock()
+
+    @staticmethod
+    def _make_key(tool_name: str, arguments: dict) -> str:
+        args_str = json.dumps(arguments, sort_keys=True, ensure_ascii=False)
+        raw = f"{tool_name}:{args_str}"
+        return hashlib.md5(raw.encode("utf-8")).hexdigest()
+
+    def get(self, tool_name: str, arguments: dict) -> Optional[Dict]:
+        key = self._make_key(tool_name, arguments)
+        with self._lock:
+            if key in self._cache:
+                self._cache.move_to_end(key)
+                self._hits += 1
+                return self._cache[key]
+            self._misses += 1
+            return None
+
+    def put(self, tool_name: str, arguments: dict, result: Dict) -> None:
+        key = self._make_key(tool_name, arguments)
+        with self._lock:
+            if key in self._cache:
+                self._cache.move_to_end(key)
+            self._cache[key] = result
+            if len(self._cache) > self._max_size:
+                self._cache.popitem(last=False)
+
+    def clear(self) -> None:
+        with self._lock:
+            self._cache.clear()
+
+    def clear_expired(self, max_age_seconds: float = 300) -> int:
+        """清除超过指定秒数的条目（基于 result 中的 _cache_ts）"""
+        removed = 0
+        now = time.time()
+        with self._lock:
+            stale_keys = [
+                k for k, v in self._cache.items()
+                if now - v.get("_cache_ts", now) > max_age_seconds
+            ]
+            for k in stale_keys:
+                del self._cache[k]
+                removed += 1
+        return removed
+
+    @property
+    def hit_rate(self) -> float:
+        total = self._hits + self._misses
+        return self._hits / total if total > 0 else 0.0
+
+    @property
+    def stats(self) -> Dict:
+        with self._lock:
+            return {
+                "size": len(self._cache),
+                "max_size": self._max_size,
+                "hits": self._hits,
+                "misses": self._misses,
+                "hit_rate": round(self.hit_rate, 3),
+            }
+
+
+# ═══════════════════════════════════════════
+# ToolRegistry
+# ═══════════════════════════════════════════
 
 
 class ToolRegistry:
@@ -39,13 +128,16 @@ class ToolRegistry:
         result = registry.execute(tool_call)
     """
 
+    # 类级共享缓存：所有 ToolRegistry 实例共享（agent_loop / agent_delegate 均受益）
+    _shared_cache: ToolResultCache = ToolResultCache(max_size=256)
+
     def __init__(self, enable_metrics: bool = True):
         self._tools: Dict[str, ToolDefinition] = {}
         self._disabled_tools: set = set()
         self._categories: Dict[str, str] = {}  # tool_name -> category
         self._enable_metrics = enable_metrics
         self._monitor = None
-        
+
         if enable_metrics:
             try:
                 from .performance_monitor import get_monitor
@@ -163,7 +255,7 @@ class ToolRegistry:
 
     def execute(self, tool_call: ToolCall) -> dict:
         """
-        执行一个工具调用并返回结果。
+        执行一个工具调用并返回结果（含类级共享缓存）。
 
         Returns:
             {"success": True, "result": ..., "tool": "xxx"}
@@ -191,21 +283,31 @@ class ToolRegistry:
                 "tool": tool_call.name,
             }
 
+        # ── 类级共享缓存检查 ──
+        cached = ToolRegistry._shared_cache.get(tool_call.name, tool_call.arguments)
+        if cached is not None:
+            logger.debug("Tool %s: 缓存命中（共享）", tool_call.name)
+            return cached
+
         start_time = time.perf_counter()
         try:
             result = tool.handler(**tool_call.arguments)
             duration_ms = (time.perf_counter() - start_time) * 1000
-            
+
             if self._monitor:
                 self._monitor.record_tool_call(tool_call.name, True, duration_ms)
             logger.debug(f"Tool {tool_call.name} succeeded in {duration_ms:.1f}ms")
-            
-            return {
+
+            rv = {
                 "success": True,
                 "result": result,
                 "tool": tool_call.name,
                 "duration_ms": round(duration_ms, 1),
+                "_cache_ts": time.time(),
             }
+            # 写入共享缓存（仅缓存成功结果）
+            ToolRegistry._shared_cache.put(tool_call.name, tool_call.arguments, rv)
+            return rv
         except TypeError as e:
             duration_ms = (time.perf_counter() - start_time) * 1000
             if self._monitor:

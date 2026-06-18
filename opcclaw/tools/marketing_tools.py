@@ -575,12 +575,14 @@ def register_marketing_tools(registry, data_dir: str):
 if __name__ == "__main__":
     # 测试
     import sys
-    sys.path.insert(0, "/d/one_company_desktop")
+    import os
+    _test_data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data")
+    sys.path.insert(0, _test_data_dir)
     
     from opcclaw.core.tool_registry import ToolRegistry
     
     registry = ToolRegistry()
-    register_marketing_tools(registry, r"D:/one_company_desktop/data")
+    register_marketing_tools(registry, _test_data_dir)
     
     print(f"✅ 已注册 {registry.count()} 个营销工具")
     print("可用工具:", registry.list_tools())

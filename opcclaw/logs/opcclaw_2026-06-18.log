@@ -391,3 +391,21 @@ RuntimeError: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":
 2026-06-18 14:28:37 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
 2026-06-18 14:29:05 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
 2026-06-18 14:29:05 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 15:50:19 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:50:21 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 15:50:21 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:50:23 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 15:50:39 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:50:43 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 15:50:55 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:50:58 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 15:53:02 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:53:05 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 15:53:20 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:53:23 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 15:53:37 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:53:40 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 15:53:59 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:54:02 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 15:54:32 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
+2026-06-18 15:54:36 [INFO] opcclaw: FSEventMonitor: 已停止

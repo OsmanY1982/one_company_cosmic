@@ -11,7 +11,7 @@
 """
 用户 API Key 管理
 每个用户可独立设置自己的云端 API Key
-存储位置: D:/one_company_desktop/data/user_keys/{username}.json
+存储位置: data/user_keys/{username}.json
 """
 
 import os

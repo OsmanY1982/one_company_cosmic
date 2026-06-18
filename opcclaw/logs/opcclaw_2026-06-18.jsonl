@@ -211,3 +211,21 @@
 {"timestamp": "2026-06-18T14:28:37.630600", "level": "WARNING", "logger": "opcclaw.core.token_optimizer", "message": "Token optimization failed: object of type 'NoneType' has no len()", "module": "token_optimizer", "function": "optimize", "line": 44}
 {"timestamp": "2026-06-18T14:29:05.725293", "level": "WARNING", "logger": "opcclaw.core.token_optimizer", "message": "Token optimization failed: object of type 'NoneType' has no len()", "module": "token_optimizer", "function": "optimize", "line": 44}
 {"timestamp": "2026-06-18T14:29:05.735842", "level": "WARNING", "logger": "opcclaw.core.token_optimizer", "message": "Token optimization failed: object of type 'NoneType' has no len()", "module": "token_optimizer", "function": "optimize", "line": 44}
+{"timestamp": "2026-06-18T15:50:19.106018", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:50:21.814014", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T15:50:21.815674", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:50:23.730096", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T15:50:39.310578", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:50:43.320614", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T15:50:55.044324", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:50:58.264655", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T15:53:02.080717", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:53:05.090710", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T15:53:20.760886", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:53:23.766627", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T15:53:37.728678", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:53:40.734028", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T15:53:59.004668", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:54:02.010500", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T15:54:32.405669", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
+{"timestamp": "2026-06-18T15:54:36.422364", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}

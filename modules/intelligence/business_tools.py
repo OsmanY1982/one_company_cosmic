@@ -5,7 +5,7 @@ OPCclaw 业务工具 — 一人公司数据库查询
 
 Usage:
     from business_tools import register_business_tools
-    register_business_tools(registry, data_dir="D:/one_company_desktop/data")
+    register_business_tools(registry, data_dir="path/to/data")
 """
 
 import sqlite3

@@ -1,6 +1,6 @@
 # `opcclaw/core/chat_engine.py`
 
-> 路径：`opcclaw/core/chat_engine.py` | 行数：645
+> 路径：`opcclaw/core/chat_engine.py` | 行数：717
 
 
 ---
@@ -107,13 +107,20 @@ class ChatEngine(QObject):
         self._trim_context()
 
     def _trim_context(self) -> int:
-        """智能上下文裁剪：保留系统提示 + 错误信息 + 最近消息"""
+        """
+        智能上下文裁剪（LLM 摘要 + 机械裁剪兜底）
+
+        策略：
+          1. 轻度过量 → 简单截断（保留系统消息 + 最近消息）
+          2. 重度过量 → LLM 压缩中间轮次为结构化摘要，再机械裁剪残余
+          3. LLM 失败 → 回退到原始机械裁剪
+        """
         total = len(self.messages)
         if total <= self.MAX_CONTEXT_MSGS:
             return 0
 
         sys_msg = self.messages[0] if (self.messages and self.messages[0]['role'] == 'system') else None
-        keep_recent = max(30, self.MAX_CONTEXT_MSGS // 2)  # 至少保留最近 30 条
+        keep_recent = max(30, self.MAX_CONTEXT_MSGS // 2)
         sys_slot = 1 if sys_msg else 0
         total_slot = self.MAX_CONTEXT_MSGS
 
@@ -125,34 +132,44 @@ class ChatEngine(QObject):
                 self.messages = self.messages[-total_slot:]
             return total - len(self.messages)
 
-        # 深度裁剪：在中间段保留重要消息（错误、大结果）
-        recent = self.messages[-keep_recent:]  # 最近消息（必留）
-        middle = self.messages[sys_slot:-keep_recent]  # 中间可裁剪段
+        # 深度裁剪：LLM 摘要 → 机械裁剪
+        recent = self.messages[-keep_recent:]
+        middle = self.messages[sys_slot:-keep_recent]
+
+        # ── LLM 摘要压缩（中间段 > 20 条时触发） ──
+        if len(middle) > 20 and self.backend:
+            summary = self._llm_summarize_context(middle)
+            if summary:
+                # 替换中间段为一条摘要消息
+                result = []
+                if sys_msg:
+                    result.append(sys_msg)
+                result.append({"role": "user", "content": f"[上下文摘要]\n{summary}"})
+                result.extend(recent)
+                trimmed = total - len(result)
+                self.messages = result
+                return trimmed
+
+        # 回退：机械裁剪
         kept_middle = []
         for msg in middle:
             content = msg.get("content", "")
             if isinstance(content, str):
-                # 保留含错误的消息
                 if ("error" in content.lower() or "失败" in content
                         or "exception" in content.lower()):
                     kept_middle.append(msg)
                     continue
-                # 保留较大的 tool 结果（含重要数据）
                 if msg.get("role") == "tool" and len(content) > 500:
                     kept_middle.append(msg)
                     continue
-                # 保留用户消息（保持对话连贯）
                 if msg.get("role") == "user":
                     kept_middle.append(msg)
                     continue
 
-        # 计算剩余槽位
         remaining_slots = total_slot - sys_slot - keep_recent
         if remaining_slots > 0 and kept_middle:
-            # 优先保留最新的重要消息
             kept_middle = kept_middle[-remaining_slots:]
 
-        # 组装最终消息
         result = []
         if sys_msg:
             result.append(sys_msg)
@@ -161,6 +178,61 @@ class ChatEngine(QObject):
         trimmed = total - len(result)
         self.messages = result
         return trimmed
+
+    def _llm_summarize_context(self, middle_messages: list) -> Optional[str]:
+        """
+        调用 LLM 将中间段对话压缩为结构化摘要。
+
+        只在上下文严重溢出时调用（>20 条中间消息），
+        摘要内容包含：用户需求变化、关键决策点、已执行操作、
+        工具调用结果要点、遇到的错误及处理方式。
+
+        Returns:
+            摘要字符串，失败时返回 None（调用方应回退机械裁剪）
+        """
+        if not middle_messages:
+            return None
+
+        # 压缩消息：取关键轮次（跳过纯 tool 结果超过 2KB 的大输出，降低 prompt 开销）
+        compact_msgs = []
+        for msg in middle_messages:
+            content = msg.get("content", "")
+            if isinstance(content, str) and len(content) > 2048:
+                content = content[:2048] + "...[截断]"
+            compact_msgs.append({"role": msg["role"], "content": content})
+
+        # 构建摘要提示词
+        msg_json = json.dumps(compact_msgs, ensure_ascii=False, indent=2)
+        prompt = f"""你是一个上下文压缩器。以下是一段对话的中间轮次（非开头非结尾），请将其压缩为结构化摘要。
+
+要求：
+1. 列出用户提出的**所有需求**（含已放弃或修改的需求）
+2. 列出 AI 执行的**关键操作**（工具调用 + 结果要点，每条 ≤ 30 字）
+3. 列出**重要决策与转折点**（如"用户推翻方案A"、"改为用 Python 处理"）
+4. 列出**未解决的错误或阻塞**（如仍存在的问题）
+5. 禁止包含系统提示词、人格描述、问候语
+6. 输出纯中文，使用 Markdown 无序列表格式，总长度 ≤ 800 字
+
+对话轮次（共 {len(middle_messages)} 条）：
+{msg_json}
+
+请输出压缩后的结构化摘要："""
+
+        try:
+            # 使用极简参数调用 LLM（max_tokens=1024，temperature=0）
+            response = self.backend.chat(
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=1024,
+                temperature=0,
+            )
+            summary = response.content.strip()
+            if summary and len(summary) > 20:
+                logger.info("LLM 上下文压缩: %d 条 → %d 字摘要", len(middle_messages), len(summary))
+                return summary
+            return None
+        except Exception as e:
+            logger.warning("LLM 摘要压缩失败: %s，回退机械裁剪", e)
+            return None
 
     def save(self) -> bool:
         if self.memory_store:

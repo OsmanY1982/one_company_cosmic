@@ -1,6 +1,6 @@
 # `opcclaw/core/proactive_engine.py`
 
-> 路径：`opcclaw/core/proactive_engine.py` | 行数：475
+> 路径：`opcclaw/core/proactive_engine.py` | 行数：687
 
 
 ---
@@ -46,6 +46,14 @@ from enum import Enum, auto
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from .opcclaw_logging import logger
+
+# watchdog (macOS FSEvents) — 可选依赖，不可用时回退轮询
+try:
+    from watchdog.observers.fsevents import FSEventsObserver as _FSObserver
+    from watchdog.events import FileSystemEventHandler as _FSHandler
+    _WATCHDOG_AVAILABLE = True
+except ImportError:
+    _WATCHDOG_AVAILABLE = False
 
 
 # ═══════════════════════════════════════════
@@ -250,6 +258,207 @@ class FileWatchMonitor(BaseMonitor):
 
 
 # ═══════════════════════════════════════════
+# 文件变化监控 (FSEvents — 零轮询)
+# ═══════════════════════════════════════════
+
+if _WATCHDOG_AVAILABLE:
+
+    class FSEventMonitor(BaseMonitor):
+        """
+        macOS FSEvents 文件监控器（零轮询，内核级事件驱动）
+
+        替代 FileWatchMonitor 的 os.scandir 轮询，节省 CPU 和磁盘 I/O。
+        通过 watchdog 封装内核 FSEvents API，在文件变化时毫秒级回调。
+
+        特性:
+          - 事件去重：0.5s 内同文件多事件合并为一条通知
+          - 自动忽略临时文件（~ $ .swp .tmp .lock 等）
+          - 优雅降级：watchdog 不可用时自动回退 FileWatchMonitor
+        """
+
+        #    忽略的临时文件后缀
+        IGNORE_SUFFIXES = (".tmp", ".swp", ".swx", ".lock", ".part", ".crdownload")
+
+        class _Handler(_FSHandler):
+            """watchdog 事件处理器（内部类）"""
+
+            def __init__(self, monitor):
+                super().__init__()
+                self._mon = monitor  # type: FSEventMonitor
+
+            def on_created(self, event):
+                if event.is_directory:
+                    return
+                self._mon._record_event("created", event.src_path)
+
+            def on_modified(self, event):
+                if event.is_directory:
+                    return
+                self._mon._record_event("modified", event.src_path)
+
+            def on_deleted(self, event):
+                if event.is_directory:
+                    return
+                self._mon._record_event("deleted", event.src_path)
+
+            def on_moved(self, event):
+                if event.is_directory:
+                    return
+                self._mon._record_event("moved", event.dest_path)
+
+        def __init__(self, watch_paths: List[str] = None, **_kw):
+            super().__init__(interval_seconds=0.0, name="FSEventMonitor")
+            self._watch_paths = list(watch_paths or [])
+            self._observer = _FSObserver()
+            self._handler = FSEventMonitor._Handler(self)
+            self._pending: Dict[str, Dict] = {}  # path → {type, first_seen}
+            self._dedup_lock = threading.Lock()
+            self._flush_timer: Optional[threading.Timer] = None
+
+        # ── 路径管理 ──
+
+        def add_path(self, path: str):
+            if path not in self._watch_paths and os.path.isdir(path):
+                self._watch_paths.append(path)
+                if self.is_alive():
+                    self._observer.unschedule_all()
+                    for p in self._watch_paths:
+                        self._observer.schedule(self._handler, p, recursive=True)
+
+        def remove_path(self, path: str) -> bool:
+            if path in self._watch_paths:
+                self._watch_paths.remove(path)
+                if self.is_alive():
+                    self._observer.unschedule_all()
+                    for p in self._watch_paths:
+                        self._observer.schedule(self._handler, p, recursive=True)
+                return True
+            return False
+
+        # ── 生命周期 ──
+
+        def run(self):
+            """启动 watchdog observer 替代轮询"""
+            if not self._watch_paths:
+                logger.debug("FSEventMonitor: 无监控路径，线程退出")
+                return
+
+            for p in self._watch_paths:
+                if os.path.isdir(p):
+                    try:
+                        self._observer.schedule(self._handler, p, recursive=True)
+                    except Exception as e:
+                        logger.warning("FSEventMonitor 无法监控 %s: %s", p, e)
+
+            self._observer.start()
+            logger.info("FSEventMonitor: 已启动，监控 %d 个目录", len(self._watch_paths))
+
+            # watchdog observer 内部线程已运行，本线程只需等待停止信号
+            try:
+                while not self._stop_event.wait(1.0):
+                    pass
+            finally:
+                self._observer.stop()
+                try:
+                    self._observer.join(timeout=3)
+                except Exception:
+                    pass
+                logger.info("FSEventMonitor: 已停止")
+
+        def stop(self):
+            """停止监控"""
+            self._stop_event.set()
+            # 刷新积压事件
+            self._flush_pending()
+
+        # ── 事件去重与推送 ──
+
+        def _record_event(self, event_type: str, path: str):
+            """记录文件事件（去重缓冲）"""
+            basename = os.path.basename(path)
+
+            # 忽略临时文件
+            if basename.startswith(".") or basename.startswith("~"):
+                return
+            if basename.endswith(self.IGNORE_SUFFIXES):
+                return
+
+            with self._dedup_lock:
+                now = time.time()
+                if path in self._pending:
+                    old = self._pending[path]
+                    # 合并事件类型：保留更严重的（created > modified > deleted）
+                    old_type = old["type"]
+                    if event_type == "created":
+                        pass  # 覆盖
+                    elif event_type == "modified" and old_type not in ("created",):
+                        old["type"] = "modified" if old_type != "created" else "created"
+                    if old_type == "created":
+                        event_type = "created"
+                else:
+                    self._pending[path] = {"type": event_type, "first_seen": now}
+
+            # 启动/重置去重定时器
+            if self._flush_timer:
+                self._flush_timer.cancel()
+            self._flush_timer = threading.Timer(0.5, self._flush_pending)
+            self._flush_timer.daemon = True
+            self._flush_timer.start()
+
+        def _flush_pending(self):
+            """将去重缓冲冲洗为 ProactiveEvent"""
+            events = []
+            with self._dedup_lock:
+                for path, info in list(self._pending.items()):
+                    evt_type = info["type"]
+                    fname = os.path.basename(path)
+                    fdir = os.path.dirname(path)
+
+                    if evt_type == "created":
+                        try:
+                            sz = os.path.getsize(path)
+                            body = f"{path} ({sz} bytes)"
+                        except OSError:
+                            body = path
+                        events.append(ProactiveEvent(
+                            type=ProactiveEventType.ALERT,
+                            title=f"新文件: {fname}",
+                            body=body,
+                            priority=0,
+                        ))
+                    elif evt_type == "modified":
+                        events.append(ProactiveEvent(
+                            type=ProactiveEventType.INSIGHT,
+                            title=f"文件已更新: {fname}",
+                            body=path,
+                            priority=0,
+                        ))
+                    elif evt_type == "deleted":
+                        events.append(ProactiveEvent(
+                            type=ProactiveEventType.ALERT,
+                            title=f"文件已删除: {fname}",
+                            body=f"{fdir}/（原文件: {fname}）",
+                            priority=0,
+                        ))
+                    elif evt_type == "moved":
+                        events.append(ProactiveEvent(
+                            type=ProactiveEventType.INSIGHT,
+                            title=f"文件已移动: {fname}",
+                            body=f"新位置: {path}",
+                            priority=0,
+                        ))
+
+                self._pending.clear()
+
+            if events and self._callback:
+                for evt in events:
+                    self._callback(evt)
+
+else:
+    FSEventMonitor = None  # watchdog 不可用时设为 None，调用方自动回退
+
+
+# ═══════════════════════════════════════════
 # 项目健康度监控
 # ═══════════════════════════════════════════
 
@@ -339,7 +548,10 @@ class ProactiveEngine(QObject):
         if project_path:
             self.add_monitor(ProjectHealthMonitor(project_path))
         if watch_paths:
-            self.add_monitor(FileWatchMonitor(watch_paths))
+            if FSEventMonitor is not None:
+                self.add_monitor(FSEventMonitor(watch_paths))
+            else:
+                self.add_monitor(FileWatchMonitor(watch_paths))
 
     # ── 建议生成 ──
 

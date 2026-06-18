@@ -1,6 +1,6 @@
 # `opcclaw/core/skill_system.py`
 
-> 路径：`opcclaw/core/skill_system.py` | 行数：233
+> 路径：`opcclaw/core/skill_system.py` | 行数：235
 
 
 ---
@@ -52,8 +52,10 @@ class SkillMatch:
 class SkillSystem:
     """技能管理系统"""
     
+    _DEFAULT_SKILLS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "opcclaw", "skills")
+
     def __init__(self, skills_dir: str = None):
-        self.skills_dir = skills_dir or "D:/one_company_desktop/opcclaw/skills"
+        self.skills_dir = skills_dir or self._DEFAULT_SKILLS_DIR
         self.skills: Dict[str, Skill] = {}
         self._load_all_skills()
     

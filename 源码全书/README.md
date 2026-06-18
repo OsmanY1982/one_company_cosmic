@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-18 15:23
-> 共 648 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-18 16:08
+> 共 647 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -62,9 +62,6 @@
 │   ├── planet_painter.py
 │   ├── planet_painter_20260614_151048_302.py
 │   └── voice.py
-├── D:/
-│   └── one_company_desktop/
-│       └── data/
 ├── data/
 │   ├── drafts/
 │   ├── enhanced/
@@ -184,7 +181,6 @@
 │   │   ├── smart_workflow.py
 │   │   ├── starship_painter.py
 │   │   ├── super_intelligence.py
-│   │   ├── super_intelligence_star.py
 │   │   ├── system_hub_window.py
 │   │   ├── system_monitor.py
 │   │   ├── tool_registry.py
@@ -1211,7 +1207,6 @@
 - [`modules/intelligence/smart_workflow.py`](./modules/intelligence/smart_workflow.py.md)
 - [`modules/intelligence/starship_painter.py`](./modules/intelligence/starship_painter.py.md)
 - [`modules/intelligence/super_intelligence.py`](./modules/intelligence/super_intelligence.py.md)
-- [`modules/intelligence/super_intelligence_star.py`](./modules/intelligence/super_intelligence_star.py.md)
 - [`modules/intelligence/system_hub_window.py`](./modules/intelligence/system_hub_window.py.md)
 - [`modules/intelligence/system_monitor.py`](./modules/intelligence/system_monitor.py.md)
 - [`modules/intelligence/tool_registry.py`](./modules/intelligence/tool_registry.py.md)

@@ -1,6 +1,6 @@
 # `opcclaw/core/todo_system.py`
 
-> 路径：`opcclaw/core/todo_system.py` | 行数：227
+> 路径：`opcclaw/core/todo_system.py` | 行数：229
 
 
 ---
@@ -52,8 +52,10 @@ class TodoSystem:
         "cancelled": 3
     }
     
+    _DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "todos.db")
+
     def __init__(self, db_path: str = None):
-        self.db_path = db_path or "D:/one_company_desktop/data/todos.db"
+        self.db_path = db_path or self._DEFAULT_DB
         self._init_db()
     
     def _init_db(self):

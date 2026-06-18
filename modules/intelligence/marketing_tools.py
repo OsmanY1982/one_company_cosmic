@@ -580,7 +580,9 @@ if __name__ == "__main__":
     from modules.intelligence.tool_registry import ToolRegistry
     
     registry = ToolRegistry()
-    register_marketing_tools(registry, r"D:/one_company_desktop/data")
+    import os
+    _test_data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data")
+    register_marketing_tools(registry, _test_data_dir)
     
     print(f"✅ 已注册 {registry.count()} 个营销工具")
     print("可用工具:", registry.list_tools())

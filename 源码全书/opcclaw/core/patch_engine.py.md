@@ -1,6 +1,6 @@
 # `opcclaw/core/patch_engine.py`
 
-> 路径：`opcclaw/core/patch_engine.py` | 行数：232
+> 路径：`opcclaw/core/patch_engine.py` | 行数：234
 
 
 ---
@@ -27,8 +27,10 @@ from typing import Dict, List, Any, Optional, Tuple
 class PatchEngine:
     """精确文件补丁引擎"""
     
+    _DEFAULT_BACKUP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "patches", "backups")
+
     def __init__(self):
-        self.backup_dir = "D:/one_company_desktop/opcclaw/data/patches/backups"
+        self.backup_dir = self._DEFAULT_BACKUP_DIR
     
     def patch(self, file_path: str, old_string: str, new_string: str, 
               replace_all: bool = False) -> Dict:

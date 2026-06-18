@@ -41,7 +41,6 @@ class AICenterWindow(QMainWindow):
         db_paths = [
             os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'orders.db'),
             os.path.join(os.path.dirname(__file__), '..', '..', 'orders.db'),
-            'D:/one_company_desktop/data/orders.db',
         ]
         
         for path in db_paths:

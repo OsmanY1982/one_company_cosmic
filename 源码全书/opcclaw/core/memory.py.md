@@ -1,6 +1,6 @@
 # `opcclaw/core/memory.py`
 
-> 路径：`opcclaw/core/memory.py` | 行数：225
+> 路径：`opcclaw/core/memory.py` | 行数：227
 
 
 ---
@@ -40,8 +40,10 @@ class MemoryEntry:
 class OPCclawMemory:
     """跨会话持久化记忆"""
     
+    _DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "memory.db")
+
     def __init__(self, db_path: str = None):
-        self.db_path = db_path or "D:/one_company_desktop/data/memory.db"
+        self.db_path = db_path or self._DEFAULT_DB
         self._init_db()
     
     def _init_db(self):

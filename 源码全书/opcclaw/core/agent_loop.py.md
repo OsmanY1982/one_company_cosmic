@@ -1,6 +1,6 @@
 # `opcclaw/core/agent_loop.py`
 
-> 路径：`opcclaw/core/agent_loop.py` | 行数：963
+> 路径：`opcclaw/core/agent_loop.py` | 行数：991
 
 
 ---
@@ -45,13 +45,14 @@ AgentLoop — 自主 Agent 执行循环 (对标 Codex / Claude Code)
 """
 
 import json
+import os
 import time
-import hashlib
-from collections import OrderedDict
-from concurrent.futures import ThreadPoolExecutor, as_completed
+import signal
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FutureTimeoutError
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Optional, Iterator, Callable, List, Dict, Any, Tuple
+from typing import Optional, Iterator, Callable, List, Dict, Any, Tuple, Set
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from .chat_engine import ChatEngine
@@ -139,70 +140,6 @@ AGENT_SYSTEM_PROMPT = """你处于自主 Agent 执行模式，能独立完成多
 
 
 # ═══════════════════════════════════════════
-# 工具结果缓存（LRU）
-# ═══════════════════════════════════════════
-
-class ToolResultCache:
-    """
-    工具调用结果 LRU 缓存
-
-    缓存键 = hash(tool_name + 规范化参数)
-    用于减少重复工具调用的 token 浪费（如 LLM 反复读取同一文件）。
-    缓存命中率预期: 30%+（主要命中项: read_file/search_files）。
-    """
-
-    def __init__(self, max_size: int = 128):
-        self._cache: OrderedDict[str, Dict] = OrderedDict()
-        self._max_size = max_size
-        self._hits = 0
-        self._misses = 0
-
-    @staticmethod
-    def _make_key(tool_name: str, arguments: dict) -> str:
-        """生成缓存键：工具名 + 参数的稳定哈希"""
-        args_str = json.dumps(arguments, sort_keys=True, ensure_ascii=False)
-        raw = f"{tool_name}:{args_str}"
-        return hashlib.md5(raw.encode("utf-8")).hexdigest()
-
-    def get(self, tool_name: str, arguments: dict) -> Optional[Dict]:
-        """查缓存，命中返回结果 dict，未命中返回 None"""
-        key = self._make_key(tool_name, arguments)
-        if key in self._cache:
-            self._cache.move_to_end(key)
-            self._hits += 1
-            return self._cache[key]
-        self._misses += 1
-        return None
-
-    def put(self, tool_name: str, arguments: dict, result: Dict) -> None:
-        """写入缓存"""
-        key = self._make_key(tool_name, arguments)
-        if key in self._cache:
-            self._cache.move_to_end(key)
-        self._cache[key] = result
-        if len(self._cache) > self._max_size:
-            self._cache.popitem(last=False)  # 淘汰最旧条目
-
-    def clear(self) -> None:
-        self._cache.clear()
-
-    @property
-    def hit_rate(self) -> float:
-        total = self._hits + self._misses
-        return self._hits / total if total > 0 else 0.0
-
-    @property
-    def stats(self) -> Dict:
-        return {
-            "size": len(self._cache),
-            "max_size": self._max_size,
-            "hits": self._hits,
-            "misses": self._misses,
-            "hit_rate": f"{self.hit_rate:.1%}",
-        }
-
-
-# ═══════════════════════════════════════════
 # 分层错误恢复策略
 # ═══════════════════════════════════════════
 
@@ -260,6 +197,16 @@ class AgentLoop(QObject):
     DEFAULT_MAX_ITERATIONS = 50
     DEFAULT_MAX_RETRIES = 3
     DEFAULT_TIMEOUT_SECONDS = 600  # 10 分钟
+    DEFAULT_TOOL_TIMEOUT_SECONDS = 120  # 单个工具执行超时（秒）
+
+    # 类级单线程池：用于工具超时控制（所有 AgentLoop 实例共享）
+    _tool_executor: Optional[ThreadPoolExecutor] = None
+
+    @classmethod
+    def _get_tool_executor(cls) -> ThreadPoolExecutor:
+        if cls._tool_executor is None:
+            cls._tool_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="tool-")
+        return cls._tool_executor
 
     def __init__(
         self,
@@ -291,12 +238,11 @@ class AgentLoop(QObject):
         self._start_time: float = 0.0
         self._current_step = 0
         self._total_steps = 0
+        self._running_pids: Set[int] = set()  # 正在执行工具的进程 PID
+        self._tool_timeout = self.DEFAULT_TOOL_TIMEOUT_SECONDS
 
         # 保存原始 system prompt，以便注入 Agent 指令后恢复
         self._original_system_prompt = ""
-
-        # 工具结果缓存（LRU，128 条上限）
-        self._tool_cache = ToolResultCache(max_size=128)
 
         # RAG 上下文注入器（单例）
         self._rag_injector = RAGContextInjector()
@@ -379,8 +325,9 @@ class AgentLoop(QObject):
             self._restore_system_prompt()
 
     def cancel(self) -> None:
-        """取消当前执行"""
+        """取消当前执行（含强制终止正在运行的工具进程）"""
         self._cancelled = True
+        self._terminate_running_tools()
         event = AgentEvent(
             type=AgentEventType.CANCELLED,
             step=self._current_step,
@@ -388,7 +335,7 @@ class AgentLoop(QObject):
         )
         self._events.append(event)
         self.on_event.emit(event)
-        logger.info("AgentLoop 被用户取消")
+        logger.info("AgentLoop 被用户取消（已终止 %d 个子进程）", len(self._running_pids))
 
     # ── 内部方法 ──
 
@@ -476,67 +423,81 @@ class AgentLoop(QObject):
 
     def _execute_one_tool(self, tc) -> dict:
         """
-        执行单个工具调用（含缓存 + 分层错误恢复），线程安全
+        执行单个工具调用（含缓存 + 分层错误恢复 + 超时），线程安全
 
         分层恢复策略:
           L1: 缓存命中 → 直接返回（跳过执行）
           L2: 首次执行失败 → 重试同参数（最多 max_retries 次）
+              每轮执行包在 threading.Timer 超时控制中（默认120s）
           L3: 重试耗尽 → 尝试降级工具（TOOL_FALLBACK_MAP）
           L4: 降级也失败 → 返回错误，记录到 _errors
-        """
-        # L1: 缓存检查
-        cached = self._tool_cache.get(tc.name, tc.arguments)
-        if cached is not None:
-            self._emit(AgentEventType.OBSERVE,
-                      f"📦 缓存命中: {tc.name}")
-            return cached
 
-        # L2: 首次执行 + 重试
+        取消/中断: 每轮重试前检查 _cancelled，超时或取消时强制终止工具进程。
+        """
+        # L1: 缓存检查（下沉到 ToolRegistry.execute() 类级共享缓存）
         retry_count = 0
         last_error = None
         while retry_count <= self._max_retries:
+            # ── 取消检查 ──
+            if self._cancelled:
+                self._emit(AgentEventType.CANCELLED,
+                           f"⏹️ 工具 {tc.name} 被用户取消")
+                return {"success": False, "error": "用户取消执行", "cancelled": True}
+
             try:
                 self._engine.on_tool_start.emit(tc.name, tc.arguments)
-                result = self._engine.registry.execute(tc)
+                result = self._execute_with_timeout(tc)
                 success = result.get("success", False)
                 self._engine.on_tool_result.emit(
                     tc.name, success,
                     str(result.get("result", result.get("error", "")))[:200],
                 )
                 if success:
-                    # 写入缓存（仅缓存成功结果）
-                    self._tool_cache.put(tc.name, tc.arguments, result)
-                return result
+                    return result
+            except TimeoutError:
+                last_error = TimeoutError(
+                    f"{tc.name} 执行超时（>{self._tool_timeout}s），已强制终止"
+                )
+                self._terminate_running_tools()
+                self._emit(AgentEventType.OBSERVE,
+                           f"⏰ {tc.name} 执行超时（>{self._tool_timeout}s），已终止子进程")
             except Exception as e:
                 last_error = e
-                retry_count += 1
-                if retry_count <= self._max_retries:
-                    self._emit(AgentEventType.OBSERVE,
-                              f"{tc.name} 失败，重试 {retry_count}/{self._max_retries}: {e}")
-                    time.sleep(0.5 * retry_count)  # 递增退避
+                self._terminate_running_tools()
+
+            retry_count += 1
+            if retry_count <= self._max_retries:
+                # 超时重试需更长的退避
+                backoff = 0.5 * retry_count if not isinstance(last_error, TimeoutError) else 2.0 * retry_count
+                self._emit(AgentEventType.OBSERVE,
+                           f"{tc.name} 失败，重试 {retry_count}/{self._max_retries}: {last_error}")
+                time.sleep(backoff)
 
         # L3: 降级策略
         fallbacks = TOOL_FALLBACK_MAP.get(tc.name, [])
         if fallbacks:
             self._emit(AgentEventType.OBSERVE,
-                      f"{tc.name} 重试耗尽，尝试降级方案...")
+                       f"{tc.name} 重试耗尽，尝试降级方案...")
             for fallback_name, arg_transformer in fallbacks:
+                # 降级前检查取消
+                if self._cancelled:
+                    return {"success": False, "error": "用户取消执行", "cancelled": True}
                 try:
                     fallback_args = arg_transformer(tc.arguments)
-                    # 构造降级工具调用
                     from .tool_registry import ToolCall as TC
                     fallback_tc = TC(fallback_name, fallback_args)
                     self._engine.on_tool_start.emit(fallback_name, fallback_args)
-                    result = self._engine.registry.execute(fallback_tc)
+                    result = self._execute_with_timeout(fallback_tc)
                     self._engine.on_tool_result.emit(
                         fallback_name, result.get("success", False),
                         str(result.get("result", result.get("error", "")))[:200],
                     )
                     self._emit(AgentEventType.OBSERVE,
-                              f"⬇️ 降级成功: {tc.name} → {fallback_name}")
+                               f"⬇️ 降级成功: {tc.name} → {fallback_name}")
                     return result
                 except Exception as fe:
                     logger.warning("降级也失败 (%s → %s): %s", tc.name, fallback_name, fe)
+                    self._terminate_running_tools()
 
         # L4: 全部失败
         error_msg = (
@@ -547,6 +508,73 @@ class AgentLoop(QObject):
         self._errors.append(error_msg)
         self._emit(AgentEventType.ERROR, error_msg)
         return {"success": False, "error": error_msg}
+
+    def _execute_with_timeout(self, tc) -> dict:
+        """在独立线程中执行工具，带超时控制。超时时触发 _terminate_running_tools()。
+
+        线程安全：registry 内部保证线程安全；这里用 ThreadPoolExecutor
+        提交一个 task，future.result(timeout) 实现超时。
+        """
+        executor = self._get_tool_executor()
+
+        def _run_with_pid_tracking():
+            """在线程内执行工具，同时跟踪可能产生的子进程 PID"""
+            # 保存线程 ID 以便超时时关联子进程
+            self._tool_thread_id = threading.get_ident()
+            return self._engine.registry.execute(tc)
+
+        future = executor.submit(_run_with_pid_tracking)
+        try:
+            return future.result(timeout=self._tool_timeout)
+        except FutureTimeoutError:
+            # 超时：尝试取消 future，并终止相关子进程
+            future.cancel()
+            self._terminate_running_tools()
+            raise TimeoutError(
+                f"工具 {tc.name} 执行超时（>{self._tool_timeout}s）"
+            )
+
+    def _terminate_running_tools(self):
+        """强制终止正在执行的工具子进程（通过扫描当前线程的子孙进程）"""
+        import subprocess
+        killed = 0
+        # 方案 A：尝试通过已注册的 PID 终止
+        for pid in list(self._running_pids):
+            try:
+                os.kill(pid, signal.SIGTERM)
+                killed += 1
+            except (ProcessLookupError, PermissionError):
+                pass
+        self._running_pids.clear()
+
+        # 方案 B：通过 ps 找当前工具线程的子孙 shell 进程兜底
+        if hasattr(self, '_tool_thread_id'):
+            parent_pid = os.getpid()
+            try:
+                cp = subprocess.run(
+                    ["pgrep", "-P", str(parent_pid)],
+                    capture_output=True, text=True, timeout=2
+                )
+                if cp.returncode == 0 and cp.stdout.strip():
+                    for child_pid_str in cp.stdout.strip().split():
+                        try:
+                            os.kill(int(child_pid_str), signal.SIGTERM)
+                            killed += 1
+                        except (ProcessLookupError, PermissionError):
+                            pass
+            except Exception:
+                pass
+            # 如果 SIGTERM 不够，延迟一点再 SIGKILL
+            if killed > 0:
+                time.sleep(0.3)
+                for pid in list(self._running_pids):
+                    try:
+                        os.kill(pid, signal.SIGKILL)
+                    except Exception:
+                        pass
+
+        if killed > 0:
+            logger.info("已终止 %d 个工具子进程", killed)
 
     def _execute_loop(self, user_message: str) -> dict:
         """核心执行循环（同步版）"""

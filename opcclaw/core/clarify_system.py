@@ -17,8 +17,10 @@ from typing import Dict, List, Any, Optional
 class ClarifySystem:
     """交互确认系统"""
     
+    _DEFAULT_RESPONSE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "clarify_response.json")
+
     def __init__(self, response_file: str = None):
-        self.response_file = response_file or "D:/one_company_desktop/data/clarify_response.json"
+        self.response_file = response_file or self._DEFAULT_RESPONSE_FILE
         self.pending_questions: Dict[str, Dict] = {}
     
     def ask(self, question: str, choices: List[str] = None, 

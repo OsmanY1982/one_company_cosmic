@@ -177,7 +177,7 @@ class EnhancedHermesBridge:
             ("yuanbao_tools", "register_yuanbao_tools"),
         ]
         
-        _BUSINESS_DATA_DIR = "D:/one_company_desktop/data"
+        _BUSINESS_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data")
         count = 0
         
         for module_name, func_name in business_modules:

@@ -1,6 +1,6 @@
 # `opcclaw/skills/flybook_bot/server.py`
 
-> 路径：`opcclaw/skills/flybook_bot/server.py` | 行数：654
+> 路径：`opcclaw/skills/flybook_bot/server.py` | 行数：656
 
 
 ---
@@ -291,7 +291,9 @@ def init_engine():
     engine = OPCclawCoreEngine(config)
     
     # 注册业务工具
-    data_dir = "D:/one_company_desktop/data"
+    import os
+    _data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "data")
+    data_dir = _data_dir
     if os.path.exists(data_dir):
         register_all_tools(engine.registry, data_dir)
     
