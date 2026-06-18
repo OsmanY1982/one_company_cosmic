@@ -1,5 +1,5 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-18 09:25
+> 自动生成于 2026-06-18 09:36
 > 共 646 个模块，每个 `.py` 文件独立为一个文档
 
 ---
@@ -62,6 +62,9 @@
 │   ├── planet_painter.py
 │   ├── planet_painter_20260614_151048_302.py
 │   └── voice.py
+├── D:/
+│   └── one_company_desktop/
+│       └── data/
 ├── data/
 │   ├── drafts/
 │   ├── enhanced/
