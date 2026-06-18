@@ -1,6 +1,6 @@
 # `opcclaw/core/memory_store.py`
 
-> 路径：`opcclaw/core/memory_store.py` | 行数：432
+> 路径：`opcclaw/core/memory_store.py` | 行数：434
 
 
 ---
@@ -66,6 +66,7 @@ class MemoryStore:
                         "created_at": existing.get("created_at"),
                         "title": existing.get("title"),
                         "tags": existing.get("tags", []),
+                        "pinned": existing.get("pinned", False),
                     }
             except Exception:
                 pass
@@ -81,6 +82,7 @@ class MemoryStore:
             "updated_at": now,
             "title": title or existing_meta.get("title", "Untitled"),
             "tags": tags or existing_meta.get("tags", []),
+            "pinned": existing_meta.get("pinned", False),
             "message_count": len(messages),
             "messages": messages,
         }

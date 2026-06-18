@@ -254,6 +254,8 @@ def main():
         def _graceful_quit():
             logger.info("彻底退出触发，正在清理...")
             _daemon_cleanup()
+            # 阻断 closeEvent → _do_cleanup → _graceful_quit 重入
+            planet._daemon_cleanup = None
             app.quit()
 
         # 导入 FloatingPlanet

@@ -702,3 +702,5 @@ RuntimeError: [Ollama] 请求异常: timed out
 2026-06-18 11:19:35,034 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-18 11:20:00,761 [Dummy-2] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6161739776.
 2026-06-18 11:20:00,762 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 18:39:53,265 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 19:05:09,034 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)

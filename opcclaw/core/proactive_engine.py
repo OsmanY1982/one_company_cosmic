@@ -24,8 +24,6 @@ ProactiveEngine — AI 主动执行与推送引擎
 
 import json
 from typing import Optional, List, Dict, Any
-from dataclasses import dataclass, field
-from enum import Enum, auto
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from .opcclaw_logging import logger
@@ -34,30 +32,9 @@ from .proactive_monitors import (
     FileWatchMonitor,
     FSEventMonitor,
     ProjectHealthMonitor,
+    ProactiveEvent,
+    ProactiveEventType,
 )
-
-
-# ═══════════════════════════════════════════
-# 事件类型
-# ═══════════════════════════════════════════
-
-class ProactiveEventType(Enum):
-    SUGGESTION = auto()     # 智能建议（任务完成后的下一步）
-    ALERT = auto()          # 监控告警（文件异常、进程崩溃等）
-    INSIGHT = auto()        # 洞察发现（发现可优化项）
-    REMINDER = auto()       # 提醒（定时任务到期）
-
-
-@dataclass
-class ProactiveEvent:
-    """主动推送事件"""
-    type: ProactiveEventType
-    title: str                        # 简短标题
-    body: str                         # 详细信息
-    action_label: str = ""            # 可操作按钮文字（如"执行"）
-    action_payload: Dict = field(default_factory=dict)  # 操作附带数据
-    priority: int = 0                 # 0=常规, 1=重要, 2=紧急
-    timestamp: float = field(default_factory=lambda: __import__('time').time())
 
 
 # ═══════════════════════════════════════════

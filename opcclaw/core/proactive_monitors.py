@@ -15,7 +15,31 @@ import threading
 from typing import Optional, Callable, List, Dict
 
 from .opcclaw_logging import logger
-from .proactive_engine import ProactiveEvent, ProactiveEventType
+
+# ═══════════════════════════════════════════
+# 事件类型（从 proactive_engine 迁出，打破循环导入）
+# ═══════════════════════════════════════════
+from enum import Enum, auto
+from dataclasses import dataclass, field
+
+
+class ProactiveEventType(Enum):
+    SUGGESTION = auto()     # 智能建议（任务完成后的下一步）
+    ALERT = auto()          # 监控告警（文件异常、进程崩溃等）
+    INSIGHT = auto()        # 洞察发现（发现可优化项）
+    REMINDER = auto()       # 提醒（定时任务到期）
+
+
+@dataclass
+class ProactiveEvent:
+    """主动推送事件"""
+    type: ProactiveEventType
+    title: str                        # 简短标题
+    body: str                         # 详细信息
+    action_label: str = ""            # 可操作按钮文字（如"执行"）
+    action_payload: Dict = field(default_factory=dict)  # 操作附带数据
+    priority: int = 0                 # 0=常规, 1=重要, 2=紧急
+    timestamp: float = field(default_factory=lambda: __import__('time').time())
 
 # watchdog (macOS FSEvents) — 可选依赖，不可用时回退轮询
 try:

@@ -191,9 +191,12 @@ class IntelligenceWindow(QMainWindow):
             )
             dlg.show()
         elif planet_id == "digital_emp":
-            from modules.intelligence.digital_emp_window import DigitalEmpWindow
-            dlg = DigitalEmpWindow(self)
+            from modules.intelligence.digital_employee_panel import DigitalEmployeePanel
+            from modules.intelligence.opcclaw_employee import BallCEOEngine
+            engine = BallCEOEngine()
+            dlg = DigitalEmployeePanel(self, engine=engine)
             dlg.exec_()
+            engine.shutdown()
         elif planet_id == "ai_assistant":
             from modules.intelligence.ai_assistant_window import AIAssistantWindow
             dlg = AIAssistantWindow(self, opcclaw_engine=self._opcclaw_engine)

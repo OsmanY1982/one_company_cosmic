@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-18 18:02
-> 共 640 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-19 07:42
+> 共 648 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -150,11 +150,17 @@
 │   │   ├── crm_tools.py
 │   │   ├── data_import_tools.py
 │   │   ├── data_visualization.py
+│   │   ├── digital_display.py
 │   │   ├── digital_emp_window.py
 │   │   ├── digital_employee.py
+│   │   ├── digital_employee_panel.py
 │   │   ├── editor_window.py
 │   │   ├── enhanced_chat.py
 │   │   ├── finance_analysis_tools.py
+│   │   ├── floating_planet_anim_mixin.py
+│   │   ├── floating_planet_draw_mixin.py
+│   │   ├── floating_planet_menu_mixin.py
+│   │   ├── floating_planet_voice_mixin.py
 │   │   ├── hr_tools.py
 │   │   ├── intelligence_integration.py
 │   │   ├── intelligence_window.py
@@ -164,6 +170,7 @@
 │   │   ├── marketing_tools.py
 │   │   ├── model_config.py
 │   │   ├── offline_analyzer.py
+│   │   ├── opcclaw_employee.py
 │   │   ├── opcclaw_floating_planet.py
 │   │   ├── performance_monitor.py
 │   │   ├── quick_actions.py
@@ -175,6 +182,7 @@
 │   │   ├── session_context.py
 │   │   ├── smart_report_tools.py
 │   │   ├── smart_workflow.py
+│   │   ├── starship_painter.py
 │   │   ├── super_intelligence.py
 │   │   ├── system_hub_window.py
 │   │   ├── system_monitor.py
@@ -1167,13 +1175,19 @@
 - [`modules/intelligence/crm_tools.py`](./modules/intelligence/crm_tools.py.md)
 - [`modules/intelligence/data_import_tools.py`](./modules/intelligence/data_import_tools.py.md)
 - [`modules/intelligence/data_visualization.py`](./modules/intelligence/data_visualization.py.md)
+- [`modules/intelligence/digital_display.py`](./modules/intelligence/digital_display.py.md)
 - [`modules/intelligence/digital_emp_window.py`](./modules/intelligence/digital_emp_window.py.md)
 - [`modules/intelligence/digital_employee.py`](./modules/intelligence/digital_employee.py.md)
+- [`modules/intelligence/digital_employee_panel.py`](./modules/intelligence/digital_employee_panel.py.md)
 - [`modules/intelligence/editor_window.py`](./modules/intelligence/editor_window.py.md)
 - [`modules/intelligence/enhanced/__init__.py`](./modules/intelligence/enhanced/__init__.py.md)
 - [`modules/intelligence/enhanced/enhanced_tools.py`](./modules/intelligence/enhanced/enhanced_tools.py.md)
 - [`modules/intelligence/enhanced_chat.py`](./modules/intelligence/enhanced_chat.py.md)
 - [`modules/intelligence/finance_analysis_tools.py`](./modules/intelligence/finance_analysis_tools.py.md)
+- [`modules/intelligence/floating_planet_anim_mixin.py`](./modules/intelligence/floating_planet_anim_mixin.py.md)
+- [`modules/intelligence/floating_planet_draw_mixin.py`](./modules/intelligence/floating_planet_draw_mixin.py.md)
+- [`modules/intelligence/floating_planet_menu_mixin.py`](./modules/intelligence/floating_planet_menu_mixin.py.md)
+- [`modules/intelligence/floating_planet_voice_mixin.py`](./modules/intelligence/floating_planet_voice_mixin.py.md)
 - [`modules/intelligence/hr_tools.py`](./modules/intelligence/hr_tools.py.md)
 - [`modules/intelligence/intelligence_integration.py`](./modules/intelligence/intelligence_integration.py.md)
 - [`modules/intelligence/intelligence_window.py`](./modules/intelligence/intelligence_window.py.md)
@@ -1183,6 +1197,7 @@
 - [`modules/intelligence/marketing_tools.py`](./modules/intelligence/marketing_tools.py.md)
 - [`modules/intelligence/model_config.py`](./modules/intelligence/model_config.py.md)
 - [`modules/intelligence/offline_analyzer.py`](./modules/intelligence/offline_analyzer.py.md)
+- [`modules/intelligence/opcclaw_employee.py`](./modules/intelligence/opcclaw_employee.py.md)
 - [`modules/intelligence/opcclaw_floating_planet.py`](./modules/intelligence/opcclaw_floating_planet.py.md)
 - [`modules/intelligence/performance_monitor.py`](./modules/intelligence/performance_monitor.py.md)
 - [`modules/intelligence/quick_actions.py`](./modules/intelligence/quick_actions.py.md)
@@ -1194,6 +1209,7 @@
 - [`modules/intelligence/session_context.py`](./modules/intelligence/session_context.py.md)
 - [`modules/intelligence/smart_report_tools.py`](./modules/intelligence/smart_report_tools.py.md)
 - [`modules/intelligence/smart_workflow.py`](./modules/intelligence/smart_workflow.py.md)
+- [`modules/intelligence/starship_painter.py`](./modules/intelligence/starship_painter.py.md)
 - [`modules/intelligence/super_intelligence.py`](./modules/intelligence/super_intelligence.py.md)
 - [`modules/intelligence/system_hub_window.py`](./modules/intelligence/system_hub_window.py.md)
 - [`modules/intelligence/system_monitor.py`](./modules/intelligence/system_monitor.py.md)

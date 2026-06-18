@@ -486,6 +486,256 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
         # ── 多人协作 ──
         self._collab_client = OPCclawHermesClient() if _HAVE_COLLAB else None
 
+    # ═══════════════════════════════════════════
+    # 模式 1: 对话模式（chat / chat_stream）
+    # ═══════════════════════════════════════════
+
+    # ── 任务检测关键词 ──
+    TASK_KEYWORDS = [
+        "帮我", "重构", "写一个", "生成", "修改", "创建", "修复", "优化",
+        "部署", "安装", "配置", "搜索文件", "查找", "整理", "编译",
+        "测试", "运行", "迁移", "打包", "发布", "调试", "分析代码",
+        "把", "请把", "找出", "提取", "转换", "合并", "拆分", "检查",
+        "执行", "启动", "关闭", "重启", "清理", "格式化", "添加",
+        "删除", "移除", "替换", "升级", "降级", "回滚", "备份",
+    ]
+
+    def chat_stream(
+        self,
+        message: str,
+        on_chunk: Callable[[str], None] = None,
+        on_done: Callable[[str], None] = None,
+        on_tool: Callable[[str, str], None] = None,
+        on_error: Callable[[str], None] = None,
+    ):
+        """
+        流式对话（逐字输出，打字机效果）。在后台线程执行，回调运行在主线程。
+
+        Args:
+            message: 用户输入
+            on_chunk: 每收到一个文本块时回调 on_chunk(chunk_str)
+            on_done: 流式完成后回调 on_done(full_text)
+            on_tool: 工具调用时回调 on_tool(tool_name, status)
+            on_error: 流式出错时回调 on_error(error_message)
+        """
+        # 终止前一次流式（如果还在运行），防止旧 finished 信号误杀新线程
+        self._abort_stream()
+
+        # 管线预处理（RAG / Token 压缩 / SuperIntelligence / 多模型路由）
+        self._preprocess_stream(message)
+
+        self._stream_thread = QThread()
+        self._stream_worker = _StreamWorker(self._engine, message, bridge=self)
+        self._stream_worker.moveToThread(self._stream_thread)
+
+        # 连接信号到回调（跨线程安全，回调在主线程执行）
+        from PyQt5.QtCore import Qt
+        if on_chunk:
+            self._stream_worker.chunk_ready.connect(on_chunk, Qt.QueuedConnection)
+        if on_tool:
+            self._stream_worker.tool_event.connect(on_tool, Qt.QueuedConnection)
+        if on_done:
+            self._stream_worker.stream_done.connect(on_done, Qt.QueuedConnection)
+        if on_error:
+            self._stream_worker.stream_error.connect(on_error, Qt.QueuedConnection)
+
+        self._stream_thread.started.connect(self._stream_worker.run)
+        self._stream_worker.finished.connect(self._stream_thread.quit)
+        self._stream_worker.finished.connect(self._stream_worker.deleteLater)
+        self._stream_thread.finished.connect(self._stream_thread.deleteLater)
+        self._stream_thread.start()
+
+    def _abort_stream(self):
+        """安全终止当前正在运行的流式线程（清除旧引用防止信号串扰）"""
+        if hasattr(self, '_stream_worker') and self._stream_worker:
+            try:
+                self._stream_worker.finished.disconnect()
+            except Exception:
+                pass
+        if hasattr(self, '_stream_thread') and self._stream_thread:
+            try:
+                self._stream_thread.quit()
+                self._stream_thread.wait(200)
+            except Exception:
+                pass
+        self._stream_worker = None
+        self._stream_thread = None
+
+    def cancel(self):
+        """取消正在执行的流式或自主任务"""
+        self._stream_cancelled = True
+        if hasattr(self, '_agent_loop') and self._agent_loop:
+            try:
+                self._agent_loop.cancel()
+            except Exception:
+                pass
+
+    def cancel_task(self):
+        """取消正在执行的自主任务"""
+        if self._agent_loop:
+            self._agent_loop.cancel()
+
+    def chat(self, message: str) -> str:
+        """
+        智能入口：自动判定路由到对话模式或自主执行模式。
+
+        规则：
+        - 包含任务动词 → run_task_sync（AgentLoop 自主执行）
+        - 否则 → 单轮对话（ChatEngine）
+        - AgentLoop 失败时自动回退到 ChatEngine
+        """
+        is_task = any(kw in message for kw in self.TASK_KEYWORDS)
+
+        if is_task:
+            try:
+                result = self.run_task_sync(message)
+                if result.success:
+                    return result.summary
+                else:
+                    return (
+                        f"[任务未完成] {result.summary}\n\n"
+                        f"已执行 {result.steps_taken} 步，"
+                        f"调用工具: {', '.join(result.tools_called) if result.tools_called else '无'}"
+                    )
+            except Exception as e:
+                traceback.print_exc()
+                try:
+                    return self._engine.chat(message)
+                except Exception:
+                    return f"[AgentBridge 错误] {e}"
+
+        try:
+            return self._apply_engine_pipeline(message)
+        except Exception as e:
+            traceback.print_exc()
+            return f"[AgentBridge 错误] {e}"
+
+    def _clear_pipeline_blocks(self, engine):
+        """移除 system message 中旧的管线注入块，防止重复追加导致膨胀"""
+        if not engine.messages or engine.messages[0]['role'] != 'system':
+            return
+        content = engine.messages[0]['content']
+        content = re.sub(
+            r'\n<pipeline_rag>.*?</pipeline_rag>\n',
+            '', content, flags=re.DOTALL
+        )
+        content = re.sub(
+            r'\n<pipeline_si>.*?</pipeline_si>\n',
+            '', content, flags=re.DOTALL
+        )
+        engine.messages[0]['content'] = content
+
+    def _apply_engine_pipeline(self, message: str) -> str:
+        """
+        引擎管线：对 ChatEngine 调用前注入上下文压缩、RAG、SuperIntelligence。
+        管线顺序：RAG 注入 → Token 压缩 → SuperIntelligence 提示词 → 路由判断 → LLM 调用
+        """
+        # 清理旧的管线注入块，防止 system prompt 无限增长
+        self._clear_pipeline_blocks(self._engine)
+
+        # 1. RAG 上下文注入
+        if self._rag:
+            try:
+                rag_ctx = self._rag.inject_context(message)
+                if rag_ctx:
+                    self._engine.inject_context(
+                        f'<pipeline_rag>\n[项目上下文]\n{rag_ctx}\n</pipeline_rag>'
+                    )
+            except Exception:
+                pass
+
+        # 2. Token 压缩
+        if self._token_opt:
+            try:
+                self._engine.messages = self._token_opt.optimize_messages(self._engine.messages)
+            except Exception:
+                pass
+
+        # 3. SuperIntelligence 推理链注入
+        if self._super_intel:
+            try:
+                si_prompt = self._super_intel.inject_prompt(message)
+                if si_prompt:
+                    self._engine.inject_context(
+                        f'<pipeline_si>\n{si_prompt}\n</pipeline_si>'
+                    )
+            except Exception:
+                pass
+
+        # 4. 多模型路由
+        if self._multi_model:
+            try:
+                route = self._multi_model.route(message)
+                if route and route.get("model"):
+                    self.switch_model(route.get("provider_id", ""), route["model"])
+            except Exception:
+                pass
+
+        # 5. 调用 ChatEngine
+        try:
+            return self._engine.chat(message)
+        except Exception as e:
+            # 故障切换：如果当前模型失败且 model_mgr 可用，尝试备用模型
+            if self._model_mgr:
+                try:
+                    fallback = self._model_mgr.get_fallback()
+                    if fallback:
+                        self.switch_model(fallback.provider_id, fallback.model)
+                        return self._engine.chat(message)
+                except Exception:
+                    pass
+            raise e
+
+    def _preprocess_stream(self, message: str):
+        """
+        流式管线预处理（对标 _apply_engine_pipeline），
+        在 ChatEngine.chat_stream() 被 _StreamWorker 调用前执行。
+        """
+        self._clear_pipeline_blocks(self._engine)
+
+        # 1. RAG 上下文注入
+        if self._rag:
+            try:
+                rag_ctx = self._rag.inject_context(message)
+                if rag_ctx:
+                    self._engine.inject_context(
+                        f'<pipeline_rag>\n[项目上下文]\n{rag_ctx}\n</pipeline_rag>'
+                    )
+            except Exception:
+                pass
+
+        # 2. Token 压缩
+        if self._token_opt:
+            try:
+                self._engine.messages = self._token_opt.optimize_messages(self._engine.messages)
+            except Exception:
+                pass
+
+        # 3. SuperIntelligence 推理链注入
+        if self._super_intel:
+            try:
+                si_prompt = self._super_intel.inject_prompt(message)
+                if si_prompt:
+                    self._engine.inject_context(
+                        f'<pipeline_si>\n{si_prompt}\n</pipeline_si>'
+                    )
+            except Exception:
+                pass
+
+        # 4. 多模型路由
+        if self._multi_model:
+            try:
+                route = self._multi_model.route(message)
+                if route and route.get("model"):
+                    self.switch_model(route.get("provider_id", ""), route["model"])
+            except Exception:
+                pass
+
+    def reset(self):
+        """重置对话历史"""
+        self._engine.messages = []
+        self._engine.initialize_session()
+
     # ── 信号转发 ──
     @property
     def on_tool_start(self): return self._engine.on_tool_start
