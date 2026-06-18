@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-18 16:22
-> 共 647 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-18 17:42
+> 共 660 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -116,16 +116,27 @@
 │   │   ├── __init__.py
 │   │   ├── _ai_shared.py
 │   │   ├── _ai_widgets.py
+│   │   ├── _ai_widgets_anomaly.py
+│   │   ├── _ai_widgets_business.py
+│   │   ├── _ai_widgets_core.py
+│   │   ├── _ai_widgets_recommendation.py
+│   │   ├── _ai_widgets_visualization.py
+│   │   ├── _ai_widgets_workflow.py
 │   │   ├── _api_key_dialog.py
 │   │   ├── _chat_dialog.py
 │   │   ├── _compat.py
 │   │   ├── _model_manager.py
+│   │   ├── _model_manager_download.py
+│   │   ├── _model_manager_ollama.py
 │   │   ├── _navigation_hud.py
 │   │   ├── _quick_tools.py
 │   │   ├── _shell_dialogs.py
 │   │   ├── _stubs.py
 │   │   ├── advanced_features.py
 │   │   ├── agent_bridge.py
+│   │   ├── agent_bridge_models.py
+│   │   ├── agent_bridge_tools.py
+│   │   ├── agent_bridge_workers.py
 │   │   ├── ai_assistant_window.py
 │   │   ├── ai_assistant_window_monolith_backup.py
 │   │   ├── ai_center_window.py
@@ -349,6 +360,7 @@
 │   │   ├── patch_engine.py
 │   │   ├── performance_monitor.py
 │   │   ├── proactive_engine.py
+│   │   ├── proactive_monitors.py
 │   │   ├── process_manager.py
 │   │   ├── provider_registry.py
 │   │   ├── rag_context.py
@@ -1046,6 +1058,10 @@
 ├── rules_project/
 ├── ~/
 │   └── Desktop/
+├── 被删文件存档/
+│   ├── modules/
+│   │   └── intelligence/
+│   ├── _model_manager_250618_1730_原文件移入存档.py
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
@@ -1134,16 +1150,27 @@
 - [`modules/intelligence/__init__.py`](./modules/intelligence/__init__.py.md)
 - [`modules/intelligence/_ai_shared.py`](./modules/intelligence/_ai_shared.py.md)
 - [`modules/intelligence/_ai_widgets.py`](./modules/intelligence/_ai_widgets.py.md)
+- [`modules/intelligence/_ai_widgets_anomaly.py`](./modules/intelligence/_ai_widgets_anomaly.py.md)
+- [`modules/intelligence/_ai_widgets_business.py`](./modules/intelligence/_ai_widgets_business.py.md)
+- [`modules/intelligence/_ai_widgets_core.py`](./modules/intelligence/_ai_widgets_core.py.md)
+- [`modules/intelligence/_ai_widgets_recommendation.py`](./modules/intelligence/_ai_widgets_recommendation.py.md)
+- [`modules/intelligence/_ai_widgets_visualization.py`](./modules/intelligence/_ai_widgets_visualization.py.md)
+- [`modules/intelligence/_ai_widgets_workflow.py`](./modules/intelligence/_ai_widgets_workflow.py.md)
 - [`modules/intelligence/_api_key_dialog.py`](./modules/intelligence/_api_key_dialog.py.md)
 - [`modules/intelligence/_chat_dialog.py`](./modules/intelligence/_chat_dialog.py.md)
 - [`modules/intelligence/_compat.py`](./modules/intelligence/_compat.py.md)
 - [`modules/intelligence/_model_manager.py`](./modules/intelligence/_model_manager.py.md)
+- [`modules/intelligence/_model_manager_download.py`](./modules/intelligence/_model_manager_download.py.md)
+- [`modules/intelligence/_model_manager_ollama.py`](./modules/intelligence/_model_manager_ollama.py.md)
 - [`modules/intelligence/_navigation_hud.py`](./modules/intelligence/_navigation_hud.py.md)
 - [`modules/intelligence/_quick_tools.py`](./modules/intelligence/_quick_tools.py.md)
 - [`modules/intelligence/_shell_dialogs.py`](./modules/intelligence/_shell_dialogs.py.md)
 - [`modules/intelligence/_stubs.py`](./modules/intelligence/_stubs.py.md)
 - [`modules/intelligence/advanced_features.py`](./modules/intelligence/advanced_features.py.md)
 - [`modules/intelligence/agent_bridge.py`](./modules/intelligence/agent_bridge.py.md)
+- [`modules/intelligence/agent_bridge_models.py`](./modules/intelligence/agent_bridge_models.py.md)
+- [`modules/intelligence/agent_bridge_tools.py`](./modules/intelligence/agent_bridge_tools.py.md)
+- [`modules/intelligence/agent_bridge_workers.py`](./modules/intelligence/agent_bridge_workers.py.md)
 - [`modules/intelligence/ai_assistant_window.py`](./modules/intelligence/ai_assistant_window.py.md)
 - [`modules/intelligence/ai_assistant_window_monolith_backup.py`](./modules/intelligence/ai_assistant_window_monolith_backup.py.md)
 - [`modules/intelligence/ai_center_window.py`](./modules/intelligence/ai_center_window.py.md)
@@ -1354,6 +1381,7 @@
 - [`opcclaw/core/patch_engine.py`](./opcclaw/core/patch_engine.py.md)
 - [`opcclaw/core/performance_monitor.py`](./opcclaw/core/performance_monitor.py.md)
 - [`opcclaw/core/proactive_engine.py`](./opcclaw/core/proactive_engine.py.md)
+- [`opcclaw/core/proactive_monitors.py`](./opcclaw/core/proactive_monitors.py.md)
 - [`opcclaw/core/process_manager.py`](./opcclaw/core/process_manager.py.md)
 - [`opcclaw/core/provider_registry.py`](./opcclaw/core/provider_registry.py.md)
 - [`opcclaw/core/rag_context.py`](./opcclaw/core/rag_context.py.md)
@@ -1704,3 +1732,4 @@
 - [`planet_daemon.py`](./planet_daemon.py.md)
 - [`rollback_control.py`](./rollback_control.py.md)
 - [`siri_command_handler.py`](./siri_command_handler.py.md)
+- [`被删文件存档/_model_manager_250618_1730_原文件移入存档.py`](./被删文件存档/_model_manager_250618_1730_原文件移入存档.py.md)

@@ -229,3 +229,7 @@
 {"timestamp": "2026-06-18T15:54:02.010500", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
 {"timestamp": "2026-06-18T15:54:32.405669", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已启动，监控 1 个目录", "module": "proactive_engine", "function": "run", "line": 345}
 {"timestamp": "2026-06-18T15:54:36.422364", "level": "INFO", "logger": "opcclaw", "message": "FSEventMonitor: 已停止", "module": "proactive_engine", "function": "run", "line": 357}
+{"timestamp": "2026-06-18T16:28:30.916647", "level": "INFO", "logger": "opcclaw", "message": "ProactiveEngine: 启动 1 个监控器", "module": "proactive_engine", "function": "start_monitoring", "line": 668}
+{"timestamp": "2026-06-18T16:28:31.723376", "level": "INFO", "logger": "opcclaw", "message": "ProactiveEngine: 启动 2 个监控器", "module": "proactive_engine", "function": "start_monitoring", "line": 668}
+{"timestamp": "2026-06-18T16:28:32.023828", "level": "INFO", "logger": "opcclaw", "message": "ProactiveEngine: 已停止所有监控", "module": "proactive_engine", "function": "stop_monitoring", "line": 675}
+{"timestamp": "2026-06-18T16:28:35.062668", "level": "INFO", "logger": "opcclaw", "message": "OPCclaw 日志系统已启动 (level=INFO, json=False)", "module": "opcclaw_logging", "function": "install", "line": 246}

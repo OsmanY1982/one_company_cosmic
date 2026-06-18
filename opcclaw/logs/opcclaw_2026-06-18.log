@@ -409,3 +409,7 @@ RuntimeError: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":
 2026-06-18 15:54:02 [INFO] opcclaw: FSEventMonitor: 已停止
 2026-06-18 15:54:32 [INFO] opcclaw: FSEventMonitor: 已启动，监控 1 个目录
 2026-06-18 15:54:36 [INFO] opcclaw: FSEventMonitor: 已停止
+2026-06-18 16:28:30 [INFO] opcclaw: ProactiveEngine: 启动 1 个监控器
+2026-06-18 16:28:31 [INFO] opcclaw: ProactiveEngine: 启动 2 个监控器
+2026-06-18 16:28:32 [INFO] opcclaw: ProactiveEngine: 已停止所有监控
+2026-06-18 16:28:35 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
