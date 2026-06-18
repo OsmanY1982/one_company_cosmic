@@ -255,3 +255,4 @@ RuntimeError: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":
 2026-06-18 09:34:33 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-18 09:50:01 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-18 09:50:32 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 09:53:06 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
