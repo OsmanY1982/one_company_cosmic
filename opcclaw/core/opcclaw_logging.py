@@ -244,6 +244,13 @@ def install():
     """安装全局异常处理器"""
     sys.excepthook = exception_handler
     logger.info("OPCclaw 日志系统已启动 (level=%s, json=%s)", LOG_LEVEL, JSON_LOG)
+    # 启动时清理 14 天前的旧日志
+    try:
+        cleaned = cleanup_old_logs(days=14)
+        if cleaned > 0:
+            logger.info("日志清理完成: 已删除 %d 个过期文件", cleaned)
+    except Exception:
+        pass
 
 
 # ── 日志清理 ───────────────────────────────────────────────

@@ -13,6 +13,8 @@ import sys
 import os
 import json
 import asyncio
+import threading
+import concurrent.futures
 from pathlib import Path
 from typing import Optional, Callable, Dict, Any, List, Generator
 from dataclasses import dataclass, field
@@ -245,6 +247,52 @@ class EnhancedHermesBridge:
         from .llm_backend import ToolCall
         tc = ToolCall(id=f"manual_{tool_name}", name=tool_name, arguments=kwargs)
         return self.registry.execute(tc)
+
+    def execute_tool_with_timeout(
+        self,
+        tool_name: str,
+        timeout_seconds: float = 30.0,
+        **kwargs,
+    ) -> Dict[str, Any]:
+        """
+        带超时保护的工具执行（ThreadPoolExecutor 异步化）
+
+        防止单个慢工具（如网络请求、大文件扫描）阻塞主线程。
+        超时后返回 timed_out 错误，不阻塞调用方。
+
+        Args:
+            tool_name: 工具名
+            timeout_seconds: 超时阈值（秒），默认 30s
+            **kwargs: 传递给工具的参数字典
+
+        Returns:
+            {"success": True/False, ...} 或 {"success": False, "error": "timeout"}
+        """
+        result: Dict[str, Any] = {"success": False, "error": "unknown"}
+
+        def _run():
+            nonlocal result
+            result = self.execute_tool(tool_name, **kwargs)
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(_run)
+            try:
+                future.result(timeout=timeout_seconds)
+            except concurrent.futures.TimeoutError:
+                return {
+                    "success": False,
+                    "error": f"工具执行超时 ({timeout_seconds}s): {tool_name}",
+                    "tool": tool_name,
+                    "timed_out": True,
+                }
+            except Exception as e:
+                return {
+                    "success": False,
+                    "error": f"工具执行异常: {tool_name}: {e}",
+                    "tool": tool_name,
+                }
+
+        return result
     
     def get_conversation_history(self, session_id: str = None) -> List[Dict[str, Any]]:
         """获取对话历史"""

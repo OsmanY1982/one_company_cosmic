@@ -154,14 +154,25 @@ class SuggestionEngine:
 # ═══════════════════════════════════════════
 
 class BaseMonitor(threading.Thread):
-    """监控器基类"""
+    """监控器基类（支持心跳检测僵死）"""
 
-    def __init__(self, interval_seconds: float = 30.0, name: str = "Monitor"):
+    def __init__(self, interval_seconds: float = 30.0, name: str = "Monitor",
+                 heartbeat_timeout: float = 0.0):
+        """
+        Args:
+            interval_seconds: 检查间隔（秒）；FSEventMonitor 等事件驱动型为 0
+            name: 监控器名称
+            heartbeat_timeout: 心跳超时阈值（秒），超过此时间未心跳视为僵死；
+                               0 表示不启用心跳检测（事件驱动型监控器无需轮询心跳）
+        """
         super().__init__(daemon=True)
         self.interval_seconds = interval_seconds
         self.name = name
         self._stop_event = threading.Event()
         self._callback: Optional[Callable[[ProactiveEvent], None]] = None
+        self._last_heartbeat: float = 0.0
+        self._heartbeat_timeout = heartbeat_timeout
+        self._heartbeat_lock = threading.Lock()
 
     def set_callback(self, callback: Callable[[ProactiveEvent], None]):
         self._callback = callback
@@ -171,14 +182,50 @@ class BaseMonitor(threading.Thread):
 
     def run(self):
         """子类重写 _check() 方法"""
+        self._update_heartbeat()
         while not self._stop_event.wait(self.interval_seconds):
             try:
                 events = self._check()
+                self._update_heartbeat()
                 if events and self._callback:
                     for event in events:
                         self._callback(event)
             except Exception as e:
                 logger.debug("%s 检查异常: %s", self.name, e)
+                self._update_heartbeat()
+
+    def _update_heartbeat(self):
+        """更新心跳时间戳（线程安全）"""
+        with self._heartbeat_lock:
+            self._last_heartbeat = time.time()
+
+    def is_stale(self, timeout: float = None) -> bool:
+        """
+        判断监控器是否僵死（超过心跳超时未更新）
+
+        Args:
+            timeout: 覆盖实例的 heartbeat_timeout；不传则使用构造时设置的值
+
+        Returns:
+            True 如果心跳超时（僵死），False 如果健康
+        """
+        if not self.is_alive():
+            return False  # 已退出不算僵死，算正常终止
+        with self._heartbeat_lock:
+            last = self._last_heartbeat
+        # 刚启动尚未执行第一次检查
+        if last == 0.0:
+            return False
+        threshold = timeout if timeout is not None else self._heartbeat_timeout
+        if threshold <= 0:
+            return False  # 未启用心跳检测
+        return (time.time() - last) > threshold
+
+    @property
+    def last_heartbeat(self) -> float:
+        """最后一次心跳时间戳（Unix 时间）"""
+        with self._heartbeat_lock:
+            return self._last_heartbeat
 
     def _check(self) -> List[ProactiveEvent]:
         """子类实现：返回发现的主动事件列表"""
@@ -195,10 +242,14 @@ class FileWatchMonitor(BaseMonitor):
 
     监控指定目录下的文件变化（新增/删除/修改），
     发现异常变化时推送告警。
+
+    心跳机制：若 _check() 因网络文件系统等原因阻塞，
+    可在 interval_seconds * 3 内被 ProactiveEngine 检测并重启。
     """
 
     def __init__(self, watch_paths: List[str] = None, interval_seconds: float = 30.0):
-        super().__init__(interval_seconds, "FileWatchMonitor")
+        super().__init__(interval_seconds, "FileWatchMonitor",
+                         heartbeat_timeout=interval_seconds * 3.0)
         self._watch_paths = watch_paths or []
         self._last_snapshot: Dict[str, Dict] = {}  # path → {mtime, size}
 
@@ -630,6 +681,65 @@ class ProactiveEngine(QObject):
     @property
     def monitors(self) -> List[str]:
         return [m.name for m in self._monitors]
+
+    # ── 心跳检测 ──
+
+    def check_heartbeats(self, timeout: float = None) -> List[str]:
+        """
+        检测所有监控器的心跳状态，返回僵死监控器名称列表
+
+        Args:
+            timeout: 覆盖各监控器的心跳超时阈值；不传则使用各监控器自身配置
+
+        Returns:
+            僵死（is_stale=True）的监控器名称列表
+        """
+        stale = []
+        for m in self._monitors:
+            if m.is_stale(timeout=timeout):
+                stale.append(m.name)
+        return stale
+
+    def restart_stale_monitors(self, timeout: float = None) -> int:
+        """
+        检测并重启所有僵死监控器
+
+        Args:
+            timeout: 覆盖各监控器的心跳超时阈值
+
+        Returns:
+            实际重启的监控器数量
+        """
+        restarted = 0
+        for m in self._monitors:
+            if m.is_stale(timeout=timeout):
+                logger.warning("ProactiveEngine: %s 心跳超时，正在重启…", m.name)
+                try:
+                    m.stop()
+                    m.join(timeout=5)
+                except Exception:
+                    pass
+                new_monitor = self._recreate_monitor(m)
+                if new_monitor:
+                    self._monitors.remove(m)
+                    self.add_monitor(new_monitor)
+                    restarted += 1
+        return restarted
+
+    def _recreate_monitor(self, stale_monitor: BaseMonitor) -> Optional[BaseMonitor]:
+        """根据僵死监控器的类型重新创建等价实例"""
+        name = stale_monitor.name
+        if name == "FileWatchMonitor":
+            paths = getattr(stale_monitor, '_watch_paths', [])
+            interval = stale_monitor.interval_seconds
+            return FileWatchMonitor(paths, interval)
+        elif name == "FSEventMonitor" and FSEventMonitor is not None:
+            paths = getattr(stale_monitor, '_watch_paths', [])
+            return FSEventMonitor(paths)
+        elif name == "ProjectHealthMonitor":
+            pp = getattr(stale_monitor, 'project_path', "")
+            return ProjectHealthMonitor(pp)
+        return None
 
     # ── 手动推送 ──
 
