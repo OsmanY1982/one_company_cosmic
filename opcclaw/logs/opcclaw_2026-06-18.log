@@ -251,3 +251,4 @@ RuntimeError: [Ollama] API error 400: {"error":{"message":"{\"error\":{\"code\":
 2026-06-18 08:32:20 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
 2026-06-18 08:36:30 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
 2026-06-18 08:37:10 [WARNING] opcclaw.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 09:28:30 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)

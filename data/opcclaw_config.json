@@ -7,7 +7,7 @@
       "name": "llama.cpp (本地)",
       "provider_type": "openai_compatible",
       "base_url": "http://localhost:8080/v1",
-      "model": "qwen3.6-35b-iq2m",
+      "model": "qwen2.5:7b-64k",
       "api_key": ""
     }
   }
