@@ -740,12 +740,12 @@ PROVIDER_TEMPLATES = {
     ),
     # ── 本地模型 (Ollama / LM Studio / vLLM 等) ──
     "ollama": ProviderConfig(
-        name="llama.cpp (本地)",
+        name="Ollama (本地)",
         provider_type="openai_compatible",
-        base_url="http://localhost:8080/v1",
-        model="Qwen3.6-35B-A3B-IQ2_M.gguf",
-        max_tokens=131072,            # 本地模型取 128K，实际由模型参数控制
-        description="llama.cpp server - 本地大模型运行时",
+        base_url="http://localhost:11434/v1",
+        model="qwen3.6:35b",
+        max_tokens=131072,
+        description="Ollama 本地推理服务 - 一键管理模型",
         available_models=[],  # 模型列表由 /api/tags 动态获取
     ),
     "lmstudio": ProviderConfig(
@@ -771,7 +771,7 @@ PROVIDER_TEMPLATES = {
         provider_type="openai_compatible",
         base_url="http://localhost:8080/v1",
         model="local",
-        max_tokens=131072,            # 本地模型取 128K
+        max_tokens=131072,
         description="llama.cpp server - 轻量 GGUF 模型推理",
         available_models=["local"],
     ),
@@ -779,7 +779,7 @@ PROVIDER_TEMPLATES = {
     "custom": ProviderConfig(
         name="自定义 OpenAI 兼容",
         provider_type="openai_compatible",
-        base_url="http://localhost:8080/v1",
+        base_url="http://localhost:11434/v1",
         model="default",
         max_tokens=131072,            # 自定义端点取 128K，用户按需调整
         description="任意符合 OpenAI API 格式的端点",
@@ -1102,7 +1102,7 @@ def create_backend(
         cfg = ProviderConfig(
             name=provider,
             provider_type="openai_compatible",
-            base_url=base_url or "http://localhost:8080/v1",
+            base_url=base_url or "http://localhost:11434/v1",
             api_key=api_key,
             model=model or "default",
             temperature=temperature,

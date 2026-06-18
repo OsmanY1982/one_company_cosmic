@@ -44,6 +44,7 @@ PRESET_PROVIDERS = [
 ]
 
 LOCAL_SERVICES = [
+    {"id": "ollama",    "name": "Ollama",     "base_url": "http://localhost:11434/v1", "desc": "本地开源大模型运行平台，完全离线",                  "models": []},
     {"id": "lmstudio",  "name": "LM Studio",  "base_url": "http://localhost:1234/v1",  "desc": "图形界面管理模型，开箱即用",                       "models": ["local-model"]},
     {"id": "vllm",      "name": "vLLM",       "base_url": "http://localhost:8000/v1",  "desc": "高性能推理引擎，适合生产环境",                      "models": ["default"]},
     {"id": "llamacpp",  "name": "llama.cpp",  "base_url": "http://localhost:8080/v1",  "desc": "轻量 GGUF 模型推理",                              "models": ["local"]},
@@ -574,20 +575,57 @@ class ModelSetupWindow(QMainWindow):
                 self._local_model.addItem(m, m)
 
     def _refresh_local_models(self):
-        """通过 AgentBridge.list_all_models() 获取已配置的本地模型并填充下拉框"""
+        """通过 AgentBridge.list_all_models() + 直接扫描当前服务获取模型列表"""
         from modules.intelligence.agent_bridge import AgentBridge
 
         self._local_model.clear()
         self._refresh_btn.setEnabled(False)
-        self._refresh_btn.setText("获取中...")
+        self._refresh_btn.setText("扫描中...")
 
-        try:
-            all_models = AgentBridge.list_all_models()
-            local_models = [m for m in all_models if m.get("category") == "local"]
-        except Exception as e:
-            print(f"[ModelSetup] agent_bridge 获取模型列表失败: {e}")
-            traceback.print_exc()
-            local_models = []
+        local_models = []
+
+        # 优先直连当前选中的本地服务扫描（不依赖已保存的配置）
+        sid = self._local_service.currentData()
+        url = self._local_url.text().strip()
+        if url and "localhost" in url:
+            try:
+                import urllib.request
+                import urllib.parse
+
+                if "11434" in url or sid == "ollama":
+                    # Ollama 的 /api/tags 在根路径，不在 base_url 的 /v1 下
+                    parsed = urllib.parse.urlparse(url)
+                    origin = f"{parsed.scheme}://{parsed.hostname}:{parsed.port or 11434}"
+                    endpoint = urllib.parse.urljoin(origin + "/", "api/tags")
+                    resp = urllib.request.urlopen(endpoint, timeout=5)
+                    data = json.loads(resp.read())
+                    for m in data.get("models", []):
+                        if "name" in m:
+                            size = m.get("size", 0)
+                            size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
+                            local_models.append({"model": m["name"], "size": size, "display": f"{m['name']}{size_str}"})
+                else:
+                    endpoint = urllib.parse.urljoin(url.rstrip("/") + "/", "models")
+                    resp = urllib.request.urlopen(endpoint, timeout=5)
+                    data = json.loads(resp.read())
+                    for m in data.get("data", []):
+                        local_models.append({"model": m["id"], "size": 0, "display": m["id"]})
+            except Exception as e:
+                print(f"[ModelSetup] 直接扫描 {url} 失败: {e}")
+
+        # 补充从已保存配置中读取的模型
+        if not local_models:
+            try:
+                all_models = AgentBridge.list_all_models()
+                for m in all_models:
+                    if m.get("category") == "local":
+                        name = m.get("model", "")
+                        size = m.get("size", 0)
+                        size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
+                        local_models.append({"model": name, "size": size, "display": f"{name}{size_str}"})
+            except Exception as e:
+                print(f"[ModelSetup] agent_bridge 获取模型列表失败: {e}")
+                traceback.print_exc()
 
         if not local_models:
             self._local_model.addItem("（暂无本地模型，请先配置或启动 Ollama）", "")
@@ -657,6 +695,7 @@ class ModelSetupWindow(QMainWindow):
                 return None
             config["active_provider_id"] = sid
             config["active_provider_type"] = "local"
+
             config["local_providers"][sid] = {
                 "name": svc["name"],
                 "provider_type": "openai_compatible",

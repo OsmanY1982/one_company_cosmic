@@ -1,6 +1,6 @@
 # `modules/intelligence/session_context.py`
 
-> 路径：`modules/intelligence/session_context.py` | 行数：109
+> 路径：`modules/intelligence/session_context.py` | 行数：110
 
 
 ---
@@ -15,8 +15,8 @@ import threading
 
 class SessionContext:
     """
-    全局单例：维护当前活跃的AI对话会话。
-    悬浮球、智能中心、语音三个入口共享同一会话，切换即全局生效。
+    全局单例：维护当前活跃的AI对话会话和窗口注册。
+    悬浮球、智能中心、语音三个入口可各自独立打开AI对话窗口，各自维护独立会话。
     """
     _instance = None
     _lock = threading.Lock()
@@ -36,7 +36,7 @@ class SessionContext:
         self._current_session_id: str = "default"
         self._current_title: str = "对话"
         self._agent_bridge = None            # AgentBridge 引用
-        self._active_window = None           # 当前活跃的 AIChatWindow
+        self._active_windows: list = []       # 活跃的 AIChatWindow 列表
         self._listeners: List[Callable] = [] # 会话切换监听器
         self._message_listeners: List[Callable] = []  # 消息新增监听器
         
@@ -70,12 +70,13 @@ class SessionContext:
     
     def register_window(self, window):
         """注册活跃的对话窗口"""
-        self._active_window = window
+        if window not in self._active_windows:
+            self._active_windows.append(window)
         
     def unregister_window(self, window):
         """注销对话窗口"""
-        if self._active_window is window:
-            self._active_window = None
+        if window in self._active_windows:
+            self._active_windows.remove(window)
     
     def add_listener(self, callback: Callable):
         """添加会话切换监听器"""

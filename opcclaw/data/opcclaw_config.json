@@ -4,10 +4,10 @@
   "cloud_providers": {},
   "local_providers": {
     "ollama": {
-      "name": "Ollama (qwen3.6:35b)",
+      "name": "Ollama",
       "provider_type": "openai_compatible",
       "base_url": "http://localhost:11434/v1",
-      "model": "qwen3.6:35b",
+      "model": "qwen2.5:7b",
       "api_key": ""
     }
   }

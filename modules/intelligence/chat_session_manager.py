@@ -24,6 +24,7 @@ class ChatSessionManager(QWidget):
         super().__init__(parent)
         self._agent = agent_bridge
         self._sessions = []
+        self._current_session_id = ""
         self.setFixedWidth(240)
         self.setStyleSheet("""
             ChatSessionManager {
@@ -121,30 +122,6 @@ class ChatSessionManager(QWidget):
         self._list_widget.customContextMenuRequested.connect(self._show_context_menu)
         layout.addWidget(self._list_widget, 1)
 
-        # 打开对话文件夹按钮
-        folder_btn_layout = QHBoxLayout()
-        folder_btn_layout.setContentsMargins(10, 4, 10, 4)
-        self._open_folder_btn = QPushButton("打开对话文件夹")
-        self._open_folder_btn.setCursor(Qt.PointingHandCursor)
-        self._open_folder_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #1e1e3a;
-                color: #8888aa;
-                border: 1px solid #2a2a4a;
-                border-radius: 4px;
-                padding: 4px 8px;
-                font-size: 10px;
-            }
-            QPushButton:hover {
-                background-color: #2a2a5a;
-                color: #aaaacc;
-                border-color: #3a3a6a;
-            }
-        """)
-        self._open_folder_btn.clicked.connect(self._on_open_folder)
-        folder_btn_layout.addWidget(self._open_folder_btn)
-        layout.addLayout(folder_btn_layout)
-
         # 底部信息
         bottom = QHBoxLayout()
         bottom.setContentsMargins(10, 6, 10, 8)
@@ -170,6 +147,7 @@ class ChatSessionManager(QWidget):
     def set_sessions(self, sessions: list, current_id: str = ""):
         """兼容 OPCclaw Sidebar 的推送式 API"""
         self._sessions = sessions
+        self._current_session_id = current_id
         self._refresh_list()
         if current_id:
             for i in range(self._list_widget.count()):
@@ -200,7 +178,7 @@ class ChatSessionManager(QWidget):
                 ]
 
             for s in filtered:
-                sid = s.get("session_id", "")
+                sid = s.get("id") or s.get("session_id", "")
                 title = s.get("title", "未命名对话")[:30]
                 msg_count = s.get("message_count", 0)
                 updated = s.get("updated_at", "")
@@ -275,11 +253,26 @@ class ChatSessionManager(QWidget):
         self.new_chat_requested.emit()
 
     def _on_open_folder(self):
-        """打开对话文件存储目录"""
+        """打开对话文件存储目录。若当前有选中会话，则定位到该文件。"""
         import subprocess
         import platform
         try:
             sessions_dir = self._agent.get_sessions_dir()
+            # 优先：当前有选中会话 → 定位到该文件
+            item = self._list_widget.currentItem()
+            if item:
+                session_id = item.data(Qt.UserRole)
+                if session_id:
+                    filepath = os.path.join(sessions_dir, f"{session_id}.json")
+                    if os.path.exists(filepath):
+                        if platform.system() == "Darwin":
+                            subprocess.Popen(["open", "-R", filepath])
+                        elif platform.system() == "Windows":
+                            subprocess.Popen(["explorer", "/select,", filepath])
+                        else:
+                            subprocess.Popen(["xdg-open", os.path.dirname(filepath)])
+                        return
+            # 降级：打开整个目录
             if not os.path.exists(sessions_dir):
                 os.makedirs(sessions_dir, exist_ok=True)
             if platform.system() == "Darwin":
@@ -289,10 +282,30 @@ class ChatSessionManager(QWidget):
             else:
                 subprocess.Popen(["xdg-open", sessions_dir])
         except Exception as e:
-            QMessageBox.warning(self, "打开失败", f"无法打开对话文件夹:\n{e}")
+            self._styled_warning("打开失败", f"无法打开对话文件夹:\n{e}")
+
+    def _show_in_finder(self, session_id: str):
+        """在 Finder 中定位并选中指定会话文件"""
+        import subprocess
+        import platform
+        try:
+            sessions_dir = self._agent.get_sessions_dir()
+            filepath = os.path.join(sessions_dir, f"{session_id}.json")
+            if not os.path.exists(filepath):
+                self._styled_warning("文件不存在", f"会话文件不存在:\n{filepath}")
+                return
+            if platform.system() == "Darwin":
+                subprocess.Popen(["open", "-R", filepath])
+            elif platform.system() == "Windows":
+                subprocess.Popen(["explorer", "/select,", filepath])
+            else:
+                subprocess.Popen(["xdg-open", os.path.dirname(filepath)])
+        except Exception as e:
+            self._styled_warning("打开失败", f"无法定位会话文件:\n{e}")
 
     def _select_session(self, session_id: str, title: str):
         """选中会话（从自定义 item widget 触发）"""
+        self._current_session_id = session_id
         self.session_selected.emit(session_id, title)
 
     def _show_session_menu(self, session_id: str, anchor_btn: QPushButton):
@@ -335,15 +348,20 @@ class ChatSessionManager(QWidget):
         pin_action = menu.addAction("📌 取消置顶" if pinned else "📌 置顶")
         rename_action = menu.addAction("✏️ 重命名")
         menu.addSeparator()
+        finder_action = menu.addAction("🔍 在 Finder 中显示")
         copy_action = menu.addAction("📋 复制会话ID")
         export_action = menu.addAction("📤 导出会话")
+        menu.addSeparator()
+        delete_action = menu.addAction("🗑 删除")
 
         # 信号连接
         print(f"[Menu] 构建菜单 session_id={session_id}, pinned={pinned}", flush=True)
         pin_action.triggered.connect(lambda: self._toggle_pin_session(session_id))
         rename_action.triggered.connect(lambda: self._rename_session(session_id))
+        finder_action.triggered.connect(lambda: self._show_in_finder(session_id))
         copy_action.triggered.connect(lambda: self._copy_session_id(session_id))
         export_action.triggered.connect(lambda: self._export_session(session_id))
+        delete_action.triggered.connect(lambda: self._delete_session(session_id))
 
         return menu
 
@@ -372,7 +390,114 @@ class ChatSessionManager(QWidget):
                 f"共 {len(self._sessions)} 个会话"
             ))
         except Exception as e:
-            QMessageBox.warning(self, "操作失败", f"无法执行置顶操作:\n{e}")
+            self._styled_warning("操作失败", f"无法执行置顶操作:\n{e}")
+
+    def _delete_session(self, session_id: str):
+        """删除指定会话"""
+        if self._list_widget.count() <= 1:
+            self._styled_info("无法删除", "至少保留一个会话")
+            return
+        sess_title = "对话"
+        for s in self._sessions:
+            sid = s.get("id") or s.get("session_id", "")
+            if sid == session_id:
+                sess_title = s.get("title", "对话")
+                break
+        # 自定义深色确认弹窗（macOS 原生按钮 CSS 不生效，用 QDialog）
+        dlg = QDialog(self)
+        dlg.setWindowTitle("确认删除")
+        dlg.setFixedSize(380, 160)
+        dlg.setStyleSheet("QDialog { background-color: #1e1e3a; }")
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(20, 16, 20, 12)
+        msg = QLabel(f"确定要删除「{sess_title}」吗？\n删除后不可恢复。")
+        msg.setStyleSheet("color: #cccccc; font-size: 13px; background: transparent;")
+        msg.setWordWrap(True)
+        layout.addWidget(msg)
+        layout.addStretch()
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        no_btn = QPushButton("取消")
+        no_btn.setStyleSheet("""
+            QPushButton { background: #3a3a5a; color: #cccccc; border: 1px solid #555577;
+                          border-radius: 4px; padding: 6px 24px; font-size: 12px; }
+            QPushButton:hover { background: #4a4a6a; }
+        """)
+        no_btn.clicked.connect(dlg.reject)
+        btn_row.addWidget(no_btn)
+        yes_btn = QPushButton("确认删除")
+        yes_btn.setStyleSheet("""
+            QPushButton { background: #cc4444; color: #ffffff; border: none;
+                          border-radius: 4px; padding: 6px 24px; font-size: 12px; font-weight: bold; }
+            QPushButton:hover { background: #dd5555; }
+        """)
+        yes_btn.clicked.connect(dlg.accept)
+        btn_row.addWidget(yes_btn)
+        layout.addLayout(btn_row)
+        if dlg.exec_() != QDialog.Accepted:
+            return
+        try:
+            ok = self._agent.delete_session(session_id)
+            if ok:
+                if session_id == self._current_session_id:
+                    self._current_session_id = ""
+                self._load_sessions()
+            else:
+                self._styled_warning("删除失败", "无法删除该会话")
+        except Exception as e:
+            self._styled_warning("删除失败", f"删除出错:\n{e}")
+
+    def _styled_warning(self, title: str, message: str):
+        """深色主题警告弹窗（QDialog 自定义，macOS 原生按钮样式不生效）"""
+        dlg = QDialog(self)
+        dlg.setWindowTitle(title)
+        dlg.setFixedSize(360, 140)
+        dlg.setStyleSheet("QDialog { background-color: #1e1e3a; }")
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(20, 16, 20, 12)
+        msg = QLabel(message)
+        msg.setStyleSheet("color: #cccccc; font-size: 13px; background: transparent;")
+        msg.setWordWrap(True)
+        layout.addWidget(msg)
+        layout.addStretch()
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        ok_btn = QPushButton("确定")
+        ok_btn.setStyleSheet("""
+            QPushButton { background: #445577; color: #ffffff; border: 1px solid #5577aa;
+                          border-radius: 4px; padding: 6px 24px; font-size: 12px; }
+            QPushButton:hover { background: #556688; }
+        """)
+        ok_btn.clicked.connect(dlg.accept)
+        btn_row.addWidget(ok_btn)
+        layout.addLayout(btn_row)
+        dlg.exec_()
+
+    def _styled_info(self, title: str, message: str):
+        """深色主题信息弹窗"""
+        dlg = QDialog(self)
+        dlg.setWindowTitle(title)
+        dlg.setFixedSize(360, 140)
+        dlg.setStyleSheet("QDialog { background-color: #1e1e3a; }")
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(20, 16, 20, 12)
+        msg = QLabel(message)
+        msg.setStyleSheet("color: #cccccc; font-size: 13px; background: transparent;")
+        msg.setWordWrap(True)
+        layout.addWidget(msg)
+        layout.addStretch()
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        ok_btn = QPushButton("确定")
+        ok_btn.setStyleSheet("""
+            QPushButton { background: #335577; color: #ffffff; border: 1px solid #5577aa;
+                          border-radius: 4px; padding: 6px 24px; font-size: 12px; }
+            QPushButton:hover { background: #446688; }
+        """)
+        ok_btn.clicked.connect(dlg.accept)
+        btn_row.addWidget(ok_btn)
+        layout.addLayout(btn_row)
+        dlg.exec_()
 
     def _rename_session(self, session_id: str):
         """重命名会话"""
@@ -395,9 +520,9 @@ class ChatSessionManager(QWidget):
                 if success:
                     self._load_sessions()
                 else:
-                    QMessageBox.warning(self, "重命名失败", "无法重命名该会话")
+                    self._styled_warning("重命名失败", "无法重命名该会话")
             except Exception as e:
-                QMessageBox.warning(self, "重命名失败", str(e))
+                self._styled_warning("重命名失败", str(e))
 
     def rename_session(self, session_id: str, new_title: str) -> bool:
         """公共重命名方法（供外部信号直接调用）"""

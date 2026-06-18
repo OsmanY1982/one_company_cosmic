@@ -56,7 +56,7 @@ class LocalModelPanel(QWidget):
         # 快捷添加: Ollama
         ollama_group = QGroupBox("Ollama (推荐)")
         ollama_layout = QVBoxLayout(ollama_group)
-        ollama_hint = QLabel("llama.cpp 默认地址: http://localhost:8080/v1")
+        ollama_hint = QLabel("Ollama 默认地址: http://localhost:11434/v1")
         ollama_hint.setStyleSheet(f"color: {COLORS['text_light']}; font-size: 12px;")
         ollama_layout.addWidget(ollama_hint)
 
@@ -67,7 +67,7 @@ class LocalModelPanel(QWidget):
         ollama_row.addWidget(QLabel("模型:"))
         ollama_row.addWidget(self.ollama_model, stretch=1)
 
-        self.ollama_url = QLineEdit("http://localhost:8080/v1")
+        self.ollama_url = QLineEdit("http://localhost:11434/v1")
         self.ollama_url.setMinimumHeight(32)
         ollama_row.addWidget(QLabel("地址:"))
         ollama_row.addWidget(self.ollama_url)
@@ -252,11 +252,11 @@ class LocalModelPanel(QWidget):
         self.ollama_model.clear()
 
         try:
-            url = "http://localhost:8080/v1/models"
+            url = "http://localhost:11434/api/tags"
             req = urllib.request.Request(url)
             with urllib.request.urlopen(req, timeout=3) as resp:
                 data = json.loads(resp.read().decode())
-                models = [m["id"] for m in data.get("data", [])]
+                models = [m["name"] for m in data.get("models", [])]
             if models:
                 self.ollama_model.addItems(models)
                 idx = self.ollama_model.findText(current_text)
@@ -265,6 +265,6 @@ class LocalModelPanel(QWidget):
             else:
                 self.ollama_model.addItem("(未找到模型)")
         except Exception:
-            self.ollama_model.addItem("(llama.cpp 未运行)")
+            self.ollama_model.addItem("(Ollama 未运行)")
 
 ```

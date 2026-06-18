@@ -1,6 +1,6 @@
 # `modules/intelligence/agent_bridge.py`
 
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：1991
+> 路径：`modules/intelligence/agent_bridge.py` | 行数：2096
 
 
 ---
@@ -30,6 +30,7 @@ import subprocess
 import fnmatch
 import traceback
 import time
+from pathlib import Path
 from typing import Optional, Callable, Dict, Any, List
 
 from modules.intelligence.session_context import session_ctx
@@ -221,22 +222,36 @@ class AgentBridge:
         "你是 opcclaw，一人公司的全能 AI 助理。\n"
         "\n"
         "核心能力：\n"
-        "1. 文件系统：读写、编辑、搜索、列目录\n"
-        "2. 代码：搜索、运行测试、Shell 执行\n"
-        "3. Git：查看状态、diff、提交\n"
-        "4. 桌面：打开应用、控制系统设置\n"
-        "5. 网络：搜索、抓取网页\n"
+        "1. 文件系统：read_file/write_file/edit_file/list_directory/search_files\n"
+        "2. 代码：search_code/run_tests\n"
+        "3. 系统：execute_shell/execute_python/desktop_control\n"
+        "4. Git：git_operation\n"
+        "5. 网络：web_search/web_fetch_page\n"
         "\n"
-        "执行原则：\n"
-        "- 永远优先用工具完成任务，不要只给建议\n"
-        "- 每次只做一步，观察结果后再继续\n"
-        "- 出错后分析原因，尝试替代方案\n"
+        "=== 工具选择铁律（违反将导致低效/错误） ===\n"
+        "1. 读取文件 → 只用 read_file，严禁用 execute_shell 执行 cat/more/osascript\n"
+        "2. 搜索文件 → 只用 search_files（或 list_directory+匹配），严禁用 find/grep/mdfind/ls\n"
+        "3. 读写文件 → 只用 read_file/write_file/edit_file，严禁通过 pipe/重定向操作\n"
+        "4. 执行命令 → 只用 execute_shell，严禁用 osascript/open/xdg-open\n"
+        "5. 每个目的只用一个工具一次完成，不要用多个工具接力做同一件事\n"
+        "\n"
+        "=== 执行原则 ===\n"
+        "- 永远用工具完成任务，不要只给建议\n"
+        "- 多个独立操作必须并行调用（如同一轮读多个文件），不要串行等待\n"
+        "- 只读操作（读文件/列目录/搜索）直接执行，不废话\n"
+        "- 出错后分析原因，尝试替代方案，同一错误不重试超过2次\n"
         "- 关键操作（删除/覆盖）前确认安全性\n"
         "\n"
-        "能力质疑处理：\n"
-        "- 如果用户问「你能不能做X」或质疑你的能力，不要用文字解释\n"
+        "=== 文件定位策略 ===\n"
+        "当用户提到某个文件名或配置文档（如「设计规范」「规范」「AI规范」等）：\n"
+        "1. 先在工作目录下搜索该文件名\n"
+        "2. 搜索 /Volumes/D盘工作区/ 根目录（同名文件）\n"
+        "3. 搜索 ~/ 用户主目录\n"
+        "优先级：用户说的路径 > find/search_files 搜索结果 > 推断\n"
+        "\n"
+        "=== 能力质疑处理 ===\n"
+        "- 如果用户质疑你的能力，不要用文字解释\n"
         "- 直接调用工具现场演示，用行动证明\n"
-        "- 例如用户问「你不能调用工具吗」→ 立即调用 list_directory 列出桌面文件来证明\n"
     )
 
     def __init__(
@@ -307,6 +322,8 @@ class AgentBridge:
         # ── 后台线程 ──
         self._task_thread: Optional[QThread] = None
         self._task_worker: Optional[_TaskWorker] = None
+        self._stream_cancelled: bool = False
+        self._stream_aborted: bool = False
 
     def _init_engine_modules(self):
         """初始化所有 opcclaw 引擎模块（try/except 包裹，逐个失败不影响启动）"""
@@ -446,7 +463,7 @@ class AgentBridge:
         if _HAVE_CONFIG_VALID:
             try:
                 config_path = os.path.join(
-                    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
                     "opcclaw", "data", "opcclaw_config.json"
                 )
                 self._config_validator = ConfigValidator(config_path)
@@ -497,6 +514,7 @@ class AgentBridge:
             "has_git": os.path.isdir(os.path.join(cwd, ".git")),
             "top_files": [],
             "package_managers": [],
+            "design_specs": [],  # AI 设计规范等关键文档
         }
 
         # 检测顶层文件（.py, .json, .md, .txt）
@@ -507,6 +525,14 @@ class AgentBridge:
                     ctx["top_files"].append(f)
         except Exception as e:
             print(f"[agent_bridge] 扫描工作目录文件失败: {e}")
+
+        # 检测 D 盘根目录关键文档（AI设计规范等）
+        drive_roots = ["/Volumes/D盘工作区", "/Volumes/C盘工作区"]
+        for root in drive_roots:
+            if os.path.isdir(root):
+                spec_file = os.path.join(root, "AI设计规范.txt")
+                if os.path.isfile(spec_file):
+                    ctx["design_specs"].append(spec_file)
 
         # 检测包管理器
         pm_indicators = {
@@ -540,10 +566,30 @@ class AgentBridge:
             top = ctx["top_files"][:15]
             lines.append(f"- 顶层文件: {', '.join(top)}")
 
+        # 注入关键文档路径（AI设计规范等）
+        if ctx.get("design_specs"):
+            lines.append("\n## 关键参考文档（做任何重大决策前务必先查阅）")
+            for spec in ctx["design_specs"]:
+                lines.append(f"- `{spec}`")
+
         lines.append(
             "\n所有文件操作默认基于以上工作目录。"
             "如需访问其他目录，请使用绝对路径。"
         )
+
+        # ── 持久化记忆注入（跨会话 AI 自律规则）──
+        memory_md = Path.home() / ".hermes" / "memories" / "MEMORY.md"
+        if memory_md.exists():
+            try:
+                raw = memory_md.read_text(encoding="utf-8")
+                entries = [e.strip() for e in raw.split("\n§\n") if e.strip()]
+                if entries:
+                    lines.append("\n## 持久化记忆（跨会话 AI 自律）")
+                    for i, entry in enumerate(entries, 1):
+                        lines.append(f"\n### 记忆 {i}\n{entry}")
+            except Exception:
+                pass
+
         return "\n".join(lines)
 
     # ═══════════════════════════════════════════
@@ -616,6 +662,13 @@ class AgentBridge:
         except Exception:
             return False
 
+    def delete_session(self, session_id: str) -> bool:
+        """删除会话"""
+        try:
+            return self._memory.delete_session(session_id)
+        except Exception:
+            return False
+
     def get_sessions_dir(self) -> str:
         """返回会话文件的存储目录路径"""
         return self._memory.get_sessions_dir()
@@ -630,7 +683,7 @@ class AgentBridge:
         """opcclaw_config.json 的绝对路径"""
         return os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-            "data", "opcclaw_config.json"
+            "opcclaw", "data", "opcclaw_config.json"
         )
 
     @staticmethod
@@ -730,11 +783,42 @@ class AgentBridge:
 
     @staticmethod
     def discover_local_models() -> list:
-        """自动发现本地 llama.cpp 已加载的模型"""
+        """自动发现本地 provider 已加载的模型（从配置读取 base_url）"""
         try:
             import urllib.request
-            resp = urllib.request.urlopen("http://localhost:8080/v1/models", timeout=3)
+            import urllib.parse
+            config = AgentBridge._load_config()
+            # 从本地 provider 配置中取第一个有效的 base_url
+            base_url = ""
+            provider_type = ""
+            for _pid, pdata in config.get("local_providers", {}).items():
+                url = pdata.get("base_url", "")
+                if url:
+                    base_url = url
+                    provider_type = pdata.get("provider_type", "")
+                    break
+            if not base_url:
+                base_url = "http://localhost:8080/v1"
+
+            # Ollama 用 /api/tags，其他用 /v1/models
+            if "11434" in base_url or "ollama" in provider_type.lower():
+                # Ollama 的 /api/tags 在根路径，不在 base_url 的 /v1 下
+                parsed = urllib.parse.urlparse(base_url)
+                origin = f"{parsed.scheme}://{parsed.hostname}:{parsed.port or 11434}"
+                endpoint = urllib.parse.urljoin(origin + "/", "api/tags")
+            else:
+                endpoint = urllib.parse.urljoin(base_url.rstrip("/") + "/", "models")
+
+            resp = urllib.request.urlopen(endpoint, timeout=5)
             data = json.loads(resp.read())
+
+            # Ollama 返回 {"models": [{"name": "...", ...}]}
+            if "models" in data:
+                models = data["models"]
+                if models and "name" in models[0]:
+                    return [{"name": m["name"], "size": m.get("size", 0)} for m in models]
+
+            # OpenAI 兼容格式返回 {"data": [{"id": "...", ...}]}
             return [
                 {"name": m["id"], "size": 0}
                 for m in data.get("data", [])
@@ -828,12 +912,14 @@ class AgentBridge:
         """
         # 终止前一次流式（如果还在运行），防止旧 finished 信号误杀新线程
         self._abort_stream()
+        self._stream_cancelled = False
+        self._stream_aborted = False
 
         # 管线预处理（RAG / Token 压缩 / SuperIntelligence / 多模型路由）
         self._preprocess_stream(message)
 
         self._stream_thread = QThread()
-        self._stream_worker = _StreamWorker(self._engine, message)
+        self._stream_worker = _StreamWorker(self._engine, message, bridge=self)
         self._stream_worker.moveToThread(self._stream_thread)
 
         # 连接信号到回调（跨线程安全，回调在主线程执行）
@@ -854,12 +940,16 @@ class AgentBridge:
         self._stream_thread.start()
 
     def _abort_stream(self):
-        """安全终止当前正在运行的流式线程（清除旧引用防止信号串扰）"""
+        """安全终止当前正在运行的流式线程（断开全部信号防止回调串扰）"""
         if hasattr(self, '_stream_worker') and self._stream_worker:
-            try:
-                self._stream_worker.finished.disconnect()
-            except Exception:
-                pass
+            w = self._stream_worker
+            for sig_name in ('chunk_ready', 'tool_event', 'stream_done', 'stream_error', 'finished'):
+                sig = getattr(w, sig_name, None)
+                if sig is not None:
+                    try:
+                        sig.disconnect()
+                    except Exception:
+                        pass
         if hasattr(self, '_stream_thread') and self._stream_thread:
             try:
                 self._stream_thread.quit()
@@ -868,6 +958,13 @@ class AgentBridge:
                 pass
         self._stream_worker = None
         self._stream_thread = None
+
+    def cancel(self):
+        """取消当前运行的流式或任务；设置 _stream_aborted 阻断后续回调"""
+        self._stream_cancelled = True
+        self._stream_aborted = True
+        self._abort_stream()
+        self.cancel_task()
 
     # ═══════════════════════════════════════════
     # 模式 1: 对话模式
@@ -1957,10 +2054,11 @@ class _StreamWorker(QObject):
     stream_error = pyqtSignal(str)     # (error_message)
     finished = pyqtSignal()
 
-    def __init__(self, engine: ChatEngine, message: str):
+    def __init__(self, engine: ChatEngine, message: str, bridge: 'AgentBridge' = None):
         super().__init__()
         self._engine = engine
         self._message = message
+        self._bridge = bridge
 
     def run(self):
         accumulated = ""
@@ -1968,6 +2066,13 @@ class _StreamWorker(QObject):
         print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] StreamWorker.run() START — engine={type(self._engine).__name__}, msg={self._message[:50]}", flush=True)
         try:
             for chunk in self._engine.chat_stream(self._message):
+                # 用户取消检查
+                if self._bridge and self._bridge._stream_cancelled:
+                    accumulated += "\n[用户取消]"
+                    self.stream_done.emit(accumulated)
+                    self.finished.emit()
+                    return
+
                 # 工具调用标记
                 if "Calling tool:" in chunk:
                     name = chunk.split("Calling tool:")[1].split("...")[0].strip()

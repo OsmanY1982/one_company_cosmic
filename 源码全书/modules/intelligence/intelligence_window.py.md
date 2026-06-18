@@ -1,6 +1,6 @@
 # `modules/intelligence/intelligence_window.py`
 
-> 路径：`modules/intelligence/intelligence_window.py` | 行数：219
+> 路径：`modules/intelligence/intelligence_window.py` | 行数：212
 
 
 ---
@@ -191,13 +191,6 @@ class IntelligenceWindow(QMainWindow):
         if planet_id == "ai_chat":
             # 使用全局会话上下文
             session_ctx.set_agent_bridge(self._opcclaw_engine)
-
-            if session_ctx._active_window is not None:
-                try:
-                    session_ctx._active_window.close()
-                except RuntimeError:
-                    pass
-                session_ctx._active_window = None
 
             from .ai_chat_window import AIChatWindow
             dlg = AIChatWindow(

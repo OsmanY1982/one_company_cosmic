@@ -1,6 +1,6 @@
 # `opcclaw/core/chat_engine.py`
 
-> 路径：`opcclaw/core/chat_engine.py` | 行数：600
+> 路径：`opcclaw/core/chat_engine.py` | 行数：645
 
 
 ---
@@ -70,12 +70,13 @@ class ChatEngine(QObject):
                 '\n'
                 '核心规则：\n'
                 '1. 永远用工具完成任务，不要只是聊天或给建议\n'
-                '2. 读写文件用 read_file/write_file，执行代码用 execute_code，搜索用 web_search\n'
+                '2. 读取文件用 read_file，严禁用 execute_shell + cat/osascript；搜索文件用 search_files，严禁用 find/grep\n'
                 '3. 用户要求做具体操作时，立刻调用对应工具，不要先解释\n'
-                '4. 工具返回结果后，基于结果给出分析或下一步行动\n'
-                f'5. 可用工具({len(tool_names)}个): {tool_summary}\n'
+                '4. 独立操作并行调用，不要串行等待\n'
+                '5. 工具返回结果后，基于结果给出分析或下一步行动\n'
+                f'6. 可用工具({len(tool_names)}个): {tool_summary}\n'
                 '\n'
-                '回复风格：中文、简洁、直接、带Emoji。'
+                '回复风格：中文、简洁、直接。'
             )
             parts.append(intro)
         # 技能索引（仅列技能名，不注入完整内容以节省 token）
@@ -106,15 +107,59 @@ class ChatEngine(QObject):
         self._trim_context()
 
     def _trim_context(self) -> int:
-        if len(self.messages) <= self.MAX_CONTEXT_MSGS:
+        """智能上下文裁剪：保留系统提示 + 错误信息 + 最近消息"""
+        total = len(self.messages)
+        if total <= self.MAX_CONTEXT_MSGS:
             return 0
+
         sys_msg = self.messages[0] if (self.messages and self.messages[0]['role'] == 'system') else None
+        keep_recent = max(30, self.MAX_CONTEXT_MSGS // 2)  # 至少保留最近 30 条
+        sys_slot = 1 if sys_msg else 0
+        total_slot = self.MAX_CONTEXT_MSGS
+
+        if total - keep_recent <= total_slot - sys_slot:
+            # 简单裁剪：系统消息 + 最近 N-1 条
+            if sys_msg:
+                self.messages = [sys_msg] + self.messages[-(total_slot - 1):]
+            else:
+                self.messages = self.messages[-total_slot:]
+            return total - len(self.messages)
+
+        # 深度裁剪：在中间段保留重要消息（错误、大结果）
+        recent = self.messages[-keep_recent:]  # 最近消息（必留）
+        middle = self.messages[sys_slot:-keep_recent]  # 中间可裁剪段
+        kept_middle = []
+        for msg in middle:
+            content = msg.get("content", "")
+            if isinstance(content, str):
+                # 保留含错误的消息
+                if ("error" in content.lower() or "失败" in content
+                        or "exception" in content.lower()):
+                    kept_middle.append(msg)
+                    continue
+                # 保留较大的 tool 结果（含重要数据）
+                if msg.get("role") == "tool" and len(content) > 500:
+                    kept_middle.append(msg)
+                    continue
+                # 保留用户消息（保持对话连贯）
+                if msg.get("role") == "user":
+                    kept_middle.append(msg)
+                    continue
+
+        # 计算剩余槽位
+        remaining_slots = total_slot - sys_slot - keep_recent
+        if remaining_slots > 0 and kept_middle:
+            # 优先保留最新的重要消息
+            kept_middle = kept_middle[-remaining_slots:]
+
+        # 组装最终消息
+        result = []
         if sys_msg:
-            trimmed = len(self.messages) - self.MAX_CONTEXT_MSGS
-            self.messages = [sys_msg] + self.messages[-(self.MAX_CONTEXT_MSGS - 1):]
-        else:
-            trimmed = len(self.messages) - self.MAX_CONTEXT_MSGS
-            self.messages = self.messages[-self.MAX_CONTEXT_MSGS:]
+            result.append(sys_msg)
+        result.extend(kept_middle)
+        result.extend(recent)
+        trimmed = total - len(result)
+        self.messages = result
         return trimmed
 
     def save(self) -> bool:

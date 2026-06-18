@@ -183,13 +183,6 @@ class IntelligenceWindow(QMainWindow):
             # 使用全局会话上下文
             session_ctx.set_agent_bridge(self._opcclaw_engine)
 
-            if session_ctx._active_window is not None:
-                try:
-                    session_ctx._active_window.close()
-                except RuntimeError:
-                    pass
-                session_ctx._active_window = None
-
             from .ai_chat_window import AIChatWindow
             dlg = AIChatWindow(
                 self,

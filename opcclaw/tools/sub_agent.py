@@ -46,9 +46,16 @@ SUB_AGENT_PROMPTS: Dict[SubAgentType, str] = {
 - 格式转换：文件格式间转换
 - 文件分析：总结、统计、提取关键信息
 
+## 工具选择铁律
+- 读文件 → 只用 read_file，严禁 execute_shell + cat/osascript
+- 搜文件 → 只用 search_files，严禁 find/grep/mdfind
+- 写文件 → 只用 write_file/edit_file，严禁 echo/重定向
+- 列目录 → 只用 list_directory，严禁 ls
+
 ## 执行原则
 - 先用搜索工具定位目标文件，不要猜测路径
-- 大批量操作前先做小范围试点验证
+- 独立操作（如同时读多个文件）并行调用
+- 任务完成立即停止，不要追加验证性重新搜索
 - 完成后明确列出操作了哪些文件（绝对路径）
 - 遇到权限问题或路径不存在时，如实报告""",
 

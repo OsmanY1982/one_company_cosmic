@@ -1,6 +1,6 @@
 # `opcclaw/core/core_engine.py`
 
-> 路径：`opcclaw/core/core_engine.py` | 行数：860
+> 路径：`opcclaw/core/core_engine.py` | 行数：973
 
 
 ---
@@ -172,12 +172,64 @@ def init_builtin_tools(registry: ToolRegistry):
         handler=write_file
     )
     
-    # 4. 代码执行工具
+    # 4. 代码执行工具（沙箱加固）
+    _CODE_SANDBOX_PREAMBLE = '''
+import sys as _sys
+
+# 危险模块黑名单（用户代码直接导入时拦截）
+_dangerous = {
+    'subprocess', 'shutil', 'ctypes', 'signal', 'socket',
+    'multiprocessing', 'threading', 'pty', 'fcntl', 'posix',
+    'importlib', 'pkgutil', 'inspect', 'code', 'codeop',
+}
+
+# ── 导入钩子：拦截用户代码直接导入危险模块 ──
+class _ImportBlocker:
+    def find_spec(self, fullname, path, target=None):
+        top = fullname.split('.')[0]
+        if top in _dangerous:
+            import traceback as _tb
+            stack = _tb.extract_stack()
+            for frame in stack[:-1]:
+                fname = frame.filename
+                if '/python' in fname or 'site-packages' in fname:
+                    return None
+            raise ImportError(f"Module '{fullname}' is blocked for security reasons")
+        return None
+
+_sys.meta_path.insert(0, _ImportBlocker())
+
+# ── os 模块函数级安全补丁 ──
+# os 是标准库广泛依赖的基础模块，不能完全拦截
+# 但我们对危险函数做猴子补丁
+try:
+    import os as _real_os
+    _OS_DANGEROUS = {
+        'system', 'popen', 'execv', 'execve', 'execvp', 'execvpe',
+        'spawnl', 'spawnle', 'spawnlp', 'spawnlpe', 'spawnv', 'spawnve',
+        'spawnvp', 'spawnvpe', 'fork', 'kill', 'remove', 'unlink',
+        'rmdir', 'rename', 'renames', 'chmod', 'chown', 'link', 'symlink',
+    }
+    for _fn in _OS_DANGEROUS:
+        if hasattr(_real_os, _fn):
+            _blocked_fn = _fn
+            def _make_blocked(blocked=_blocked_fn):
+                def _blocker(*_a, **_kw):
+                    raise OSError(f"os.{blocked}() is blocked in sandbox")
+                return _blocker
+            setattr(_real_os, _blocked_fn, _make_blocked())
+except Exception:
+    pass
+'''
+
     def execute_code(code: str, timeout: int = 30) -> dict:
-        """执行 Python 代码（沙箱环境）"""
+        """执行 Python 代码（沙箱环境，已拦截危险模块）"""
         try:
+            # 注入沙箱前导代码
+            sandboxed = _CODE_SANDBOX_PREAMBLE + '\n' + code
+            
             result = subprocess.run(
-                [sys.executable, "-c", code],
+                [sys.executable, "-c", sandboxed],
                 capture_output=True,
                 text=True,
                 timeout=timeout,
@@ -659,13 +711,13 @@ class OPCclawCoreEngine:
         self.registry = ToolRegistry()
         init_builtin_tools(self.registry)
         
-        # 默认使用 llama.cpp 本地模型
+        # 默认使用 Ollama 本地模型
         if provider_config is None:
             provider_config = ProviderConfig(
-                name="llama.cpp",
+                name="Ollama",
                 provider_type="openai_compatible",
-                base_url="http://localhost:8080/v1",
-                model="Qwen3.6-35B-A3B-IQ2_M.gguf",
+                base_url="http://localhost:11434/v1",
+                model="qwen3.6:35b",
                 temperature=0.7,
                 max_tokens=262144
             )
@@ -683,15 +735,22 @@ class OPCclawCoreEngine:
 - 多轮工具调用直到完成任务，不提前放弃
 - 回答简洁专业，中文优先，技术术语保留英文
 
+工具选择铁律（违反将导致任务失败）：
+- 读文件 → 只用 read_file，严禁 shell_execute + cat/more/osascript/head/tail
+- 搜文件 → 只用 file_search，严禁 shell_execute + find/grep/mdfind/rg
+- 写文件 → 只用 write_file/edit_file，严禁 shell_execute + echo/printf/tee 重定向
+- 列目录 → 只用 file_list，严禁 shell_execute + ls/dir/tree
+- 独立操作（同时读多个文件/搜多个关键词）必须并行调用
+
 可用工具：
-1.  Shell 命令：执行任意 bash 命令（git/npm/pip/build/test/lint/docker 等）
-2.  文件操作：读取、写入、编辑(精确替换)、列出目录
-3.  内容搜索：在项目中 grep 搜索代码/文本
-4.  代码执行：运行 Python 代码，用于数据分析/文件处理
-5.  项目分析：生成项目目录树，快速掌握代码结构
-6.  数据库查询：查询 products/orders/customers/finance 等业务数据
-7.  联网搜索：获取实时信息
-8.  日程与客户管理
+1.  Shell 命令(shell_execute)：执行 git/npm/pip/build/test/lint/docker 等命令（严禁用于文件读写搜索列目录）
+2.  文件操作：read_file 读取、write_file 写入、edit_file 精确替换、file_list 列目录
+3.  内容搜索：file_search 按名称/内容搜索文件和代码
+4.  代码执行：execute_code 运行 Python 代码，用于数据分析/文件处理
+5.  项目分析：project_map 生成项目目录树，快速掌握代码结构
+6.  数据库查询：query_database 查询 products/orders/customers/finance 等业务数据
+7.  联网搜索：web_search 获取实时信息
+8.  日程与客户管理：add_schedule/list_schedules/add_customer/list_customers 等
 
 编程场景最佳实践：
 - 修改代码前先用 file_search 找到相关代码位置
@@ -711,6 +770,33 @@ class OPCclawCoreEngine:
         """清空对话历史"""
         self.messages = []
     
+    def _trim_messages(self, messages: List[dict], max_messages: int = 60) -> List[dict]:
+        """智能裁剪消息历史，防止超出 token 限制
+        
+        保留策略：
+        - 系统消息（role=system）永久保留
+        - 最近 30 条消息必留
+        - 中间保留错误消息和工具调用结果消息
+        """
+        if len(messages) <= max_messages:
+            return messages
+        
+        # 分离系统消息
+        system_msgs = [m for m in messages if m["role"] == "system"]
+        other_msgs = [m for m in messages if m["role"] != "system"]
+        recent = other_msgs[-30:] if len(other_msgs) > 30 else other_msgs
+        
+        # 中间部分保留关键消息（错误、工具调用结果）
+        middle = other_msgs[:-30] if len(other_msgs) > 30 else []
+        kept_middle = [
+            m for m in middle
+            if (m["role"] == "tool" and '"error"' in str(m.get("content", "")))
+            or (m["role"] == "assistant" and m.get("tool_calls"))
+        ][-10:]  # 最多保留 10 条中间关键消息
+        
+        trimmed = system_msgs + kept_middle + recent
+        return trimmed[:max_messages]
+    
     def chat(self, user_input: str, max_tool_iterations: int = 5) -> str:
         """
         与用户对话，支持多轮工具调用
@@ -722,6 +808,8 @@ class OPCclawCoreEngine:
         Returns:
             AI 回复
         """
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        
         # 添加用户消息
         self.add_message("user", user_input)
         
@@ -745,49 +833,74 @@ class OPCclawCoreEngine:
         
         # 多轮工具调用循环
         for iteration in range(max_tool_iterations):
+            # 裁剪消息防止超 token
+            if len(messages) > 60:
+                messages = self._trim_messages(messages)
+            
             # 调用 LLM
             response = self.backend.chat(messages, tools=tools)
             
             # 检查是否需要调用工具
             if response.tool_calls:
-                # 处理工具调用
-                for tc in response.tool_calls:
+                tool_calls = response.tool_calls
+                
+                # 单工具调用：串行执行（保留重试语义）
+                if len(tool_calls) == 1:
+                    tc = tool_calls[0]
                     result = self.registry.execute(tc.name, tc.arguments)
-                    
-                    # 添加工具调用到消息历史
-                    messages.append({
-                        "role": "assistant",
-                        "content": None,
-                        "tool_calls": [{
-                            "id": tc.id,
-                            "type": "function",
-                            "function": {
-                                "name": tc.name,
-                                "arguments": json.dumps(tc.arguments)
-                            }
-                        }]
-                    })
-                    
-                    # 添加工具结果
+                    tc_results = [(tc, result)]
+                # 多工具调用：并行执行无依赖的工具
+                else:
+                    tc_results = []
+                    with ThreadPoolExecutor(max_workers=min(len(tool_calls), 8)) as executor:
+                        future_to_tc = {
+                            executor.submit(self.registry.execute, tc.name, tc.arguments): tc
+                            for tc in tool_calls
+                        }
+                        for future in as_completed(future_to_tc):
+                            tc = future_to_tc[future]
+                            try:
+                                result = future.result()
+                            except Exception as e:
+                                result = {"error": str(e)}
+                            tc_results.append((tc, result))
+                    # 恢复原始顺序
+                    tc_order = {id(tc): i for i, tc in enumerate(tool_calls)}
+                    tc_results.sort(key=lambda x: tc_order[id(x[0])])
+                
+                # 构建 assistant 消息（含所有工具调用）
+                assistant_tool_calls = [
+                    {
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {
+                            "name": tc.name,
+                            "arguments": json.dumps(tc.arguments)
+                        }
+                    }
+                    for tc in tool_calls
+                ]
+                
+                messages.append({
+                    "role": "assistant",
+                    "content": None,
+                    "tool_calls": assistant_tool_calls
+                })
+                
+                # 保存到本地历史
+                self.messages.append(ChatMessage(
+                    role="assistant",
+                    content="",
+                    tool_calls=assistant_tool_calls
+                ))
+                
+                # 添加工具结果（按原始顺序）
+                for tc, result in tc_results:
                     messages.append({
                         "role": "tool",
                         "tool_call_id": tc.id,
                         "content": json.dumps(result, ensure_ascii=False)
                     })
-                    
-                    # 保存到本地历史
-                    self.messages.append(ChatMessage(
-                        role="assistant",
-                        content="",
-                        tool_calls=[{
-                            "id": tc.id,
-                            "type": "function",
-                            "function": {
-                                "name": tc.name,
-                                "arguments": tc.arguments
-                            }
-                        }]
-                    ))
                     self.messages.append(ChatMessage(
                         role="tool",
                         content=result,
@@ -828,7 +941,7 @@ class OPCclawCoreEngine:
 # 快捷函数
 # ═══════════════════════════════════════════
 
-def create_engine(model: str = "/Users/opc/.llama-models/Qwen3.6-35B-A3B-IQ2_M.gguf", base_url: str = "http://localhost:8080/v1") -> OPCclawCoreEngine:
+def create_engine(model: str = "qwen3.6:35b", base_url: str = "http://localhost:11434/v1") -> OPCclawCoreEngine:
     """创建引擎实例"""
     config = ProviderConfig(
         name="Ollama",

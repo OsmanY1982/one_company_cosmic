@@ -694,3 +694,11 @@ RuntimeError: [Ollama] 请求异常: timed out
 2026-06-18 08:24:26,810 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
 2026-06-18 08:25:04,147 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
 2026-06-18 08:25:04,167 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 09:59:33,709 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 10:54:06,225 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 11:00:00,941 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 11:06:14,522 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 11:08:01,253 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 11:19:35,034 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 11:20:00,761 [Dummy-2] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6161739776.
+2026-06-18 11:20:00,762 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()

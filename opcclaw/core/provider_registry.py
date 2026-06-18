@@ -12,7 +12,7 @@ import httpx
 class ModelConfig:
     provider: str = "custom"        # ollama / openai / deepseek / claude / qwen / custom
     api_key: str = ""
-    base_url: str = "http://localhost:8080/v1"
+    base_url: str = "http://localhost:11434/v1"
     model_name: str = "/Users/opc/.llama-models/Qwen3.6-35B-A3B-IQ2_M.gguf"
     temperature: float = 0.7
     max_tokens: int = 262144
@@ -39,13 +39,13 @@ class ModelConfig:
 
 PROVIDERS = {
     "ollama": {
-        "name": "llama.cpp (本地)",
-        "base_url": "http://localhost:8080",
+        "name": "Ollama (本地)",
+        "base_url": "http://localhost:11434",
         "api_path": "/v1/chat/completions",
         "needs_key": False,
         "needs_model_list": True,
-        "list_path": "/v1/models",
-        "description": "本地 llama.cpp 运行，数据不出设备",
+        "list_path": "/api/tags",
+        "description": "本地 Ollama 运行，数据不出设备",
     },
     "openai": {
         "name": "OpenAI",
@@ -81,7 +81,7 @@ PROVIDERS = {
     },
     "custom": {
         "name": "自定义 OpenAI 兼容",
-        "base_url": "http://localhost:8080",
+        "base_url": "http://localhost:11434",
         "api_path": "/v1/chat/completions",
         "needs_key": True,
         "needs_model_list": False,
@@ -91,29 +91,24 @@ PROVIDERS = {
 
 
 def discover_ollama_models() -> List[dict]:
-    """静态方法：自动发现本地 llama.cpp 模型（兼容 OpenAI /v1/models 格式）"""
+    """自动发现本地 Ollama 模型"""
     try:
         import urllib.request
-        import os
-        resp = urllib.request.urlopen("http://localhost:8080/v1/models", timeout=3)
+        resp = urllib.request.urlopen("http://localhost:11434/api/tags", timeout=3)
         raw = json.loads(resp.read())
         result = []
-        for m in raw.get("data", []):
-            model_id = m.get("id", "")
-            # 从文件路径提取模型名
-            model_name = os.path.basename(model_id) if model_id else model_id
-            # 获取文件大小
-            size_mb = 0
-            if model_id and os.path.exists(model_id):
-                size_mb = round(os.path.getsize(model_id) / (1024 * 1024), 1)
+        for m in raw.get("models", []):
+            model_id = m.get("name", "")
+            size_bytes = m.get("size", 0)
+            size_mb = round(size_bytes / (1024 * 1024), 1) if size_bytes else 0
             entry = {
                 "name": model_id,
-                "display_name": model_name,
+                "display_name": model_id,
                 "size_mb": size_mb,
-                "param_size": "?",
+                "param_size": m.get("details", {}).get("parameter_size", "?"),
                 "context_length": 16384,
                 "capabilities": [],
-                "modified": "",
+                "modified": m.get("modified_at", ""),
             }
             result.append(entry)
         return result

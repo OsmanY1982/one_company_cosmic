@@ -102,6 +102,32 @@ FILE_PILL_STYLE = """
     QPushButton:hover { background: rgba(255,100,60,70); color: #ffffff; }
 """
 
+BTN_MIC = """
+    QPushButton {
+        background: #2d8a4e;
+        color: #ffffff;
+        border: 2px solid #44cc66;
+        border-radius: 15px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+    QPushButton:hover { background: #3aa85e; }
+    QPushButton:pressed { background: #1e6b3a; }
+"""
+
+BTN_SPEAK = """
+    QPushButton {
+        background: rgba(80,200,160,40);
+        color: #88ffcc;
+        border: 1px solid rgba(80,220,160,60);
+        border-radius: 16px;
+        padding: 6px 14px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    QPushButton:hover { background: rgba(100,230,180,65); }
+"""
+
 
 class AIChatWindow(QWidget):
     """AI助手 · NEURAL v5 — 统一 AgentBridge，顶部嵌入紧凑模型选择器"""
@@ -126,6 +152,8 @@ class AIChatWindow(QWidget):
         self._bridge = opcclaw_engine  # AgentBridge 实例（唯一引擎）
         self._streaming = False
         self._stream_buffer = ""
+        self._stream_block = 0       # 流式占位行块编号
+        self._stream_finalized = False  # 防止 _stream_done 重复执行
 
         # ── 对话会话管理 ──
         # 使用全局会话ID或传入的ID
@@ -157,7 +185,7 @@ class AIChatWindow(QWidget):
         self._file_pills = []           # 附件标签按钮引用
 
         # 流式控制
-        self._stop_requested = False    # 用户请求停止生成
+
         self._suppress_self_notify = False  # 阻止自通知导致的重复显示
 
         self._all_models = []  # 全量模型列表（云端+本地）
@@ -199,6 +227,10 @@ class AIChatWindow(QWidget):
                             self._append_user_msg(content)
                         elif role == "assistant":
                             self._append_ai_msg(content)
+                        elif role == "tool":
+                            self.ai_chat.append(
+                                f'<p style="color:#888;font-size:10px;margin:0;">{content}</p>'
+                            )
                     print(f"[AIChatWindow] 从引擎恢复 {len(msgs)} 条消息 (session={self._current_session_id})")
             except Exception as e:
                 print(f"[AIChatWindow] 加载会话历史失败: {e}")
@@ -241,20 +273,6 @@ class AIChatWindow(QWidget):
         """)
         self.btn_toggle_sidebar.clicked.connect(self._toggle_sidebar)
         top_row.addWidget(self.btn_toggle_sidebar)
-
-        # 新建对话按钮（工具栏常驻，侧边栏折叠时也能用）
-        self.btn_new_chat = QPushButton("+")
-        self.btn_new_chat.setToolTip("新建对话")
-        self.btn_new_chat.setFixedSize(24, 20)
-        self.btn_new_chat.setStyleSheet("""
-            QPushButton {
-                background: rgba(100,200,100,30); color: #88cc88; border: none;
-                border-radius: 4px; font-size: 14px; font-weight: bold;
-            }
-            QPushButton:hover { background: rgba(100,200,100,60); color: #aaffaa; }
-        """)
-        self.btn_new_chat.clicked.connect(self._on_new_session)
-        top_row.addWidget(self.btn_new_chat)
 
         top_row.addStretch()
 
@@ -399,18 +417,7 @@ class AIChatWindow(QWidget):
         self.btn_mic = QPushButton("语音")
         self.btn_mic.setToolTip("点击开始语音输入（Apple 语音识别，6秒超时自动发送）")
         self.btn_mic.setFixedSize(60, 30)
-        self.btn_mic.setStyleSheet("""
-            QPushButton {
-                background: #2d8a4e;
-                color: #ffffff;
-                border: 2px solid #44cc66;
-                border-radius: 15px;
-                font-size: 13px;
-                font-weight: 700;
-            }
-            QPushButton:hover { background: #3aa85e; }
-            QPushButton:pressed { background: #1e6b3a; }
-        """)
+        self.btn_mic.setStyleSheet(BTN_MIC)
         self.btn_mic.clicked.connect(self._toggle_voice_input)
         ir.addWidget(self.btn_mic)
 
@@ -425,44 +432,16 @@ class AIChatWindow(QWidget):
         self.btn_stop.setVisible(False)
         ir.addWidget(self.btn_stop)
 
-        self.btn_speak = QPushButton("朗读")
-        self.btn_speak.setToolTip("朗读最后一条 AI 回复")
-        self.btn_speak.setStyleSheet("""
-            QPushButton {
-                background: rgba(80,200,160,40);
-                color: #88ffcc;
-                border: 1px solid rgba(80,220,160,60);
-                border-radius: 16px;
-                padding: 6px 14px;
-                font-size: 11px;
-                font-weight: 600;
-            }
-            QPushButton:hover { background: rgba(100,230,180,65); }
-        """)
-        self.btn_speak.clicked.connect(self._on_speak_clicked)
-        ir.addWidget(self.btn_speak)
-
         clear_btn = QPushButton("清屏")
         clear_btn.setStyleSheet(BTN_DANGER)
         clear_btn.clicked.connect(self._on_clear_chat)
         ir.addWidget(clear_btn)
 
-        self.btn_export = QPushButton("导出")
-        self.btn_export.setToolTip("导出当前对话（Markdown / JSON）")
-        self.btn_export.setStyleSheet("""
-            QPushButton {
-                background: rgba(60,160,200,40);
-                color: #88ccff;
-                border: 1px solid rgba(80,180,220,60);
-                border-radius: 16px;
-                padding: 6px 14px;
-                font-size: 11px;
-                font-weight: 600;
-            }
-            QPushButton:hover { background: rgba(80,200,240,65); }
-        """)
-        self.btn_export.clicked.connect(self._on_export_chat)
-        ir.addWidget(self.btn_export)
+        self.btn_speak = QPushButton("朗读")
+        self.btn_speak.setToolTip("朗读最后一条 AI 回复")
+        self.btn_speak.setStyleSheet(BTN_SPEAK)
+        self.btn_speak.clicked.connect(self._on_speak_clicked)
+        ir.addWidget(self.btn_speak)
 
         right_layout.addLayout(ir)
 
@@ -473,63 +452,8 @@ class AIChatWindow(QWidget):
         l.addWidget(self._splitter, 1)
 
     def _on_clear_chat(self):
-        """清屏并清空本地消息缓存"""
+        """清屏（仅清视图，保留消息历史以便回溯/重新生成）"""
         self.ai_chat.clear()
-        self._messages = []
-
-    def _on_export_chat(self):
-        """导出当前对话为 Markdown 或 JSON"""
-        import json
-        if not self._messages:
-            # 尝试从 bridge 加载
-            if self._bridge:
-                try:
-                    self._messages = self._bridge.load_session(self._current_session_id)
-                except Exception:
-                    pass
-        if not self._messages:
-            self.ai_chat.append(
-                '<p style="color:#ff6644;font-size:10px;">当前对话为空，无需导出</p>'
-            )
-            return
-
-        default_name = f"chat_{self._current_session_id}"
-        path, selected_filter = QFileDialog.getSaveFileName(
-            self, "导出当前对话", default_name,
-            "Markdown文件 (*.md);;JSON文件 (*.json)",
-        )
-        if not path:
-            return
-
-        try:
-            if path.endswith(".md"):
-                lines = [
-                    f"# {self._current_title}\n",
-                    f"*导出于: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n",
-                    "---\n",
-                ]
-                for msg in self._messages:
-                    role = msg.get("role", "unknown").upper()
-                    content = msg.get("content", "")
-                    if isinstance(content, str):
-                        lines.append(f"\n### {role}\n")
-                        lines.append(content)
-                        lines.append("")
-                with open(path, "w", encoding="utf-8") as f:
-                    f.write("\n".join(lines))
-            else:
-                data = {
-                    "session_id": self._current_session_id,
-                    "title": self._current_title,
-                    "exported_at": datetime.now().isoformat(),
-                    "messages": self._messages,
-                }
-                with open(path, "w", encoding="utf-8") as f:
-                    json.dump(data, f, ensure_ascii=False, indent=2)
-
-            self._session_manager._show_export_result_dialog(True, path)
-        except Exception as e:
-            self._session_manager._show_export_result_dialog(False, str(e))
 
     def _on_speak_clicked(self):
         """朗读最后一条 AI 回复（macOS say 命令，中文语音 Tingting）"""
@@ -796,6 +720,7 @@ class AIChatWindow(QWidget):
 
         self.ai_chat.clear()
         self._messages = []
+        self._clear_file_pills()  # 切换会话时清理附件
 
         # 加载新会话历史
         if self._bridge:
@@ -810,6 +735,10 @@ class AIChatWindow(QWidget):
                             self._append_user_msg(content)
                         elif role == "assistant":
                             self._append_ai_msg(content)
+                        elif role == "tool":
+                            self.ai_chat.append(
+                                f'<p style="color:#888;font-size:10px;margin:0;">{content}</p>'
+                            )
             except Exception as e:
                 print(f"[AIChatWindow] 加载会话失败: {e}")
 
@@ -1116,25 +1045,38 @@ class AIChatWindow(QWidget):
     def _stream_begin(self):
         self._streaming = True
         self._stream_buffer = ""
+        self._stream_finalized = False  # 新流式开始，重置完成标志
         self._enter_streaming_ui()
         now = datetime.now().strftime("%H:%M:%S")
         # 先添加 AI 标签行，再添加流式占位行
         self.ai_chat.append(
             f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
         )
-        # 流式内容行：追加后再记录光标位置（此时光标在文档末尾）
         self.ai_chat.append(
             f'<p style="color:#ccaaff;">▌</p>'
         )
+        # 记录流式占位行的块编号（后续 _stream_chunk/_stream_done 按编号锁定目标）
+        cursor = self.ai_chat.textCursor()
+        cursor.movePosition(cursor.End)
+        self._stream_block = cursor.blockNumber()
 
     def _stream_chunk(self, chunk: str):
         import sys, datetime
         print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._stream_chunk len={len(chunk)}", flush=True)
+        # 取消后回调可能还在事件队列中，_stream_block 可能已失效
+        if self._bridge and getattr(self._bridge, '_stream_aborted', False):
+            return
+        if self._stream_block <= 0:
+            return
         self._stream_buffer += chunk
-        # 用 QTextCursor 替换最后一个段落（避免 QTextEdit.toHtml() 重排破坏 id）
+        # 按 _stream_block 编号定位流式占位行，避免工具行插入后替换错位
+        doc = self.ai_chat.document()
+        block = doc.findBlockByNumber(self._stream_block)
+        if not block.isValid():
+            return
         cursor = self.ai_chat.textCursor()
-        cursor.movePosition(cursor.End)
-        cursor.movePosition(cursor.StartOfBlock, cursor.KeepAnchor)
+        cursor.setPosition(block.position())
+        cursor.movePosition(cursor.EndOfBlock, cursor.KeepAnchor)
         cursor.removeSelectedText()
         escaped = self._stream_buffer.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
         cursor.insertHtml(f'<p style="color:#ccaaff;">{escaped}▌</p>')
@@ -1150,32 +1092,49 @@ class AIChatWindow(QWidget):
         self.ai_chat.append(
             f'<p style="color:{color};font-size:10px;margin:0;">{icon} 工具: {tool_name} [{status}]</p>'
         )
+        # 记录工具状态行，以便重建视图时不丢失
+        self._messages.append({"role": "tool", "content": f"{icon} 工具: {tool_name} [{status}]"})
 
     def _stream_done(self, full_text: str):
         import sys, datetime
         print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] AIChatWindow._stream_done len={len(full_text)}", flush=True)
+        # 防止 _abort_stream 断开信号后仍排队的回调重复执行
+        if getattr(self, '_stream_finalized', False):
+            return
+        self._stream_finalized = True
         self._streaming = False
         self._exit_streaming_ui()
-        # 用 QTextCursor 替换最后一个段落，移除闪烁光标
+        if self._stream_block <= 0:
+            return
+        # 按 _stream_block 编号定位流式占位行，替换为最终回复
+        doc = self.ai_chat.document()
+        block = doc.findBlockByNumber(self._stream_block)
+        if not block.isValid():
+            return
         cursor = self.ai_chat.textCursor()
-        cursor.movePosition(cursor.End)
-        cursor.movePosition(cursor.StartOfBlock, cursor.KeepAnchor)
+        cursor.setPosition(block.position())
+        cursor.movePosition(cursor.EndOfBlock, cursor.KeepAnchor)
         cursor.removeSelectedText()
         escaped = full_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
-        mid = self._next_msg_id
-        self._next_msg_id += 1
-        cursor.insertHtml(f'<p style="color:#ccaaff;">{escaped}</p>{self._msg_action_row(mid, full_text)}')
+        cancelled = "[用户取消]" in full_text
+        if not cancelled:
+            mid = self._next_msg_id
+            self._next_msg_id += 1
+            cursor.insertHtml(f'<p style="color:#ccaaff;">{escaped}</p>{self._msg_action_row(mid, full_text)}')
+        else:
+            cursor.insertHtml(f'<p style="color:#ffaa44;">{escaped}</p>')
         self._stream_buffer = ""
-        # 消息跟踪 + 增量保存
-        self._messages.append({"role": "assistant", "content": full_text})
-        if self._bridge:
-            try:
-                self._bridge.append_message("assistant", full_text, self._current_session_id)
-                self._suppress_self_notify = True
-                self._bridge.notify_message_added()
-                self._suppress_self_notify = False
-            except Exception:
-                import traceback; traceback.print_exc()
+        # 消息跟踪 + 增量保存（用户取消时不保存）
+        if not cancelled:
+            self._messages.append({"role": "assistant", "content": full_text})
+            if self._bridge:
+                try:
+                    self._bridge.append_message("assistant", full_text, self._current_session_id)
+                    self._suppress_self_notify = True
+                    self._bridge.notify_message_added()
+                    self._suppress_self_notify = False
+                except Exception:
+                    import traceback; traceback.print_exc()
 
     def _stream_error(self, err_msg: str):
         import sys, datetime
@@ -1186,6 +1145,22 @@ class AIChatWindow(QWidget):
         self._stream_buffer = ""
 
     # ─── 核心发送逻辑（仅 AgentBridge）───
+    def _build_prompt_with_attachments(self, text: str) -> str:
+        """拼接附件内容到提示词（如有）"""
+        if not self._attached_files:
+            return text
+        file_contexts = []
+        for fp, bn in self._attached_files:
+            try:
+                with open(fp, "r", encoding="utf-8", errors="replace") as f:
+                    content = f.read(4000)
+                file_contexts.append(f"[文件: {bn}]\n{content}")
+            except Exception:
+                file_contexts.append(f"[文件: {bn}] (二进制/不可读)")
+        if file_contexts:
+            return text + "\n\n--- 附件内容 ---\n" + "\n\n".join(file_contexts)
+        return text
+
     def _ai_send(self):
         text = self.ai_input.text().strip()
         if not text:
@@ -1209,20 +1184,8 @@ class AIChatWindow(QWidget):
             except Exception:
                 import traceback; traceback.print_exc()
 
-        # 附带文件内容（如已上传）
-        prompt = text
-        if self._attached_files:
-            file_contexts = []
-            for fp, bn in self._attached_files:
-                try:
-                    with open(fp, "r", encoding="utf-8", errors="replace") as f:
-                        content = f.read(4000)  # 截断长文件
-                    file_contexts.append(f"[文件: {bn}]\n{content}")
-                except Exception:
-                    file_contexts.append(f"[文件: {bn}] (二进制/不可读)")
-            if file_contexts:
-                prompt = text + "\n\n--- 附件内容 ---\n" + "\n\n".join(file_contexts)
-            self._clear_file_pills()
+        prompt = self._build_prompt_with_attachments(text)
+        self._clear_file_pills()
 
         # ── 优先级 1: AgentBridge 流式输出 ──
         if self._bridge is not None and hasattr(self._bridge, "chat_stream"):
@@ -1250,8 +1213,6 @@ class AIChatWindow(QWidget):
                 reply = ""
                 if hasattr(self._bridge, "chat"):
                     reply = self._bridge.chat(prompt)
-                elif hasattr(self._bridge, "query"):
-                    reply = self._bridge.query(prompt)
                 if reply:
                     self._append_ai_msg(reply)
                     self._messages.append({"role": "assistant", "content": reply})
@@ -1294,12 +1255,10 @@ class AIChatWindow(QWidget):
     # ─── 停止生成 ───
     def _on_stop_generation(self):
         """用户点击停止按钮"""
-        self._stop_requested = True
-        if hasattr(self, '_bridge') and self._bridge and hasattr(self._bridge, 'cancel'):
-            try:
-                self._bridge.cancel()
-            except Exception:
-                import traceback; traceback.print_exc()
+        self._streaming = False
+        if self._bridge:
+            self._bridge.cancel()
+        self._exit_streaming_ui()
 
     # ─── 文件上传 ───
     def _on_upload_clicked(self):
@@ -1396,26 +1355,34 @@ class AIChatWindow(QWidget):
         menu.exec_(self.ai_chat.mapToGlobal(pos))
 
     def _on_regenerate(self):
-        """重新生成：移除最后一条 AI 回复，重新发送上一条用户消息"""
+        """重新生成：移除最后一条 AI 回复及之前的工具行，重新发送上一条用户消息"""
         if not self._messages:
             return
         # 找到最后一条 user 消息
         last_user_msg = None
+        cut_idx = 0
         for i in range(len(self._messages) - 1, -1, -1):
             if self._messages[i]["role"] == "user":
                 last_user_msg = self._messages[i]["content"]
-                # 移除该 user 之后的所有消息
-                self._messages = self._messages[:i]
+                cut_idx = i
                 break
         if last_user_msg is None:
             return
-        # 清屏重绘（简化：清空并重新 append 剩余消息）
+        # 移除该 user 之后的所有消息（含工具行）
+        self._messages = self._messages[:cut_idx]
+        # 重建视图（包含工具行）
         self.ai_chat.clear()
         for msg in self._messages:
-            if msg["role"] == "user":
-                self._append_user_msg(msg["content"])
-            elif msg["role"] == "assistant":
-                self._append_ai_msg(msg["content"])
+            role = msg.get("role", "")
+            content = msg.get("content", "")
+            if role == "user":
+                self._append_user_msg(content)
+            elif role == "assistant":
+                self._append_ai_msg(content)
+            elif role == "tool":
+                self.ai_chat.append(
+                    f'<p style="color:#888;font-size:10px;margin:0;">{content}</p>'
+                )
         # 重新发送
         self.ai_input.setText(last_user_msg)
         self._ai_send()
@@ -1425,9 +1392,11 @@ class AIChatWindow(QWidget):
         """进入流式输出 UI：发送变停止"""
         self.btn_send.setVisible(False)
         self.btn_stop.setVisible(True)
-        self._stop_requested = False
+        self.lbl_status.setStyleSheet("color: #ffaa44; font-size: 11px; background: transparent;")
 
     def _exit_streaming_ui(self):
         """退出流式输出 UI：停止变发送"""
         self.btn_stop.setVisible(False)
         self.btn_send.setVisible(True)
+        status_color = "#44cc88" if self._bridge is not None else "#ff6644"
+        self.lbl_status.setStyleSheet(f"color: {status_color}; font-size: 11px; background: transparent;")

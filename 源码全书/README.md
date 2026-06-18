@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-18 09:36
-> 共 646 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-18 15:23
+> 共 648 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -352,6 +352,7 @@
 │   │   ├── opcclaw_logging.py
 │   │   ├── patch_engine.py
 │   │   ├── performance_monitor.py
+│   │   ├── proactive_engine.py
 │   │   ├── process_manager.py
 │   │   ├── provider_registry.py
 │   │   ├── rag_context.py
@@ -521,6 +522,8 @@
 │   │   │   ├── nous/
 │   │   │   │   ├── __init__.py
 │   │   │   ├── nvidia/
+│   │   │   │   ├── __init__.py
+│   │   │   ├── ollama/
 │   │   │   │   ├── __init__.py
 │   │   │   ├── ollama-cloud/
 │   │   │   │   ├── __init__.py
@@ -1045,6 +1048,8 @@
 │   ├── utils.py
 │   ├── verify_sync.py
 ├── rules_project/
+├── ~/
+│   └── Desktop/
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
@@ -1353,6 +1358,7 @@
 - [`opcclaw/core/opcclaw_logging.py`](./opcclaw/core/opcclaw_logging.py.md)
 - [`opcclaw/core/patch_engine.py`](./opcclaw/core/patch_engine.py.md)
 - [`opcclaw/core/performance_monitor.py`](./opcclaw/core/performance_monitor.py.md)
+- [`opcclaw/core/proactive_engine.py`](./opcclaw/core/proactive_engine.py.md)
 - [`opcclaw/core/process_manager.py`](./opcclaw/core/process_manager.py.md)
 - [`opcclaw/core/provider_registry.py`](./opcclaw/core/provider_registry.py.md)
 - [`opcclaw/core/rag_context.py`](./opcclaw/core/rag_context.py.md)
@@ -1463,6 +1469,7 @@
 - [`opcclaw/plugins/model-providers/minimax/__init__.py`](./opcclaw/plugins/model-providers/minimax/__init__.py.md)
 - [`opcclaw/plugins/model-providers/nous/__init__.py`](./opcclaw/plugins/model-providers/nous/__init__.py.md)
 - [`opcclaw/plugins/model-providers/nvidia/__init__.py`](./opcclaw/plugins/model-providers/nvidia/__init__.py.md)
+- [`opcclaw/plugins/model-providers/ollama/__init__.py`](./opcclaw/plugins/model-providers/ollama/__init__.py.md)
 - [`opcclaw/plugins/model-providers/ollama-cloud/__init__.py`](./opcclaw/plugins/model-providers/ollama-cloud/__init__.py.md)
 - [`opcclaw/plugins/model-providers/openai-codex/__init__.py`](./opcclaw/plugins/model-providers/openai-codex/__init__.py.md)
 - [`opcclaw/plugins/model-providers/opencode-zen/__init__.py`](./opcclaw/plugins/model-providers/opencode-zen/__init__.py.md)

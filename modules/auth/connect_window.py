@@ -512,7 +512,7 @@ class ConnectWindow(QMainWindow):
         import json, os
         data_dir = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-            "data"
+            "opcclaw", "data"
         )
         os.makedirs(data_dir, exist_ok=True)
         cfg_path = os.path.join(data_dir, "opcclaw_config.json")

@@ -57,6 +57,8 @@ rollback_control.py — 回滚管控，不改
 5. 新功能通过**新增文件**或**已有文件末尾追加新方法**实现
 6. 修改已有函数/方法时，保持**完全向后兼容**——原调用方不做任何改动就能正常工作
 7. 所有 UI 沿用 cosmic.py 中的色彩体系和辉光效果（SPACE_VOID、ACCENT_CYAN 等），通过 import 引用，禁止在模块内重新定义同名颜色
+8. **模型设置的唯一入口是 ModelSetupWindow（`modules/auth/model_setup_window.py`，登录后"启动引擎"）**。所有模型配置的创建/修改/保存只在此处进行。其他地方（如聊天窗口的 ⚙ 按钮 → ModelConfigDialog）只是切入查看/切换，禁止触碰 model_config_panel.py / opcclaw_config.json 等其他模型相关文件，除非用户明确指明
+9. **禁止擅自执行备份/恢复/同步操作**——包括 gen_book.py、rsync 备份、git push、回滚等，仅限用户明确下令时执行。代码修改完成后停在自检环节，等用户下令再继续
 
 ### 风格规范
 - 模块文件保持在 200-500 行
@@ -155,7 +157,7 @@ gen_book.py 自动扫描项目所有 .py 文件，清空并重建 `源码全书/
 - [ ] `项目全书/版本功能地图.md` 已追加本次变更条目
 - [ ] `项目全书/模块状态总表.md` 对应行已更新（行数/状态/备注）
 - [ ] 如涉及回滚，`rollback_control.py` 已申请并记录
-- [ ] `python3 gen_book.py` 已执行，`源码全书/` 已重新生成
+- [ ] `python3 gen_book.py` 待用户下令后执行（禁止擅自运行）
 - [ ] `python3 -c "from xxx import YYY"` 受影响模块导入通过
 
 ### 文档编写准则
@@ -187,8 +189,9 @@ gen_book.py 自动扫描项目所有 .py 文件，清空并重建 `源码全书/
 - [ ] 回滚操作（如有）已通过 rollback_control.py 申请
 - [ ] 项目全书/版本功能地图.md 已追加
 - [ ] 项目全书/模块状态总表.md 已更新
-- [ ] python3 gen_book.py 已执行
+- [ ] python3 gen_book.py 待用户下令后执行
 - [ ] 受影响模块导入验证通过
+- [ ] 未擅自执行备份/恢复/rsync/git push 等操作
 （内容由AI生成，仅供参考）
 （内容由AI生成，仅供参考）
 

@@ -54,7 +54,6 @@ class CustomProfile(ProviderProfile):
 custom = CustomProfile(
     name="custom",
     aliases=(
-        "ollama",
         "local",
         "vllm",
         "llamacpp",

@@ -1,6 +1,6 @@
 # `opcclaw/plugins/model-providers/custom/__init__.py`
 
-> 路径：`opcclaw/plugins/model-providers/custom/__init__.py` | 行数：68
+> 路径：`opcclaw/plugins/model-providers/custom/__init__.py` | 行数：67
 
 
 ---
@@ -63,7 +63,6 @@ class CustomProfile(ProviderProfile):
 custom = CustomProfile(
     name="custom",
     aliases=(
-        "ollama",
         "local",
         "vllm",
         "llamacpp",

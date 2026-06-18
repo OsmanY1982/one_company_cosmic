@@ -88,6 +88,9 @@ class FloatingPlanet(QWidget):
         self._current_size = self.SLEEP_SIZE
         self._target_size = self.SLEEP_SIZE
 
+        # 独立 AI 对话窗口引用
+        self._standalone_chat = None
+
         # 昵称
         self._tooltip_text = "🌍 经典星球"
         self.TOOLTIP_H = 26
@@ -835,13 +838,13 @@ class FloatingPlanet(QWidget):
             # 注入 AgentBridge 到全局上下文
             session_ctx.set_agent_bridge(self._engine)
 
-            # 如果已有活跃窗口，关闭后重建（确保新代码生效）
-            if session_ctx._active_window is not None:
+            # 如果已有之前创建的悬浮球窗口，关闭后重建（确保新代码生效）
+            if self._standalone_chat is not None:
                 try:
-                    session_ctx._active_window.close()
+                    self._standalone_chat.close()
                 except RuntimeError:
                     pass
-                session_ctx._active_window = None
+                self._standalone_chat = None
 
             self._standalone_chat = AIChatWindow(
                 opcclaw_engine=self._engine,

@@ -1,0 +1,4 @@
+name: ollama
+kind: model-provider
+version: "1.0"
+description: Ollama 本地推理（localhost:11434，/api/tags 模型发现）
