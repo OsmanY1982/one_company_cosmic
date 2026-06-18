@@ -673,3 +673,24 @@ RuntimeError: [Ollama] 请求异常: timed out
 2026-06-15 21:26:31,123 [Dummy-4] Token optimization failed: 'NoneType' object has no attribute 'lower'
 2026-06-16 06:51:43,196 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-16 21:14:03,294 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 08:09:58,172 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-18 08:10:41,297 [Dummy-2] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6162214912.
+2026-06-18 08:10:41,298 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:11:28,115 [Dummy-2] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6162214912.
+2026-06-18 08:11:28,116 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:12:11,225 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:12:11,247 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:13:24,640 [Dummy-3] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6159347712.
+2026-06-18 08:13:24,643 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:15:03,841 [Dummy-3] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6159347712.
+2026-06-18 08:15:03,844 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:15:58,537 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:16:18,116 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:16:25,879 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:16:49,915 [Dummy-3] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:17:40,333 [Dummy-2] Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8414977664 and this is thread id 6162214912.
+2026-06-18 08:17:40,335 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:23:44,603 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:24:26,810 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:25:04,147 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
+2026-06-18 08:25:04,167 [Dummy-2] Token optimization failed: object of type 'NoneType' has no len()
