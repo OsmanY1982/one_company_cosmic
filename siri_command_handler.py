@@ -11,7 +11,7 @@ import subprocess
 import logging
 from datetime import datetime
 
-LOG_PATH = "/Volumes/D盘工作区/一人公司/one_company_cosmic/siri_commands.log"
+LOG_PATH = "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/siri_commands.log"
 
 logging.basicConfig(
     filename=LOG_PATH,
@@ -93,7 +93,7 @@ def execute_command(text):
         log_and_say("活动监视器已打开")
 
     elif any(kw in text_lower for kw in ["打开文件夹", "打开目录"]):
-        target = "/Volumes/D盘工作区/一人公司/one_company_cosmic"
+        target = "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic"
         subprocess.Popen(["open", target])
         log_and_say("工作目录已打开")
 

@@ -22,7 +22,7 @@ AIGC:
 ## 项目路径
 
 ```
-/Volumes/D盘工作区/一人公司/one_company_cosmic/
+/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/
 ```
 
 Python 包导入根路径即此目录。

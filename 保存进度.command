@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "/Volumes/D盘工作区/一人公司/one_company_cosmic"
+cd "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic"
 
 echo "=== 保存进度 ==="
 

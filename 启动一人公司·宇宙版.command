@@ -8,7 +8,7 @@ sleep 1
 # 设置环境
 export QT_PLUGIN_PATH=/Users/opc/Library/Python/3.9/lib/python/site-packages/PyQt5/Qt5/plugins
 export DYLD_FRAMEWORK_PATH=/Users/opc/Library/Python/3.9/lib/python/site-packages/PyQt5/Qt5/lib
-cd "/Volumes/D盘工作区/一人公司/one_company_cosmic"
+cd "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic"
 
 # 用 screen 启动（继承终端麦克风权限）
 screen -dmS opcclaw /usr/bin/python3 main.py

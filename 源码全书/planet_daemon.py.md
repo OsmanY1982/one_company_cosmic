@@ -36,7 +36,7 @@ logger = logging.getLogger("PlanetDaemon")
 # ──────────────────────────────────────────────
 # 1. 路径配置
 # ──────────────────────────────────────────────
-PROJECT_ROOT = "/Volumes/D盘工作区/一人公司/one_company_cosmic"
+PROJECT_ROOT = "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic"
 DATA_DIR = os.path.join(PROJECT_ROOT, "opcclaw", "data")
 CONFIG_PATH = os.path.join(DATA_DIR, "opcclaw_config.json")
 OPCCLAW_ROOT = PROJECT_ROOT  # opcclaw 与项目同目录

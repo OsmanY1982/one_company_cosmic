@@ -311,7 +311,7 @@ class MiniAgent:
 - 桌面路径: /Users/opc/Desktop
 - 下载目录: /Users/opc/Downloads
 - 文档目录: /Users/opc/Documents
-- 项目根目录: /Volumes/D盘工作区/一人公司/one_company_cosmic/
+- 项目根目录: /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/
 
 ## 输出要求
 - 完成后用简洁的中文总结结果

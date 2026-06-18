@@ -3,7 +3,7 @@
 # 一人公司 · 宇宙版 — 启动脚本
 
 PYTHON="/usr/bin/python3"
-PROJECT="/Volumes/D盘工作区/一人公司/one_company_cosmic"
+PROJECT="/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic"
 
 echo "=========================================="
 echo "  一人公司 · 宇宙版 COSMIC v2.0"

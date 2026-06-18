@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-18 09:13
-> 共 647 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-18 09:25
+> 共 646 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -1042,14 +1042,11 @@
 │   ├── utils.py
 │   ├── verify_sync.py
 ├── rules_project/
-├── ~/
-│   └── Desktop/
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
 ├── rollback_control.py
 ├── siri_command_handler.py
-├── temp_test_stream.py
 ```
 
 ---
@@ -1702,4 +1699,3 @@
 - [`planet_daemon.py`](./planet_daemon.py.md)
 - [`rollback_control.py`](./rollback_control.py.md)
 - [`siri_command_handler.py`](./siri_command_handler.py.md)
-- [`temp_test_stream.py`](./temp_test_stream.py.md)
