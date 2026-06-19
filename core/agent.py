@@ -43,12 +43,12 @@ class AgentCore:
         "设置": "system",
         "系统设置": "system",
         "配置": "system",
-        "舰桥": "dashboard",
-        "主控": "dashboard",
-        "首页": "dashboard",
-        "总览": "dashboard",
-        "主面板": "dashboard",
-        "面板": "dashboard",
+        "舰桥": "intelligence",
+        "主控": "intelligence",
+        "首页": "intelligence",
+        "总览": "intelligence",
+        "主面板": "intelligence",
+        "面板": "intelligence",
     }
 
     # ── 动作模式 ──
@@ -166,7 +166,6 @@ class AgentCore:
             "intelligence": "智能中心",
             "data": "数据中心",
             "system": "系统设置",
-            "dashboard": "舰桥主控",
         }
         name = module_names.get(intent.target, intent.target)
         return f"正在打开「{name}」模块..."

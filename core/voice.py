@@ -87,7 +87,7 @@ class VoiceListener(QThread):
     # ─── faster-whisper 离线识别 ───
     def _recognize_faster_whisper(self) -> str:
         """使用 faster-whisper 进行本地离线语音识别"""
-        from core.deps import ensure
+        from deps.install_deps import ensure
         try:
             import faster_whisper
         except ImportError:
@@ -143,7 +143,7 @@ class VoiceListener(QThread):
     # ─── openai-whisper 离线识别 ───
     def _recognize_whisper(self) -> str:
         """使用 openai-whisper 进行本地离线语音识别"""
-        from core.deps import ensure
+        from deps.install_deps import ensure
         try:
             import whisper
         except ImportError:
@@ -175,7 +175,7 @@ class VoiceListener(QThread):
     # ─── speech_recognition 识别（需要网络） ───
     def _recognize_with_sr(self) -> str:
         """使用 speech_recognition 库 + 系统麦克风"""
-        from core.deps import ensure
+        from deps.install_deps import ensure
         try:
             import speech_recognition as sr
         except ImportError:

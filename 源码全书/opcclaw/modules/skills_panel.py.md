@@ -1,6 +1,6 @@
 # `opcclaw/modules/skills_panel.py`
 
-> 路径：`opcclaw/modules/skills_panel.py` | 行数：139
+> 路径：`opcclaw/modules/skills_panel.py` | 行数：130
 
 
 ---
@@ -76,10 +76,6 @@ class SkillsPanel(QWidget):
         btn_row.addWidget(view_btn)
         btn_row.addStretch()
 
-        # 添加技能按钮
-        add_btn = _styled_btn("+ 添加技能目录", COLORS["success"])
-        add_btn.clicked.connect(self._add_skill_dir)
-        btn_row.addWidget(add_btn)
         layout.addLayout(btn_row)
 
         # 统计
@@ -140,11 +136,6 @@ class SkillsPanel(QWidget):
         )
         QMessageBox.information(self, f"技能: {name}", detail)
 
-    def _add_skill_dir(self):
-        from PyQt5.QtWidgets import QFileDialog, QMessageBox
-        d = QFileDialog.getExistingDirectory(self, "选择技能目录")
-        if d:
-            QMessageBox.information(self, "提示", "自定义技能目录功能暂未实现\n\n技能将从默认目录加载")
-            # TODO: 未来支持自定义技能目录
+
 
 ```

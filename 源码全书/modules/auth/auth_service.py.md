@@ -1,6 +1,6 @@
 # `modules/auth/auth_service.py`
 
-> 路径：`modules/auth/auth_service.py` | 行数：367
+> 路径：`modules/auth/auth_service.py` | 行数：441
 
 
 ---
@@ -17,6 +17,8 @@ import os
 import sqlite3
 from datetime import datetime, timedelta
 from typing import Optional
+
+from core.operation_log import log_action
 
 USER_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users.json")
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
@@ -181,7 +183,38 @@ class AuthService:
             "created_at": now,
         }
         _save_users(self._users)
+        try:
+            log_action(username, "注册", "login", "新用户注册")
+        except Exception:
+            pass
         return True, "注册成功"
+
+    def modify_password(self, username: str, old_password: str,
+                        new_password: str, confirm_password: str) -> tuple:
+        """
+        用户自主修改密码
+        返回: (ok: bool, msg: str)
+        """
+        self._reload()
+        user = self._users.get(username)
+        if not user:
+            return False, "用户不存在"
+        if user.get("password") != old_password:
+            return False, "原密码错误"
+        if not new_password or len(new_password) < 6:
+            return False, "新密码至少6位"
+        if new_password != confirm_password:
+            return False, "两次输入的新密码不一致"
+        if new_password == old_password:
+            return False, "新密码不能与原密码相同"
+
+        user["password"] = new_password
+        _save_users(self._users)
+        try:
+            log_action(username, "修改密码", "account", "密码修改成功")
+        except Exception:
+            pass
+        return True, "密码修改成功，请重新登录"
 
     def login(self, username: str, password: str) -> dict:
         """
@@ -201,6 +234,10 @@ class AuthService:
 
         # 管理员无过期限制
         if user["role"] == "admin":
+            try:
+                log_action(username, "登录", "login", "管理员登录成功")
+            except Exception:
+                pass
             return {"ok": True, "msg": "管理员登录成功", "user": user}
 
         # 检查会员过期
@@ -217,6 +254,10 @@ class AuthService:
             except ValueError:
                 traceback.print_exc()
 
+        try:
+            log_action(username, "登录", "login", "用户登录成功")
+        except Exception:
+            pass
         return {"ok": True, "msg": "登录成功", "user": user}
 
     def admin_login(self, password: str) -> dict:
@@ -242,6 +283,10 @@ class AuthService:
             user["membership"] = MEMBERSHIP_PERMANENT
             user["expire_at"] = None
             _save_users(self._users)
+            try:
+                log_action(username, "升级会员", "membership", "升级为永久会员")
+            except Exception:
+                pass
             return True, "升级为永久会员成功"
 
         if target_membership == MEMBERSHIP_VIP:
@@ -252,6 +297,10 @@ class AuthService:
             user["membership"] = MEMBERSHIP_VIP
             user["expire_at"] = (datetime.now() + timedelta(days=365)).strftime("%Y-%m-%d %H:%M:%S")
             _save_users(self._users)
+            try:
+                log_action(username, "升级会员", "membership", "升级为VIP会员（有效期1年）")
+            except Exception:
+                pass
             return True, "升级为VIP会员成功（有效期1年）"
 
         return False, "未知的会员类型"
@@ -345,6 +394,10 @@ class AuthService:
         conn.close()
 
         _save_users(self._users)
+        try:
+            log_action(username, "激活会员", "membership", f"激活码激活，类型={code_type}")
+        except Exception:
+            pass
         return True, "激活成功"
 
     def get_membership_info(self, username: str) -> dict:
@@ -374,4 +427,25 @@ class AuthService:
             "days_left": days_left,  # -1=永久, >=0=剩余天数
             "role": user.get("role", "member"),
         }
+
+    def admin_reset_password(self, username: str, new_password: str) -> tuple:
+        """
+        管理员重置用户密码（明文存储）
+        返回: (ok: bool, msg: str)
+        """
+        self._reload()
+        user = self._users.get(username)
+        if not user:
+            return False, "用户不存在"
+
+        if not new_password or len(new_password) < 3:
+            return False, "密码至少3个字符"
+
+        user["password"] = new_password
+        _save_users(self._users)
+        try:
+            log_action("admin", "重置密码", "admin", f"重置用户 {username} 的密码")
+        except Exception:
+            pass
+        return True, f"用户 {username} 的密码已重置"
 ```

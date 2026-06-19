@@ -323,7 +323,7 @@ class ConnectWindow(QMainWindow):
         layout.addWidget(self._status_label)
 
         # ── 启动引擎按钮 ──
-        self._launch_btn = QPushButton("启动引擎 · 进入舰桥")
+        self._launch_btn = QPushButton("启动引擎 · 进入智能中心")
         self._launch_btn.setFixedSize(280, 52)
         self._launch_btn.setCursor(Qt.PointingHandCursor)
         self._launch_btn.setEnabled(False)
@@ -511,9 +511,9 @@ class ConnectWindow(QMainWindow):
     def _enter_dashboard(self):
         config = self._build_config()
         self._save_to_opcclaw(config)
-        from modules.dashboard.dashboard_window import DashboardWindow
-        self._dash = DashboardWindow(config=config)
-        self._dash.show()
+        from modules.intelligence.intelligence_window import IntelligenceWindow
+        self._center = IntelligenceWindow()
+        self._center.show()
         self.close()
 
     def _save_to_opcclaw(self, config):
@@ -578,10 +578,10 @@ class ConnectWindow(QMainWindow):
             json.dump(opcclaw_config, f, indent=2, ensure_ascii=False)
 
     def _enter_normal_mode(self):
-        """无 AI 引擎 — 直接进入舰桥，使用规则引擎"""
-        from modules.dashboard.dashboard_window import DashboardWindow
-        self._dash = DashboardWindow(config=None)
-        self._dash.show()
+        """无 AI 引擎 — 直接进入智能中心，使用规则引擎"""
+        from modules.intelligence.intelligence_window import IntelligenceWindow
+        self._center = IntelligenceWindow()
+        self._center.show()
         self.close()
 
     def _go_back(self):

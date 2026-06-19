@@ -18,7 +18,7 @@ from PyQt5.QtGui import (
 
 from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPLE
 from core.planet_painter import PLANET_STYLES, paint_planet
-from core.deps import ensure
+from deps.install_deps import ensure
 
 # 模型列表统一走 AgentBridge.list_all_models() 静态方法（数据源：opcclaw_config.json + Ollama 动态发现）
 
@@ -273,7 +273,7 @@ class ModelSetupWindow(QMainWindow):
         )
         card_layout.addWidget(title)
 
-        sub = QLabel("选择 AI 模型提供商以激活主控面板")
+        sub = QLabel("选择 AI 模型提供商以激活智能中心")
         sub.setAlignment(Qt.AlignCenter)
         sub.setStyleSheet("color: #446688; font-size: 11px; background: transparent; padding-bottom: 14px;")
         card_layout.addWidget(sub)

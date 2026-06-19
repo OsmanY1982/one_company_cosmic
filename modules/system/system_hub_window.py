@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 系统管理中心 · 子星球导航
-环绕太阳核心的5颗子星球，点击分别路由到系统模块窗口
+环绕太阳核心的4颗子星球，点击分别路由到系统模块窗口
 """
 import math
 from PyQt5.QtWidgets import (
@@ -14,13 +14,16 @@ from core.planet_painter import (
     PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line,
 )
 
-# ═══════ 5颗子星球配置 ═══════
+# ═══════ 7颗子星球配置 ═══════
+# 窗口 800×650，中心约 (400, 325)，最大允许轨道 ≈ 290（留 35px 边距）
 PLANETS = [
-    {"id": "system_settings", "name": "系统设置", "style": "uranus",  "orbit": 140, "size": 46},
-    {"id": "activation",      "name": "激活码",   "style": "sun",     "orbit": 210, "size": 46},
-    {"id": "cloud_sync",      "name": "云端同步", "style": "neptune", "orbit": 280, "size": 46},
-    {"id": "system_logs",     "name": "系统日志", "style": "pluto",   "orbit": 350, "size": 46},
-    {"id": "update_check",    "name": "更新检测", "style": "moon",    "orbit": 420, "size": 46},
+    {"id": "system_settings", "name": "系统设置", "style": "uranus",  "orbit": 112, "size": 46},
+    {"id": "activation",      "name": "激活码",   "style": "sun",     "orbit": 148, "size": 46},
+    {"id": "cloud_sync",      "name": "云端同步", "style": "neptune", "orbit": 184, "size": 44},
+    {"id": "system_logs",     "name": "系统日志", "style": "moon",    "orbit": 220, "size": 44},
+    {"id": "audit",           "name": "审计日志", "style": "pluto",   "orbit": 256, "size": 42},
+    {"id": "cloud_server",    "name": "云服务器", "style": "mercury", "orbit": 276, "size": 42},
+    {"id": "admin",           "name": "后台管理", "style": "mars",    "orbit": 292, "size": 44},
 ]
 
 
@@ -65,19 +68,16 @@ class NavigationHUD(QWidget):
         w2 = self._center
 
         for planet in PLANETS:
-            paint_orbit(p, w2, planet["orbit"], alpha=10)
+            paint_orbit(p, w2, planet["orbit"])
 
         for planet_data, pos in self._planet_positions():
-            paint_energy_line(p, w2, pos, alpha=15)
+            paint_energy_line(p, w2, pos)
 
         for planet_data, pos in self._planet_positions():
             style = PLANET_STYLES.get(planet_data.get("style"), PLANET_STYLES["neptune"])
             is_hovered = (self._hovered_planet == planet_data["id"])
             paint_planet(p, pos, planet_data["size"], style,
                          hovered=is_hovered, label=planet_data["name"], font_size=10)
-
-        # 中央核心 · 太阳
-        paint_planet(p, w2, 56, PLANET_STYLES["sun"], label="SYS", font_size=12)
 
         p.end()
 
@@ -107,11 +107,16 @@ class NavigationHUD(QWidget):
 class SystemHubWindow(QMainWindow):
     """系统管理中心 · 子星球导航主窗口"""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, role="admin"):
         super().__init__(parent)
+        self._role = role
         self.setWindowTitle("一人公司 — 系统管理中心 · SOLAR HUB")
         self.setMinimumSize(800, 650)
+        self.resize(800, 650)
         self._build_ui()
+
+        if self._role != "admin":
+            self._show_access_denied()
 
     def _build_ui(self):
         from core.cosmic import CosmicBackground
@@ -134,7 +139,7 @@ class SystemHubWindow(QMainWindow):
         title.setStyleSheet("color: #ddaaff; font-size: 24px; font-weight: 800; letter-spacing: 8px; background: transparent;")
         title.setAlignment(Qt.AlignCenter)
         hl.addWidget(title)
-        subtitle = QLabel("SOLAR HUB · 5颗子星球")
+        subtitle = QLabel("SOLAR HUB · 7颗子星球")
         subtitle.setStyleSheet("color: #776699; font-size: 11px; letter-spacing: 3px; background: transparent;")
         subtitle.setAlignment(Qt.AlignCenter)
         hl.addWidget(subtitle)
@@ -156,23 +161,37 @@ class SystemHubWindow(QMainWindow):
             self._hud.setGeometry(0, 0, self.width(), self.height())
 
     def _on_planet_clicked(self, planet_id):
-        if planet_id == "system_settings":
-            from modules.system.system_window import SystemWindow
-            dlg = SystemWindow(self)
-            dlg.show()
-        elif planet_id == "activation":
-            from modules.system.activation_window import ActivationWindow
-            dlg = ActivationWindow(self)
-            dlg.exec_()
-        elif planet_id == "cloud_sync":
-            from modules.system.cloud_window import CloudWindow
-            dlg = CloudWindow(self)
-            dlg.exec_()
-        elif planet_id == "system_logs":
-            from modules.system.logs_window import LogsWindow
-            dlg = LogsWindow(self)
-            dlg.show()
-        elif planet_id == "update_check":
-            from modules.system.update_dialog import UpdateDialog
-            dlg = UpdateDialog(self)
-            dlg.exec_()
+        try:
+            if planet_id == "system_settings":
+                from modules.system.base_info_window import BaseInfoWindow
+                dlg = BaseInfoWindow(self)
+                dlg.exec_()
+            elif planet_id == "activation":
+                from modules.account.account_activation import AccountActivationWindow
+                dlg = AccountActivationWindow(self)
+                dlg.exec_()
+            elif planet_id == "cloud_sync":
+                from modules.system.cloud_window import CloudWindow
+                dlg = CloudWindow(self)
+                dlg.exec_()
+            elif planet_id == "system_logs":
+                from modules.system.logs_window import LogsWindow
+                dlg = LogsWindow(self)
+                dlg.exec_()
+            elif planet_id == "audit":
+                from modules.system.audit_window import AuditWindow
+                win = AuditWindow()
+                win.show()
+            elif planet_id == "cloud_server":
+                from modules.system.cloud_server_window import CloudServerWindow
+                win = CloudServerWindow(self)
+                win.show()
+            elif planet_id == "admin":
+                from modules.admin.admin_window import AdminWindow
+                win = AdminWindow(self)
+                win.show()
+
+        except ImportError as e:
+            from PyQt5.QtWidgets import QMessageBox
+            QMessageBox.warning(self, "模块未就绪",
+                                f"「{planet_id}」模块加载失败：{e}")

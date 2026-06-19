@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 # 懒安装
-from core.deps import ensure
+from deps.install_deps import ensure
 ensure("qrcode")
 import qrcode
 

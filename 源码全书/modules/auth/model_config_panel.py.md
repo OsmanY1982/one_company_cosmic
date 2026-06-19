@@ -351,7 +351,7 @@ class ModelConfigPanel(QWidget):
         )
         main.addWidget(title)
 
-        sub = QLabel("选择 AI 模型提供商以激活主控面板")
+        sub = QLabel("选择 AI 模型提供商以激活智能中心")
         sub.setAlignment(Qt.AlignCenter)
         sub.setStyleSheet("color: #446688; font-size: 11px; background: transparent; padding-bottom: 14px;")
         main.addWidget(sub)

@@ -16,7 +16,7 @@ import json
 from typing import Optional, AsyncIterator, Dict, List
 from dataclasses import dataclass, field
 
-from core.deps import ensure
+from deps.install_deps import ensure
 ensure("httpx")
 import httpx
 

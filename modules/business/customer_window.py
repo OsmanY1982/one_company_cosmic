@@ -327,7 +327,7 @@ class CustomerWindow(QDialog):
                 row["phone"] or "",
                 row["email"] or "",
                 row["level"] or "普通",
-                f"¥{row['total_amount']:,.2f}" if row.get("total_amount") else "¥0.00",
+                f"¥{row['total_amount']:,.2f}" if row["total_amount"] else "¥0.00",
                 row["source"] or "",
                 row["note"] or "",
             ]

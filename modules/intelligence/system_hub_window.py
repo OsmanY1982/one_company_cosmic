@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 系统管理中心 · SOLAR VAULT（真实星球子导航）
-5颗子星球环绕，点击弹出独立系统管理窗口
+4颗子星球环绕，点击弹出独立系统管理窗口
 """
 import os, math
 from PyQt5.QtWidgets import (
@@ -16,11 +16,11 @@ from core.planet_painter import (
 
 # ═══════ 5颗系统管理子星球 ═══════
 SYSTEM_PLANETS = [
-    {"id": "base_info",     "name": "系统设置",   "style": "uranus",  "orbit": 130, "size": 46},
-    {"id": "activation",    "name": "激活码",     "style": "sun",     "orbit": 200, "size": 48},
-    {"id": "cloud_server",  "name": "云端同步",   "style": "neptune", "orbit": 270, "size": 50},
-    {"id": "system_logs",   "name": "系统日志",   "style": "pluto",   "orbit": 340, "size": 46},
-    {"id": "update",        "name": "更新检测",   "style": "moon",    "orbit": 410, "size": 46},
+    {"id": "base_info",     "name": "系统设置",   "style": "uranus",  "orbit": 120, "size": 42},
+    {"id": "activation",    "name": "激活码",     "style": "sun",     "orbit": 165, "size": 44},
+    {"id": "cloud_server",  "name": "云端同步",   "style": "neptune", "orbit": 210, "size": 46},
+    {"id": "system_logs",   "name": "系统日志",   "style": "pluto",   "orbit": 255, "size": 44},
+    {"id": "admin",         "name": "后台管理",   "style": "mars",    "orbit": 300, "size": 44},
 ]
 
 
@@ -77,11 +77,6 @@ class SystemHubHUD(QWidget):
             paint_planet(p, pos, sp["size"], style,
                          hovered=hovered, label=sp["name"], font_size=10)
 
-        # 中央核心：太阳
-        core_r = 60
-        paint_planet(p, w2, core_r, PLANET_STYLES["sun"],
-                     label="SOLAR", font_size=12)
-
         p.end()
 
     def mouseMoveEvent(self, event):
@@ -114,6 +109,7 @@ class SystemHubWindow(QMainWindow):
         super().__init__(parent)
         self.setWindowTitle("一人公司 — 系统管理 · SOLAR VAULT")
         self.setMinimumSize(900, 700)
+        self.resize(900, 700)
         self._build_ui()
 
     def _build_ui(self):
@@ -171,8 +167,8 @@ class SystemHubWindow(QMainWindow):
                 dlg = BaseInfoWindow(self)
                 dlg.exec_()
             elif planet_id == "activation":
-                from modules.system.activation_window import ActivationWindow
-                dlg = ActivationWindow(self)
+                from modules.account.account_activation import AccountActivationWindow
+                dlg = AccountActivationWindow(self)
                 dlg.exec_()
             elif planet_id == "cloud_server":
                 from modules.system.cloud_window import CloudWindow
@@ -182,10 +178,10 @@ class SystemHubWindow(QMainWindow):
                 from modules.system.logs_window import LogsWindow
                 dlg = LogsWindow(self)
                 dlg.exec_()
-            elif planet_id == "update":
-                from modules.system.update_dialog import UpdateDialog
-                dlg = UpdateDialog(self)
-                dlg.exec_()
+            elif planet_id == "admin":
+                from modules.admin.admin_window import AdminWindow
+                dlg = AdminWindow(self)
+                dlg.show()
         except ImportError as e:
             from PyQt5.QtWidgets import QMessageBox
             QMessageBox.warning(self, "模块未就绪",

@@ -103,7 +103,7 @@ class StaffDialog(QDialog):
         self.edit_notes = QTextEdit()
         self.edit_notes.setMaximumHeight(60)
         if row:
-            self.edit_notes.setText(row['notes'] or '')
+            self.edit_notes.setText(row['note'] or '')
 
         layout.addRow("姓名:", self.edit_name)
         layout.addRow("电话:", self.edit_phone)
@@ -133,7 +133,7 @@ class StaffDialog(QDialog):
             "position": self.edit_position.text().strip(),
             "salary": float(self.edit_salary.text() or 0),
             "status": self.edit_status.currentText(),
-            "notes": self.edit_notes.toPlainText().strip(),
+            "note": self.edit_notes.toPlainText().strip(),
         }
 
 
@@ -237,13 +237,13 @@ class StaffWindow(QDialog):
         search = self.search_input.text().strip()
         rows = staff_get_all(search)
         self.table.setRowCount(len(rows))
+        columns = ['id', 'name', 'phone', 'email', 'position', 'salary', 'status', 'note']
         for i, r in enumerate(rows):
-            for j, k in enumerate(
-                ['id', 'name', 'phone', 'email', 'position', 'salary', 'status', 'notes']
-            ):
+            for j, k in enumerate(columns):
+                val = r[k] if r[k] is not None else ""
                 self.table.setItem(
                     i, j,
-                    QTableWidgetItem(str(r[k]) if r[k] is not None else "")
+                    QTableWidgetItem(str(val))
                 )
 
     def _add(self):

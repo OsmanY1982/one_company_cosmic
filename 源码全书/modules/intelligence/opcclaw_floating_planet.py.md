@@ -1,6 +1,6 @@
 # `modules/intelligence/opcclaw_floating_planet.py`
 
-> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：467
+> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：538
 
 
 ---
@@ -33,12 +33,11 @@ from core.planet_painter import PLANET_STYLES
 from core.shapes import SHAPE_PLANETS, SHAPE_ALIENS, SHAPE_STARSHIPS, SHAPE_MODES
 from .floating_planet_anim_mixin import FloatingPlanetAnimMixin
 from .floating_planet_draw_mixin import FloatingPlanetDrawMixin
-from .floating_planet_voice_mixin import FloatingPlanetVoiceMixin
 from .floating_planet_menu_mixin import FloatingPlanetMenuMixin
 
 
 class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
-                     FloatingPlanetVoiceMixin, FloatingPlanetMenuMixin, QWidget):
+                     FloatingPlanetMenuMixin, QWidget):
     """桌面悬浮星球 — frameless + 圆形遮罩"""
 
     SLEEP = "sleep"
@@ -81,6 +80,7 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
         self._current_size = self.SLEEP_SIZE
         self._target_size = self.SLEEP_SIZE
         self._standalone_chat = None
+        self._open_windows: dict = {}  # 保持非模态窗口引用防止被 GC 回收
         self._tooltip_text = "经典星球"
         self.TOOLTIP_H = 26
         self._dragging = False
@@ -110,23 +110,6 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
         self._drag_trail_max = 5
         self._wander_timer = 0
         self._next_wander = 120
-
-        self._voice = None
-        self._last_voice_text = ""
-        self._voice_enabled = True
-        self._voice_handlers_active = False
-        self._speak_process = None
-
-        self._wake_word_mode = False
-        self._wake_words = ["球球", "星仔", "球球在吗", "小助手", "助理"]
-        self._wake_pending = False
-        self._exit_words = ["退出", "关闭", "再见", "拜拜", "睡觉", "休息", "退下"]
-        self._whisper_wake_recognizer = None
-
-        self._conversation_timer = QTimer(self)
-        self._conversation_timer.setSingleShot(True)
-        self._conversation_timer.timeout.connect(self._exit_conversation)
-        self._in_conversation = False
 
         self._style = PLANET_STYLES.get("earth", PLANET_STYLES["neptune"])
         self._shape_mode = None
@@ -170,26 +153,8 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
         self._timer.timeout.connect(self._tick)
         self._timer.start(16)
 
-        if self._wake_word_mode:
-            self._wake_pending = False
-            self._enable_voice_handlers()
-            QTimer.singleShot(1000, self._start_wake_on_init)
-
         self._daemon_cleanup = None
         self._cleanup_done = False
-
-        print("[FloatingPlanet] 3秒后将初始化语音接口...")
-        QTimer.singleShot(3000, self._init_voice_lazy)
-
-    def _start_wake_on_init(self):
-        stt = self._voice.stt_engine
-        print(f"[Wake] _start_wake_on_init: stt={stt}")
-        if stt == "whisper":
-            print("[Wake] 先用 Apple Speech 启动唤醒，后台加载 Whisper...")
-            self._start_wake_listen()
-            QTimer.singleShot(500, self._start_whisper_wake)
-        else:
-            self._start_wake_listen()
 
     def _scaled_widget_size(self):
         return max(16, int(self.ACTIVE_SIZE * self._scale_multiplier))
@@ -319,9 +284,90 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
 
     # ── 模块打开 ──
 
+    # ── 第三层子模块 → 第二层大类回退映射 ──
+    _SUB_TO_CATEGORY = {
+        # AI 助手子模块 → AIAssistantWindow
+        "opcclaw_chat": "ai_assistant",
+        "super_intelligence": "ai_assistant",
+        "enhanced_chat": "ai_assistant",
+        "knowledge_base": "ai_assistant",
+        "system_monitor": "ai_assistant",
+        "quick_actions": "ai_assistant",
+        "anomaly_detector": "ai_assistant",
+        "recommendation_engine": "ai_assistant",
+        "data_visualization": "ai_assistant",
+        "smart_workflow": "ai_assistant",
+        "business_ai": "ai_assistant",
+        "voice_interface": "ai_assistant",
+        # 工具箱 → calculator 回退到 ToolsWindow；其余有独立窗口
+        "calculator": "tools",
+        # 系统管理子模块 → SystemHubWindow
+        "system_settings": "system",
+        "activation": "system",
+        "cloud_sync": "system",
+        "cloud_server": "system",
+        "system_logs": "system",
+        "audit": "system",
+        "admin": "system",
+        # 数据中心子模块 → DataWindow
+        "dashboard": "data",
+        "report": "data",
+        "bi": "data",
+        "chart": "data",
+        # 账号与安全 → backup/update 回退到 AccountWindow
+        "backup": "account",
+        "update": "account",
+    }
+
     def _open_module(self, module_id: str):
         try:
-            if module_id == "business":
+            # ── 第三层子模块：优先精确路由 ──
+            if module_id == "upgrade":
+                self._open_upgrade()
+                return
+            elif module_id == "password":
+                self._open_change_password()
+                return
+            elif module_id == "editor":
+                from modules.intelligence.editor_window import EditorWindow
+                win = EditorWindow()
+            elif module_id == "vault":
+                from modules.intelligence.vault_window import VaultWindow
+                win = VaultWindow()
+            elif module_id == "scanner":
+                from modules.intelligence.scan_window import ScanWindow
+                win = ScanWindow()
+            elif module_id == "order":
+                from modules.business.order_window import OrderWindow
+                win = OrderWindow()
+            elif module_id == "product":
+                from modules.business.product_window import ProductWindow
+                win = ProductWindow()
+            elif module_id == "customer":
+                from modules.business.customer_window import CustomerWindow
+                win = CustomerWindow()
+            elif module_id == "finance":
+                from modules.business.finance_window import FinanceWindow
+                win = FinanceWindow()
+            elif module_id == "distribution":
+                from modules.personnel.distribution_window import DistributionWindow
+                win = DistributionWindow()
+            elif module_id == "staff":
+                from modules.personnel.staff_window import StaffWindow
+                win = StaffWindow()
+            elif module_id == "member":
+                from modules.personnel.member_window import MemberWindow
+                win = MemberWindow()
+            elif module_id == "wallet":
+                from modules.personnel.wallet_window import WalletWindow
+                win = WalletWindow()
+
+            # ── 回退：子模块 → 大类窗口 ──
+            elif module_id in self._SUB_TO_CATEGORY:
+                return self._open_module(self._SUB_TO_CATEGORY[module_id])
+
+            # ── 第二层大类 / 第一层独立项 ──
+            elif module_id == "business":
                 from modules.business.business_window import BusinessWindow
                 win = BusinessWindow()
             elif module_id == "personnel":
@@ -334,17 +380,60 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
                 from modules.data_center.data_window import DataWindow
                 win = DataWindow()
             elif module_id == "system":
-                from modules.system.system_window import SystemWindow
-                win = SystemWindow()
-            elif module_id == "digital_emp":
-                from modules.intelligence.digital_emp_window import DigitalEmpWindow
-                win = DigitalEmpWindow()
+                from modules.system.system_hub_window import SystemHubWindow
+                win = SystemHubWindow(role=self._role)
+            elif module_id == "account":
+                from modules.intelligence.account_window import AccountWindow
+                win = AccountWindow(role=self._role, opcclaw_engine=self._engine)
+            elif module_id == "ai_assistant":
+                from modules.intelligence.ai_assistant_window import AIAssistantWindow
+                win = AIAssistantWindow(opcclaw_engine=self._engine)
+            elif module_id == "tools":
+                from modules.intelligence.tools_window import ToolsWindow
+                win = ToolsWindow()
+            elif module_id == "login":
+                from modules.auth.login_window import LoginWindow
+                win = LoginWindow()
+            elif module_id == "model_settings":
+                from modules.auth.model_setup_window import ModelSetupWindow
+                dlg = ModelSetupWindow(
+                    username=self._membership_info.get("username", ""),
+                    role=self._role,
+                    membership_info=self._membership_info,
+                )
+                self._open_windows["model_settings"] = dlg
+                dlg.destroyed.connect(lambda: self._open_windows.pop("model_settings", None))
+                dlg.show()
+                return
             else:
                 return
+            self._open_windows[module_id] = win
+            win.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
             win.show()
         except Exception as e:
             print(f"[FloatingPlanet] Failed to open module {module_id}: {e}")
             traceback.print_exc()
+
+    def _open_upgrade(self):
+        """升级会员"""
+        from modules.auth.upgrade_window import UpgradeWindow
+        dlg = UpgradeWindow(
+            username=self._membership_info.get("username", ""),
+            role=self._role,
+            membership=self._membership_info.get("membership", "trial"),
+            expire_at=self._membership_info.get("expire_at"),
+            parent=None,
+        )
+        dlg.exec_()
+
+    def _open_change_password(self):
+        """修改密码"""
+        from modules.auth.change_password_dialog import ChangePasswordWindow
+        dlg = ChangePasswordWindow(
+            username=self._membership_info.get("username", "admin"),
+            parent=None,
+        )
+        dlg.exec_()
 
     def _switch_to_shape(self, category: str, key: str):
         if category == "planet":
@@ -367,22 +456,6 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
         name = SHAPE_MODES.get(key, {}).get("name", key)
         self._tooltip_text = name
         print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
-        self._speak_shape(name, key)
-
-    # ── 模型设置 ──
-
-    def _open_model_config(self):
-        try:
-            from modules.auth.model_setup_window import ModelSetupWindow
-            self._model_setup_window = ModelSetupWindow(
-                username="",
-                role=self._role,
-                membership_info=self._membership_info,
-            )
-            self._model_setup_window.show()
-        except Exception as e:
-            print(f"[FloatingPlanet] Failed to open model config: {e}")
-            traceback.print_exc()
 
     # ── AI 对话 ──
 
@@ -414,12 +487,10 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
     def _on_exit(self):
         reply = QMessageBox.question(
             self, "退出悬浮球",
-            "确定要退出悬浮球吗？\n可从主控面板重新启动。",
+            "确定要退出悬浮球吗？\n可从智能中心重新启动。",
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No
         )
         if reply == QMessageBox.Yes:
-            self._terminate_speak()
-            self._voice.stop_listening()
             self._do_cleanup()
             self.close()
 

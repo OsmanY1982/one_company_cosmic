@@ -21,5 +21,3 @@ EXIT_CODE=$?
 
 echo ""
 echo "退出状态: $EXIT_CODE"
-echo "按任意键退出..."
-read -n 1
