@@ -14,8 +14,8 @@ from core.planet_painter import (
     PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line,
 )
 
-# ═══════ 6颗星球配置 — 均匀轨道间距，无颜色冲突 ═══════
-# 窗口 1200×850，中心约 (600, 425)，轨道 164~326 间距均匀
+# ═══════ 7颗星球配置 — 均匀轨道间距，无颜色冲突 ═══════
+# 窗口 1200×850，中心约 (600, 425)，轨道 180~400 间距均匀
 PLANETS = [
     {"id": "ai_assistant",      "name": "AI助手",       "style": "jupiter", "orbit": 180, "size": 60},
     {"id": "business",          "name": "业务管理",     "style": "mars",    "orbit": 225, "size": 56},
@@ -23,6 +23,7 @@ PLANETS = [
     {"id": "account",           "name": "账号与安全",   "style": "venus",   "orbit": 315, "size": 50},
     {"id": "tools",             "name": "工具箱",       "style": "saturn",  "orbit": 350, "size": 56},
     {"id": "system_mgmt",       "name": "系统管理",     "style": "earth",   "orbit": 380, "size": 54},
+    {"id": "astronomy_hub",     "name": "天文馆",       "style": "sun",     "orbit": 400, "size": 48},
 ]
 
 # ═══════ 导航 HUD 层 ═══════
@@ -183,6 +184,10 @@ class IntelligenceWindow(QMainWindow):
         elif planet_id == "system_mgmt":
             from modules.system.system_hub_window import SystemHubWindow
             dlg = SystemHubWindow(self)
+            dlg.show()
+        elif planet_id == "astronomy_hub":
+            from modules.astronomy.hub import AstronomyHubWindow
+            dlg = AstronomyHubWindow(self)
             dlg.show()
         elif planet_id == "account":
             from .account_window import AccountWindow

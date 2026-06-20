@@ -188,4 +188,7 @@ class FloatingPlanetAnimMixin:
             category = "starship"
         self._switch_to_shape(category, key)
         name = SHAPE_MODES.get(key, {}).get("name", key)
-        print(f"[AutoSwitch] #{self._auto_switch_idx}/{total} -> {name} ({key})")
+        try:
+            print(f"[AutoSwitch] #{self._auto_switch_idx}/{total} -> {name} ({key})")
+        except OSError:
+            pass

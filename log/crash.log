@@ -24610,3 +24610,99 @@ AttributeError: 'sqlite3.Row' object has no attribute 'get'
 2026-06-20 07:57:36,275 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
 2026-06-20 07:57:37,165 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
 2026-06-20 07:57:38,016 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 08:40:16,427 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:41:29,169 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 08:41:30,210 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 08:41:36,196 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 08:44:58,662 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:45:02,220 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 08:45:03,322 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 08:45:04,168 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 08:49:47,736 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 08:49:48,785 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 08:49:49,651 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 08:49:50,669 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:53:25,292 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:53:29,221 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 08:53:30,032 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 08:53:30,890 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 08:59:09,134 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:59:13,955 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 08:59:14,843 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 08:59:15,759 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:04:38,015 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:04:43,344 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:04:44,264 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:04:45,169 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:14:08,833 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:14:13,889 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:14:14,984 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:14:15,860 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:20:41,278 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:20:45,525 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:20:46,526 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:20:47,377 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:40:16,122 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:40:22,186 [cloud_pull_worker] ❌ 拉取 佣金 失败: database is locked
+2026-06-20 09:40:28,258 [cloud_pull_worker] ❌ 拉取 团队成员 失败: database is locked
+2026-06-20 09:44:44,728 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:44:49,532 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:44:50,638 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:44:51,520 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:44:58,603 [MainThread] 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/floating_planet_anim_mixin.py", line 189, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 448, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+OSError: [Errno 5] Input/output error
+2026-06-20 09:45:47,516 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:45:49,694 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:45:52,403 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:45:55,776 [cloud_pull_worker] ❌ 拉取 团队成员 失败: database is locked
+2026-06-20 09:46:53,425 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:46:54,297 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:46:55,202 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:49:11,291 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:50:38,616 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:50:39,520 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:50:40,429 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:50:41,347 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:51:10,220 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:51:11,068 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:51:11,941 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:51:51,830 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:51:52,922 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:51:53,947 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:52:06,012 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:52:06,936 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:52:07,855 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:52:16,624 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:52:17,524 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:52:18,408 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:52:43,296 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:52:44,206 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:52:45,121 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:54:09,236 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:54:10,225 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 09:54:11,277 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 09:54:12,116 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 09:54:56,049 [MainThread] 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-20 09:54:56,067 [MainThread] 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-20 09:59:21,143 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 10:21:59,809 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 10:58:57,856 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 10:58:58,762 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 10:58:59,849 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 11:05:40,741 [cloud_pull_worker] ❌ 拉取 分销链接 失败: NOT NULL constraint failed: distribution_links.user_name
+2026-06-20 11:05:41,583 [cloud_pull_worker] ❌ 拉取 佣金 失败: NOT NULL constraint failed: commissions.user_name
+2026-06-20 11:05:42,427 [cloud_pull_worker] ❌ 拉取 团队成员 失败: NOT NULL constraint failed: team_members.user_name
+2026-06-20 11:18:15,024 [MainThread] OPCclaw 日志系统已启动 (level=INFO, json=False)

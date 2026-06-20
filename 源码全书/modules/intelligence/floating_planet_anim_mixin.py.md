@@ -1,6 +1,6 @@
 # `modules/intelligence/floating_planet_anim_mixin.py`
 
-> 路径：`modules/intelligence/floating_planet_anim_mixin.py` | 行数：191
+> 路径：`modules/intelligence/floating_planet_anim_mixin.py` | 行数：194
 
 
 ---
@@ -197,6 +197,9 @@ class FloatingPlanetAnimMixin:
             category = "starship"
         self._switch_to_shape(category, key)
         name = SHAPE_MODES.get(key, {}).get("name", key)
-        print(f"[AutoSwitch] #{self._auto_switch_idx}/{total} -> {name} ({key})")
+        try:
+            print(f"[AutoSwitch] #{self._auto_switch_idx}/{total} -> {name} ({key})")
+        except OSError:
+            pass
 
 ```

@@ -413,13 +413,13 @@ if __name__ == "__main__":
 
     # 保存测试
     test_key = "sk-test-123456789"
-    if storage.save_api_key("bailian", test_key):
+    if storage.save_api_key("openai", test_key):
         print("[OK] Save success")
     else:
         print("[FAIL] Save failed")
 
     # 读取测试
-    loaded = storage.load_api_key("bailian")
+    loaded = storage.load_api_key("openai")
     if loaded == test_key:
         print(f"[OK] Load success: {loaded[:10]}...")
     else:

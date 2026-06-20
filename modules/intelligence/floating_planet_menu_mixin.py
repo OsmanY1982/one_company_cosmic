@@ -173,6 +173,10 @@ class FloatingPlanetMenuMixin:
                 ("backup",  "数据备份"),
                 ("update",  "检查更新"),
             ], True),
+            ("astronomy", "天文馆", [
+                ("solar_system",   "太阳系天文馆"),
+                ("solar_explorer", "星谱探索"),
+            ], True),
         ]
 
         for cat_id, cat_name, sub_modules, visible in categories:

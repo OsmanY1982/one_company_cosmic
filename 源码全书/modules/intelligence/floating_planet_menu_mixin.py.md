@@ -1,6 +1,6 @@
 # `modules/intelligence/floating_planet_menu_mixin.py`
 
-> 路径：`modules/intelligence/floating_planet_menu_mixin.py` | 行数：211
+> 路径：`modules/intelligence/floating_planet_menu_mixin.py` | 行数：215
 
 
 ---
@@ -181,6 +181,10 @@ class FloatingPlanetMenuMixin:
                 ("upgrade", "升级会员"),
                 ("backup",  "数据备份"),
                 ("update",  "检查更新"),
+            ], True),
+            ("astronomy", "天文馆", [
+                ("solar_system",   "太阳系天文馆"),
+                ("solar_explorer", "星谱探索"),
             ], True),
         ]
 

@@ -228,3 +228,35 @@ AttributeError: 'sqlite3.Row' object has no attribute 'get'
 2026-06-20 07:47:28 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-20 07:52:36 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
 2026-06-20 07:57:31 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:40:16 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:44:58 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:49:50 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:53:25 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 08:59:09 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:04:38 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:14:08 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:20:41 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:44:44 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:44:58 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/floating_planet_anim_mixin.py", line 189, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 448, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+OSError: [Errno 5] Input/output error
+2026-06-20 09:45:52 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:50:38 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:54:09 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 09:54:56 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-20 09:54:56 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-20 09:59:21 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 10:21:59 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 11:18:15 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)

@@ -1,6 +1,6 @@
 # `modules/intelligence/opcclaw_floating_planet.py`
 
-> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：537
+> 路径：`modules/intelligence/opcclaw_floating_planet.py` | 行数：549
 
 
 ---
@@ -336,6 +336,15 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
             elif module_id == "scanner":
                 from modules.intelligence.scan_window import ScanWindow
                 win = ScanWindow()
+            elif module_id == "astronomy_hub":
+                from modules.astronomy.hub import AstronomyHubWindow
+                win = AstronomyHubWindow()
+            elif module_id == "solar_system":
+                from modules.astronomy.solar_system.window import SolarSystemWindow
+                win = SolarSystemWindow()
+            elif module_id == "solar_explorer":
+                from modules.astronomy.star_catalog.catalog import StarCatalogWindow
+                win = StarCatalogWindow()
             elif module_id == "order":
                 from modules.business.order_window import OrderWindow
                 win = OrderWindow()
@@ -454,7 +463,10 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
             return
         name = SHAPE_MODES.get(key, {}).get("name", key)
         self._tooltip_text = name
-        print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+        try:
+            print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+        except OSError:
+            pass
 
     # ── AI 对话 ──
 

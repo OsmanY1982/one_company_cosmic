@@ -502,13 +502,39 @@ class AccountActivationWindow(QDialog):
         except Exception as e:
             QMessageBox.critical(self, "错误", f"重置失败：{str(e)}")
     def _test_cloud(self):
-        self.cloud_status.setText("🔴 未配置云端")
-        self.cloud_status.setStyleSheet("color: #e53e3e; font-size: 13px;")
-        QMessageBox.information(self, "云端状态", "宇宙版云端同步暂未配置。")
+        try:
+            from core.supabase_client import _request
+            ok, data = _request("GET", "/rest/v1/activation_codes?select=code&limit=1", service_key=True)
+            if ok and isinstance(data, list):
+                self.cloud_status.setText(f"🟢 云端已连接 ({len(data)} 条)")
+                self.cloud_status.setStyleSheet("color: #38a169; font-size: 13px;")
+                QMessageBox.information(self, "云端状态", "Supabase 云端连接正常。")
+            else:
+                self.cloud_status.setText("🟡 云端异常")
+                self.cloud_status.setStyleSheet("color: #d69e2e; font-size: 13px;")
+                QMessageBox.warning(self, "云端状态", "云端返回异常，请检查 Supabase 配置。")
+        except Exception as e:
+            self.cloud_status.setText("🔴 云端不可达")
+            self.cloud_status.setStyleSheet("color: #e53e3e; font-size: 13px;")
+            QMessageBox.critical(self, "云端状态", f"无法连接云端：{str(e)[:200]}")
 
     def _sync_all_to_cloud(self):
-        """同步所有激活码到云端（暂未实现）"""
-        QMessageBox.information(self, "提示", "宇宙版云端同步功能暂未开放。")
+        """同步所有激活码到云端"""
+        try:
+            from core.simple_sync import push_to_cloud
+            ok = push_to_cloud("activation_codes")
+            if ok:
+                self.cloud_status.setText("🟢 已同步")
+                self.cloud_status.setStyleSheet("color: #38a169; font-size: 13px;")
+                QMessageBox.information(self, "同步成功", "激活码已同步到云端。")
+            else:
+                self.cloud_status.setText("🔴 同步失败")
+                self.cloud_status.setStyleSheet("color: #e53e3e; font-size: 13px;")
+                QMessageBox.warning(self, "同步失败", "激活码同步失败，请检查网络连接后重试。")
+        except Exception as e:
+            self.cloud_status.setText("🔴 同步异常")
+            self.cloud_status.setStyleSheet("color: #e53e3e; font-size: 13px;")
+            QMessageBox.critical(self, "同步异常", f"同步出错：{str(e)[:200]}")
     def _open_cloud_manager(self):
         QMessageBox.information(self, "提示", "宇宙版云端管理面板暂未开放。")
 

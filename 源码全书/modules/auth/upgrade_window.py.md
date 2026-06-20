@@ -243,7 +243,7 @@ class UpgradeWindow(QDialog):
             self.machine_code = get_fixed_machine_code()
         self.setWindowTitle("升级会员")
         self.setModal(True)
-        self.setMinimumSize(800, 700)
+        self.setMinimumSize(960, 700)
         self.setStyleSheet("""
             QDialog { background-color: #f0f2f5; }
             QLabel { background: transparent; }

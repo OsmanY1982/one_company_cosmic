@@ -108,7 +108,7 @@ def get_shared_api_key(provider: str) -> dict:
             auth = json.load(f)
         pool = auth.get("credential_pool", {})
         provider_map = {
-            "bailian": "custom:bailian",
+            # ⚠️ bailian 已移除
             "openai": "custom:openai",
             "deepseek": "custom:deepseek",
         }

@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-20 08:01
-> 共 815 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-20 11:44
+> 共 846 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -16,6 +16,20 @@
 │       ├── license_crypto.py
 │       ├── license_db.py
 │       └── license_service.py
+├── astronomy/
+│   ├── solar_system/
+│   │   ├── __init__.py
+│   │   ├── data.py
+│   │   └── window.py
+│   ├── star_catalog/
+│   │   ├── __init__.py
+│   │   ├── catalog.py
+│   │   ├── data_entries.py
+│   │   ├── detail.py
+│   │   ├── encyclopedia.py
+│   │   └── voice.py
+│   ├── __init__.py
+│   └── hub.py
 ├── backup/
 │   ├── cloud_backups/
 ├── config/
@@ -146,6 +160,20 @@
 │   │   ├── admin_window.py
 │   │   ├── cascade_delete.py
 │   │   └── strategy_dao.py
+│   ├── astronomy/
+│   │   ├── solar_system/
+│   │   │   ├── __init__.py
+│   │   │   ├── data.py
+│   │   │   └── window.py
+│   │   ├── star_catalog/
+│   │   │   ├── __init__.py
+│   │   │   ├── catalog.py
+│   │   │   ├── data_entries.py
+│   │   │   ├── detail.py
+│   │   │   ├── encyclopedia.py
+│   │   │   └── voice.py
+│   │   ├── __init__.py
+│   │   └── hub.py
 │   ├── auth/
 │   │   ├── dao/
 │   │   │   └── user_dao.py
@@ -299,6 +327,8 @@
 │   │   ├── smart_assistant.py
 │   │   ├── smart_report_tools.py
 │   │   ├── smart_workflow.py
+│   │   ├── solar_system_data.py
+│   │   ├── solar_system_window.py
 │   │   ├── starship_painter.py
 │   │   ├── super_intelligence.py
 │   │   ├── system_hub_window.py
@@ -339,6 +369,7 @@
 │   │   │   ├── system_window.py
 │   │   │   └── update_dialog.py
 │   │   ├── __init__.py
+│   │   ├── astronomy_hub_window.py
 │   │   ├── audit_window.py
 │   │   ├── base_info_window.py
 │   │   ├── cloud_model_panel.py
@@ -1229,14 +1260,19 @@
 │   ├── theme_service.py
 │   ├── update_service.py
 │   └── workflow_service.py
+├── solar_explorer/
+│   ├── __init__.py
+│   ├── body_data_entries.py
+│   ├── body_detail_window.py
+│   ├── body_encyclopedia.py
+│   ├── star_catalog_window.py
+│   └── voice_reader.py
 ├── tools/
 │   ├── environments/
 │   │   ├── __init__.py
 │   │   └── file_sync.py
 │   ├── __init__.py
 │   └── skills_sync.py
-├── ~/
-│   └── Desktop/
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
@@ -1252,6 +1288,17 @@
 - [`_archived/license_模块归档_20260619/license_crypto.py`](./_archived/license_模块归档_20260619/license_crypto.py.md)
 - [`_archived/license_模块归档_20260619/license_db.py`](./_archived/license_模块归档_20260619/license_db.py.md)
 - [`_archived/license_模块归档_20260619/license_service.py`](./_archived/license_模块归档_20260619/license_service.py.md)
+- [`astronomy/__init__.py`](./astronomy/__init__.py.md)
+- [`astronomy/hub.py`](./astronomy/hub.py.md)
+- [`astronomy/solar_system/__init__.py`](./astronomy/solar_system/__init__.py.md)
+- [`astronomy/solar_system/data.py`](./astronomy/solar_system/data.py.md)
+- [`astronomy/solar_system/window.py`](./astronomy/solar_system/window.py.md)
+- [`astronomy/star_catalog/__init__.py`](./astronomy/star_catalog/__init__.py.md)
+- [`astronomy/star_catalog/catalog.py`](./astronomy/star_catalog/catalog.py.md)
+- [`astronomy/star_catalog/data_entries.py`](./astronomy/star_catalog/data_entries.py.md)
+- [`astronomy/star_catalog/detail.py`](./astronomy/star_catalog/detail.py.md)
+- [`astronomy/star_catalog/encyclopedia.py`](./astronomy/star_catalog/encyclopedia.py.md)
+- [`astronomy/star_catalog/voice.py`](./astronomy/star_catalog/voice.py.md)
 - [`config/__init__.py`](./config/__init__.py.md)
 - [`config/supabase_config.py`](./config/supabase_config.py.md)
 - [`core/__init__.py`](./core/__init__.py.md)
@@ -1369,6 +1416,17 @@
 - [`modules/admin/admin_window.py`](./modules/admin/admin_window.py.md)
 - [`modules/admin/cascade_delete.py`](./modules/admin/cascade_delete.py.md)
 - [`modules/admin/strategy_dao.py`](./modules/admin/strategy_dao.py.md)
+- [`modules/astronomy/__init__.py`](./modules/astronomy/__init__.py.md)
+- [`modules/astronomy/hub.py`](./modules/astronomy/hub.py.md)
+- [`modules/astronomy/solar_system/__init__.py`](./modules/astronomy/solar_system/__init__.py.md)
+- [`modules/astronomy/solar_system/data.py`](./modules/astronomy/solar_system/data.py.md)
+- [`modules/astronomy/solar_system/window.py`](./modules/astronomy/solar_system/window.py.md)
+- [`modules/astronomy/star_catalog/__init__.py`](./modules/astronomy/star_catalog/__init__.py.md)
+- [`modules/astronomy/star_catalog/catalog.py`](./modules/astronomy/star_catalog/catalog.py.md)
+- [`modules/astronomy/star_catalog/data_entries.py`](./modules/astronomy/star_catalog/data_entries.py.md)
+- [`modules/astronomy/star_catalog/detail.py`](./modules/astronomy/star_catalog/detail.py.md)
+- [`modules/astronomy/star_catalog/encyclopedia.py`](./modules/astronomy/star_catalog/encyclopedia.py.md)
+- [`modules/astronomy/star_catalog/voice.py`](./modules/astronomy/star_catalog/voice.py.md)
 - [`modules/auth/__init__.py`](./modules/auth/__init__.py.md)
 - [`modules/auth/activation_gate.py`](./modules/auth/activation_gate.py.md)
 - [`modules/auth/admin_login_dialog.py`](./modules/auth/admin_login_dialog.py.md)
@@ -1502,6 +1560,8 @@
 - [`modules/intelligence/smart_assistant.py`](./modules/intelligence/smart_assistant.py.md)
 - [`modules/intelligence/smart_report_tools.py`](./modules/intelligence/smart_report_tools.py.md)
 - [`modules/intelligence/smart_workflow.py`](./modules/intelligence/smart_workflow.py.md)
+- [`modules/intelligence/solar_system_data.py`](./modules/intelligence/solar_system_data.py.md)
+- [`modules/intelligence/solar_system_window.py`](./modules/intelligence/solar_system_window.py.md)
 - [`modules/intelligence/starship_painter.py`](./modules/intelligence/starship_painter.py.md)
 - [`modules/intelligence/super_intelligence.py`](./modules/intelligence/super_intelligence.py.md)
 - [`modules/intelligence/system_hub_window.py`](./modules/intelligence/system_hub_window.py.md)
@@ -1536,6 +1596,7 @@
 - [`modules/system/_archived/logs_window.py`](./modules/system/_archived/logs_window.py.md)
 - [`modules/system/_archived/system_window.py`](./modules/system/_archived/system_window.py.md)
 - [`modules/system/_archived/update_dialog.py`](./modules/system/_archived/update_dialog.py.md)
+- [`modules/system/astronomy_hub_window.py`](./modules/system/astronomy_hub_window.py.md)
 - [`modules/system/audit_window.py`](./modules/system/audit_window.py.md)
 - [`modules/system/base_info_window.py`](./modules/system/base_info_window.py.md)
 - [`modules/system/cloud_model_panel.py`](./modules/system/cloud_model_panel.py.md)
@@ -2059,6 +2120,12 @@
 - [`services/update_service.py`](./services/update_service.py.md)
 - [`services/workflow_service.py`](./services/workflow_service.py.md)
 - [`siri_command_handler.py`](./siri_command_handler.py.md)
+- [`solar_explorer/__init__.py`](./solar_explorer/__init__.py.md)
+- [`solar_explorer/body_data_entries.py`](./solar_explorer/body_data_entries.py.md)
+- [`solar_explorer/body_detail_window.py`](./solar_explorer/body_detail_window.py.md)
+- [`solar_explorer/body_encyclopedia.py`](./solar_explorer/body_encyclopedia.py.md)
+- [`solar_explorer/star_catalog_window.py`](./solar_explorer/star_catalog_window.py.md)
+- [`solar_explorer/voice_reader.py`](./solar_explorer/voice_reader.py.md)
 - [`tools/__init__.py`](./tools/__init__.py.md)
 - [`tools/environments/__init__.py`](./tools/environments/__init__.py.md)
 - [`tools/environments/file_sync.py`](./tools/environments/file_sync.py.md)

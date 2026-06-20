@@ -178,7 +178,7 @@ class OpenAICompatibleBackend(BaseLLMBackend):
     def __init__(self, config: ProviderConfig):
         super().__init__(config)
         # SSL: 本地模型自签证书 / 阿里云百炼 hostname mismatch
-        _insecure_hosts = ("localhost", "127.0.0.1", "0.0.0.0", "maas.aliyuncs.com")
+        _insecure_hosts = ("localhost", "127.0.0.1", "0.0.0.0")  # maas.aliyuncs.com 已移除
         if any(h in config.base_url for h in _insecure_hosts):
             self._ssl_context = ssl._create_unverified_context()
         else:
@@ -776,63 +776,7 @@ PROVIDER_TEMPLATES = {
         description="任意符合 OpenAI API 格式的端点",
         available_models=["default"],
     ),
-"bailian": ProviderConfig(
-        name="阿里云百炼",
-        provider_type="openai_compatible",
-        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        model="qwen-plus",
-        max_tokens=131072,            # 百炼同通义千问系，取 128K
-        description="阿里云百炼 MaaS 平台 — Qwen/DeepSeek/Kimi 等云端模型",
-        available_models=[
-            # 通义千问系列
-            "qwen-plus", "qwen-max", "qwen-turbo",
-            "qwen-vl-plus", "qwen-vl-max", "qwen-vl-ocr",
-            "qwen-audio-turbo", "qwen-mt-plus", "qwen-cv-plus",
-            "qwen-math-plus", "qwen-code-plus", "qwen-coder-plus",
-            "qwen-long", "qwen-text-embedding-v1", "qwen-text-embedding-v2",
-            "qwen-text-embedding-v3",
-            # 新一代模型
-            "qwen2.5-72b-instruct", "qwen2.5-32b-instruct", "qwen2.5-14b-instruct", "qwen2.5-7b-instruct",
-            "qwen2.5-1.5b-instruct", "qwen2.5-0.5b-instruct",
-            "qwen3-235b-a22b", "qwen3-110b-a22b", "qwen3-64b-a22b",
-            "qwen3.5-plus-2026-04-20", "qwen3.5-max-2026-04-20",
-            "qwen3.6-27b", "qwen3.6-72b",
-            # DeepSeek 系列
-            "deepseek-v3-pro", "deepseek-v3-plus", "deepseek-v3-flash",
-            "deepseek-v4-pro", "deepseek-v4-plus", "deepseek-v4-flash",
-            "deepseek-r1", "deepseek-r1-distill-llama-70b", "deepseek-r1-distill-llama-8b",
-            # Kimi 系列
-            "kimi/kimi-k2.6", "kimi/kimi-k2.5", "kimi/kimi-k2",
-            "kimi/kimi-k1.5", "kimi/kimi-k1", "kimi/kimi-k0",
-            "kimi-k2-100k", "kimi-k2-128k", "kimi-k2-200k",
-            # GLM 系列
-            "glm-4-plus", "glm-4-flash", "glm-4-air", "glm-4-long",
-            "glm-4v-plus", "glm-4v-flash", "glm-4v-air",
-            "glm-4-alltools", "glm-4-alltools-flash",
-            "glm-4-9b", "glm-4-9b-chat", "glm-4-0520",
-            "glm-3-turbo", "glm-3-turbo-pro",
-            # Llama 系列
-            "llama-3.3-70b-instruct", "llama-3.1-405b-instruct", "llama-3.1-70b-instruct",
-            "llama-3.1-8b-instruct", "llama-3.2-3b-instruct", "llama-3.2-1b-instruct",
-            # 其他模型
-            "gemma-2-27b-it", "gemma-2-9b-it", "gemma-2-2b-it",
-            "mistral-large-2407", "mistral-nemo", "mistral-7b-instruct",
-            "mixtral-8x7b-32768", "mixtral-8x22b-instruct",
-            "phi-3-mini-128k-instruct", "phi-3-medium-128k-instruct",
-            "qwen2-57b-a14b-instruct", "qwen2-72b-instruct",
-            "yi-1.5-34b-chat", "yi-1.5-9b-chat", "yi-large",
-            "baichuan2-13b-chat", "baichuan2-7b-chat",
-            "internlm2_5-20b-chat", "internlm2_5-7b-chat",
-            # 多模态
-            "qwen-vl-max", "qwen-vl-plus", "qwen-vl-chat-v1",
-            # 音频
-            "qwen-audio-turbo", "funasr-resnet50-asr-zh",
-            # 向量
-            "text-embedding-v1", "text-embedding-v2", "text-embedding-v3",
-            # 搜索
-            "qwen-search-plus", "qwen-search-max",
-        ],
-    ),
+    # ⚠️ bailian ProviderConfig 已移除（含 MaaS 端点）
 }
 
 
