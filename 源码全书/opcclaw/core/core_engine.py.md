@@ -1,6 +1,6 @@
 # `opcclaw/core/core_engine.py`
 
-> 路径：`opcclaw/core/core_engine.py` | 行数：973
+> 路径：`opcclaw/core/core_engine.py` | 行数：977
 
 
 ---
@@ -958,6 +958,10 @@ def quick_chat(question: str, model: str = "qwen2.5:7b") -> str:
     """快速对话（无状态）"""
     engine = create_engine(model=model)
     return engine.chat(question)
+
+
+# ── 兼容别名（调用方期望 CoreEngine）──
+CoreEngine = OPCclawCoreEngine
 
 
 # ═══════════════════════════════════════════

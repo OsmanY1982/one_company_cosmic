@@ -57,22 +57,33 @@ def _load_knowledge_facts(dir_name):
 
 
 def _inject_knowledge(entry, body_id):
+    """将 knowledge/ 目录下所有 .md 文件（除 index 和 facts）合并为一个完整的深度图文内容"""
     dir_name = _BODY_ID_TO_DIR.get(body_id)
     if not dir_name:
         return
     kdir = os.path.join(_KNOWLEDGE_ROOT, dir_name, "knowledge")
     if not os.path.isdir(kdir):
         return
-    overview = _load_knowledge_md(dir_name, "01_overview.md")
-    physics = _load_knowledge_md(dir_name, "02_physics.md")
-    exploration = _load_knowledge_md(dir_name, "03_exploration.md")
+
+    parts = []
+    try:
+        files = sorted(f for f in os.listdir(kdir) if f.endswith(".md") and f != "04_facts.md")
+    except Exception:
+        return
+
+    for fn in files:
+        text = _load_knowledge_md(dir_name, fn)
+        if text:
+            # 跳过纯索引文件（内容太短或只有链接列表）
+            if fn == "00_index.md" and len(text) < 500:
+                continue
+            parts.append(text)
+
+    # 合并所有文件，用分割线隔开
+    if parts:
+        entry["summary"] = "\n\n---\n\n".join(parts)
+
     facts = _load_knowledge_facts(dir_name)
-    if overview:
-        entry["summary"] = overview
-    if physics:
-        entry["physics"] = physics
-    if exploration:
-        entry["exploration"] = exploration
     if facts:
         entry["facts"] = facts
 

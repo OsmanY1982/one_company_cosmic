@@ -1,6 +1,6 @@
 # `modules/intelligence/solar_system_window.py`
 
-> 路径：`modules/intelligence/solar_system_window.py` | 行数：455
+> 路径：`modules/intelligence/solar_system_window.py` | 行数：457
 
 
 ---
@@ -364,14 +364,16 @@ class SolarSystemHUD(QWidget):
             style = PLANET_STYLES.get(body["style"], PLANET_STYLES["neptune"])
             r = radius_to_px(body["radius_km"], self._zoom)
             r = max(r, 2.5)
-            paint_planet(p, pos, r, style, hovered=False, label=body["name"], font_size=9)
+            paint_planet(p, pos, r, style, hovered=False, label=body["name"], font_size=9,
+                         anim_t=self._t)
 
         # ── 太阳 ──
         sun = SOLAR_CATALOG["sun"]
         sun_r = radius_to_px(sun["radius_km"], self._zoom)
         sun_r = max(sun_r, 10)
         sun_style = PLANET_STYLES["sun"]
-        paint_planet(p, w2, sun_r, sun_style, hovered=False, label="太阳", font_size=10)
+        paint_planet(p, w2, sun_r, sun_style, hovered=False, label="太阳", font_size=10,
+                     anim_t=self._t)
 
         # ── 悬停标签 ──
         self._paint_hover_label(p)

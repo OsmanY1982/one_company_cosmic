@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-20 16:40
-> 共 863 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-20 17:44
+> 共 864 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -95,6 +95,7 @@
 │   ├── paths.py
 │   ├── planet_painter.py
 │   ├── planet_painter_20260614_151048_302.py
+│   ├── procedural_texture.py
 │   ├── reconciliation.py
 │   ├── scheduled_tasks.py
 │   ├── simple_sync.py
@@ -1391,6 +1392,7 @@
 - [`core/paths.py`](./core/paths.py.md)
 - [`core/planet_painter.py`](./core/planet_painter.py.md)
 - [`core/planet_painter_20260614_151048_302.py`](./core/planet_painter_20260614_151048_302.py.md)
+- [`core/procedural_texture.py`](./core/procedural_texture.py.md)
 - [`core/reconciliation.py`](./core/reconciliation.py.md)
 - [`core/scheduled_tasks.py`](./core/scheduled_tasks.py.md)
 - [`core/shapes/__init__.py`](./core/shapes/__init__.py.md)

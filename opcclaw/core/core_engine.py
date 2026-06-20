@@ -951,6 +951,10 @@ def quick_chat(question: str, model: str = "qwen2.5:7b") -> str:
     return engine.chat(question)
 
 
+# ── 兼容别名（调用方期望 CoreEngine）──
+CoreEngine = OPCclawCoreEngine
+
+
 # ═══════════════════════════════════════════
 # 测试
 # ═══════════════════════════════════════════

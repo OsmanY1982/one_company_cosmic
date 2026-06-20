@@ -1,6 +1,6 @@
 # `solar_explorer/body_detail_window.py`
 
-> 路径：`solar_explorer/body_detail_window.py` | 行数：450
+> 路径：`solar_explorer/body_detail_window.py` | 行数：472
 
 
 ---
@@ -15,7 +15,7 @@ paint_planet() 渲染 + 科普卡片 + 语音朗读。ESC 关闭。
 import os
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QScrollArea, QFrame, QSizePolicy,
+    QScrollArea, QFrame, QSizePolicy, QTextBrowser,
 )
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPainter, QFont, QColor
@@ -211,22 +211,38 @@ class BodyDetailWindow(QWidget):
         top_row.addWidget(info_card, 1)
         layout.addLayout(top_row)
 
-        # ── 下半部分：详细介绍 ──
-        sections = [
-            ("概述", self._body.get("summary", "")),
-            ("物理特征", self._body.get("physics", "")),
-            ("探测历史", self._body.get("exploration", "")),
-        ]
-        for title, content in sections:
-            if not content:
-                continue
-            sec_title = QLabel(title)
+        # ── 下半部分：详细介绍（合并所有 knowledge 文件，Markdown 渲染）──
+        merged_content = self._body.get("summary", "")
+        phys = self._body.get("physics", "")
+        expl = self._body.get("exploration", "")
+        if phys and phys not in merged_content:
+            merged_content = merged_content + "\n\n---\n\n" + phys if merged_content else phys
+        if expl and expl not in merged_content:
+            merged_content = merged_content + "\n\n---\n\n" + expl if merged_content else expl
+
+        if merged_content:
+            sec_title = QLabel("详细介绍")
             sec_title.setStyleSheet(SECTION_TITLE_STYLE)
             layout.addWidget(sec_title)
 
-            sec_body = QLabel(content)
-            sec_body.setStyleSheet(BODY_TEXT_STYLE)
-            sec_body.setWordWrap(True)
+            sec_body = QTextBrowser()
+            sec_body.setOpenExternalLinks(True)
+            sec_body.setStyleSheet(
+                "QTextBrowser {"
+                " color: #8899bb; font-size: 16px; background: rgba(8,14,32,0.6);"
+                " border: 1px solid rgba(60,120,200,0.15); border-radius: 8px;"
+                " padding: 12px 16px; font-family: 'PingFang SC';"
+                "}"
+                "QTextBrowser:focus { border-color: rgba(0,200,255,0.3); }"
+            )
+            sec_body.document().setDefaultStyleSheet(
+                "body { color: #8899bb; background: rgba(8,14,32,0.6); }"
+                " a { color: #66ccff; }"
+                " p { color: #8899bb; line-height: 1.8; }"
+            )
+            sec_body.setHtml(_md_to_html(merged_content))
+            sec_body.setMinimumHeight(120)
+            sec_body.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
             layout.addWidget(sec_body)
 
         # 趣味事实
@@ -276,6 +292,12 @@ class BodyDetailWindow(QWidget):
         bl.addWidget(esc_hint)
 
         self._scroll = scroll
+
+        # 初始 geometry：避免 showMaximized() 异步 resize 前首帧内容不可见
+        w0, h0 = self.width(), self.height()
+        if w0 > 0 and h0 > 0:
+            self._scroll.setGeometry(0, 0, w0, h0 - 64)
+            self._bottom_bar.setGeometry(0, h0 - 64, w0, 64)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)

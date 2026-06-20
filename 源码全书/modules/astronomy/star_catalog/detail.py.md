@@ -1,6 +1,6 @@
 # `modules/astronomy/star_catalog/detail.py`
 
-> 路径：`modules/astronomy/star_catalog/detail.py` | 行数：466
+> 路径：`modules/astronomy/star_catalog/detail.py` | 行数：477
 
 
 ---
@@ -235,6 +235,11 @@ class BodyDetailWindow(QWidget):
                 "}"
                 "QTextBrowser:focus { border-color: rgba(0,200,255,0.3); }"
             )
+            sec_body.document().setDefaultStyleSheet(
+                "body { color: #8899bb; background: rgba(8,14,32,0.6); }"
+                " a { color: #66ccff; }"
+                " p { color: #8899bb; line-height: 1.8; }"
+            )
             sec_body.setHtml(_md_to_html(merged_content))
             sec_body.setMinimumHeight(120)
             sec_body.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -287,6 +292,12 @@ class BodyDetailWindow(QWidget):
         bl.addWidget(esc_hint)
 
         self._scroll = scroll
+
+        # 初始 geometry：避免 showMaximized() 异步 resize 前首帧内容不可见
+        w0, h0 = self.width(), self.height()
+        if w0 > 0 and h0 > 0:
+            self._scroll.setGeometry(0, 0, w0, h0 - 64)
+            self._bottom_bar.setGeometry(0, h0 - 64, w0, 64)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)

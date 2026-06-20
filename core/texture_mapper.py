@@ -42,11 +42,12 @@ def load_texture(path):
     return arr
 
 
-def _fast_equirect_to_ortho(tex_arr, diameter):
+def _fast_equirect_to_ortho(tex_arr, diameter, rotation_deg=0.0):
     """
     等角矩形纹理 → 球面正交投影（向量化 numpy）
     tex_arr: (H, W, 4) RGBA uint8 array
     diameter: 输出直径 (px)
+    rotation_deg: 自转角度 (0-360)，偏移经度坐标
     return: (diameter, diameter, 4) RGBA uint8 array
     """
     r = diameter / 2.0
@@ -62,8 +63,8 @@ def _fast_equirect_to_ortho(tex_arr, diameter):
     mask = dz2 > 0
     dz = np.sqrt(np.maximum(dz2, 0))
 
-    # 球面法线 → 等角矩形纹理坐标
-    u = 0.5 + np.arctan2(dx, dz) / (2.0 * np.pi)
+    # 球面法线 → 等角矩形纹理坐标（含自转偏移）
+    u = (0.5 + np.arctan2(dx, dz) / (2.0 * np.pi) + rotation_deg / 360.0) % 1.0
     v = 0.5 - np.arcsin(np.clip(dy, -1.0, 1.0)) / np.pi
 
     # 纹理坐标 → 像素索引
@@ -117,16 +118,24 @@ def _apply_lighting(sphere_arr, light_angle_deg=45, ambient=0.3):
     return np.clip(lit, 0, 255).astype(np.uint8)
 
 
-def render_sphere(tex_arr, diameter, light_angle=45, ambient=0.25):
+def render_sphere(tex_arr, diameter, light_angle=45, ambient=0.25, rotation_deg=0.0):
     """
     全流程: 纹理加载 → 球面映射 → 光照 → QPixmap
+    小尺寸自动 2x 超采样以消除像素化
+    rotation_deg: 自转角度 0-360
     """
     if tex_arr is None:
         return None
-    sphere = _fast_equirect_to_ortho(tex_arr, diameter)
+    # 超采样：直径 < 80px 时 2x 渲染再缩放
+    supersample = 2 if diameter < 80 else 1
+    render_d = diameter * supersample
+    sphere = _fast_equirect_to_ortho(tex_arr, render_d, rotation_deg)
     sphere = _apply_lighting(sphere, light_angle, ambient)
-    img = QImage(sphere.data, diameter, diameter, diameter * 4, QImage.Format_RGBA8888)
-    return QPixmap.fromImage(img.copy())  # copy to detach from numpy buffer
+    img = QImage(sphere.data, render_d, render_d, render_d * 4, QImage.Format_RGBA8888)
+    pix = QPixmap.fromImage(img.copy())
+    if supersample > 1:
+        pix = pix.scaled(diameter, diameter, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+    return pix
 
 
 # ── 预生成缓存，避免每帧重复映射 ──
@@ -135,29 +144,32 @@ _render_cache = {}
 CACHE_MAX_SIZE = 128
 
 
-def get_sphere_pixmap(tex_path, diameter, light_angle=45):
-    """获取缓存的球面贴图，缓存未命中时生成"""
+def get_sphere_pixmap(tex_path, diameter, light_angle=45, rotation_deg=0.0):
+    """获取球面贴图。rotation_deg=0 时使用缓存，否则实时渲染。"""
     if not tex_path:
         return None
 
-    key = (tex_path, diameter, light_angle)
-    if key in _render_cache:
-        return _render_cache[key]
+    # 自转时不缓存（每帧角度不同）
+    if rotation_deg == 0.0:
+        key = (tex_path, diameter, light_angle)
+        if key in _render_cache:
+            return _render_cache[key]
 
     tex = load_texture(tex_path)
     if tex is None:
         return None
 
-    pix = render_sphere(tex, diameter, light_angle)
+    pix = render_sphere(tex, diameter, light_angle, rotation_deg=rotation_deg)
     if pix is None:
         return None
 
-    # LRU 驱逐
-    if len(_render_cache) >= CACHE_MAX_SIZE:
-        oldest = next(iter(_render_cache))
-        del _render_cache[oldest]
+    if rotation_deg == 0.0:
+        # LRU 驱逐
+        if len(_render_cache) >= CACHE_MAX_SIZE:
+            oldest = next(iter(_render_cache))
+            del _render_cache[oldest]
+        _render_cache[key] = pix
 
-    _render_cache[key] = pix
     return pix
 
 
