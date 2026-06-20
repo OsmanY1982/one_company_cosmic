@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-20 16:02
-> 共 859 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-20 16:40
+> 共 863 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -106,6 +106,7 @@
 │   ├── sync_integration.py
 │   ├── sync_manager.py
 │   ├── sync_optimized.py
+│   ├── texture_mapper.py
 │   ├── triple_sync.py
 │   ├── user_dao.py
 │   ├── voice.py
@@ -610,6 +611,9 @@
 │   │   ├── tool_registry.py
 │   │   ├── web_search.py
 │   │   └── workspace_indexer.py
+│   ├── cron/
+│   │   ├── __init__.py
+│   │   └── jobs.py
 │   ├── data/
 │   │   ├── opcclaw/
 │   │   │   ├── data/
@@ -1067,6 +1071,7 @@
 │   │   │   ├── webscraper-v2/
 │   │   │   │   └── webscraper.py
 │   │   │   └── wecom-weisheng-scrm/
+│   │   │       ├── logs/
 │   │   │       ├── references/
 │   │   │       ├── scripts/
 │   │   │       │   ├── api_client.py
@@ -1265,6 +1270,8 @@
 │   │   ├── website_policy.py
 │   │   ├── xai_http.py
 │   │   └── yuanbao_tools.py
+│   ├── toolsets/
+│   │   └── __init__.py
 │   ├── web_ui/
 │   │   ├── harness/
 │   │   │   ├── __init__.py
@@ -1436,6 +1443,7 @@
 - [`core/sync_integration.py`](./core/sync_integration.py.md)
 - [`core/sync_manager.py`](./core/sync_manager.py.md)
 - [`core/sync_optimized.py`](./core/sync_optimized.py.md)
+- [`core/texture_mapper.py`](./core/texture_mapper.py.md)
 - [`core/triple_sync.py`](./core/triple_sync.py.md)
 - [`core/user_dao.py`](./core/user_dao.py.md)
 - [`core/voice.py`](./core/voice.py.md)
@@ -1831,6 +1839,8 @@
 - [`opcclaw/core/tool_registry.py`](./opcclaw/core/tool_registry.py.md)
 - [`opcclaw/core/web_search.py`](./opcclaw/core/web_search.py.md)
 - [`opcclaw/core/workspace_indexer.py`](./opcclaw/core/workspace_indexer.py.md)
+- [`opcclaw/cron/__init__.py`](./opcclaw/cron/__init__.py.md)
+- [`opcclaw/cron/jobs.py`](./opcclaw/cron/jobs.py.md)
 - [`opcclaw/data/__init__.py`](./opcclaw/data/__init__.py.md)
 - [`opcclaw/hermes_cli/__init__.py`](./opcclaw/hermes_cli/__init__.py.md)
 - [`opcclaw/hermes_cli/config.py`](./opcclaw/hermes_cli/config.py.md)
@@ -2147,6 +2157,7 @@
 - [`opcclaw/tools/website_policy.py`](./opcclaw/tools/website_policy.py.md)
 - [`opcclaw/tools/xai_http.py`](./opcclaw/tools/xai_http.py.md)
 - [`opcclaw/tools/yuanbao_tools.py`](./opcclaw/tools/yuanbao_tools.py.md)
+- [`opcclaw/toolsets/__init__.py`](./opcclaw/toolsets/__init__.py.md)
 - [`opcclaw/utils.py`](./opcclaw/utils.py.md)
 - [`opcclaw/verify_sync.py`](./opcclaw/verify_sync.py.md)
 - [`opcclaw/web_ui/__init__.py`](./opcclaw/web_ui/__init__.py.md)

@@ -6,7 +6,7 @@ paint_planet() 渲染 + 科普卡片 + 语音朗读。ESC 关闭。
 import os
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QScrollArea, QFrame, QSizePolicy,
+    QScrollArea, QFrame, QSizePolicy, QTextBrowser,
 )
 from PyQt5.QtCore import Qt, QPointF, QTimer
 from PyQt5.QtGui import QPainter, QFont, QColor
@@ -202,22 +202,33 @@ class BodyDetailWindow(QWidget):
         top_row.addWidget(info_card, 1)
         layout.addLayout(top_row)
 
-        # ── 下半部分：详细介绍 ──
-        sections = [
-            ("概述", self._body.get("summary", "")),
-            ("物理特征", self._body.get("physics", "")),
-            ("探测历史", self._body.get("exploration", "")),
-        ]
-        for title, content in sections:
-            if not content:
-                continue
-            sec_title = QLabel(title)
+        # ── 下半部分：详细介绍（合并所有 knowledge 文件）──
+        merged_content = self._body.get("summary", "")
+        phys = self._body.get("physics", "")
+        expl = self._body.get("exploration", "")
+        if phys and phys not in merged_content:
+            merged_content = merged_content + "\n\n---\n\n" + phys if merged_content else phys
+        if expl and expl not in merged_content:
+            merged_content = merged_content + "\n\n---\n\n" + expl if merged_content else expl
+
+        if merged_content:
+            sec_title = QLabel("详细介绍")
             sec_title.setStyleSheet(SECTION_TITLE_STYLE)
             layout.addWidget(sec_title)
 
-            sec_body = QLabel(content)
-            sec_body.setStyleSheet(BODY_TEXT_STYLE)
-            sec_body.setWordWrap(True)
+            sec_body = QTextBrowser()
+            sec_body.setOpenExternalLinks(True)
+            sec_body.setStyleSheet(
+                "QTextBrowser {"
+                " color: #8899bb; font-size: 16px; background: rgba(8,14,32,0.6);"
+                " border: 1px solid rgba(60,120,200,0.15); border-radius: 8px;"
+                " padding: 12px 16px; font-family: 'PingFang SC';"
+                "}"
+                "QTextBrowser:focus { border-color: rgba(0,200,255,0.3); }"
+            )
+            sec_body.setHtml(_md_to_html(merged_content))
+            sec_body.setMinimumHeight(120)
+            sec_body.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
             layout.addWidget(sec_body)
 
         # 趣味事实
@@ -362,3 +373,94 @@ def _btn_style():
         " border-color: rgba(0, 200, 255, 0.5);"
         "}"
     )
+
+
+# ═══════════════════════════════════════════════════════
+# Markdown → HTML 简易转换
+# ═══════════════════════════════════════════════════════
+
+import re as _re
+
+
+def _md_to_html(text: str) -> str:
+    """将知识库 Markdown 转为 HTML 片段（用于 QTextBrowser）"""
+    if not text:
+        return "<p></p>"
+    lines = text.split("\n")
+    out = []
+    in_code = False
+    buf = []
+
+    def _flush_para():
+        nonlocal buf
+        if buf:
+            p = " ".join(buf).strip()
+            buf.clear()
+            # 行内样式
+            p = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", p)
+            p = _re.sub(r"\*(.+?)\*", r"<i>\1</i>", p)
+            p = _re.sub(r"`([^`]+)`", r"<code>\1</code>", p)
+            p = _re.sub(r"\[([^\]]+)\]\(([^)]+)\)",
+                         r'<a href="\2" style="color:#66ccff;">\1</a>', p)
+            out.append(f"<p>{p}</p>")
+
+    for line in lines:
+        stripped = line.strip()
+
+        if stripped.startswith("```"):
+            _flush_para()
+            if in_code:
+                out.append("</pre>")
+                in_code = False
+            else:
+                out.append('<pre style="color:#7799aa; background:rgba(0,0,0,0.3); '
+                            'padding:10px; border-radius:6px;">')
+                in_code = True
+            continue
+
+        if in_code:
+            out.append(line)
+            continue
+
+        if not stripped:
+            _flush_para()
+            continue
+
+        # 标题
+        if stripped.startswith("# "):
+            _flush_para()
+            h = stripped[2:]
+            out.append(f'<h2 style="color:#ccddff; font-size:18px; margin:12px 0 4px;">{h}</h2>')
+        elif stripped.startswith("## "):
+            _flush_para()
+            h = stripped[3:]
+            out.append(f'<h3 style="color:#aaccff; font-size:16px; margin:10px 0 2px;">{h}</h3>')
+        elif stripped.startswith("### "):
+            _flush_para()
+            h = stripped[4:]
+            out.append(f'<h4 style="color:#99bbee; font-size:15px; margin:8px 0 2px;">{h}</h4>')
+        # --- 分割线
+        elif stripped == "---" or stripped == "***":
+            _flush_para()
+            out.append('<hr style="border:none; border-top:1px solid rgba(60,120,200,0.2); margin:8px 0;">')
+        # 列表
+        elif _re.match(r"^[-*]\s+", stripped):
+            _flush_para()
+            item = _re.sub(r"^[-*]\s+", "", stripped)
+            item = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", item)
+            item = _re.sub(r"\*(.+?)\*", r"<i>\1</i>", item)
+            out.append(f'<li style="color:#8899bb; margin-left:16px;">{item}</li>')
+        elif _re.match(r"^\d+[\.、]\s+", stripped):
+            _flush_para()
+            item = _re.sub(r"^\d+[\.、]\s+", "", stripped)
+            item = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", item)
+            item = _re.sub(r"\*(.+?)\*", r"<i>\1</i>", item)
+            out.append(f'<li style="color:#8899bb; margin-left:16px;">{item}</li>')
+        else:
+            buf.append(stripped)
+
+    _flush_para()
+    if in_code:
+        out.append("</pre>")
+
+    return "".join(out)

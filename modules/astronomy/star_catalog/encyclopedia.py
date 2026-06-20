@@ -3,9 +3,93 @@
 天体百科数据 — 加载器 (306 天体)
 从 body_data_entries 加载 33 颗主要天体的详细数据，
 其余 273 颗小卫星通过模板自动生成简介。
+
+优先从 planets/<body>/knowledge/ .md 文件加载深度图文内容，
+覆盖硬编码短摘要，以实现专业级知识库展示。
 """
-import math
+import math, os
 from modules.astronomy.star_catalog.data_entries import PLANET_ENTRIES, MOON_ENTRIES
+
+# knowledge/ .md 文件根目录
+_KNOWLEDGE_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                "solar_system", "planets")
+
+# body_id → planets 目录名的映射（SOLAR_CATALOG key → 子目录名）
+_BODY_ID_TO_DIR = {
+    "sun": "sun", "mercury": "mercury", "venus": "venus", "earth": "earth",
+    "mars": "mars", "jupiter": "jupiter", "saturn": "saturn",
+    "uranus": "uranus", "neptune": "neptune", "pluto": "pluto",
+    "ceres": "ceres", "eris": "eris", "makemake": "makemake", "haumea": "haumea",
+    "earth_moon_0": "moon",
+    "jupiter_moon_0": "io", "jupiter_moon_1": "europa",
+    "jupiter_moon_2": "ganymede", "jupiter_moon_3": "callisto",
+    "saturn_moon_0": "titan", "saturn_moon_5": "enceladus",
+}
+
+
+def _load_knowledge_md(dir_name, filename):
+    """读取单个 knowledge/ .md 文件，不存在返回空字符串"""
+    path = os.path.join(_KNOWLEDGE_ROOT, dir_name, "knowledge", filename)
+    if not os.path.isfile(path):
+        return ""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except Exception:
+        return ""
+
+
+def _load_knowledge_facts(dir_name):
+    """从 knowledge/04_facts.md 解析趣味事实列表"""
+    text = _load_knowledge_md(dir_name, "04_facts.md")
+    if not text:
+        return []
+    facts = []
+    for line in text.split("\n"):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        # 去掉前导编号 (如 "1. ", "1、", "- ")
+        if line[0].isdigit() and (". " in line[:4] or "、" in line[:4]):
+            line = line.split(" ", 1)[-1] if ". " in line[:4] else line.split("、", 1)[-1]
+            line = line.strip()
+        elif line.startswith("- "):
+            line = line[2:].strip()
+        if line:
+            facts.append(line)
+    return facts
+
+
+def _inject_knowledge(entry, body_id):
+    """将 knowledge/ 目录下所有 .md 文件（除 index 和 facts）合并为一个完整的深度图文内容"""
+    dir_name = _BODY_ID_TO_DIR.get(body_id)
+    if not dir_name:
+        return
+    kdir = os.path.join(_KNOWLEDGE_ROOT, dir_name, "knowledge")
+    if not os.path.isdir(kdir):
+        return
+
+    parts = []
+    try:
+        files = sorted(f for f in os.listdir(kdir) if f.endswith(".md") and f != "04_facts.md")
+    except Exception:
+        return
+
+    for fn in files:
+        text = _load_knowledge_md(dir_name, fn)
+        if text:
+            # 跳过纯索引文件（内容太短或只有链接列表）
+            if fn == "00_index.md" and len(text) < 500:
+                continue
+            parts.append(text)
+
+    # 合并所有文件，用分割线隔开
+    if parts:
+        entry["summary"] = "\n\n---\n\n".join(parts)
+
+    facts = _load_knowledge_facts(dir_name)
+    if facts:
+        entry["facts"] = facts
 
 # ═══════════════════════════════════════════════════════
 # 从 solar_system_data 获取天体目录
@@ -138,6 +222,7 @@ def _build_bodies():
             entry.setdefault("discovered_by", "—")
             entry.setdefault("style", body.get("style", "neptune"))
             entry["catalog_id"] = body_id
+            _inject_knowledge(entry, body_id)
             bodies[body_id] = entry
 
         elif body.get("name_en") in MOON_ENTRIES:
@@ -153,6 +238,7 @@ def _build_bodies():
             entry.setdefault("discovered_by", "—")
             entry.setdefault("style", body.get("style", _parent_style(body.get("parent", ""))))
             entry["catalog_id"] = body_id
+            _inject_knowledge(entry, body_id)
             bodies[body_id] = entry
 
         else:
@@ -162,7 +248,7 @@ def _build_bodies():
             body_with_parent = dict(body)
             body_with_parent["parent_name"] = parent_name
 
-            bodies[body_id] = {
+            entry = {
                 "name": body.get("name_en", body.get("name", "")),
                 "name_cn": body.get("name", ""),
                 "type": "moon",
@@ -185,6 +271,8 @@ def _build_bodies():
                 "style": _parent_style(parent_id),
                 "catalog_id": body_id,
             }
+            _inject_knowledge(entry, body_id)
+            bodies[body_id] = entry
 
     _BODIES = bodies
     return bodies

@@ -1,6 +1,6 @@
 # `solar_explorer/body_detail_window.py`
 
-> 路径：`solar_explorer/body_detail_window.py` | 行数：363
+> 路径：`solar_explorer/body_detail_window.py` | 行数：450
 
 
 ---
@@ -370,5 +370,92 @@ def _btn_style():
         " border-color: rgba(0, 200, 255, 0.5);"
         "}"
     )
+
+
+# ═══════════════════════════════════════════════════════
+# Markdown → HTML 简易转换
+# ═══════════════════════════════════════════════════════
+
+import re as _re
+
+
+def _md_to_html(text: str) -> str:
+    """将知识库 Markdown 转为 HTML 片段（用于 QTextBrowser）"""
+    if not text:
+        return "<p></p>"
+    lines = text.split("\n")
+    out = []
+    in_code = False
+    buf = []
+
+    def _flush_para():
+        nonlocal buf
+        if buf:
+            p = " ".join(buf).strip()
+            buf.clear()
+            p = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", p)
+            p = _re.sub(r"\*(.+?)\*", r"<i>\1</i>", p)
+            p = _re.sub(r"`([^`]+)`", r"<code>\1</code>", p)
+            p = _re.sub(r"\[([^\]]+)\]\(([^)]+)\)",
+                         r'<a href="\2" style="color:#66ccff;">\1</a>', p)
+            out.append(f"<p>{p}</p>")
+
+    for line in lines:
+        stripped = line.strip()
+
+        if stripped.startswith("```"):
+            _flush_para()
+            if in_code:
+                out.append("</pre>")
+                in_code = False
+            else:
+                out.append('<pre style="color:#7799aa; background:rgba(0,0,0,0.3); '
+                            'padding:10px; border-radius:6px;">')
+                in_code = True
+            continue
+
+        if in_code:
+            out.append(line)
+            continue
+
+        if not stripped:
+            _flush_para()
+            continue
+
+        if stripped.startswith("# "):
+            _flush_para()
+            h = stripped[2:]
+            out.append(f'<h2 style="color:#ccddff; font-size:18px; margin:12px 0 4px;">{h}</h2>')
+        elif stripped.startswith("## "):
+            _flush_para()
+            h = stripped[3:]
+            out.append(f'<h3 style="color:#aaccff; font-size:16px; margin:10px 0 2px;">{h}</h3>')
+        elif stripped.startswith("### "):
+            _flush_para()
+            h = stripped[4:]
+            out.append(f'<h4 style="color:#99bbee; font-size:15px; margin:8px 0 2px;">{h}</h4>')
+        elif stripped == "---" or stripped == "***":
+            _flush_para()
+            out.append('<hr style="border:none; border-top:1px solid rgba(60,120,200,0.2); margin:8px 0;">')
+        elif _re.match(r"^[-*]\s+", stripped):
+            _flush_para()
+            item = _re.sub(r"^[-*]\s+", "", stripped)
+            item = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", item)
+            item = _re.sub(r"\*(.+?)\*", r"<i>\1</i>", item)
+            out.append(f'<li style="color:#8899bb; margin-left:16px;">{item}</li>')
+        elif _re.match(r"^\d+[\.、]\s+", stripped):
+            _flush_para()
+            item = _re.sub(r"^\d+[\.、]\s+", "", stripped)
+            item = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", item)
+            item = _re.sub(r"\*(.+?)\*", r"<i>\1</i>", item)
+            out.append(f'<li style="color:#8899bb; margin-left:16px;">{item}</li>')
+        else:
+            buf.append(stripped)
+
+    _flush_para()
+    if in_code:
+        out.append("</pre>")
+
+    return "".join(out)
 
 ```
