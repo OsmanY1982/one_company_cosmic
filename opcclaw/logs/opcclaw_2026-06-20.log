@@ -1,0 +1,230 @@
+2026-06-20 07:03:59 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:08:10 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:08:28 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:08:28 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:08:29 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:08:29 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:08:30 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:10:03 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:10:04 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:10:04 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:10:06 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:10:07 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:12:06 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:12:10 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:12:11 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:12:11 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:24:44 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:25:03 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:25:03 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:25:04 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:25:59 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:26:00 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:26:00 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:26:00 [CRITICAL] opcclaw: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 104, in mousePressEvent
+    self.planet_clicked(self._hovered_planet)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/system_hub_window.py", line 179, in _on_planet_clicked
+    dlg = LogsWindow(self)
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 108, in __init__
+    self._load_sync_status()
+  File "/Volumes/D盘工作区/一人公司宇宙版/modules/system/logs_window.py", line 298, in _load_sync_status
+    vals = [str(r["id"]), r.get("sync_type", "-"), r.get("status", "-"),
+AttributeError: 'sqlite3.Row' object has no attribute 'get'
+2026-06-20 07:29:15 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:33:03 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:38:38 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:47:28 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:52:36 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)
+2026-06-20 07:57:31 [INFO] opcclaw: OPCclaw 日志系统已启动 (level=INFO, json=False)

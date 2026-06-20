@@ -583,7 +583,7 @@ class FinanceWindow(QDialog):
                 str(row["id"]),
                 row["type"] or "",
                 row["category"] or "",
-                f"¥{row['amount']:,.2f}" if row.get("amount") else "¥0.00",
+                f"¥{row['amount']:,.2f}" if row["amount"] else "¥0.00",
                 row["date"] or "",
                 row["description"] or "",
                 row["created_at"] or "",

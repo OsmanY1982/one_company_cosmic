@@ -1,6 +1,6 @@
 # `modules/intelligence/floating_planet_menu_mixin.py`
 
-> 路径：`modules/intelligence/floating_planet_menu_mixin.py` | 行数：162
+> 路径：`modules/intelligence/floating_planet_menu_mixin.py` | 行数：211
 
 
 ---
@@ -98,53 +98,102 @@ class FloatingPlanetMenuMixin:
                 lambda checked, cat="starship", k=key: self._switch_to_shape(cat, k)
             )
 
-        # ═══════════ AI对话子菜单 ═══════════
-        ai_menu = menu.addMenu("AI对话")
-        ai_menu.setStyleSheet(menu.styleSheet())
-
-        chat_action = ai_menu.addAction("AI 对话")
+        # ═══════════ AI 对话 ═══════════
+        chat_action = menu.addAction("AI 对话")
         chat_action.triggered.connect(self._open_chat)
 
-        ai_menu.addSeparator()
+        menu.addSeparator()
 
-        model_action = ai_menu.addAction("模型设置")
-        model_action.triggered.connect(self._open_model_config)
+        # ═══════════ 打开模块 ═══════════
+        modules_menu = menu.addMenu("打开模块")
+        modules_menu.setStyleSheet(menu.styleSheet())
 
-        ai_menu.addSeparator()
+        # ── 第一层：登录/注册 ──
+        login_action = modules_menu.addAction("登录/注册")
+        login_action.triggered.connect(
+            lambda checked: self._open_module("login")
+        )
 
-        # 打开各模块
-        modules_menu = ai_menu.addMenu("打开模块")
-        modules_menu.setStyleSheet(ai_menu.styleSheet())
-        modules = [
-            ("business", "业务管理"),
-            ("intelligence", "智能中心"),
-            ("data", "数据中心"),
-            ("digital_emp", "数字员工工作台"),
-        ]
+        # ── 第一层：模型设置 ──
         if self._role == "admin":
-            modules += [
-                ("personnel", "人员管理"),
-                ("system", "系统设置"),
-            ]
-
-        for mid, mname in modules:
-            action = modules_menu.addAction(mname)
-            action.setData(mid)
-            action.triggered.connect(
-                lambda checked, m=mid: self._open_module(m)
+            model_action = modules_menu.addAction("模型设置")
+            model_action.triggered.connect(
+                lambda checked: self._open_module("model_settings")
             )
 
-        # ═══════════ 语音对话子菜单 ═══════════
-        voice_menu = menu.addMenu("语音对话")
-        voice_menu.setStyleSheet(menu.styleSheet())
+        modules_menu.addSeparator()
 
-        voice_action = voice_menu.addAction("语音对话")
-        voice_action.triggered.connect(self._start_voice_chat)
+        # ── 第一层：智能中心 ──
+        intelligence_menu = modules_menu.addMenu("智能中心")
+        intelligence_menu.setStyleSheet(modules_menu.styleSheet())
 
-        voice_menu.addSeparator()
+        # ── 第二层：五大类（各自含第三层子模块） ──
+        # 权限：管理员全部可见；注册用户仅见 AI助手/工具箱/业务管理
+        is_admin = (self._role == "admin")
 
-        wake_action = voice_menu.addAction("语音唤醒 (开)" if self._wake_word_mode else "语音唤醒 (关)")
-        wake_action.triggered.connect(self._toggle_wake_word)
+        categories = [
+            ("ai_assistant", "AI助手", [
+                ("opcclaw_chat",     "AI对话"),
+                ("super_intelligence","超级智能"),
+                ("enhanced_chat",    "增强对话"),
+                ("knowledge_base",   "知识库"),
+                ("system_monitor",   "系统监控"),
+                ("quick_actions",    "快捷操作"),
+                ("anomaly_detector", "异常检测"),
+                ("recommendation_engine", "推荐引擎"),
+                ("data_visualization", "数据可视化"),
+                ("smart_workflow",   "智能工作流"),
+                ("business_ai",      "商业AI"),
+                ("voice_interface",  "语音接口"),
+            ], True),
+            ("tools", "工具箱", [
+                ("editor",     "编辑器"),
+                ("vault",      "保险箱"),
+                ("calculator", "计算器"),
+                ("scanner",    "扫码工具"),
+            ], True),
+            ("business", "业务管理", [
+                ("order",        "订单"),
+                ("product",      "产品"),
+                ("customer",     "客户"),
+                ("finance",      "财务"),
+                ("distribution", "分销"),
+                ("staff",        "员工"),
+                ("member",       "成员"),
+                ("wallet",       "钱包"),
+            ], True),
+            ("data", "数据中心", [
+                ("dashboard",     "数据看板"),
+                ("report",        "报表中心"),
+                ("bi",            "商业智能"),
+                ("chart",         "可视化图表"),
+            ], True),
+            ("system", "系统管理", [
+                ("system_settings", "系统设置"),
+                ("activation",      "激活码"),
+                ("cloud_sync",      "云端同步"),
+                ("cloud_server",    "云服务器"),
+                ("system_logs",     "系统日志"),
+                ("admin",           "后台管理"),
+            ], is_admin),
+            ("account", "账号与安全", [
+                ("password", "修改密码"),
+                ("upgrade", "升级会员"),
+                ("backup",  "数据备份"),
+                ("update",  "检查更新"),
+            ], True),
+        ]
+
+        for cat_id, cat_name, sub_modules, visible in categories:
+            if not visible:
+                continue
+            cat_menu = intelligence_menu.addMenu(cat_name)
+            cat_menu.setStyleSheet(intelligence_menu.styleSheet())
+            for sub_id, sub_name in sub_modules:
+                action = cat_menu.addAction(sub_name)
+                action.triggered.connect(
+                    lambda checked, mid=sub_id: self._open_module(mid)
+                )
 
         # ═══════════ 缩放倍数子菜单 ═══════════
         scale_menu = menu.addMenu("缩放倍数")

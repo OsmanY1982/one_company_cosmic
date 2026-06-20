@@ -966,7 +966,7 @@ def paint_starship_bridge(p: QPainter, rect: QRectF, center: QPointF,
 #  L13: 数字员工状态屏 — 2×3 卡片网格
 # ═══════════════════════════════════════════
 
-# 员工核心颜色映射（与 digital_employee.py 一致）
+
 _EMP_SHAPE_PATHS = {
     "hexagon":  None,  # 六边形由外部绘制
     "circle":   None,

@@ -91,48 +91,80 @@ def paint_planet(painter: QPainter, center: QPointF, radius: float, style: dict,
         hovered: 是否鼠标悬停
         label: 星球名称
         font_size: 标签字号
+        anim_t: 动画时间（用于自转纹理位移）
     """
     cx, cy = center.x(), center.y()
+    draw_radius = radius * 1.15 if hovered else radius
+    
+    # ── 悬停外发光光晕（星球外侧，两层径向渐变）──
+    if hovered:
+        for i in range(2):
+            glow_scale = 1.25 + i * 0.3
+            glow = QRadialGradient(center, draw_radius * glow_scale)
+            glow.setColorAt(0, QColor(180, 140, 255, 45 - i * 20))
+            glow.setColorAt(0.5, QColor(120, 80, 220, 15 - i * 8))
+            glow.setColorAt(1, QColor(0, 0, 0, 0))
+            painter.setBrush(glow)
+            painter.setPen(Qt.NoPen)
+            painter.drawEllipse(center, draw_radius * glow_scale, draw_radius * glow_scale)
     
     # ── 1. 外层大气光晕 ──
-    _paint_atmosphere(painter, center, radius, style)
+    _paint_atmosphere(painter, center, draw_radius, style)
     
     # ── 2. 光环（土星/天王星）──
     has_ring = style.get("has_ring", False)
     ring_vertical = style.get("ring_vertical", False)
     if has_ring:
-        _paint_ring(painter, center, radius, style, ring_vertical)
+        _paint_ring(painter, center, draw_radius, style, ring_vertical)
     
     # ── 3. 球体表面 ──
-    _paint_surface(painter, center, radius, style)
+    _paint_surface(painter, center, draw_radius, style)
     
-    # ── 4. 云层/条纹 ──
+    # ── 4. 云层/条纹/陨石坑（带自转动画）──
     if style.get("clouds"):
-        _paint_clouds(painter, center, radius)
+        _paint_clouds(painter, center, draw_radius, anim_t)
     if style.get("bands"):
-        _paint_bands(painter, center, radius, style)
+        _paint_bands(painter, center, draw_radius, style, anim_t)
     if style.get("craters"):
-        _paint_craters(painter, center, radius)
+        _paint_craters(painter, center, draw_radius, anim_t)
     
     # ── 5. 球体高光 ──
-    _paint_specular(painter, center, radius)
+    _paint_specular(painter, center, draw_radius)
     
-    # ── 6. 悬停边框 ──
+    # ── 6. 悬停白色边框 ──
     if hovered:
         pen = QPen(QColor(255, 255, 255, 200))
         pen.setWidth(2)
         painter.setPen(pen)
         painter.setBrush(Qt.NoBrush)
-        painter.drawEllipse(center, radius + 1, radius + 1)
+        painter.drawEllipse(center, draw_radius + 1, draw_radius + 1)
     
-    # ── 7. 文字标签 ──
+    # ── 7. 文字标签（带外发光）──
     if label:
         fm = painter.fontMetrics()
         tw = fm.horizontalAdvance(label)
         tx = cx - tw / 2
-        ty = cy + radius + 14
+        ty = cy + draw_radius + 14
+        font = QFont("PingFang SC", font_size)
+        
+        # 发光底色层（模糊光晕效果：多层半透明径向渐变 + 偏移文字绘制）
+        glow_colors = [
+            QColor(140, 100, 200, 60),
+            QColor(140, 100, 200, 40),
+            QColor(140, 100, 200, 20),
+        ]
+        painter.setFont(font)
+        for i, gc in enumerate(glow_colors):
+            painter.setPen(gc)
+            offset = i + 1
+            painter.drawText(QPointF(tx - offset, ty - offset), label)
+            painter.drawText(QPointF(tx + offset, ty - offset), label)
+            painter.drawText(QPointF(tx - offset, ty + offset), label)
+            painter.drawText(QPointF(tx + offset, ty + offset), label)
+        
+        # 正文文字
         painter.setPen(QColor(200, 180, 220))
-        painter.setFont(QFont("PingFang SC", font_size))
+        painter.setFont(font)
         painter.drawText(QPointF(tx, ty), label)
 
 
@@ -208,13 +240,16 @@ def _paint_specular(p: QPainter, c: QPointF, r: float):
     p.drawEllipse(c, r, r)
 
 
-def _paint_clouds(p: QPainter, c: QPointF, r: float):
-    """白色云层纹理"""
+def _paint_clouds(p: QPainter, c: QPointF, r: float, anim_t: float = 0.0):
+    """白色云层纹理（带自转动画）"""
     cx, cy = c.x(), c.y()
     random.seed(42)
     p.setPen(Qt.NoPen)
+    # 自转偏移角：anim_t 弧度作为整体旋转
+    rot = anim_t * 0.3
     for _ in range(8):
-        angle = random.uniform(0, 2 * math.pi)
+        base_angle = random.uniform(0, 2 * math.pi)
+        angle = (base_angle + rot) % (2 * math.pi)
         dist = random.uniform(0.2, 0.75) * r
         cloud_cx = cx + math.cos(angle) * dist
         cloud_cy = cy + math.sin(angle) * dist
@@ -228,8 +263,8 @@ def _paint_clouds(p: QPainter, c: QPointF, r: float):
         p.drawEllipse(QPointF(cloud_cx, cloud_cy), cloud_r, cloud_r)
 
 
-def _paint_bands(p: QPainter, c: QPointF, r: float, style: dict):
-    """气体行星水平条纹"""
+def _paint_bands(p: QPainter, c: QPointF, r: float, style: dict, anim_t: float = 0.0):
+    """气体行星水平条纹（带自转动画 — 纹理水平漂移）"""
     cx, cy = c.x(), c.y()
     surface = style.get("surface", [])
     if not surface:
@@ -238,9 +273,10 @@ def _paint_bands(p: QPainter, c: QPointF, r: float, style: dict):
     p.setPen(Qt.NoPen)
     num_bands = 12
     band_height = (r * 2) / num_bands
+    # 自转：水平偏移量（周期性循环）
+    drift = (anim_t * 4.0) % (r * 2)
     for i in range(num_bands):
         y = cy - r + i * band_height
-        # 计算该位置的 x 宽度（基于圆形截面）
         dy = y - cy
         if abs(dy) >= r:
             continue
@@ -250,8 +286,10 @@ def _paint_bands(p: QPainter, c: QPointF, r: float, style: dict):
         color = QColor(surface[min(idx, len(surface) - 1)][1])
         alpha = random.randint(15, 45) if i % 3 == 0 else random.randint(5, 20)
         
+        # 水平纹理漂移：矩形位置随 anim_t 变化
+        bx = cx - half_width + drift
         p.setBrush(QColor(color.red(), color.green(), color.blue(), alpha))
-        p.drawRect(QRectF(cx - half_width, y, half_width * 2, band_height + 0.5))
+        p.drawRect(QRectF(bx, y, half_width * 2, band_height + 0.5))
 
 
 def _paint_ring(p: QPainter, c: QPointF, r: float, style: dict, vertical: bool = False):
@@ -288,13 +326,15 @@ def _paint_ring(p: QPainter, c: QPointF, r: float, style: dict, vertical: bool =
     p.restore()
 
 
-def _paint_craters(p: QPainter, c: QPointF, r: float):
-    """月球陨石坑"""
+def _paint_craters(p: QPainter, c: QPointF, r: float, anim_t: float = 0.0):
+    """月球陨石坑（带自转动画）"""
     cx, cy = c.x(), c.y()
     random.seed(123)
     p.setPen(Qt.NoPen)
+    rot = anim_t * 0.25
     for _ in range(15):
-        angle = random.uniform(0, 2 * math.pi)
+        base_angle = random.uniform(0, 2 * math.pi)
+        angle = (base_angle + rot) % (2 * math.pi)
         dist = random.uniform(0.1, 0.85) * r
         crater_cx = cx + math.cos(angle) * dist
         crater_cy = cy + math.sin(angle) * dist
@@ -314,15 +354,23 @@ def _paint_craters(p: QPainter, c: QPointF, r: float):
 # ═══════════════════════════════════════════
 
 def paint_orbit(p: QPainter, center: QPointF, radius: float):
-    """半透明轨道圆环"""
-    pen = QPen(QColor(170, 80, 255, 12))
+    """半透明虚线轨道圆环"""
+    pen = QPen(QColor(170, 80, 255, 25))
     pen.setWidth(1)
+    pen.setStyle(Qt.DashLine)
+    pen.setDashPattern([6, 4])
     p.setPen(pen)
     p.setBrush(Qt.NoBrush)
     p.drawEllipse(center, radius, radius)
 
 
 def paint_energy_line(p: QPainter, from_pos: QPointF, to_pos: QPointF):
-    """能量连接线"""
-    p.setPen(QPen(QColor(170, 80, 255, 20)))
+    """发光渐变能量连接线"""
+    grad = QLinearGradient(from_pos, to_pos)
+    grad.setColorAt(0.0, QColor(255, 200, 80, 80))
+    grad.setColorAt(0.3, QColor(200, 140, 255, 70))
+    grad.setColorAt(0.7, QColor(140, 80, 220, 60))
+    grad.setColorAt(1.0, QColor(100, 60, 180, 30))
+    pen = QPen(grad, 1.5)
+    p.setPen(pen)
     p.drawLine(from_pos, to_pos)

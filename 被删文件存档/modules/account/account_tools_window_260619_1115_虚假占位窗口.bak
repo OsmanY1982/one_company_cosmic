@@ -1,0 +1,97 @@
+# -*- coding: utf-8 -*-
+"""
+账号与安全工具面板 — QDialog
+从悬浮球文件中迁移出的完整 UI 实现。
+"""
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QPushButton, QLabel
+from PyQt5.QtCore import Qt
+
+
+class AccountToolsWindow(QDialog):
+    """账号与安全工具面板（悬浮球菜单切入调用）"""
+
+    def __init__(self, parent=None, on_activation=None, on_upgrade=None, on_update_check=None):
+        super().__init__(parent)
+        self._on_activation_cb = on_activation
+        self._on_upgrade_cb = on_upgrade
+        self._on_update_check_cb = on_update_check
+        self.setWindowTitle("账号与安全")
+        self.setMinimumWidth(420)
+        self.setStyleSheet("""
+            QDialog {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #080e1a, stop:1 #0c1424);
+            }
+        """)
+        self._build_ui()
+
+    def _build_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setSpacing(10)
+        layout.setContentsMargins(24, 20, 24, 20)
+
+        title = QLabel("账号与安全")
+        title.setStyleSheet("color: #ddeeff; font-size: 18px; font-weight: 700; letter-spacing: 3px;")
+        title.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title)
+
+        _btn_style = """
+            QPushButton {{
+                background: {bg};
+                color: #e0e0f0;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 16px;
+                font-size: 13px;
+                font-weight: 500;
+            }}
+            QPushButton:hover {{ background: {hover}; }}
+            QPushButton:pressed {{ background: {pressed}; }}
+        """
+
+        # 激活许可证
+        btn1 = QPushButton("激活许可证")
+        btn1.setStyleSheet(_btn_style.format(bg="#d69e2e", hover="#c59a2e", pressed="#b8860b"))
+        btn1.clicked.connect(self._on_activation)
+        layout.addWidget(btn1)
+
+        # 升级会员
+        btn2 = QPushButton("升级会员")
+        btn2.setStyleSheet(_btn_style.format(bg="#7c3aed", hover="#6d28d9", pressed="#5b21b6"))
+        btn2.clicked.connect(self._on_upgrade)
+        layout.addWidget(btn2)
+
+        # 检查更新
+        btn3 = QPushButton("检查更新")
+        btn3.setStyleSheet(_btn_style.format(bg="#2563eb", hover="#1d4ed8", pressed="#1e40af"))
+        btn3.clicked.connect(self._on_update_check)
+        layout.addWidget(btn3)
+
+        # 数据备份
+        btn4 = QPushButton("数据备份")
+        btn4.setStyleSheet(_btn_style.format(bg="#059669", hover="#047857", pressed="#065f46"))
+        btn4.clicked.connect(self._on_backup)
+        layout.addWidget(btn4)
+
+    def _on_activation(self):
+        self.close()
+        if self._on_activation_cb:
+            self._on_activation_cb()
+
+    def _on_upgrade(self):
+        self.close()
+        if self._on_upgrade_cb:
+            self._on_upgrade_cb()
+
+    def _on_update_check(self):
+        self.close()
+        if self._on_update_check_cb:
+            self._on_update_check_cb()
+
+    def _on_backup(self):
+        import os
+        from modules.account.account_backup import backup_user_data
+
+        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        backup_user_data(root=root, parent=self)
+

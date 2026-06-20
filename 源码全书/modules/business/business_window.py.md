@@ -1,6 +1,6 @@
 # `modules/business/business_window.py`
 
-> 路径：`modules/business/business_window.py` | 行数：521
+> 路径：`modules/business/business_window.py` | 行数：461
 
 
 ---
@@ -28,6 +28,7 @@ from PyQt5.QtGui import (
 )
 
 from core.cosmic import CosmicBackground, ACCENT_CYAN, draw_ring, draw_glow_ellipse
+from core.planet_painter import PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line
 from core.data import init_all_dbs, ORDER_DB, PRODUCT_DB, CUSTOMER_DB, FINANCE_DB
 
 ACCENT_BLUE = QColor(68, 136, 255)
@@ -259,27 +260,29 @@ def finance_list(search="", start_date="", end_date=""):
 
 
 # ═══════════════════════════════════════════════════════
-#  小星球导航 HUD 层
+#  小星球导航 HUD 层 — 使用 planet_painter 真实纹理
 # ═══════════════════════════════════════════════════════
 
+# 窗口 900×680，中心约 (450, 340)，轨道 105~350 均匀排列
 PLANET_DATA = {
-    "order":    {"label": "订单", "color": QColor(0xD2, 0xA0, 0x28), "orbit": 130, "speed": 1.2, "icon": "O"},
-    "product":  {"label": "产品", "color": QColor(0x38, 0xA0, 0x50), "orbit": 200, "speed": 0.9, "icon": "P"},
-    "customer": {"label": "客户", "color": QColor(0xDC, 0x64, 0x1E), "orbit": 270, "speed": 0.7, "icon": "C"},
-    "finance":  {"label": "财务", "color": QColor(0x80, 0x50, 0xD2), "orbit": 340, "speed": 0.6, "icon": "F"},
+    "order":        {"label": "订单",    "style": "sun",     "orbit": 105, "size": 48, "speed": 1.2},
+    "product":      {"label": "产品",    "style": "earth",   "orbit": 148, "size": 50, "speed": 1.05},
+    "customer":     {"label": "客户",    "style": "mars",    "orbit": 191, "size": 52, "speed": 0.9},
+    "finance":      {"label": "财务",    "style": "neptune", "orbit": 234, "size": 54, "speed": 0.78},
+    "distribution": {"label": "分销",    "style": "venus",   "orbit": 277, "size": 50, "speed": 0.66},
+    "staff":        {"label": "员工",    "style": "pluto",   "orbit": 310, "size": 48, "speed": 0.56},
+    "member":       {"label": "会员",    "style": "uranus",  "orbit": 336, "size": 50, "speed": 0.48},
+    "wallet":       {"label": "钱包",    "style": "jupiter", "orbit": 356, "size": 52, "speed": 0.40},
 }
 
-CORE_COLOR = QColor(0x44, 0x88, 0xFF)
-
-
 class PlanetNavHUD(QWidget):
-    """HUD 层 — 绘制核心光球 + 轨道环 + 4颗小星球，带公转动画"""
+    """HUD 层 — 轨道环 + 8颗真实纹理星球，带公转动画"""
 
     planetClicked = pyqtSignal(str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setAttribute(Qt.WA_TransparentForMouseEvents, False)
+        self.setAttribute(Qt.WA_TranslucentBackground)
         self._planet_angles = {key: 0.0 for key in PLANET_DATA}
         self._hovered = None
         self._planet_positions = {}  # key -> (px, py)
@@ -305,113 +308,31 @@ class PlanetNavHUD(QWidget):
         painter.setRenderHint(QPainter.Antialiasing)
         w, h = self.width(), self.height()
         cx, cy = w // 2, h // 2
+        center = QPointF(cx, cy)
 
-        # ── 核心光球 ──
-        core_radius = 48
-        # 外层辉光（3层）
-        for i in range(4, 0, -1):
-            alpha = int(40 * (1 - i * 0.22))
-            r = core_radius * (1 + i * 0.6)
-            g = QRadialGradient(QPointF(cx, cy), r)
-            g.setColorAt(0, QColor(CORE_COLOR.red(), CORE_COLOR.green(),
-                                   CORE_COLOR.blue(), alpha))
-            g.setColorAt(1, QColor(0, 0, 0, 0))
-            painter.setPen(Qt.NoPen)
-            painter.setBrush(QBrush(g))
-            painter.drawEllipse(QPointF(cx, cy), r, r)
-
-        # 核心球体（渐变）
-        core_g = QRadialGradient(QPointF(cx - 8, cy - 12), core_radius * 1.3)
-        core_g.setColorAt(0, QColor(160, 200, 255))
-        core_g.setColorAt(0.35, CORE_COLOR)
-        core_g.setColorAt(0.7, QColor(20, 50, 140))
-        core_g.setColorAt(1, QColor(5, 15, 50))
-        painter.setPen(Qt.NoPen)
-        painter.setBrush(QBrush(core_g))
-        painter.drawEllipse(QPointF(cx, cy), core_radius, core_radius)
-
-        # 核心光环
-        ring_g = QRadialGradient(QPointF(cx, cy), core_radius + 6)
-        ring_g.setColorAt(0.85, QColor(0, 0, 0, 0))
-        ring_g.setColorAt(0.92, QColor(CORE_COLOR.red(), CORE_COLOR.green(),
-                                        CORE_COLOR.blue(), 120))
-        ring_g.setColorAt(1, QColor(0, 0, 0, 0))
-        painter.setBrush(QBrush(ring_g))
-        painter.drawEllipse(QPointF(cx, cy), core_radius + 6, core_radius + 6)
-
-        # ── 轨道环 ──
-        painter.setPen(Qt.NoPen)
+        # ── 轨道线（使用 planet_painter 轨道） ──
         for key, data in PLANET_DATA.items():
-            orbit_r = data["orbit"]
-            orbit_color = data["color"]
-            # 轨道虚线（用扇形渐变模拟）
-            pen = QPen(QColor(orbit_color.red(), orbit_color.green(),
-                              orbit_color.blue(), 30), 1, Qt.DotLine)
-            painter.setPen(pen)
-            painter.setBrush(Qt.NoBrush)
-            painter.drawEllipse(QPointF(cx, cy), orbit_r, orbit_r)
+            paint_orbit(painter, center, data["orbit"])
 
-        # ── 星球 ──
-        self._planet_positions.clear()
-        font = QFont("Arial", 10, QFont.Bold)
-        label_font = QFont("Arial", 9)
-
+        # ── 能量连接线 ──
         for key, data in PLANET_DATA.items():
-            orbit_r = data["orbit"]
-            planet_color = data["color"]
-            icon_text = data["icon"]
             angle = self._planet_angle(key)
-            px = cx + math.cos(angle) * orbit_r
-            py = cy + math.sin(angle) * orbit_r
-            planet_r = 18
+            px = cx + math.cos(angle) * data["orbit"]
+            py = cy + math.sin(angle) * data["orbit"]
+            paint_energy_line(painter, center, QPointF(px, py))
 
+        # ── 星球（使用 planet_painter） ──
+        self._planet_positions.clear()
+        for key, data in PLANET_DATA.items():
+            angle = self._planet_angle(key)
+            px = cx + math.cos(angle) * data["orbit"]
+            py = cy + math.sin(angle) * data["orbit"]
             self._planet_positions[key] = (px, py)
 
-            # 星球辉光
-            glow_r = planet_r + 10
-            glow = QRadialGradient(QPointF(px, py), glow_r)
-            glow.setColorAt(0, QColor(planet_color.red(), planet_color.green(),
-                                       planet_color.blue(), 70))
-            glow.setColorAt(1, QColor(0, 0, 0, 0))
-            painter.setPen(Qt.NoPen)
-            painter.setBrush(QBrush(glow))
-            painter.drawEllipse(QPointF(px, py), glow_r, glow_r)
-
-            # 星球球体
-            planet_g = QRadialGradient(QPointF(px - 3, py - 5), planet_r * 1.2)
-            planet_g.setColorAt(0, QColor(
-                min(255, planet_color.red() + 80),
-                min(255, planet_color.green() + 80),
-                min(255, planet_color.blue() + 80)))
-            planet_g.setColorAt(0.5, planet_color)
-            planet_g.setColorAt(1, QColor(
-                max(0, planet_color.red() - 60),
-                max(0, planet_color.green() - 60),
-                max(0, planet_color.blue() - 60)))
-            painter.setBrush(QBrush(planet_g))
-            painter.drawEllipse(QPointF(px, py), planet_r, planet_r)
-
-            # 高亮（hover 时增强辉光）
-            if self._hovered == key:
-                hover_glow = QRadialGradient(QPointF(px, py), planet_r + 16)
-                hover_glow.setColorAt(0, QColor(255, 255, 255, 60))
-                hover_glow.setColorAt(1, QColor(0, 0, 0, 0))
-                painter.setBrush(QBrush(hover_glow))
-                painter.drawEllipse(QPointF(px, py), planet_r + 16, planet_r + 16)
-
-            # 图标文字
-            painter.setPen(QColor(255, 255, 255))
-            painter.setFont(font)
-            painter.drawText(QRectF(px - planet_r, py - planet_r, planet_r * 2, planet_r * 2),
-                             Qt.AlignCenter, icon_text)
-
-            # 标签
-            label_y = py + planet_r + 14
-            painter.setPen(QColor(planet_color.red(), planet_color.green(),
-                                  planet_color.blue(), 180))
-            painter.setFont(label_font)
-            painter.drawText(QRectF(px - 30, label_y, 60, 18),
-                             Qt.AlignHCenter | Qt.AlignTop, data["label"])
+            style = PLANET_STYLES.get(data["style"], PLANET_STYLES["neptune"])
+            is_hovered = (self._hovered == key)
+            paint_planet(painter, QPointF(px, py), data["size"], style,
+                         hovered=is_hovered, label=data["label"], font_size=10)
 
         painter.end()
 
@@ -420,8 +341,9 @@ class PlanetNavHUD(QWidget):
         old_hover = self._hovered
         self._hovered = None
         for key, (px, py) in self._planet_positions.items():
+            hit_r = PLANET_DATA[key]["size"] + 12
             dist = math.hypot(mx - px, my - py)
-            if dist <= 30:
+            if dist <= hit_r:
                 self._hovered = key
                 break
         if old_hover != self._hovered:
@@ -449,17 +371,19 @@ class BusinessWindow(QMainWindow):
         super().__init__(parent)
         self.setWindowTitle("业务管理 · COSMIC")
         self.resize(900, 680)
+        self.setMinimumSize(900, 680)
 
         init_all_dbs()
 
-        # 深空背景
-        self._bg = CosmicBackground(self)
-        self._bg.setGeometry(self.rect())
+        # 深空背景直接作为 central widget
+        bg = CosmicBackground()
+        self.setCentralWidget(bg)
 
-        # HUD 层
+        # HUD 层 — QMainWindow 直接子控件
         self._hud = PlanetNavHUD(self)
-        self._hud.setGeometry(self.rect())
+        self._hud.setGeometry(0, 0, self.width(), self.height())
         self._hud.planetClicked.connect(self._on_planet_clicked)
+        self._hud.raise_()
 
         # 顶部标题
         title_label = QLabel("业务管理中心", self)
@@ -502,6 +426,7 @@ class BusinessWindow(QMainWindow):
         self._product_win = None
         self._customer_win = None
         self._finance_win = None
+        self._distribution_win = None
 
     def _on_planet_clicked(self, key):
         if key == "order":
@@ -520,12 +445,27 @@ class BusinessWindow(QMainWindow):
             from modules.business.finance_window import FinanceWindow
             self._finance_win = FinanceWindow(self)
             self._finance_win.show()
-        else:
-            label = PLANET_DATA[key]["label"]
-            QMessageBox.information(self, "施工中", f"「{label}」模块施工中，小行星正在紧急建造中")
+        elif key == "distribution":
+            from modules.personnel.distribution_window import DistributionWindow
+            self._distribution_win = DistributionWindow(self)
+            self._distribution_win.show()
+        elif key == "staff":
+            from modules.personnel.staff_window import StaffWindow
+            self._staff_win = StaffWindow(self)
+            self._staff_win.show()
+        elif key == "member":
+            from modules.personnel.member_window import MemberWindow
+            self._member_win = MemberWindow(self)
+            self._member_win.show()
+        elif key == "wallet":
+            from modules.personnel.wallet_window import WalletWindow
+            self._wallet_win = WalletWindow(self)
+            self._wallet_win.show()
+
 
     def resizeEvent(self, event):
-        self._bg.setGeometry(self.rect())
-        self._hud.setGeometry(self.rect())
         super().resizeEvent(event)
+        w, h = self.width(), self.height()
+        if hasattr(self, '_hud'):
+            self._hud.setGeometry(0, 0, w, h)
 ```

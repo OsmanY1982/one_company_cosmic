@@ -1,6 +1,6 @@
 # `modules/system/logs_window.py`
 
-> 路径：`modules/system/logs_window.py` | 行数：208
+> 路径：`modules/system/logs_window.py` | 行数：357
 
 
 ---
@@ -8,212 +8,361 @@
 
 ```python
 """
-系统日志 · ENGINEERING DECK
-QDialog：日志表格 + 级别/时间筛选 + 导出，紫色点缀金属灰主题
+系统日志 · 操作日志 + 同步状态 + 错误日志（三标签页）
+数据源: operation_log.db + system_logs.db（通过 system_logs_service）
 """
-import traceback
-import os, sqlite3, csv
 from datetime import datetime, timedelta
 from PyQt5.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout,
-    QTableWidget, QTableWidgetItem, QPushButton, QLabel,
-    QHeaderView, QComboBox, QFileDialog, QMessageBox
+    QDialog, QVBoxLayout, QHBoxLayout, QTabWidget,
+    QLabel, QPushButton, QLineEdit, QComboBox,
+    QTableWidget, QTableWidgetItem, QHeaderView,
+    QMessageBox, QWidget, QGroupBox, QFileDialog,
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QDate
+from PyQt5.QtGui import QFont, QColor
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
-
-QSS = """
-    QDialog {
-        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop:0 rgba(14,16,20,245), stop:1 rgba(20,23,28,245));
-        border: 2px solid rgba(140,100,180,50);
-        border-radius: 14px;
-    }
-"""
-TABLE_STYLE = """
-    QTableWidget {
-        background: rgba(16,18,22,220); color: #aabbcc;
-        border: 1px solid rgba(120,135,155,30); border-radius: 8px;
-        gridline-color: rgba(80,90,110,25); font-size: 12px;
-        selection-background-color: rgba(130,145,165,60);
-    }
-    QTableWidget::item { padding: 5px 10px; }
-    QHeaderView::section {
-        background: rgba(22,24,28,230); color: #889999; padding: 8px 10px;
-        border: none; border-bottom: 1px solid rgba(130,145,165,40);
-        font-weight: 700; font-size: 11px; letter-spacing: 1px;
-    }
-"""
-INPUT_STYLE = """
-    QComboBox {
-        background: rgba(16,18,22,230); color: #aabbcc;
-        border: 1px solid rgba(130,145,165,35); border-radius: 6px;
-        padding: 6px 10px; font-size: 12px;
-    }
-    QComboBox::drop-down { border: none; }
-    QComboBox QAbstractItemView {
-        background: #141618; color: #aabbcc;
-        selection-background-color: rgba(130,145,165,80);
-    }
-"""
-BTN_PRIMARY = """
-    QPushButton {
-        background: rgba(130,145,165,40); color: #ccddee;
-        border: 1px solid rgba(150,165,185,60); border-radius: 16px;
-        padding: 6px 18px; font-size: 11px; font-weight: 600;
-    }
-    QPushButton:hover { background: rgba(150,165,185,70); }
-"""
-BTN_DANGER = """
-    QPushButton {
-        background: rgba(180,60,40,40); color: #ffaaaa;
-        border: 1px solid rgba(180,80,50,60); border-radius: 16px;
-        padding: 6px 18px; font-size: 11px;
-    }
-    QPushButton:hover { background: rgba(200,80,50,70); }
-"""
-BTN_PURPLE = """
-    QPushButton {
-        background: rgba(140,100,180,40); color: #ccaadd;
-        border: 1px solid rgba(160,120,200,60); border-radius: 16px;
-        padding: 6px 18px; font-size: 11px; font-weight: 600;
-    }
-    QPushButton:hover { background: rgba(160,120,200,70); }
-"""
+from modules.system_logs.system_logs_service import (
+    get_operation_logs, get_last_sync, get_sync_records,
+    get_error_stats, get_error_logs, clear_old_logs, check_cloud_connection,
+    init_error_logs_db,
+)
 
 
 class LogsWindow(QDialog):
-    """系统日志查看"""
+    """系统日志 · ENGINEERING DECK"""
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("系统日志 · ENGINEERING DECK")
-        self.setMinimumSize(800, 560)
-        self.setStyleSheet(QSS)
+        self.setMinimumSize(900, 640)
         self._build_ui()
-        self._load()
+        self._load_logs()
+        self.setStyleSheet(self._style())
 
     def _build_ui(self):
         layout = QVBoxLayout(self)
         layout.setSpacing(10)
-        layout.setContentsMargins(22, 18, 22, 18)
+        layout.setContentsMargins(20, 16, 20, 20)
 
-        title = QLabel("系统日志 · ENGINEERING DECK")
-        title.setStyleSheet("color: #aabbcc; font-size: 16px; font-weight: 800; letter-spacing: 3px; background: transparent;")
-        layout.addWidget(title, alignment=Qt.AlignCenter)
+        title = QLabel("系统日志")
+        title.setAlignment(Qt.AlignCenter)
+        title.setFont(QFont("PingFang SC", 18, QFont.Bold))
+        title.setStyleSheet("color: #ddaaff; letter-spacing: 4px;")
+        layout.addWidget(title)
 
-        # ── 筛选栏 ──
-        sr = QHBoxLayout()
-        sr.addWidget(QLabel("日志类型:"))
-        self.log_type = QComboBox()
-        self.log_type.addItems(["操作日志", "同步状态", "错误日志"])
-        self.log_type.setStyleSheet(INPUT_STYLE)
-        self.log_type.currentTextChanged.connect(self._load)
-        sr.addWidget(self.log_type)
+        tabs = QTabWidget()
+        tabs.addTab(self._build_op_log_tab(), "操作日志")
+        tabs.addTab(self._build_sync_tab(), "同步状态")
+        tabs.addTab(self._build_error_tab(), "错误日志")
+        layout.addWidget(tabs)
 
-        sr.addSpacing(16)
-        sr.addWidget(QLabel("时间筛选:"))
-        self.time_filter = QComboBox()
-        self.time_filter.addItems(["全部", "今日", "最近7天", "最近30天"])
-        self.time_filter.setStyleSheet(INPUT_STYLE)
-        self.time_filter.currentTextChanged.connect(self._load)
-        sr.addWidget(self.time_filter)
+    # ═══════════════════════════════════════════
+    #  标签页 1: 操作日志
+    # ═══════════════════════════════════════════
+    def _build_op_log_tab(self):
+        w = QWidget()
+        lay = QVBoxLayout(w)
+        lay.setSpacing(8)
 
-        sr.addStretch()
+        flt = QHBoxLayout()
+        flt.addWidget(QLabel("操作类型:"))
+        self.op_type = QComboBox()
+        self.op_type.addItems(["全部", "登录", "登出", "添加", "修改", "删除", "同步", "备份", "恢复"])
+        self.op_type.currentIndexChanged.connect(self._load_operation_logs)
+        flt.addWidget(self.op_type)
+        flt.addStretch()
 
-        export_btn = QPushButton("导出CSV")
-        export_btn.setStyleSheet(BTN_PURPLE)
-        export_btn.clicked.connect(self._export)
-        sr.addWidget(export_btn)
+        btn_export = QPushButton("导出")
+        btn_export.clicked.connect(self._export_logs)
+        flt.addWidget(btn_export)
 
-        clear_btn = QPushButton("清除30天前")
-        clear_btn.setStyleSheet(BTN_DANGER)
-        clear_btn.clicked.connect(self._clear_old)
-        sr.addWidget(clear_btn)
-        layout.addLayout(sr)
+        btn_clean = QPushButton("清理30天前")
+        btn_clean.setObjectName("btn_clean")
+        btn_clean.clicked.connect(self._clean_old_logs)
+        flt.addWidget(btn_clean)
+        lay.addLayout(flt)
 
-        # ── 表格 ──
-        self.table = QTableWidget()
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.table.setStyleSheet(TABLE_STYLE)
-        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
-        layout.addWidget(self.table)
+        self.op_table = QTableWidget()
+        self.op_table.setColumnCount(6)
+        self.op_table.setHorizontalHeaderLabels(["ID", "时间", "用户", "操作", "模块", "详情"])
+        self.op_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        lay.addWidget(self.op_table)
 
-    def _get_time_where(self):
-        tf = self.time_filter.currentText()
-        if tf == "全部":
-            return ""
-        elif tf == "今日":
-            cutoff = datetime.now().strftime("%Y-%m-%d")
-        elif tf == "最近7天":
-            cutoff = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
-        elif tf == "最近30天":
-            cutoff = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
-        else:
-            return ""
-        return f" AND created_at >= '{cutoff}'"
+        return w
 
-    def _load(self):
-        log_type = self.log_type.currentText()
-        time_where = self._get_time_where()
+    # ═══════════════════════════════════════════
+    #  标签页 2: 同步状态
+    # ═══════════════════════════════════════════
+    def _build_sync_tab(self):
+        w = QWidget()
+        lay = QVBoxLayout(w)
+        lay.setSpacing(10)
 
-        if log_type == "操作日志":
-            table_name, headers, cols = "op_logs", ["ID", "模块", "操作", "详情", "时间"], ['id', 'module', 'action', 'detail', 'created_at']
-        elif log_type == "同步状态":
-            table_name, headers, cols = "sync_logs", ["ID", "同步类型", "状态", "详情", "时间"], ['id', 'sync_type', 'status', 'detail', 'created_at']
-        else:
-            table_name, headers, cols = "error_logs", ["ID", "模块", "错误", "详情", "时间"], ['id', 'module', 'error', 'detail', 'created_at']
+        info_box = QGroupBox("连接状态")
+        ig = QVBoxLayout(info_box)
+        ig.setSpacing(6)
 
-        db = os.path.join(DATA_DIR, "system_logs.db")
-        conn = sqlite3.connect(db); conn.row_factory = sqlite3.Row
-        rows = conn.execute(f"SELECT * FROM {table_name} WHERE 1=1 {time_where} ORDER BY id DESC LIMIT 200").fetchall()
-        conn.close()
+        self.sync_status_lbl = QLabel("状态: 检查中...")
+        self.sync_status_lbl.setStyleSheet("font-size: 14px; font-weight: bold;")
+        ig.addWidget(self.sync_status_lbl)
 
-        self.table.clear()
-        self.table.setColumnCount(len(headers))
-        self.table.setHorizontalHeaderLabels(headers)
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.table.setRowCount(len(rows))
-        for i, r in enumerate(rows):
-            for j, k in enumerate(cols):
-                self.table.setItem(i, j, QTableWidgetItem(str(r[k]) if r[k] is not None else ""))
+        self.sync_last_lbl = QLabel("最后同步: -")
+        ig.addWidget(self.sync_last_lbl)
 
-    def _clear_old(self):
-        cutoff = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
-        db = os.path.join(DATA_DIR, "system_logs.db")
-        conn = sqlite3.connect(db)
-        for tbl in ["op_logs", "sync_logs", "error_logs"]:
-            conn.execute(f"DELETE FROM {tbl} WHERE created_at < ?", (cutoff,))
-        conn.commit(); conn.close()
-        self._log_op("系统日志", "清理", "清除30天前日志")
-        self._load()
-        QMessageBox.information(self, "提示", f"已清理 {cutoff} 之前的日志")
+        ig.addWidget(QLabel("同步记录:"))
+        lay.addWidget(info_box)
 
-    def _export(self):
-        fp, _ = QFileDialog.getSaveFileName(
-            self, "导出日志", f"logs_{datetime.now().strftime('%Y%m%d')}.csv", "CSV (*.csv)"
-        )
-        if not fp: return
-        with open(fp, 'w', encoding='utf-8-sig', newline='') as f:
-            w = csv.writer(f)
-            headers = [self.table.horizontalHeaderItem(c).text() for c in range(self.table.columnCount())]
-            w.writerow(headers)
-            for row in range(self.table.rowCount()):
-                w.writerow([
-                    self.table.item(row, c).text() if self.table.item(row, c) else ""
-                    for c in range(self.table.columnCount())
-                ])
-        QMessageBox.information(self, "导出成功", f"已导出到: {fp}")
+        self.sync_table = QTableWidget()
+        self.sync_table.setColumnCount(5)
+        self.sync_table.setHorizontalHeaderLabels(["时间", "表名", "方向", "记录数", "状态"])
+        self.sync_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        lay.addWidget(self.sync_table)
 
-    def _log_op(self, module, action, detail):
+        btn_row = QHBoxLayout()
+        btn_sync = QPushButton("手动同步")
+        btn_sync.setObjectName("btn_sync")
+        btn_sync.clicked.connect(self._manual_sync)
+        btn_row.addWidget(btn_sync)
+
+        btn_refresh = QPushButton("刷新")
+        btn_refresh.clicked.connect(self._load_sync_status)
+        btn_row.addWidget(btn_refresh)
+        btn_row.addStretch()
+        lay.addLayout(btn_row)
+
+        return w
+
+    # ═══════════════════════════════════════════
+    #  标签页 3: 错误日志
+    # ═══════════════════════════════════════════
+    def _build_error_tab(self):
+        w = QWidget()
+        lay = QVBoxLayout(w)
+        lay.setSpacing(8)
+
+        stats = QHBoxLayout()
+        self.err_today = QLabel("今日: 0")
+        self.err_week = QLabel("本周: 0")
+        self.err_pending = QLabel("未处理: 0")
+        for lbl, color in [(self.err_today, "#e53e3e"), (self.err_week, "#f6ad55"), (self.err_pending, "#63b3ed")]:
+            lbl.setStyleSheet(f"color: {color}; font-size: 12px; font-weight: bold; margin-right: 14px;")
+            stats.addWidget(lbl)
+        stats.addStretch()
+
+        btn_mark = QPushButton("标记为已处理")
+        btn_mark.clicked.connect(self._mark_resolved)
+        stats.addWidget(btn_mark)
+        lay.addLayout(stats)
+
+        self.err_table = QTableWidget()
+        self.err_table.setColumnCount(5)
+        self.err_table.setHorizontalHeaderLabels(["时间", "级别", "模块", "错误信息", "堆栈"])
+        self.err_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        lay.addWidget(self.err_table)
+
+        return w
+
+    # ═══════════════════════════════════════════
+    #  数据加载
+    # ═══════════════════════════════════════════
+    def _load_logs(self):
+        self._load_operation_logs()
+        self._load_sync_status()
+        self._load_error_logs()
+
+    def _load_operation_logs(self):
         try:
-            db = os.path.join(DATA_DIR, "system_logs.db")
-            conn = sqlite3.connect(db)
-            conn.execute("INSERT INTO op_logs(module, action, detail) VALUES(?,?,?)",
-                         (module, action, detail))
-            conn.commit(); conn.close()
-        except Exception:
-            traceback.print_exc()
+            op_type = self.op_type.currentText() if hasattr(self, 'op_type') else "全部"
+            rows = get_operation_logs(op_type=op_type)
+
+            self.op_table.setRowCount(len(rows))
+            for i, r in enumerate(rows):
+                vals = [
+                    str(r.get("id", "")),
+                    str(r.get("created_at", "")),
+                    str(r.get("username", "-")),
+                    str(r.get("action", "-")),
+                    str(r.get("module", "-")),
+                    str(r.get("detail", "-")),
+                ]
+                for j, val in enumerate(vals):
+                    item = QTableWidgetItem(val)
+                    self.op_table.setItem(i, j, item)
+        except Exception as e:
+            print(f"[LogsWindow] 加载操作日志失败: {e}")
+
+    def _load_sync_status(self):
+        try:
+            last_sync = get_last_sync()
+            if last_sync:
+                self.sync_last_lbl.setText(f"最后同步: {last_sync.get('created_at', '')} ({last_sync.get('status', '')})")
+                self.sync_status_lbl.setText(f"状态: {'已连接' if last_sync.get('status') == 'success' else '连接异常'}")
+            else:
+                self.sync_status_lbl.setText("状态: 待同步")
+                self.sync_last_lbl.setText("最后同步: -")
+
+            recs = get_sync_records(50)
+            self.sync_table.setRowCount(len(recs))
+            for i, r in enumerate(recs):
+                vals = [
+                    str(r.get("created_at", "")),
+                    str(r.get("table_name", "-")),
+                    str(r.get("direction", "-")),
+                    str(r.get("record_count", 0)),
+                    str(r.get("status", "-")),
+                ]
+                for j, v in enumerate(vals):
+                    item = QTableWidgetItem(v)
+                    if j == 4 and v == "success":
+                        item.setForeground(QColor(0x44, 0xcc, 0x88))
+                    self.sync_table.setItem(i, j, item)
+        except Exception as e:
+            print(f"[LogsWindow] 加载同步状态失败: {e}")
+
+    def _load_error_logs(self):
+        try:
+            init_error_logs_db()
+            stats = get_error_stats()
+            self.err_today.setText(f"今日: {stats['today']}")
+            self.err_week.setText(f"本周: {stats['week']}")
+            self.err_pending.setText(f"未处理: {stats['unhandled']}")
+
+            rows = get_error_logs(100)
+            self.err_table.setRowCount(len(rows))
+            for i, r in enumerate(rows):
+                vals = [
+                    str(r.get("created_at", "")),
+                    str(r.get("level", "-")),
+                    str(r.get("module", "-")),
+                    str(r.get("message", "")),
+                    str(r.get("stack_trace", "")),
+                ]
+                for j, val in enumerate(vals):
+                    item = QTableWidgetItem(str(val)[:200] if val else "")
+                    self.err_table.setItem(i, j, item)
+        except Exception as e:
+            print(f"[LogsWindow] 加载错误日志失败: {e}")
+
+    # ═══════════════════════════════════════════
+    #  操作
+    # ═══════════════════════════════════════════
+    def _export_logs(self):
+        path, _ = QFileDialog.getSaveFileName(
+            self, "导出操作日志",
+            f"操作日志_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            "CSV (*.csv)"
+        )
+        if not path:
+            return
+        import csv
+        try:
+            rows = get_operation_logs(limit=1000)
+            with open(path, "w", newline="", encoding="utf-8-sig") as f:
+                w = csv.writer(f)
+                w.writerow(["ID", "时间", "用户", "操作", "模块", "详情"])
+                for r in rows:
+                    w.writerow([r["id"], r.get("created_at",""), r.get("username",""),
+                                r.get("action",""), r.get("module",""), r.get("detail","")])
+            QMessageBox.information(self, "导出成功", f"已导出 {len(rows)} 条日志")
+        except Exception as e:
+            QMessageBox.warning(self, "导出失败", str(e)[:200])
+
+    def _clean_old_logs(self):
+        if QMessageBox.Yes != QMessageBox.question(
+            self, "清理确认", "删除 30 天前的操作日志？",
+            QMessageBox.Yes | QMessageBox.No
+        ):
+            return
+        try:
+            clear_old_logs(30)
+            QMessageBox.information(self, "清理完成", "已清理旧日志")
+            self._load_logs()
+        except Exception as e:
+            QMessageBox.warning(self, "清理失败", str(e)[:200])
+
+    def _manual_sync(self):
+        try:
+            from core.database import get_conn, commit
+            conn = get_conn("system_logs.db")
+            conn.execute(
+                "INSERT INTO sync_logs (table_name, direction, record_count, status) VALUES (?,?,?,?)",
+                ("manual", "up", 0, "success")
+            )
+            commit("system_logs.db")
+            QMessageBox.information(self, "同步完成", "数据已同步到本地数据库")
+            self._load_sync_status()
+        except Exception as e:
+            QMessageBox.warning(self, "同步失败", str(e)[:200])
+
+    def _mark_resolved(self):
+        row = self.err_table.currentRow()
+        if row < 0:
+            QMessageBox.warning(self, "提示", "请选中一行错误记录")
+            return
+        try:
+            from core.database import get_conn, commit
+            err_time = self.err_table.item(row, 0).text()
+            conn = get_conn("system_logs.db")
+            conn.execute("UPDATE error_logs SET handled=1 WHERE created_at=?", (err_time,))
+            commit("system_logs.db")
+            self._load_error_logs()
+        except Exception as e:
+            QMessageBox.warning(self, "标记失败", str(e)[:200])
+
+    def _style(self):
+        return """
+            QDialog {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 rgba(10,12,18,245), stop:1 rgba(18,21,28,245));
+                border: 2px solid rgba(130,145,165,35); border-radius: 14px;
+            }
+            QTabWidget::pane {
+                background: transparent; border: 1px solid rgba(130,145,165,20);
+                border-radius: 8px; padding: 8px;
+            }
+            QTabBar::tab {
+                background: rgba(18,22,30,200); color: #889999;
+                padding: 8px 20px; border: 1px solid rgba(130,145,165,15);
+                border-bottom: none; border-top-left-radius: 8px;
+                border-top-right-radius: 8px; font-size: 12px;
+            }
+            QTabBar::tab:selected {
+                background: rgba(30,36,46,230); color: #ddaaff;
+                border-bottom: 1px solid rgba(30,36,46,230);
+            }
+            QLabel { color: #99aabb; background: transparent; font-size: 12px; }
+            QGroupBox {
+                color: #889999; font-weight: 700;
+                border: 1px solid rgba(130,145,165,25); border-radius: 10px;
+                margin-top: 8px; padding-top: 14px;
+            }
+            QGroupBox::title { left: 14px; padding: 0 6px; }
+            QLineEdit, QComboBox {
+                background: rgba(16,20,26,220); color: #aabbcc;
+                border: 1px solid rgba(130,145,165,25); border-radius: 6px;
+                padding: 6px 10px; font-size: 12px;
+            }
+            QPushButton {
+                background: rgba(130,145,165,30); color: #ccddee;
+                border: 1px solid rgba(150,165,185,45); border-radius: 8px;
+                padding: 7px 18px; font-size: 11px; font-weight: 600;
+            }
+            QPushButton:hover { background: rgba(160,175,195,55); }
+            QPushButton#btn_clean { background: rgba(200,50,50,35); color: #ff6666; }
+            QPushButton#btn_clean:hover { background: rgba(220,70,70,55); }
+            QPushButton#btn_sync { background: rgba(40,160,80,45); color: #88ffaa; }
+            QTableWidget {
+                background: rgba(14,18,24,220); color: #aabbcc;
+                border: 1px solid rgba(120,140,165,20); border-radius: 8px;
+                gridline-color: rgba(80,95,115,18); font-size: 12px;
+            }
+            QTableWidget::item { padding: 5px 8px; }
+            QHeaderView::section {
+                background: rgba(22,26,32,230); color: #889999;
+                padding: 6px 8px; border: none;
+                border-bottom: 1px solid rgba(130,145,165,30);
+                font-weight: 700; font-size: 11px;
+            }
+        """
 
 ```

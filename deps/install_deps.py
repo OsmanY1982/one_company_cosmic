@@ -38,7 +38,8 @@ DEPENDENCY_GROUPS = {
         "desc": "核心依赖（运行时必需）",
         "packages": [
             "numpy", "psutil", "httpx", "requests",
-            "qrcode",
+            "qrcode", "PyQt5",
+            "urllib3", "certifi", "charset_normalizer", "idna",
         ],
     },
     "voice": {
@@ -121,20 +122,26 @@ def _check_installed(package_name: str) -> bool:
 
 
 def _pip_install(package_name: str, wheel_path: str | None = None) -> bool:
-    """安装单个包，优先本地 wheel"""
-    try:
-        if wheel_path and os.path.exists(wheel_path):
+    """安装单个包，优先本地 wheel；本地失败自动降级到在线安装"""
+    # 第一轮：尝试本地 wheel
+    if wheel_path and os.path.exists(wheel_path):
+        try:
             print(f"  📦 本地安装: {os.path.basename(wheel_path)}")
             subprocess.check_call(
                 [sys.executable, "-m", "pip", "install", "--no-deps", wheel_path],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             )
-        else:
-            print(f"  🌐 在线安装: {package_name}")
-            subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", package_name],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            )
+            return True
+        except subprocess.CalledProcessError:
+            print(f"  ⚠️  本地不兼容，降级在线安装: {package_name}")
+
+    # 第二轮：在线安装
+    try:
+        print(f"  🌐 在线安装: {package_name}")
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", package_name],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
         return True
     except subprocess.CalledProcessError:
         print(f"  ❌ 安装失败: {package_name}")
@@ -182,6 +189,29 @@ def list_status():
             wheel_label = f" (本地: {os.path.basename(wheel)})" if wheel else " (需在线)"
             status = "✅ 已安装" if installed else "❌ 未安装"
             print(f"  {status}  {pkg}{wheel_label if not installed else ''}")
+
+
+def ensure(*package_names: str) -> bool:
+    """
+    按需确保模块可用 —— 兼容旧版 core.deps.ensure() 调用。
+    检查模块是否可导入，不可用则 pip install。
+    示例: ensure("PIL", "serial", "numpy")
+    """
+    missing = []
+    for mod in package_names:
+        try:
+            importlib.import_module(mod)
+        except ImportError:
+            missing.append(mod)
+    if not missing:
+        return True
+
+    ok = True
+    for pkg in missing:
+        wheel = _find_local_wheel(pkg)
+        if not _pip_install(pkg, wheel):
+            ok = False
+    return ok
 
 
 def ensure_core_deps() -> bool:

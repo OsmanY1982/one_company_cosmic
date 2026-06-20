@@ -1,14 +1,11 @@
 ## 第十六章 · 智能中心总控（intelligence_window.py）
 
-### 五星导航
-
-243 行代码，5 颗小星球环绕 AI 核心能量球：
+### 星球导航
 
 | 子星球ID | 名称 | 功能 | 文件 |
 |----------|------|------|------|
 | ai_chat | AI助手 | LLM接入+离线兜底 | ai_chat_window.py (224行) + 3子模块 |
 | ai_center | 智能中心 | AI能力总览（轨道式滚动区+真实报表洞察） | ai_center_window.py (343行) |
-| digital_emp | 数字员工 | SQLite持久化+真实执行 | digital_emp_window.py (593行) |
 | tools | 工具箱 | 4工具集 | tools_window.py (237行) |
 | scan | 扫码工具 | 二维码生成/解析 | scan_window.py (223行) |
 
@@ -27,23 +24,6 @@
 **上下文注入**：`_gather_context` 方法在每次对话时收集当前业务数据（钱包余额、订单数、库存预警等）作为 LLM 上下文前缀，让 AI 无需用户解释背景即可回答业务问题。
 
 **离线兜底**：保留原有关键词匹配引擎，LLM 不可用时自动切换，确保离线可用。右下角「LLM 设置」按钮可打开配置对话框。
-
-### 数字员工（digital_emp_window.py）
-
-593 行代码，2026-06-11 重写。核心改进：
-
-**SQLite 持久化**：任务不再硬编码在 `__init__`（关闭即丢失）。新增 `tasks` 表（id/title/type/params/enabled/interval_seconds/last_run）和 `execution_logs` 表（task_id/status/result/timestamp），任务创建、编辑、执行记录全持久化。
-
-**真实执行引擎**：`TaskRunner` 类包含 7 个真实业务处理器（`TASK_HANDLERS` 字典），执行时调用真实 DAO 查询实际数据库数据：
-- 库存预警：查询 products 表，低于阈值生成提醒
-- 今日营收：查询 orders 表计算当日总金额
-- 待发货订单：查询 status='paid' 的订单
-- 会员到期提醒：查询 customers 表
-- 未读消息：查询 messages 表
-- 未处理工单：查询 tickets 表
-- 员工考勤：查询 attendance 表
-
-**批量执行**：新增「全部执行」按钮，一键运行所有已启用任务。
 
 ### 知识库（vault_window.py）
 

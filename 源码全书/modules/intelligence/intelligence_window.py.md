@@ -1,6 +1,6 @@
 # `modules/intelligence/intelligence_window.py`
 
-> 路径：`modules/intelligence/intelligence_window.py` | 行数：215
+> 路径：`modules/intelligence/intelligence_window.py` | 行数：225
 
 
 ---
@@ -10,28 +10,28 @@
 # -*- coding: utf-8 -*-
 """
 智能中心 · NEURAL NEXUS（真实星球导航模式）
-宇宙主题窗口：6颗真实风格星球环绕中央能量核心，点击弹出子窗口
+宇宙主题窗口：5颗真实风格星球环绕中央能量核心，点击弹出子窗口
 """
 import os, math
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QLabel, QFrame,
 )
 from PyQt5.QtCore import Qt, QTimer, QPointF
-from PyQt5.QtGui import QColor, QFont, QPainter, QPen, QFontMetrics
+from PyQt5.QtGui import QPainter
 
 from core.planet_painter import (
     PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line,
 )
-from .session_context import session_ctx
 
-# ═══════ 6颗星球配置 ═══════
+# ═══════ 6颗星球配置 — 均匀轨道间距，无颜色冲突 ═══════
+# 窗口 1200×850，中心约 (600, 425)，轨道 164~326 间距均匀
 PLANETS = [
-    {"id": "ai_chat",       "name": "AI对话",   "style": "neptune", "orbit": 120, "size": 52},
-    {"id": "digital_emp",   "name": "数字员工", "style": "mars",    "orbit": 195, "size": 54},
-    {"id": "ai_assistant",  "name": "AI助手",   "style": "jupiter", "orbit": 270, "size": 60},
-    {"id": "tools",         "name": "工具箱",   "style": "saturn",  "orbit": 345, "size": 54},
-    {"id": "scan",          "name": "扫码工具", "style": "mercury", "orbit": 420, "size": 52},
-    {"id": "system_mgmt",   "name": "系统管理", "style": "earth",   "orbit": 495, "size": 56},
+    {"id": "ai_assistant",      "name": "AI助手",       "style": "jupiter", "orbit": 180, "size": 60},
+    {"id": "business",          "name": "业务管理",     "style": "mars",    "orbit": 225, "size": 56},
+    {"id": "data_center",       "name": "数据中心",     "style": "neptune", "orbit": 270, "size": 54},
+    {"id": "account",           "name": "账号与安全",   "style": "venus",   "orbit": 315, "size": 50},
+    {"id": "tools",             "name": "工具箱",       "style": "saturn",  "orbit": 350, "size": 56},
+    {"id": "system_mgmt",       "name": "系统管理",     "style": "earth",   "orbit": 380, "size": 54},
 ]
 
 # ═══════ 导航 HUD 层 ═══════
@@ -91,17 +91,6 @@ class NavigationHUD(QWidget):
             paint_planet(p, pos, planet_data["size"], style,
                          hovered=hovered, label=planet_data["name"], font_size=10)
 
-        # ── 中央核心地球 ──
-        core_r = 68
-        paint_planet(p, w2, core_r, PLANET_STYLES["earth"],
-                     label="NEURAL", font_size=12)
-        # 额外一层蓝色科技辉光
-        tech_glow = QPen(QColor(100, 180, 255, 30))
-        tech_glow.setWidth(1)
-        p.setPen(tech_glow)
-        p.setBrush(Qt.NoBrush)
-        p.drawEllipse(w2, core_r + 12, core_r + 12)
-
         p.end()
 
     def mouseMoveEvent(self, event):
@@ -135,8 +124,12 @@ class IntelligenceWindow(QMainWindow):
         super().__init__(parent)
         self._role = role
         self._opcclaw_engine = opcclaw_engine
+        self._account_win = None
+        self._business_win = None
+        self._tools_win = None
         self.setWindowTitle("一人公司 — 智能中心 · NEURAL NEXUS")
         self.setMinimumSize(1200, 850)
+        self.resize(1200, 850)
         self._build_ui()
 
     def _build_ui(self):
@@ -188,39 +181,56 @@ class IntelligenceWindow(QMainWindow):
             self._hud.setGeometry(0, 0, self.width(), self.height())
 
     def _on_planet_clicked(self, planet_id):
-        if planet_id == "ai_chat":
-            # 使用全局会话上下文
-            session_ctx.set_agent_bridge(self._opcclaw_engine)
-
-            from .ai_chat_window import AIChatWindow
-            dlg = AIChatWindow(
-                self,
-                opcclaw_engine=self._opcclaw_engine,
-                session_id=session_ctx.current_session_id,
-            )
-            dlg.show()
-        elif planet_id == "digital_emp":
-            from modules.intelligence.digital_employee_panel import DigitalEmployeePanel
-            from modules.intelligence.opcclaw_employee import BallCEOEngine
-            engine = BallCEOEngine()
-            dlg = DigitalEmployeePanel(self, engine=engine)
-            dlg.exec_()
-            engine.shutdown()
-        elif planet_id == "ai_assistant":
+        if planet_id == "ai_assistant":
             from modules.intelligence.ai_assistant_window import AIAssistantWindow
             dlg = AIAssistantWindow(self, opcclaw_engine=self._opcclaw_engine)
             dlg.show()
         elif planet_id == "tools":
             from modules.intelligence.tools_window import ToolsWindow
-            dlg = ToolsWindow(self)
-            dlg.exec_()
-        elif planet_id == "scan":
-            from modules.intelligence.scan_window import ScanWindow
-            dlg = ScanWindow(self)
-            dlg.exec_()
+            self._tools_win = ToolsWindow(self)
+            self._tools_win.show()
         elif planet_id == "system_mgmt":
             from modules.system.system_hub_window import SystemHubWindow
             dlg = SystemHubWindow(self)
             dlg.show()
+        elif planet_id == "account":
+            from .account_window import AccountWindow
+            self._account_win = AccountWindow(self, role=self._role, opcclaw_engine=self._opcclaw_engine)
+            self._account_win.show()
+        elif planet_id == "business":
+            from modules.business.business_window import BusinessWindow
+            self._business_win = BusinessWindow(self)
+            self._business_win.show()
+        elif planet_id == "data_center":
+            from modules.data_center.data_window import DataWindow
+            self._data_win = DataWindow(self)
+            self._data_win.show()
+
+
+    @property
+    def _membership_info(self):
+        if hasattr(self, '_membership_info_cache'):
+            return self._membership_info_cache
+        info = {"username": self._role or "admin", "role": self._role or "admin",
+                "membership": "trial", "expire_at": ""}
+        try:
+            import sqlite3
+            root = self._get_project_root()
+            db_path = os.path.join(root, "data", "member.db")
+            if os.path.exists(db_path):
+                conn = sqlite3.connect(db_path)
+                row = conn.execute(
+                    "SELECT username, role, membership, expire_at FROM members WHERE username=?",
+                    (self._role or "admin",)).fetchone()
+                if row:
+                    info = {"username": row[0] or "admin", "role": row[1] or "member",
+                            "membership": row[2] or "trial", "expire_at": row[3] or ""}
+                conn.close()
+        except Exception:
+            pass
+        return info
+
+    def _get_project_root(self):
+        return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ```

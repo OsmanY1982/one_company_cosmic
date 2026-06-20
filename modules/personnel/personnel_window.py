@@ -16,6 +16,7 @@ from PyQt5.QtGui import (
     QLinearGradient, QFont, QPainterPath
 )
 from core.cosmic import CosmicBackground
+from core.planet_painter import PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line
 
 # ═══════ 天体身份 ═══════
 PLANET_COLOR = QColor(255, 102, 68)
@@ -23,12 +24,13 @@ PLANET_COLOR_NAME = "#ff6644"
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# ═══════ 星球配置 ═══════
+# ═══════ 星球配置 — 使用 planet_painter 纹理 ═══════
+# 窗口 900×650，中心约 (450, 325)，轨道均匀排列
 PLANETS = [
-    {"id": "staff",   "name": "员工",   "angle": -90, "color": (255, 120, 70),  "icon": "§"},
-    {"id": "member",  "name": "会员",   "angle": 0,    "color": (255, 160, 90),  "icon": "✦"},
-    {"id": "wallet",  "name": "钱包",   "angle": 90,   "color": (255, 200, 120), "icon": "◎"},
-    {"id": "dist",    "name": "分销",   "angle": 180,  "color": (255, 140, 100), "icon": "◈"},
+    {"id": "staff",   "name": "员工",   "style": "mars",    "orbit": 110, "size": 48, "angle": -90},
+    {"id": "member",  "name": "会员",   "style": "venus",   "orbit": 175, "size": 50, "angle": 0},
+    {"id": "wallet",  "name": "钱包",   "style": "jupiter", "orbit": 230, "size": 52, "angle": 90},
+    {"id": "dist",    "name": "分销",   "style": "saturn",  "orbit": 280, "size": 48, "angle": 180},
 ]
 
 
@@ -50,7 +52,7 @@ def staff_init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL, phone TEXT, email TEXT,
         position TEXT, salary REAL DEFAULT 0,
-        status TEXT DEFAULT '在职', notes TEXT,
+        status TEXT DEFAULT '在职', note TEXT,
         created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
     conn.commit(); conn.close()
@@ -64,16 +66,16 @@ def staff_get_all(search=""):
         rows = conn.execute("SELECT * FROM staff ORDER BY id DESC").fetchall()
     conn.close(); return rows
 
-def staff_add(name, phone, email, position, salary, status, notes):
+def staff_add(name, phone, email, position, salary, status, note):
     conn = _get_conn("staff.db")
-    c = conn.execute("INSERT INTO staff(name,phone,email,position,salary,status,notes) VALUES(?,?,?,?,?,?,?)",
-                     (name, phone, email, position, salary, status, notes))
+    c = conn.execute("INSERT INTO staff(name,phone,email,position,salary,status,note) VALUES(?,?,?,?,?,?,?)",
+                     (name, phone, email, position, salary, status, note))
     conn.commit(); conn.close(); return c.lastrowid
 
-def staff_update(sid, name, phone, email, position, salary, status, notes):
+def staff_update(sid, name, phone, email, position, salary, status, note):
     conn = _get_conn("staff.db")
-    conn.execute("UPDATE staff SET name=?,phone=?,email=?,position=?,salary=?,status=?,notes=? WHERE id=?",
-                 (name, phone, email, position, salary, status, notes, sid))
+    conn.execute("UPDATE staff SET name=?,phone=?,email=?,position=?,salary=?,status=?,note=? WHERE id=?",
+                 (name, phone, email, position, salary, status, note, sid))
     conn.commit(); conn.close()
 
 def staff_delete(sid):
@@ -88,7 +90,7 @@ def staff_import_csv(filepath):
         for row in reader:
             staff_add(row.get('name',''), row.get('phone',''), row.get('email',''),
                       row.get('position',''), float(row.get('salary',0) or 0),
-                      row.get('status','在职'), row.get('notes',''))
+                      row.get('status','在职'), row.get('note', row.get('notes','')))
             count += 1
     return count
 
@@ -99,7 +101,7 @@ def staff_export_csv(filepath):
         w.writerow(['ID','姓名','电话','邮箱','职位','薪资','状态','备注','创建时间'])
         for r in rows:
             w.writerow([r['id'],r['name'],r['phone'],r['email'],r['position'],
-                        r['salary'],r['status'],r['notes'],r['created_at']])
+                        r['salary'],r['status'],r['note'],r['created_at']])
 
 
 # ─── 会员 (member) ───
@@ -107,11 +109,15 @@ def member_init_db():
     conn = _get_conn("member.db")
     conn.execute('''CREATE TABLE IF NOT EXISTS member (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL, phone TEXT, email TEXT,
-        level TEXT DEFAULT '体验', points INTEGER DEFAULT 0,
-        rights TEXT, vip_expire TEXT, status TEXT DEFAULT '正常',
-        created_at TEXT DEFAULT (datetime('now','localtime')),
-        updated_at TEXT DEFAULT (datetime('now','localtime'))
+        name TEXT UNIQUE NOT NULL,
+        phone TEXT DEFAULT '',
+        email TEXT DEFAULT '',
+        level TEXT DEFAULT 'TRIAL',
+        points INTEGER DEFAULT 0,
+        rights TEXT DEFAULT '',
+        vip_expire TEXT DEFAULT '',
+        status TEXT DEFAULT '激活',
+        created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
     conn.commit(); conn.close()
 
@@ -167,7 +173,7 @@ def wallet_init_db():
         status TEXT DEFAULT 'active',
         created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
-    conn.execute('''CREATE TABLE IF NOT EXISTS wallet_trans (
+    conn.execute('''CREATE TABLE IF NOT EXISTS wallet_transactions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         wallet_id INTEGER, user_id TEXT, amount REAL,
         trans_type TEXT, note TEXT,
@@ -195,7 +201,7 @@ def wallet_get_all():
 
 def wallet_get_trans():
     conn = _get_conn("wallet.db")
-    rows = conn.execute("SELECT * FROM wallet_trans ORDER BY id DESC LIMIT 100").fetchall()
+    rows = conn.execute("SELECT * FROM wallet_transactions ORDER BY id DESC LIMIT 100").fetchall()
     conn.close(); return rows
 
 def wallet_get_withdraw(status=""):
@@ -210,8 +216,8 @@ def wallet_stats():
     conn = _get_conn("wallet.db")
     bal = conn.execute("SELECT COALESCE(SUM(balance),0) FROM wallet").fetchone()[0]
     froz = conn.execute("SELECT COALESCE(SUM(frozen),0) FROM wallet").fetchone()[0]
-    income = conn.execute("SELECT COALESCE(SUM(amount),0) FROM wallet_trans WHERE trans_type='收入'").fetchone()[0]
-    expense = conn.execute("SELECT COALESCE(SUM(amount),0) FROM wallet_trans WHERE trans_type='支出'").fetchone()[0]
+    income = conn.execute("SELECT COALESCE(SUM(amount),0) FROM wallet_transactions WHERE trans_type='收入'").fetchone()[0]
+    expense = conn.execute("SELECT COALESCE(SUM(amount),0) FROM wallet_transactions WHERE trans_type='支出'").fetchone()[0]
     pending = conn.execute("SELECT COUNT(*) FROM wallet_withdraw WHERE status='pending'").fetchone()[0]
     conn.close()
     return {"balance": bal, "frozen": froz, "income": income, "expense": expense, "pending": pending}
@@ -240,7 +246,7 @@ def wallet_recharge(user_id, amount, note=""):
         conn.close()
         return {"ok": False, "error": "钱包不存在"}
     conn.execute("UPDATE wallet SET balance=balance+? WHERE user_id=?", (amount, user_id))
-    conn.execute("INSERT INTO wallet_trans(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
+    conn.execute("INSERT INTO wallet_transactions(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
                  (w['id'], user_id, amount, '收入', note or '充值'))
     conn.commit()
     new_bal = conn.execute("SELECT balance FROM wallet WHERE user_id=?", (user_id,)).fetchone()['balance']
@@ -282,9 +288,9 @@ def wallet_transfer(from_user, to_user, amount, note=""):
         return {"ok": False, "error": "目标钱包不存在"}
     conn.execute("UPDATE wallet SET balance=balance-? WHERE user_id=?", (amount, from_user))
     conn.execute("UPDATE wallet SET balance=balance+? WHERE user_id=?", (amount, to_user))
-    conn.execute("INSERT INTO wallet_trans(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
+    conn.execute("INSERT INTO wallet_transactions(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
                  (fw['id'], from_user, -amount, '支出', note or f'转账至{to_user}'))
-    conn.execute("INSERT INTO wallet_trans(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
+    conn.execute("INSERT INTO wallet_transactions(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
                  (tw['id'], to_user, amount, '收入', note or f'来自{from_user}转账'))
     conn.commit()
     from_bal = conn.execute("SELECT balance FROM wallet WHERE user_id=?", (from_user,)).fetchone()['balance']
@@ -298,7 +304,7 @@ def wallet_commission(user_id, amount, note=""):
         conn.close()
         return {"ok": False, "error": "钱包不存在"}
     conn.execute("UPDATE wallet SET balance=balance+? WHERE user_id=?", (amount, user_id))
-    conn.execute("INSERT INTO wallet_trans(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
+    conn.execute("INSERT INTO wallet_transactions(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
                  (w['id'], user_id, amount, '收入', note or '佣金'))
     conn.commit()
     new_bal = conn.execute("SELECT balance FROM wallet WHERE user_id=?", (user_id,)).fetchone()['balance']
@@ -322,7 +328,7 @@ def wallet_approve_withdraw(withdraw_id, operator="", note=""):
                  (merged, operator, now, withdraw_id))
     conn.execute("UPDATE wallet SET balance=balance-?,frozen=frozen-? WHERE user_id=?",
                  (wd['amount'], wd['amount'], wd['user_id']))
-    conn.execute("INSERT INTO wallet_trans(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
+    conn.execute("INSERT INTO wallet_transactions(wallet_id,user_id,amount,trans_type,note) VALUES(?,?,?,?,?)",
                  (wd['wallet_id'], wd['user_id'], -wd['amount'], '支出', f'提现审批通过 #{withdraw_id}'))
     conn.commit(); conn.close()
     return {"ok": True, "amount": wd['amount']}
@@ -368,7 +374,7 @@ def wallet_update_status(user_id, status):
 
 def wallet_delete_wallet(wallet_id):
     conn = _get_conn("wallet.db")
-    conn.execute("DELETE FROM wallet_trans WHERE wallet_id=?", (wallet_id,))
+    conn.execute("DELETE FROM wallet_transactions WHERE wallet_id=?", (wallet_id,))
     conn.execute("DELETE FROM wallet_withdraw WHERE wallet_id=?", (wallet_id,))
     conn.execute("DELETE FROM wallet WHERE id=?", (wallet_id,))
     conn.commit(); conn.close()
@@ -377,7 +383,7 @@ def wallet_delete_wallet(wallet_id):
 def wallet_get_transactions(wallet_id=None, trans_type="", start_date="", end_date="",
                             min_amount=None, max_amount=None, keyword="", limit=500):
     conn = _get_conn("wallet.db")
-    sql = "SELECT * FROM wallet_trans WHERE 1=1"
+    sql = "SELECT * FROM wallet_transactions WHERE 1=1"
     params = []
     if wallet_id:
         sql += " AND wallet_id=?"
@@ -419,11 +425,11 @@ def wallet_get_balance_trend(days=7):
             (next_str,)
         ).fetchone()[0]
         income = conn.execute(
-            "SELECT COALESCE(SUM(amount),0) FROM wallet_trans WHERE trans_type='收入' AND created_at >= ? AND created_at < ?",
+            "SELECT COALESCE(SUM(amount),0) FROM wallet_transactions WHERE trans_type='收入' AND created_at >= ? AND created_at < ?",
             (date_str, next_str)
         ).fetchone()[0]
         expense = conn.execute(
-            "SELECT COALESCE(SUM(ABS(amount)),0) FROM wallet_trans WHERE trans_type='支出' AND created_at >= ? AND created_at < ?",
+            "SELECT COALESCE(SUM(ABS(amount)),0) FROM wallet_transactions WHERE trans_type='支出' AND created_at >= ? AND created_at < ?",
             (date_str, next_str)
         ).fetchone()[0]
         result.append({"date": date_str, "balance": bal, "income": income, "expense": expense})
@@ -434,19 +440,19 @@ def wallet_get_balance_trend(days=7):
 # ─── 分销 (distribution) ───
 def dist_init_db():
     conn = _get_conn("distribution.db")
-    conn.execute('''CREATE TABLE IF NOT EXISTS dist_links (
+    conn.execute('''CREATE TABLE IF NOT EXISTS distribution_links (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id TEXT, code TEXT UNIQUE, url TEXT,
         clicks INTEGER DEFAULT 0, registrations INTEGER DEFAULT 0,
         status TEXT DEFAULT 'active', created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
-    conn.execute('''CREATE TABLE IF NOT EXISTS dist_commissions (
+    conn.execute('''CREATE TABLE IF NOT EXISTS commissions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id TEXT, source_user TEXT, amount REAL,
         comm_type TEXT, status TEXT DEFAULT 'pending',
         created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
-    conn.execute('''CREATE TABLE IF NOT EXISTS dist_team (
+    conn.execute('''CREATE TABLE IF NOT EXISTS team_members (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         leader_id TEXT, member_id TEXT, member_name TEXT,
         joined_at TEXT DEFAULT (datetime('now','localtime'))
@@ -456,15 +462,15 @@ def dist_init_db():
 def dist_get_links(search=""):
     conn = _get_conn("distribution.db")
     if search:
-        rows = conn.execute("SELECT * FROM dist_links WHERE user_id LIKE ? ORDER BY id DESC",
+        rows = conn.execute("SELECT * FROM distribution_links WHERE user_id LIKE ? ORDER BY id DESC",
                             (f"%{search}%",)).fetchall()
     else:
-        rows = conn.execute("SELECT * FROM dist_links ORDER BY id DESC").fetchall()
+        rows = conn.execute("SELECT * FROM distribution_links ORDER BY id DESC").fetchall()
     conn.close(); return rows
 
 def dist_get_commissions(user="", date_from="", date_to="", status=""):
     conn = _get_conn("distribution.db")
-    sql = "SELECT * FROM dist_commissions WHERE 1=1"
+    sql = "SELECT * FROM commissions WHERE 1=1"
     params = []
     if user: sql += " AND user_id LIKE ?"; params.append(f"%{user}%")
     if date_from: sql += " AND created_at >= ?"; params.append(date_from)
@@ -477,10 +483,10 @@ def dist_get_commissions(user="", date_from="", date_to="", status=""):
 def dist_get_team(search=""):
     conn = _get_conn("distribution.db")
     if search:
-        rows = conn.execute("SELECT * FROM dist_team WHERE leader_id LIKE ? OR member_id LIKE ? ORDER BY id DESC",
+        rows = conn.execute("SELECT * FROM team_members WHERE leader_id LIKE ? OR member_id LIKE ? ORDER BY id DESC",
                             (f"%{search}%", f"%{search}%")).fetchall()
     else:
-        rows = conn.execute("SELECT * FROM dist_team ORDER BY id DESC").fetchall()
+        rows = conn.execute("SELECT * FROM team_members ORDER BY id DESC").fetchall()
     conn.close(); return rows
 
 
@@ -493,7 +499,7 @@ for init in [staff_init_db, member_init_db, wallet_init_db, dist_init_db]:
 
 # ═══════════════ 星球导航 HUD 层 ═══════════════
 class PlanetHUD(QWidget):
-    """绘制中心光球 + 4 颗环绕小星球"""
+    """绘制核心光球 + 4颗真实纹理环绕星球"""
 
     def __init__(self, parent=None, callback=None):
         super().__init__(parent)
@@ -512,12 +518,13 @@ class PlanetHUD(QWidget):
         self._animation_phase += 0.02
         self.update()
 
-    def _planet_positions(self, cx, cy, orbit_r):
+    def _planet_positions(self, cx, cy):
+        """返回每颗星球的画面坐标"""
         positions = []
         for p in PLANETS:
-            angle_rad = math.radians(p["angle"] + self._animation_phase * 10)
-            px = cx + orbit_r * math.cos(angle_rad)
-            py = cy + orbit_r * math.sin(angle_rad)
+            angle_rad = math.radians(p["angle"] + self._animation_phase * 8)
+            px = cx + p["orbit"] * math.cos(angle_rad)
+            py = cy + p["orbit"] * math.sin(angle_rad)
             positions.append((px, py, p))
         return positions
 
@@ -527,109 +534,30 @@ class PlanetHUD(QWidget):
 
         w, h = self.width(), self.height()
         cx, cy = w / 2, h / 2
+        center = QPointF(cx, cy)
 
-        # ── 中心光球 ──
-        sun_r = min(w, h) * 0.12
-        glow_r = sun_r * 2.5
+        # ── 轨道线（使用 planet_painter） ──
+        for p in PLANETS:
+            paint_orbit(painter, center, p["orbit"])
 
-        # 外层辉光
-        glow = QRadialGradient(cx, cy, glow_r)
-        glow.setColorAt(0, QColor(255, 140, 80, 50))
-        glow.setColorAt(0.4, QColor(255, 100, 60, 20))
-        glow.setColorAt(0.7, QColor(255, 80, 40, 5))
-        glow.setColorAt(1, QColor(0, 0, 0, 0))
-        painter.setBrush(QBrush(glow))
-        painter.setPen(Qt.NoPen)
-        painter.drawEllipse(QPointF(cx, cy), glow_r, glow_r)
-
-        # 主体光球
-        body = QRadialGradient(cx - sun_r * 0.15, cy - sun_r * 0.15, sun_r * 0.9)
-        body.setColorAt(0, QColor(255, 220, 180))
-        body.setColorAt(0.3, QColor(255, 160, 100))
-        body.setColorAt(0.7, QColor(255, 100, 50))
-        body.setColorAt(1, QColor(180, 40, 10))
-        painter.setBrush(QBrush(body))
-        painter.setPen(Qt.NoPen)
-        painter.drawEllipse(QPointF(cx, cy), sun_r, sun_r)
-
-        # 中心文字
-        painter.setPen(QColor(255, 240, 220))
-        font = QFont("sans-serif", max(11, int(sun_r * 0.5)), QFont.Bold)
-        painter.setFont(font)
-        painter.drawText(
-            QPointF(cx, cy + sun_r * 0.15),
-            "CREW"
-        )
-
-        # ── 轨道环 ──
-        orbit_r = min(w, h) * 0.30
-        painter.setPen(QPen(QColor(255, 100, 60, 50), 1, Qt.DashLine))
-        painter.setBrush(Qt.NoBrush)
-        painter.drawEllipse(QPointF(cx, cy), orbit_r, orbit_r)
-
-        # 第二轨道（虚线，更远）
-        orbit2_r = min(w, h) * 0.38
-        painter.setPen(QPen(QColor(255, 80, 50, 25), 1, Qt.DotLine))
-        painter.drawEllipse(QPointF(cx, cy), orbit2_r, orbit2_r)
-
-        # ── 小星球 ──
-        positions = self._planet_positions(cx, cy, orbit_r)
-        planet_r = max(18, min(w, h) * 0.04)
+        # ── 星球（使用 planet_painter 纹理） ──
+        positions = self._planet_positions(cx, cy)
 
         for px, py, pdata in positions:
             is_hover = (self._hover_planet == pdata["id"])
-
-            # 光晕
-            halo_r = planet_r * 1.8 if is_hover else planet_r * 1.4
-            halo = QRadialGradient(px, py, halo_r)
-            alpha = 80 if is_hover else 30
-            halo.setColorAt(0, QColor(*pdata["color"], alpha))
-            halo.setColorAt(1, QColor(0, 0, 0, 0))
-            painter.setBrush(QBrush(halo))
-            painter.setPen(Qt.NoPen)
-            painter.drawEllipse(QPointF(px, py), halo_r, halo_r)
-
-            # 行星体
-            pr = planet_r * 1.15 if is_hover else planet_r
-            pg = QRadialGradient(px - pr * 0.2, py - pr * 0.2, pr)
-            r, g, b = pdata["color"]
-            pg.setColorAt(0, QColor(min(r + 80, 255), min(g + 80, 255), min(b + 60, 255)))
-            pg.setColorAt(0.6, QColor(r, g, b))
-            pg.setColorAt(1, QColor(max(r - 80, 0), max(g - 60, 0), max(b - 40, 0)))
-            painter.setBrush(QBrush(pg))
-            painter.setPen(QPen(QColor(r, g, b, 120), 1))
-            painter.drawEllipse(QPointF(px, py), pr, pr)
-
-            # 图标符号
-            painter.setPen(QColor(255, 240, 220))
-            icon_font = QFont("sans-serif", max(9, int(pr * 0.75)), QFont.Bold)
-            painter.setFont(icon_font)
-            painter.drawText(
-                QPointF(px, py + pr * 0.28),
-                pdata["icon"]
-            )
-
-            # 名称标签
-            label_font = QFont("sans-serif", max(8, int(pr * 0.5)))
-            painter.setFont(label_font)
-            painter.setPen(QColor(255, 200, 170, 200 if not is_hover else 255))
-            label_y = py + pr + 16
-            painter.drawText(
-                QPointF(px, label_y),
-                pdata["name"]
-            )
+            style = PLANET_STYLES.get(pdata["style"], PLANET_STYLES["mars"])
+            paint_planet(painter, QPointF(px, py), pdata["size"], style,
+                         hovered=is_hover, label=pdata["name"], font_size=10)
 
         painter.end()
 
     def _planet_at(self, mx, my):
         w, h = self.width(), self.height()
         cx, cy = w / 2, h / 2
-        orbit_r = min(w, h) * 0.30
-        positions = self._planet_positions(cx, cy, orbit_r)
-        planet_r = max(18, min(w, h) * 0.04)
-        hit_r = planet_r * 1.5
+        positions = self._planet_positions(cx, cy)
 
         for px, py, pdata in positions:
+            hit_r = pdata["size"] + 14
             dist = math.hypot(mx - px, my - py)
             if dist <= hit_r:
                 return pdata["id"]

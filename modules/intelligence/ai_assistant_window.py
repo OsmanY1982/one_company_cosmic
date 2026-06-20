@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 AI 助手模块 v3 — 支持本地模型管理
-- 标签1: 💬 AI 对话 (opcclaw ChatWindow)
+- 标签1: 💬 AI 对话 (AgentBridge 完整对话窗口)
 - 标签2: ⚡ 快捷工具 (模板、本地模型、系统状态)
 - 标签3~6: 增强功能（智能对话、快捷操作、系统监控、高级功能）
 
@@ -45,14 +45,13 @@ from modules.intelligence._stubs import app_state
 from ._ai_shared import SUPER_INTELLIGENCE_AVAILABLE
 from ._navigation_hud import NavigationHUD
 from ._shell_dialogs import (
-    SystemMonitorDialog, AIDashboardDialog,
+    SystemMonitorDialog,
     SmartWorkflowDialog, BusinessAIDialog,
 )
 from ._ai_widgets import (
     SuperIntelligenceWidget, AnomalyDetectorWidget,
     RecommendationEngineWidget, DataVisualizationWidget,
 )
-from ._chat_dialog import OPCclawChatDialog
 
 
 
@@ -69,6 +68,7 @@ class AIAssistantWindow(QMainWindow):
         self._role = "admin"
         self.setWindowTitle("AI 助手 · CREW")
         self.setMinimumSize(1200, 900)
+        self.resize(1200, 900)
         self._build_ui()
 
     def _build_ui(self):
@@ -95,7 +95,7 @@ class AIAssistantWindow(QMainWindow):
         )
         title.setAlignment(Qt.AlignCenter)
         hl.addWidget(title)
-        subtitle = QLabel("CREW · 12颗智能星球")
+        subtitle = QLabel("CREW · 13颗智能星球")
         subtitle.setStyleSheet(
             "color: #776699; font-size: 11px; letter-spacing: 3px;"
             "background: transparent;"
@@ -122,10 +122,9 @@ class AIAssistantWindow(QMainWindow):
     # ═══════ 行星点击路由 ═══════
     def _on_planet_clicked(self, planet_id):
         if planet_id == "opcclaw_chat":
-            from modules.intelligence.session_context import session_ctx
-            dlg = OPCclawChatDialog(self, opcclaw_engine=self._opcclaw)
-            dlg._session_id = session_ctx.current_session_id
-            dlg.show()
+            from modules.intelligence.ai_chat_window import AIChatWindow
+            self._chat_win = AIChatWindow(opcclaw_engine=self._opcclaw)
+            self._chat_win.show()
         elif planet_id == "super_intelligence":
             if SUPER_INTELLIGENCE_AVAILABLE:
                 dlg = QDialog(self)
@@ -253,9 +252,6 @@ class AIAssistantWindow(QMainWindow):
                 dlg.show()
             except ImportError as e:
                 QMessageBox.warning(self, "错误", f"快捷操作模块加载失败: {e}")
-        elif planet_id == "ai_dashboard":
-            dlg = AIDashboardDialog(self)
-            dlg.show()
         elif planet_id == "anomaly_detector":
             dlg = QDialog(self)
             dlg.setWindowTitle("异常检测")

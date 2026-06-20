@@ -1,6 +1,6 @@
 # `modules/auth/login_window.py`
 
-> 路径：`modules/auth/login_window.py` | 行数：573
+> 路径：`modules/auth/login_window.py` | 行数：613
 
 
 ---
@@ -26,6 +26,7 @@ from PyQt5.QtGui import (
 )
 
 from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPLE
+from core.operation_log import log_action
 from modules.auth.auth_service import AuthService, MEMBERSHIP_LABELS
 from modules.auth.model_setup_window import ModelSetupWindow
 
@@ -484,6 +485,10 @@ class LoginWindow(QMainWindow):
 
         user = result["user"]
         role = user.get("role", "member")
+        try:
+            log_action(username, "登录", "login", "用户登录成功")
+        except Exception:
+            pass
         self._open_model_setup(username, role)
 
     def _do_register(self):
@@ -504,6 +509,10 @@ class LoginWindow(QMainWindow):
             self, "注册成功",
             f"船员 {username} 已登记。\n获得 7 天体验会员。\n请返回对接。"
         )
+        try:
+            log_action(username, "注册", "login", "新用户注册")
+        except Exception:
+            pass
         self._switch_to_login()
         self._login_user.setText(username)
         self._login_pass.setFocus()
@@ -541,8 +550,8 @@ class LoginWindow(QMainWindow):
         self.close()
 
     def _on_setup_complete(self, result: dict):
-        """模型配置完成后打开主控面板 + 自动启动悬浮星球"""
-        from modules.dashboard.dashboard_window import DashboardWindow
+        """模型配置完成后打开智能中心 + 启动悬浮星球（宇宙版是浮球唯一主程序）"""
+        from modules.intelligence.intelligence_window import IntelligenceWindow
         from modules.intelligence.opcclaw_floating_planet import FloatingPlanet
 
         config = result.get("config", {})
@@ -551,15 +560,16 @@ class LoginWindow(QMainWindow):
         role = result.get("role", "member")
         membership_info = result.get("membership_info")
 
-        self._dash = DashboardWindow(
+        self._center = IntelligenceWindow(
             role=role,
-            membership_info=membership_info,
-            config=config,
             opcclaw_engine=engine,
         )
-        self._dash.show()
+        self._center.show()
 
-        # 自动启动悬浮星球
+        # 宇宙版始终创建并持有悬浮球
+        _lock_file = "/tmp/opcclaw_floating_planet.pid"
+        _cmd_file = "/tmp/opcclaw_floating_cmd"
+
         try:
             self._floating = FloatingPlanet(
                 opcclaw_engine=engine,
@@ -569,12 +579,42 @@ class LoginWindow(QMainWindow):
             )
             self._floating.show()
             self._floating.raise_()
+
+            # 写入 PID 锁文件
+            with open(_lock_file, "w") as f:
+                f.write(str(os.getpid()))
+            import atexit as _ae
+            _ae.register(lambda: os.path.exists(_lock_file) and os.remove(_lock_file))
+
+            # ── IPC 命令监听 ──
+            def _check_ipc_cmd():
+                if not os.path.exists(_cmd_file):
+                    return
+                try:
+                    with open(_cmd_file, "r") as f:
+                        cmd = f.read().strip()
+                    os.remove(_cmd_file)
+                    if cmd in ("show", "toggle"):
+                        if not self._floating.isVisible():
+                            self._floating.show()
+                            self._floating.raise_()
+                        elif cmd == "toggle":
+                            self._floating.hide()
+                    elif cmd == "hide":
+                        self._floating.hide()
+                except OSError:
+                    pass
+
+            from PyQt5.QtCore import QTimer
+            self._ipc_timer = QTimer(self._floating)
+            self._ipc_timer.timeout.connect(_check_ipc_cmd)
+            self._ipc_timer.start(500)
         except Exception as e:
             print(f"[Login] FloatingPlanet launch failed: {e}")
             traceback.print_exc()
             QMessageBox.warning(
-                self._dash, "悬浮球启动失败",
-                f"悬浮星球未能启动：{e}\n可通过主控面板重新打开。"
+                self._center, "悬浮球启动失败",
+                f"悬浮星球未能启动：{e}\n可通过智能中心重新打开。"
             )
 
     def _open_dashboard(self, username: str, role: str):

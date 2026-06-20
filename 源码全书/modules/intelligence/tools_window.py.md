@@ -1,43 +1,48 @@
 # `modules/intelligence/tools_window.py`
 
-> 路径：`modules/intelligence/tools_window.py` | 行数：259
+> 路径：`modules/intelligence/tools_window.py` | 行数：304
 
 
 ---
 
 
 ```python
+# -*- coding: utf-8 -*-
 """
-工具箱 · NEURAL — 导航窗口
-点击按钮卡片打开：编辑器 / 保险箱 / 扫码工具 / 计算器
-轨道式独立子窗口布局
+工具箱 · NEURAL NEXUS（星球导航模式）
+4颗星球环绕，点击打开：编辑器 / 保险箱 / 计算器 / 扫码工具
 """
-import os
+import os, math
 from PyQt5.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QLabel, QWidget,
-    QLineEdit, QMessageBox, QFrame,
+    QMainWindow, QWidget, QVBoxLayout, QLabel, QFrame, QDialog,
+    QLineEdit, QPushButton, QGridLayout, QMessageBox,
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer, QPointF
+from PyQt5.QtGui import QPainter
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
+from core.planet_painter import (
+    PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line,
+)
 
-# ═══════ QSS ═══════
-CARD_STYLE = """
-    QPushButton {
-        background: rgba(18,10,32,220);
-        color: #ccbbdd;
+# ═══════ 4颗工具星球 ═══════
+PLANETS = [
+    {"id": "editor",     "name": "编辑器",   "style": "mercury", "orbit": 130, "size": 46},
+    {"id": "vault",      "name": "保险箱",   "style": "saturn",  "orbit": 210, "size": 48},
+    {"id": "calculator", "name": "计算器",   "style": "moon",    "orbit": 290, "size": 46},
+    {"id": "scanner",    "name": "扫码工具", "style": "uranus",  "orbit": 370, "size": 46},
+]
+
+# ═══════ 计算器内嵌 ═══════
+CALC_DISPLAY = """
+    QLineEdit {
+        background: rgba(14,8,26,230);
+        color: #ddaaff;
         border: 1px solid rgba(170,80,255,40);
-        border-radius: 16px;
-        padding: 20px 16px;
-        font-size: 14px;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 24px;
         font-weight: 700;
-        letter-spacing: 3px;
-        text-align: center;
-    }
-    QPushButton:hover {
-        background: rgba(30,16,48,235);
-        border: 1px solid rgba(200,100,255,100);
-        color: #eeeeff;
+        font-family: 'Menlo', monospace;
     }
 """
 CALC_BTN = """
@@ -58,22 +63,10 @@ CALC_BTN = """
         background: rgba(50,30,70,220);
     }
 """
-CALC_DISPLAY = """
-    QLineEdit {
-        background: rgba(14,8,26,230);
-        color: #ddaaff;
-        border: 1px solid rgba(170,80,255,40);
-        border-radius: 10px;
-        padding: 12px 16px;
-        font-size: 24px;
-        font-weight: 700;
-        font-family: 'Menlo', monospace;
-    }
-"""
 
 
 class CalcDialog(QDialog):
-    """计算器 · NEURAL — 内嵌轻量子窗口"""
+    """计算器 · NEURAL"""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -161,110 +154,162 @@ class CalcDialog(QDialog):
             self._clear()
 
 
-class ToolsWindow(QDialog):
-    """工具箱 · NEURAL — 导航窗口"""
+# ═══════ 星球导航 HUD ═══════
+class NavigationHUD(QWidget):
+    """工具箱星球导航叠加层"""
+
+    planet_clicked = None
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("工具箱 · NEURAL")
-        self.setMinimumSize(560, 400)
-        self.setStyleSheet("background: rgba(10,5,20,240);")
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setMouseTracking(True)
+        self._center = QPointF(0, 0)
+        self._hovered_planet = None
+        self._angle = 0.0
+        self._timer = QTimer(self)
+        self._timer.timeout.connect(self._tick)
+        self._timer.start(50)
+
+    def _tick(self):
+        self._angle = (self._angle + 0.3) % 360.0
+        self.update()
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self._center = QPointF(self.width() / 2, self.height() / 2)
+
+    def _planet_positions(self):
+        w2 = self._center
+        positions = []
+        n = len(PLANETS)
+        for i, p in enumerate(PLANETS):
+            offset_angle = i * (360.0 / n)
+            rad = math.radians(self._angle + offset_angle)
+            x = w2.x() + p["orbit"] * math.cos(rad)
+            y = w2.y() + p["orbit"] * math.sin(rad)
+            positions.append((p, QPointF(x, y)))
+        return positions
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        w2 = self._center
+
+        # 轨道线
+        for planet in PLANETS:
+            paint_orbit(p, w2, planet["orbit"])
+
+        # 能量连接线
+        for _, pos in self._planet_positions():
+            paint_energy_line(p, w2, pos)
+
+        # 行星
+        for planet_data, pos in self._planet_positions():
+            style = PLANET_STYLES.get(planet_data["style"], PLANET_STYLES["neptune"])
+            hovered = (self._hovered_planet == planet_data["id"])
+            paint_planet(p, pos, planet_data["size"], style,
+                         hovered=hovered, label=planet_data["name"], font_size=10)
+
+        p.end()
+
+    def mouseMoveEvent(self, event):
+        pos = event.pos()
+        self._hovered_planet = None
+        for planet_data, pt in self._planet_positions():
+            r = planet_data["size"] + 8
+            dx = pos.x() - pt.x()
+            dy = pos.y() - pt.y()
+            if dx * dx + dy * dy <= r * r:
+                self._hovered_planet = planet_data["id"]
+                self.setCursor(Qt.PointingHandCursor)
+                self.update()
+                return
+        self.setCursor(Qt.ArrowCursor)
+        if self._hovered_planet is not None:
+            self._hovered_planet = None
+            self.update()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton and self._hovered_planet:
+            if self.planet_clicked:
+                self.planet_clicked(self._hovered_planet)
+
+
+# ═══════ 主窗口 ═══════
+class ToolsWindow(QMainWindow):
+    """工具箱 · NEURAL NEXUS — 4颗工具星球"""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("一人公司 — 工具箱 · NEURAL NEXUS")
+        self.setMinimumSize(1200, 850)
+        self.resize(1200, 850)
         self._build_ui()
 
     def _build_ui(self):
         from core.cosmic import CosmicBackground
-        self._bg = CosmicBackground()
-        self._bg.setFixedSize(self.minimumWidth(), self.minimumHeight())
+        bg = CosmicBackground()
+        self.setCentralWidget(bg)
 
-        l = QVBoxLayout(self)
-        l.setContentsMargins(0, 0, 0, 0)
-        l.addWidget(self._bg)
+        self._hud = NavigationHUD(self)
+        self._hud.setGeometry(0, 0, self.width(), self.height())
+        self._hud.planet_clicked = self._on_planet_clicked
+        self._hud.raise_()
 
-        # ── HUD 叠加层 ──
-        overlay = QWidget(self)
-        overlay.setAttribute(Qt.WA_TranslucentBackground)
-        overlay.setGeometry(0, 0, self.minimumWidth(), self.minimumHeight())
-        overlay.raise_()
+        header = QWidget(self)
+        header.setAttribute(Qt.WA_TranslucentBackground)
+        header.setFixedHeight(70)
+        header.setGeometry(0, 10, self.width(), 70)
 
-        ol = QVBoxLayout(overlay)
-        ol.setSpacing(0)
-        ol.setContentsMargins(0, 0, 0, 0)
-
-        ol.addStretch(1)
-
-        # 标题
+        hl = QVBoxLayout(header)
+        hl.setSpacing(2)
         title = QLabel("工具箱")
         title.setStyleSheet(
-            "color: #ddaaff; font-size: 22px; font-weight: 800; "
-            "letter-spacing: 8px; background: transparent;"
+            "color: #ddaaff; font-size: 24px; font-weight: 800;"
+            " letter-spacing: 8px; background: transparent;"
         )
         title.setAlignment(Qt.AlignCenter)
-        ol.addWidget(title)
-
-        subtitle = QLabel("选择工具模块")
+        hl.addWidget(title)
+        subtitle = QLabel("NEURAL NEXUS · 4颗工具星球")
         subtitle.setStyleSheet(
-            "color: #776699; font-size: 11px; letter-spacing: 3px; background: transparent;"
+            "color: #776699; font-size: 11px; letter-spacing: 3px;"
+            " background: transparent;"
         )
         subtitle.setAlignment(Qt.AlignCenter)
-        ol.addWidget(subtitle)
-        ol.addSpacing(24)
+        hl.addWidget(subtitle)
 
-        # ── 按钮卡片区 2×2 网格 ──
-        grid = QGridLayout()
-        grid.setSpacing(16)
-        grid.setAlignment(Qt.AlignCenter)
-
-        tools = [
-            ("文本编辑器", 0, 0, self._open_editor),
-            ("密码保险箱", 0, 1, self._open_vault),
-            ("扫码工具", 1, 0, self._open_scan),
-            ("计算器", 1, 1, self._open_calc),
-        ]
-        for text, r, c, handler in tools:
-            btn = QPushButton(text)
-            btn.setStyleSheet(CARD_STYLE)
-            btn.setFixedSize(160, 80)
-            btn.setCursor(Qt.PointingHandCursor)
-            btn.clicked.connect(handler)
-            grid.addWidget(btn, r, c)
-
-        ol.addLayout(grid)
-
-        ol.addSpacing(16)
-
-        # 底部提示
-        hint = QLabel("NEURAL · 智能工具箱")
-        hint.setStyleSheet("color: #443366; font-size: 10px; background: transparent;")
-        hint.setAlignment(Qt.AlignCenter)
-        ol.addWidget(hint)
-
-        ol.addStretch(1)
+        line = QFrame()
+        line.setFixedHeight(2)
+        line.setStyleSheet("""
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 transparent, stop:0.3 rgba(170,80,255,50),
+                stop:0.5 rgba(200,120,255,120),
+                stop:0.7 rgba(170,80,255,50), stop:1 transparent);
+            border: none;
+        """)
+        hl.addWidget(line)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        w = self.width()
-        h = self.height()
-        if w > 0 and h > 0:
-            self._bg.setFixedSize(w, h)
+        if hasattr(self, '_hud'):
+            self._hud.setGeometry(0, 0, self.width(), self.height())
 
-    # ═══════ 导航路由 ═══════
-    def _open_editor(self):
-        from modules.intelligence.editor_window import EditorWindow
-        dlg = EditorWindow(self)
-        dlg.exec_()
-
-    def _open_vault(self):
-        from modules.intelligence.vault_window import VaultWindow
-        dlg = VaultWindow(self)
-        dlg.exec_()
-
-    def _open_scan(self):
-        from modules.intelligence.scan_window import ScanWindow
-        dlg = ScanWindow(self)
-        dlg.exec_()
-
-    def _open_calc(self):
-        dlg = CalcDialog(self)
-        dlg.exec_()
+    def _on_planet_clicked(self, planet_id):
+        if planet_id == "editor":
+            from modules.intelligence.editor_window import EditorWindow
+            dlg = EditorWindow(self)
+            dlg.exec_()
+        elif planet_id == "vault":
+            from modules.intelligence.vault_window import VaultWindow
+            dlg = VaultWindow(self)
+            dlg.exec_()
+        elif planet_id == "calculator":
+            dlg = CalcDialog(self)
+            dlg.exec_()
+        elif planet_id == "scanner":
+            from modules.intelligence.scan_window import ScanWindow
+            dlg = ScanWindow(self)
+            dlg.exec_()
 
 ```

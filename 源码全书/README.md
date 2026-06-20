@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-19 07:42
-> 共 648 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-20 08:01
+> 共 815 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -8,8 +8,20 @@
 
 ```
 .
+├── _archived/
+│   ├── data_20260619_122853/
+│   ├── dedup_20260619_170800/
+│   │   └── deps.py
+│   └── license_模块归档_20260619/
+│       ├── license_crypto.py
+│       ├── license_db.py
+│       └── license_service.py
+├── backup/
+│   ├── cloud_backups/
 ├── config/
-│   └── agents/
+│   ├── agents/
+│   ├── __init__.py
+│   ├── supabase_config.py
 ├── core/
 │   ├── shapes/
 │   │   ├── __init__.py
@@ -55,13 +67,51 @@
 │   │   └── wormhole.py
 │   ├── __init__.py
 │   ├── agent.py
+│   ├── app_state.py
+│   ├── auth_service.py
+│   ├── backup.py
+│   ├── business_service.py
+│   ├── ceo_agent.py
+│   ├── cloud_pull.py
+│   ├── cloud_sync.py
+│   ├── cloud_sync_v2.py
+│   ├── conflict_resolver.py
 │   ├── cosmic.py
+│   ├── custom_fields.py
+│   ├── dark_theme.py
 │   ├── data.py
-│   ├── deps.py
+│   ├── data_20260619_111935_141.py
+│   ├── data_sync.py
+│   ├── database.py
+│   ├── event_bus.py
+│   ├── excel_export.py
 │   ├── llm_client.py
+│   ├── machine_code.py
+│   ├── mobile_api.py
+│   ├── module_manager.py
+│   ├── notification_cron.py
+│   ├── notification_service.py
+│   ├── notification_toast.py
+│   ├── operation_log.py
+│   ├── oplog.py
+│   ├── paths.py
 │   ├── planet_painter.py
 │   ├── planet_painter_20260614_151048_302.py
-│   └── voice.py
+│   ├── reconciliation.py
+│   ├── scheduled_tasks.py
+│   ├── simple_sync.py
+│   ├── smart_report.py
+│   ├── storage.py
+│   ├── supabase_client.py
+│   ├── sync_bridge.py
+│   ├── sync_decorator.py
+│   ├── sync_integration.py
+│   ├── sync_manager.py
+│   ├── sync_optimized.py
+│   ├── triple_sync.py
+│   ├── user_dao.py
+│   ├── voice.py
+│   └── workflow_engine.py
 ├── data/
 │   ├── drafts/
 │   ├── enhanced/
@@ -70,22 +120,64 @@
 ├── knowledge_base/
 ├── log/
 ├── modules/
-│   ├── auth/
+│   ├── account/
 │   │   ├── __init__.py
+│   │   ├── account_activation.py
+│   │   ├── account_update.py
+│   │   ├── activation_service.py
+│   │   ├── activation_stats.py
+│   │   ├── activation_stats_service.py
+│   │   └── license_local.py
+│   ├── admin/
+│   │   ├── __init__.py
+│   │   ├── admin_activation.py
+│   │   ├── admin_backup.py
+│   │   ├── admin_data.py
+│   │   ├── admin_data_mgmt.py
+│   │   ├── admin_finance.py
+│   │   ├── admin_log.py
+│   │   ├── admin_orders.py
+│   │   ├── admin_product.py
+│   │   ├── admin_service.py
+│   │   ├── admin_settings.py
+│   │   ├── admin_staff.py
+│   │   ├── admin_strategy.py
+│   │   ├── admin_user.py
+│   │   ├── admin_window.py
+│   │   ├── cascade_delete.py
+│   │   └── strategy_dao.py
+│   ├── auth/
+│   │   ├── dao/
+│   │   │   └── user_dao.py
+│   │   ├── service/
+│   │   │   └── cloud_api.py
+│   │   ├── __init__.py
+│   │   ├── activation_gate.py
 │   │   ├── admin_login_dialog.py
+│   │   ├── admin_login_window.py
 │   │   ├── auth_service.py
+│   │   ├── change_password_dialog.py
 │   │   ├── connect_window.py
 │   │   ├── login_window.py
 │   │   ├── model_config_panel.py
 │   │   ├── model_setup_window.py
+│   │   ├── register_window.py
+│   │   ├── select_mode_window.py
 │   │   ├── upgrade_window.py
 │   ├── business/
 │   │   ├── __init__.py
 │   │   ├── business_window.py
+│   │   ├── customer_service.py
 │   │   ├── customer_window.py
+│   │   ├── finance_service.py
 │   │   ├── finance_window.py
+│   │   ├── order_service.py
 │   │   ├── order_window.py
+│   │   ├── product_service.py
 │   │   └── product_window.py
+│   ├── common/
+│   │   ├── advanced_filter_window.py
+│   │   └── custom_field_window.py
 │   ├── dashboard/
 │   │   ├── __init__.py
 │   │   └── dashboard_window.py
@@ -94,9 +186,23 @@
 │   ├── data_center/
 │   │   ├── __init__.py
 │   │   ├── bi_window.py
+│   │   ├── chart_window.py
+│   │   ├── dashboard_window_v2.py
+│   │   ├── dashboard_window_v3.py
 │   │   ├── data_window.py
-│   │   └── report_window.py
+│   │   ├── report_service.py
+│   │   ├── report_service_v2.py
+│   │   ├── report_window.py
+│   │   └── smart_report_window.py
+│   ├── i18n/
+│   │   └── i18n_window.py
+│   ├── industry/
+│   │   ├── industry_adapter.py
+│   │   ├── industry_config.py
+│   │   ├── industry_report.py
+│   │   └── industry_window.py
 │   ├── intelligence/
+│   │   ├── _archived/
 │   │   ├── backup_p02/
 │   │   │   ├── agent_bridge.py
 │   │   │   ├── ai_chat_window.py
@@ -129,11 +235,13 @@
 │   │   ├── _navigation_hud.py
 │   │   ├── _shell_dialogs.py
 │   │   ├── _stubs.py
+│   │   ├── account_window.py
 │   │   ├── agent_bridge.py
 │   │   ├── agent_bridge_models.py
 │   │   ├── agent_bridge_tools.py
 │   │   ├── agent_bridge_workers.py
 │   │   ├── ai_assistant_window.py
+│   │   ├── ai_center_window.py
 │   │   ├── ai_chat_styles.py
 │   │   ├── ai_chat_window.py
 │   │   ├── ai_dashboard_window.py
@@ -144,71 +252,108 @@
 │   │   ├── ai_features_sales_ai.py
 │   │   ├── analysis_tools.py
 │   │   ├── anomaly_detector.py
+│   │   ├── auto_task_executor.py
+│   │   ├── batch_text.py
 │   │   ├── business_ai_assistant.py
 │   │   ├── business_tools.py
 │   │   ├── chat_session_manager.py
+│   │   ├── compress_tool.py
 │   │   ├── crm_tools.py
 │   │   ├── data_import_tools.py
 │   │   ├── data_visualization.py
-│   │   ├── digital_display.py
-│   │   ├── digital_emp_window.py
-│   │   ├── digital_employee.py
-│   │   ├── digital_employee_panel.py
+│   │   ├── db_helper.py
+│   │   ├── download_dialog.py
 │   │   ├── editor_window.py
 │   │   ├── enhanced_chat.py
+│   │   ├── event_trigger.py
+│   │   ├── file_rename_tools.py
 │   │   ├── finance_analysis_tools.py
 │   │   ├── floating_planet_anim_mixin.py
 │   │   ├── floating_planet_draw_mixin.py
 │   │   ├── floating_planet_menu_mixin.py
-│   │   ├── floating_planet_voice_mixin.py
 │   │   ├── hr_tools.py
+│   │   ├── img_converter.py
 │   │   ├── intelligence_integration.py
 │   │   ├── intelligence_window.py
 │   │   ├── inventory_tools.py
+│   │   ├── json_tools.py
 │   │   ├── key_manager.py
 │   │   ├── knowledge_base.py
 │   │   ├── marketing_tools.py
 │   │   ├── model_config.py
+│   │   ├── monitor_dashboard.py
 │   │   ├── offline_analyzer.py
-│   │   ├── opcclaw_employee.py
 │   │   ├── opcclaw_floating_planet.py
+│   │   ├── password_tools.py
 │   │   ├── performance_monitor.py
+│   │   ├── predictor_window.py
 │   │   ├── quick_actions.py
 │   │   ├── rag_injector.py
 │   │   ├── recommendation_engine.py
 │   │   ├── report_generator.py
+│   │   ├── sales_predictor.py
 │   │   ├── scan_window.py
+│   │   ├── screen_recorder.py
 │   │   ├── self_monitor.py
 │   │   ├── session_context.py
+│   │   ├── smart_assistant.py
 │   │   ├── smart_report_tools.py
 │   │   ├── smart_workflow.py
 │   │   ├── starship_painter.py
 │   │   ├── super_intelligence.py
 │   │   ├── system_hub_window.py
 │   │   ├── system_monitor.py
+│   │   ├── text_editor.py
+│   │   ├── timestamp_tools.py
 │   │   ├── tool_registry.py
 │   │   ├── tools_window.py
+│   │   ├── usb_scanner.py
 │   │   ├── vault_window.py
 │   │   ├── voice_interface.py
 │   │   ├── whisper_recognizer.py
+│   │   ├── window_top_tools.py
 │   │   └── workflow_engine.py
+│   ├── notification/
+│   │   └── notification_window.py
+│   ├── permission/
+│   │   └── permission_window.py
 │   ├── personnel/
 │   │   ├── __init__.py
+│   │   ├── distribution_service.py
 │   │   ├── distribution_window.py
+│   │   ├── member_service.py
 │   │   ├── member_window.py
 │   │   ├── personnel_window.py
+│   │   ├── staff_service.py
 │   │   ├── staff_window.py
+│   │   ├── wallet_service.py
 │   │   └── wallet_window.py
+│   ├── startup/
+│   │   └── startup_selector_window.py
 │   ├── system/
+│   │   ├── _archived/
+│   │   │   ├── activation_window.py
+│   │   │   ├── base_info_window.py
+│   │   │   ├── cloud_window.py
+│   │   │   ├── logs_window.py
+│   │   │   ├── system_window.py
+│   │   │   └── update_dialog.py
 │   │   ├── __init__.py
-│   │   ├── activation_window.py
+│   │   ├── audit_window.py
 │   │   ├── base_info_window.py
+│   │   ├── cloud_model_panel.py
+│   │   ├── cloud_module.py
+│   │   ├── cloud_server_window.py
 │   │   ├── cloud_window.py
 │   │   ├── logs_window.py
 │   │   ├── system_hub_window.py
-│   │   ├── system_window.py
-│   │   └── update_dialog.py
+│   │   └── system_logs_service.py
+│   ├── system_logs/
+│   │   ├── system_logs_service.py
+│   │   └── system_logs_window.py
 │   ├── tools/
+│   ├── workflow/
+│   │   └── workflow_window.py
 │   └── __init__.py
 ├── opcclaw/
 │   ├── adapters/
@@ -1045,6 +1190,51 @@
 │   ├── utils.py
 │   ├── verify_sync.py
 ├── rules_project/
+├── services/
+│   ├── __init__.py
+│   ├── ai_chatbot_service.py
+│   ├── audit_service.py
+│   ├── backup_service.py
+│   ├── backup_tool.py
+│   ├── barcode_service.py
+│   ├── bi_service.py
+│   ├── cache_service.py
+│   ├── chart_service.py
+│   ├── database_optimizer.py
+│   ├── encryption_service.py
+│   ├── export_service.py
+│   ├── hotkey_manager.py
+│   ├── i18n_service.py
+│   ├── image_cache_service.py
+│   ├── import_export_service.py
+│   ├── lazy_load_service.py
+│   ├── license_service.py
+│   ├── logistics_service.py
+│   ├── memory_service.py
+│   ├── nl_query_service.py
+│   ├── notification_service.py
+│   ├── offline_queue.py
+│   ├── payment_service.py
+│   ├── performance_service.py
+│   ├── permission_service.py
+│   ├── print_service.py
+│   ├── realtime_service.py
+│   ├── sales_prediction_service.py
+│   ├── scheduler_service.py
+│   ├── sms_service.py
+│   ├── sync_manager.py
+│   ├── system_service.py
+│   ├── system_tray.py
+│   ├── template_service.py
+│   ├── theme_service.py
+│   ├── update_service.py
+│   └── workflow_service.py
+├── tools/
+│   ├── environments/
+│   │   ├── __init__.py
+│   │   └── file_sync.py
+│   ├── __init__.py
+│   └── skills_sync.py
 ├── ~/
 │   └── Desktop/
 ├── gen_book.py
@@ -1058,14 +1248,46 @@
 
 ## 模块列表
 
+- [`_archived/dedup_20260619_170800/deps.py`](./_archived/dedup_20260619_170800/deps.py.md)
+- [`_archived/license_模块归档_20260619/license_crypto.py`](./_archived/license_模块归档_20260619/license_crypto.py.md)
+- [`_archived/license_模块归档_20260619/license_db.py`](./_archived/license_模块归档_20260619/license_db.py.md)
+- [`_archived/license_模块归档_20260619/license_service.py`](./_archived/license_模块归档_20260619/license_service.py.md)
+- [`config/__init__.py`](./config/__init__.py.md)
+- [`config/supabase_config.py`](./config/supabase_config.py.md)
 - [`core/__init__.py`](./core/__init__.py.md)
 - [`core/agent.py`](./core/agent.py.md)
+- [`core/app_state.py`](./core/app_state.py.md)
+- [`core/auth_service.py`](./core/auth_service.py.md)
+- [`core/backup.py`](./core/backup.py.md)
+- [`core/business_service.py`](./core/business_service.py.md)
+- [`core/ceo_agent.py`](./core/ceo_agent.py.md)
+- [`core/cloud_pull.py`](./core/cloud_pull.py.md)
+- [`core/cloud_sync.py`](./core/cloud_sync.py.md)
+- [`core/cloud_sync_v2.py`](./core/cloud_sync_v2.py.md)
+- [`core/conflict_resolver.py`](./core/conflict_resolver.py.md)
 - [`core/cosmic.py`](./core/cosmic.py.md)
+- [`core/custom_fields.py`](./core/custom_fields.py.md)
+- [`core/dark_theme.py`](./core/dark_theme.py.md)
 - [`core/data.py`](./core/data.py.md)
-- [`core/deps.py`](./core/deps.py.md)
+- [`core/data_20260619_111935_141.py`](./core/data_20260619_111935_141.py.md)
+- [`core/data_sync.py`](./core/data_sync.py.md)
+- [`core/database.py`](./core/database.py.md)
+- [`core/event_bus.py`](./core/event_bus.py.md)
+- [`core/excel_export.py`](./core/excel_export.py.md)
 - [`core/llm_client.py`](./core/llm_client.py.md)
+- [`core/machine_code.py`](./core/machine_code.py.md)
+- [`core/mobile_api.py`](./core/mobile_api.py.md)
+- [`core/module_manager.py`](./core/module_manager.py.md)
+- [`core/notification_cron.py`](./core/notification_cron.py.md)
+- [`core/notification_service.py`](./core/notification_service.py.md)
+- [`core/notification_toast.py`](./core/notification_toast.py.md)
+- [`core/operation_log.py`](./core/operation_log.py.md)
+- [`core/oplog.py`](./core/oplog.py.md)
+- [`core/paths.py`](./core/paths.py.md)
 - [`core/planet_painter.py`](./core/planet_painter.py.md)
 - [`core/planet_painter_20260614_151048_302.py`](./core/planet_painter_20260614_151048_302.py.md)
+- [`core/reconciliation.py`](./core/reconciliation.py.md)
+- [`core/scheduled_tasks.py`](./core/scheduled_tasks.py.md)
 - [`core/shapes/__init__.py`](./core/shapes/__init__.py.md)
 - [`core/shapes/alien.py`](./core/shapes/alien.py.md)
 - [`core/shapes/black_hole.py`](./core/shapes/black_hole.py.md)
@@ -1107,30 +1329,90 @@
 - [`core/shapes/venus.py`](./core/shapes/venus.py.md)
 - [`core/shapes/white_dwarf.py`](./core/shapes/white_dwarf.py.md)
 - [`core/shapes/wormhole.py`](./core/shapes/wormhole.py.md)
+- [`core/simple_sync.py`](./core/simple_sync.py.md)
+- [`core/smart_report.py`](./core/smart_report.py.md)
+- [`core/storage.py`](./core/storage.py.md)
+- [`core/supabase_client.py`](./core/supabase_client.py.md)
+- [`core/sync_bridge.py`](./core/sync_bridge.py.md)
+- [`core/sync_decorator.py`](./core/sync_decorator.py.md)
+- [`core/sync_integration.py`](./core/sync_integration.py.md)
+- [`core/sync_manager.py`](./core/sync_manager.py.md)
+- [`core/sync_optimized.py`](./core/sync_optimized.py.md)
+- [`core/triple_sync.py`](./core/triple_sync.py.md)
+- [`core/user_dao.py`](./core/user_dao.py.md)
 - [`core/voice.py`](./core/voice.py.md)
+- [`core/workflow_engine.py`](./core/workflow_engine.py.md)
 - [`gen_book.py`](./gen_book.py.md)
 - [`main.py`](./main.py.md)
 - [`modules/__init__.py`](./modules/__init__.py.md)
+- [`modules/account/__init__.py`](./modules/account/__init__.py.md)
+- [`modules/account/account_activation.py`](./modules/account/account_activation.py.md)
+- [`modules/account/account_update.py`](./modules/account/account_update.py.md)
+- [`modules/account/activation_service.py`](./modules/account/activation_service.py.md)
+- [`modules/account/activation_stats.py`](./modules/account/activation_stats.py.md)
+- [`modules/account/activation_stats_service.py`](./modules/account/activation_stats_service.py.md)
+- [`modules/account/license_local.py`](./modules/account/license_local.py.md)
+- [`modules/admin/__init__.py`](./modules/admin/__init__.py.md)
+- [`modules/admin/admin_activation.py`](./modules/admin/admin_activation.py.md)
+- [`modules/admin/admin_backup.py`](./modules/admin/admin_backup.py.md)
+- [`modules/admin/admin_data.py`](./modules/admin/admin_data.py.md)
+- [`modules/admin/admin_data_mgmt.py`](./modules/admin/admin_data_mgmt.py.md)
+- [`modules/admin/admin_finance.py`](./modules/admin/admin_finance.py.md)
+- [`modules/admin/admin_log.py`](./modules/admin/admin_log.py.md)
+- [`modules/admin/admin_orders.py`](./modules/admin/admin_orders.py.md)
+- [`modules/admin/admin_product.py`](./modules/admin/admin_product.py.md)
+- [`modules/admin/admin_service.py`](./modules/admin/admin_service.py.md)
+- [`modules/admin/admin_settings.py`](./modules/admin/admin_settings.py.md)
+- [`modules/admin/admin_staff.py`](./modules/admin/admin_staff.py.md)
+- [`modules/admin/admin_strategy.py`](./modules/admin/admin_strategy.py.md)
+- [`modules/admin/admin_user.py`](./modules/admin/admin_user.py.md)
+- [`modules/admin/admin_window.py`](./modules/admin/admin_window.py.md)
+- [`modules/admin/cascade_delete.py`](./modules/admin/cascade_delete.py.md)
+- [`modules/admin/strategy_dao.py`](./modules/admin/strategy_dao.py.md)
 - [`modules/auth/__init__.py`](./modules/auth/__init__.py.md)
+- [`modules/auth/activation_gate.py`](./modules/auth/activation_gate.py.md)
 - [`modules/auth/admin_login_dialog.py`](./modules/auth/admin_login_dialog.py.md)
+- [`modules/auth/admin_login_window.py`](./modules/auth/admin_login_window.py.md)
 - [`modules/auth/auth_service.py`](./modules/auth/auth_service.py.md)
+- [`modules/auth/change_password_dialog.py`](./modules/auth/change_password_dialog.py.md)
 - [`modules/auth/connect_window.py`](./modules/auth/connect_window.py.md)
+- [`modules/auth/dao/user_dao.py`](./modules/auth/dao/user_dao.py.md)
 - [`modules/auth/login_window.py`](./modules/auth/login_window.py.md)
 - [`modules/auth/model_config_panel.py`](./modules/auth/model_config_panel.py.md)
 - [`modules/auth/model_setup_window.py`](./modules/auth/model_setup_window.py.md)
+- [`modules/auth/register_window.py`](./modules/auth/register_window.py.md)
+- [`modules/auth/select_mode_window.py`](./modules/auth/select_mode_window.py.md)
+- [`modules/auth/service/cloud_api.py`](./modules/auth/service/cloud_api.py.md)
 - [`modules/auth/upgrade_window.py`](./modules/auth/upgrade_window.py.md)
 - [`modules/business/__init__.py`](./modules/business/__init__.py.md)
 - [`modules/business/business_window.py`](./modules/business/business_window.py.md)
+- [`modules/business/customer_service.py`](./modules/business/customer_service.py.md)
 - [`modules/business/customer_window.py`](./modules/business/customer_window.py.md)
+- [`modules/business/finance_service.py`](./modules/business/finance_service.py.md)
 - [`modules/business/finance_window.py`](./modules/business/finance_window.py.md)
+- [`modules/business/order_service.py`](./modules/business/order_service.py.md)
 - [`modules/business/order_window.py`](./modules/business/order_window.py.md)
+- [`modules/business/product_service.py`](./modules/business/product_service.py.md)
 - [`modules/business/product_window.py`](./modules/business/product_window.py.md)
+- [`modules/common/advanced_filter_window.py`](./modules/common/advanced_filter_window.py.md)
+- [`modules/common/custom_field_window.py`](./modules/common/custom_field_window.py.md)
 - [`modules/dashboard/__init__.py`](./modules/dashboard/__init__.py.md)
 - [`modules/dashboard/dashboard_window.py`](./modules/dashboard/dashboard_window.py.md)
 - [`modules/data_center/__init__.py`](./modules/data_center/__init__.py.md)
 - [`modules/data_center/bi_window.py`](./modules/data_center/bi_window.py.md)
+- [`modules/data_center/chart_window.py`](./modules/data_center/chart_window.py.md)
+- [`modules/data_center/dashboard_window_v2.py`](./modules/data_center/dashboard_window_v2.py.md)
+- [`modules/data_center/dashboard_window_v3.py`](./modules/data_center/dashboard_window_v3.py.md)
 - [`modules/data_center/data_window.py`](./modules/data_center/data_window.py.md)
+- [`modules/data_center/report_service.py`](./modules/data_center/report_service.py.md)
+- [`modules/data_center/report_service_v2.py`](./modules/data_center/report_service_v2.py.md)
 - [`modules/data_center/report_window.py`](./modules/data_center/report_window.py.md)
+- [`modules/data_center/smart_report_window.py`](./modules/data_center/smart_report_window.py.md)
+- [`modules/i18n/i18n_window.py`](./modules/i18n/i18n_window.py.md)
+- [`modules/industry/industry_adapter.py`](./modules/industry/industry_adapter.py.md)
+- [`modules/industry/industry_config.py`](./modules/industry/industry_config.py.md)
+- [`modules/industry/industry_report.py`](./modules/industry/industry_report.py.md)
+- [`modules/industry/industry_window.py`](./modules/industry/industry_window.py.md)
 - [`modules/intelligence/__init__.py`](./modules/intelligence/__init__.py.md)
 - [`modules/intelligence/_ai_shared.py`](./modules/intelligence/_ai_shared.py.md)
 - [`modules/intelligence/_ai_widgets.py`](./modules/intelligence/_ai_widgets.py.md)
@@ -1148,11 +1430,13 @@
 - [`modules/intelligence/_navigation_hud.py`](./modules/intelligence/_navigation_hud.py.md)
 - [`modules/intelligence/_shell_dialogs.py`](./modules/intelligence/_shell_dialogs.py.md)
 - [`modules/intelligence/_stubs.py`](./modules/intelligence/_stubs.py.md)
+- [`modules/intelligence/account_window.py`](./modules/intelligence/account_window.py.md)
 - [`modules/intelligence/agent_bridge.py`](./modules/intelligence/agent_bridge.py.md)
 - [`modules/intelligence/agent_bridge_models.py`](./modules/intelligence/agent_bridge_models.py.md)
 - [`modules/intelligence/agent_bridge_tools.py`](./modules/intelligence/agent_bridge_tools.py.md)
 - [`modules/intelligence/agent_bridge_workers.py`](./modules/intelligence/agent_bridge_workers.py.md)
 - [`modules/intelligence/ai_assistant_window.py`](./modules/intelligence/ai_assistant_window.py.md)
+- [`modules/intelligence/ai_center_window.py`](./modules/intelligence/ai_center_window.py.md)
 - [`modules/intelligence/ai_chat_styles.py`](./modules/intelligence/ai_chat_styles.py.md)
 - [`modules/intelligence/ai_chat_window.py`](./modules/intelligence/ai_chat_window.py.md)
 - [`modules/intelligence/ai_dashboard_window.py`](./modules/intelligence/ai_dashboard_window.py.md)
@@ -1163,76 +1447,107 @@
 - [`modules/intelligence/ai_features_sales_ai.py`](./modules/intelligence/ai_features_sales_ai.py.md)
 - [`modules/intelligence/analysis_tools.py`](./modules/intelligence/analysis_tools.py.md)
 - [`modules/intelligence/anomaly_detector.py`](./modules/intelligence/anomaly_detector.py.md)
+- [`modules/intelligence/auto_task_executor.py`](./modules/intelligence/auto_task_executor.py.md)
 - [`modules/intelligence/backup_p02/agent_bridge.py`](./modules/intelligence/backup_p02/agent_bridge.py.md)
 - [`modules/intelligence/backup_p02/ai_chat_window.py`](./modules/intelligence/backup_p02/ai_chat_window.py.md)
 - [`modules/intelligence/backup_p02/intelligence_window.py`](./modules/intelligence/backup_p02/intelligence_window.py.md)
 - [`modules/intelligence/backup_p02/opcclaw_floating_planet.py`](./modules/intelligence/backup_p02/opcclaw_floating_planet.py.md)
+- [`modules/intelligence/batch_text.py`](./modules/intelligence/batch_text.py.md)
 - [`modules/intelligence/business_ai_assistant.py`](./modules/intelligence/business_ai_assistant.py.md)
 - [`modules/intelligence/business_tools.py`](./modules/intelligence/business_tools.py.md)
 - [`modules/intelligence/chat_session_manager.py`](./modules/intelligence/chat_session_manager.py.md)
+- [`modules/intelligence/compress_tool.py`](./modules/intelligence/compress_tool.py.md)
 - [`modules/intelligence/core/__init__.py`](./modules/intelligence/core/__init__.py.md)
 - [`modules/intelligence/core/llm_backend.py`](./modules/intelligence/core/llm_backend.py.md)
 - [`modules/intelligence/crm_tools.py`](./modules/intelligence/crm_tools.py.md)
 - [`modules/intelligence/data_import_tools.py`](./modules/intelligence/data_import_tools.py.md)
 - [`modules/intelligence/data_visualization.py`](./modules/intelligence/data_visualization.py.md)
-- [`modules/intelligence/digital_display.py`](./modules/intelligence/digital_display.py.md)
-- [`modules/intelligence/digital_emp_window.py`](./modules/intelligence/digital_emp_window.py.md)
-- [`modules/intelligence/digital_employee.py`](./modules/intelligence/digital_employee.py.md)
-- [`modules/intelligence/digital_employee_panel.py`](./modules/intelligence/digital_employee_panel.py.md)
+- [`modules/intelligence/db_helper.py`](./modules/intelligence/db_helper.py.md)
+- [`modules/intelligence/download_dialog.py`](./modules/intelligence/download_dialog.py.md)
 - [`modules/intelligence/editor_window.py`](./modules/intelligence/editor_window.py.md)
 - [`modules/intelligence/enhanced/__init__.py`](./modules/intelligence/enhanced/__init__.py.md)
 - [`modules/intelligence/enhanced/enhanced_tools.py`](./modules/intelligence/enhanced/enhanced_tools.py.md)
 - [`modules/intelligence/enhanced_chat.py`](./modules/intelligence/enhanced_chat.py.md)
+- [`modules/intelligence/event_trigger.py`](./modules/intelligence/event_trigger.py.md)
+- [`modules/intelligence/file_rename_tools.py`](./modules/intelligence/file_rename_tools.py.md)
 - [`modules/intelligence/finance_analysis_tools.py`](./modules/intelligence/finance_analysis_tools.py.md)
 - [`modules/intelligence/floating_planet_anim_mixin.py`](./modules/intelligence/floating_planet_anim_mixin.py.md)
 - [`modules/intelligence/floating_planet_draw_mixin.py`](./modules/intelligence/floating_planet_draw_mixin.py.md)
 - [`modules/intelligence/floating_planet_menu_mixin.py`](./modules/intelligence/floating_planet_menu_mixin.py.md)
-- [`modules/intelligence/floating_planet_voice_mixin.py`](./modules/intelligence/floating_planet_voice_mixin.py.md)
 - [`modules/intelligence/hr_tools.py`](./modules/intelligence/hr_tools.py.md)
+- [`modules/intelligence/img_converter.py`](./modules/intelligence/img_converter.py.md)
 - [`modules/intelligence/intelligence_integration.py`](./modules/intelligence/intelligence_integration.py.md)
 - [`modules/intelligence/intelligence_window.py`](./modules/intelligence/intelligence_window.py.md)
 - [`modules/intelligence/inventory_tools.py`](./modules/intelligence/inventory_tools.py.md)
+- [`modules/intelligence/json_tools.py`](./modules/intelligence/json_tools.py.md)
 - [`modules/intelligence/key_manager.py`](./modules/intelligence/key_manager.py.md)
 - [`modules/intelligence/knowledge_base.py`](./modules/intelligence/knowledge_base.py.md)
 - [`modules/intelligence/marketing_tools.py`](./modules/intelligence/marketing_tools.py.md)
 - [`modules/intelligence/model_config.py`](./modules/intelligence/model_config.py.md)
+- [`modules/intelligence/monitor_dashboard.py`](./modules/intelligence/monitor_dashboard.py.md)
 - [`modules/intelligence/offline_analyzer.py`](./modules/intelligence/offline_analyzer.py.md)
-- [`modules/intelligence/opcclaw_employee.py`](./modules/intelligence/opcclaw_employee.py.md)
 - [`modules/intelligence/opcclaw_floating_planet.py`](./modules/intelligence/opcclaw_floating_planet.py.md)
+- [`modules/intelligence/password_tools.py`](./modules/intelligence/password_tools.py.md)
 - [`modules/intelligence/performance_monitor.py`](./modules/intelligence/performance_monitor.py.md)
+- [`modules/intelligence/predictor_window.py`](./modules/intelligence/predictor_window.py.md)
 - [`modules/intelligence/quick_actions.py`](./modules/intelligence/quick_actions.py.md)
 - [`modules/intelligence/rag_injector.py`](./modules/intelligence/rag_injector.py.md)
 - [`modules/intelligence/recommendation_engine.py`](./modules/intelligence/recommendation_engine.py.md)
 - [`modules/intelligence/report_generator.py`](./modules/intelligence/report_generator.py.md)
+- [`modules/intelligence/sales_predictor.py`](./modules/intelligence/sales_predictor.py.md)
 - [`modules/intelligence/scan_window.py`](./modules/intelligence/scan_window.py.md)
+- [`modules/intelligence/screen_recorder.py`](./modules/intelligence/screen_recorder.py.md)
 - [`modules/intelligence/self_monitor.py`](./modules/intelligence/self_monitor.py.md)
 - [`modules/intelligence/session_context.py`](./modules/intelligence/session_context.py.md)
+- [`modules/intelligence/smart_assistant.py`](./modules/intelligence/smart_assistant.py.md)
 - [`modules/intelligence/smart_report_tools.py`](./modules/intelligence/smart_report_tools.py.md)
 - [`modules/intelligence/smart_workflow.py`](./modules/intelligence/smart_workflow.py.md)
 - [`modules/intelligence/starship_painter.py`](./modules/intelligence/starship_painter.py.md)
 - [`modules/intelligence/super_intelligence.py`](./modules/intelligence/super_intelligence.py.md)
 - [`modules/intelligence/system_hub_window.py`](./modules/intelligence/system_hub_window.py.md)
 - [`modules/intelligence/system_monitor.py`](./modules/intelligence/system_monitor.py.md)
+- [`modules/intelligence/text_editor.py`](./modules/intelligence/text_editor.py.md)
+- [`modules/intelligence/timestamp_tools.py`](./modules/intelligence/timestamp_tools.py.md)
 - [`modules/intelligence/tool_registry.py`](./modules/intelligence/tool_registry.py.md)
 - [`modules/intelligence/tools_window.py`](./modules/intelligence/tools_window.py.md)
+- [`modules/intelligence/usb_scanner.py`](./modules/intelligence/usb_scanner.py.md)
 - [`modules/intelligence/vault_window.py`](./modules/intelligence/vault_window.py.md)
 - [`modules/intelligence/voice_interface.py`](./modules/intelligence/voice_interface.py.md)
 - [`modules/intelligence/whisper_recognizer.py`](./modules/intelligence/whisper_recognizer.py.md)
+- [`modules/intelligence/window_top_tools.py`](./modules/intelligence/window_top_tools.py.md)
 - [`modules/intelligence/workflow_engine.py`](./modules/intelligence/workflow_engine.py.md)
+- [`modules/notification/notification_window.py`](./modules/notification/notification_window.py.md)
+- [`modules/permission/permission_window.py`](./modules/permission/permission_window.py.md)
 - [`modules/personnel/__init__.py`](./modules/personnel/__init__.py.md)
+- [`modules/personnel/distribution_service.py`](./modules/personnel/distribution_service.py.md)
 - [`modules/personnel/distribution_window.py`](./modules/personnel/distribution_window.py.md)
+- [`modules/personnel/member_service.py`](./modules/personnel/member_service.py.md)
 - [`modules/personnel/member_window.py`](./modules/personnel/member_window.py.md)
 - [`modules/personnel/personnel_window.py`](./modules/personnel/personnel_window.py.md)
+- [`modules/personnel/staff_service.py`](./modules/personnel/staff_service.py.md)
 - [`modules/personnel/staff_window.py`](./modules/personnel/staff_window.py.md)
+- [`modules/personnel/wallet_service.py`](./modules/personnel/wallet_service.py.md)
 - [`modules/personnel/wallet_window.py`](./modules/personnel/wallet_window.py.md)
+- [`modules/startup/startup_selector_window.py`](./modules/startup/startup_selector_window.py.md)
 - [`modules/system/__init__.py`](./modules/system/__init__.py.md)
-- [`modules/system/activation_window.py`](./modules/system/activation_window.py.md)
+- [`modules/system/_archived/activation_window.py`](./modules/system/_archived/activation_window.py.md)
+- [`modules/system/_archived/base_info_window.py`](./modules/system/_archived/base_info_window.py.md)
+- [`modules/system/_archived/cloud_window.py`](./modules/system/_archived/cloud_window.py.md)
+- [`modules/system/_archived/logs_window.py`](./modules/system/_archived/logs_window.py.md)
+- [`modules/system/_archived/system_window.py`](./modules/system/_archived/system_window.py.md)
+- [`modules/system/_archived/update_dialog.py`](./modules/system/_archived/update_dialog.py.md)
+- [`modules/system/audit_window.py`](./modules/system/audit_window.py.md)
 - [`modules/system/base_info_window.py`](./modules/system/base_info_window.py.md)
+- [`modules/system/cloud_model_panel.py`](./modules/system/cloud_model_panel.py.md)
+- [`modules/system/cloud_module.py`](./modules/system/cloud_module.py.md)
+- [`modules/system/cloud_server_window.py`](./modules/system/cloud_server_window.py.md)
 - [`modules/system/cloud_window.py`](./modules/system/cloud_window.py.md)
 - [`modules/system/logs_window.py`](./modules/system/logs_window.py.md)
 - [`modules/system/system_hub_window.py`](./modules/system/system_hub_window.py.md)
-- [`modules/system/system_window.py`](./modules/system/system_window.py.md)
-- [`modules/system/update_dialog.py`](./modules/system/update_dialog.py.md)
+- [`modules/system/system_logs_service.py`](./modules/system/system_logs_service.py.md)
+- [`modules/system_logs/system_logs_service.py`](./modules/system_logs/system_logs_service.py.md)
+- [`modules/system_logs/system_logs_window.py`](./modules/system_logs/system_logs_window.py.md)
+- [`modules/workflow/workflow_window.py`](./modules/workflow/workflow_window.py.md)
 - [`opcclaw/__init__.py`](./opcclaw/__init__.py.md)
 - [`opcclaw/__init___20260613_080428_724.py`](./opcclaw/__init___20260613_080428_724.py.md)
 - [`opcclaw/adapters/__init__.py`](./opcclaw/adapters/__init__.py.md)
@@ -1705,4 +2020,46 @@
 - [`opcclaw/web_ui/workflow/templates.py`](./opcclaw/web_ui/workflow/templates.py.md)
 - [`planet_daemon.py`](./planet_daemon.py.md)
 - [`rollback_control.py`](./rollback_control.py.md)
+- [`services/__init__.py`](./services/__init__.py.md)
+- [`services/ai_chatbot_service.py`](./services/ai_chatbot_service.py.md)
+- [`services/audit_service.py`](./services/audit_service.py.md)
+- [`services/backup_service.py`](./services/backup_service.py.md)
+- [`services/backup_tool.py`](./services/backup_tool.py.md)
+- [`services/barcode_service.py`](./services/barcode_service.py.md)
+- [`services/bi_service.py`](./services/bi_service.py.md)
+- [`services/cache_service.py`](./services/cache_service.py.md)
+- [`services/chart_service.py`](./services/chart_service.py.md)
+- [`services/database_optimizer.py`](./services/database_optimizer.py.md)
+- [`services/encryption_service.py`](./services/encryption_service.py.md)
+- [`services/export_service.py`](./services/export_service.py.md)
+- [`services/hotkey_manager.py`](./services/hotkey_manager.py.md)
+- [`services/i18n_service.py`](./services/i18n_service.py.md)
+- [`services/image_cache_service.py`](./services/image_cache_service.py.md)
+- [`services/import_export_service.py`](./services/import_export_service.py.md)
+- [`services/lazy_load_service.py`](./services/lazy_load_service.py.md)
+- [`services/license_service.py`](./services/license_service.py.md)
+- [`services/logistics_service.py`](./services/logistics_service.py.md)
+- [`services/memory_service.py`](./services/memory_service.py.md)
+- [`services/nl_query_service.py`](./services/nl_query_service.py.md)
+- [`services/notification_service.py`](./services/notification_service.py.md)
+- [`services/offline_queue.py`](./services/offline_queue.py.md)
+- [`services/payment_service.py`](./services/payment_service.py.md)
+- [`services/performance_service.py`](./services/performance_service.py.md)
+- [`services/permission_service.py`](./services/permission_service.py.md)
+- [`services/print_service.py`](./services/print_service.py.md)
+- [`services/realtime_service.py`](./services/realtime_service.py.md)
+- [`services/sales_prediction_service.py`](./services/sales_prediction_service.py.md)
+- [`services/scheduler_service.py`](./services/scheduler_service.py.md)
+- [`services/sms_service.py`](./services/sms_service.py.md)
+- [`services/sync_manager.py`](./services/sync_manager.py.md)
+- [`services/system_service.py`](./services/system_service.py.md)
+- [`services/system_tray.py`](./services/system_tray.py.md)
+- [`services/template_service.py`](./services/template_service.py.md)
+- [`services/theme_service.py`](./services/theme_service.py.md)
+- [`services/update_service.py`](./services/update_service.py.md)
+- [`services/workflow_service.py`](./services/workflow_service.py.md)
 - [`siri_command_handler.py`](./siri_command_handler.py.md)
+- [`tools/__init__.py`](./tools/__init__.py.md)
+- [`tools/environments/__init__.py`](./tools/environments/__init__.py.md)
+- [`tools/environments/file_sync.py`](./tools/environments/file_sync.py.md)
+- [`tools/skills_sync.py`](./tools/skills_sync.py.md)
