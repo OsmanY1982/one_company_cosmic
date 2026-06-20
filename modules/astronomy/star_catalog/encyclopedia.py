@@ -13,11 +13,6 @@ from modules.astronomy.star_catalog.data_entries import PLANET_ENTRIES, MOON_ENT
 
 def _load_catalog():
     """加载 solar_system_data 中的 SOLAR_CATALOG"""
-    import sys
-    import os
-    proj = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    if proj not in sys.path:
-        sys.path.insert(0, proj)
     from modules.astronomy.solar_system.data import SOLAR_CATALOG
     return SOLAR_CATALOG
 
@@ -145,9 +140,9 @@ def _build_bodies():
             entry["catalog_id"] = body_id
             bodies[body_id] = entry
 
-        elif body_id in MOON_ENTRIES:
+        elif body.get("name_en") in MOON_ENTRIES:
             # 大卫星 — 使用详细数据
-            entry = dict(MOON_ENTRIES[body_id])
+            entry = dict(MOON_ENTRIES[body["name_en"]])
             entry.setdefault("diameter_km", body.get("radius_km", 0) * 2)
             entry.setdefault("mass_kg", "—")
             entry.setdefault("temp_surface_c", "—")

@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-20 11:54
-> 共 846 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-20 16:02
+> 共 859 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -16,22 +16,6 @@
 │       ├── license_crypto.py
 │       ├── license_db.py
 │       └── license_service.py
-├── astronomy/
-│   ├── solar_system/
-│   │   ├── __init__.py
-│   │   ├── data.py
-│   │   └── window.py
-│   ├── star_catalog/
-│   │   ├── __init__.py
-│   │   ├── catalog.py
-│   │   ├── data_entries.py
-│   │   ├── detail.py
-│   │   ├── encyclopedia.py
-│   │   └── voice.py
-│   ├── __init__.py
-│   └── hub.py
-├── backup/
-│   ├── cloud_backups/
 ├── config/
 │   ├── agents/
 │   ├── __init__.py
@@ -162,8 +146,86 @@
 │   │   └── strategy_dao.py
 │   ├── astronomy/
 │   │   ├── solar_system/
+│   │   │   ├── planets/
+│   │   │   │   ├── callisto/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── ceres/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── earth/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── enceladus/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── eris/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── europa/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── ganymede/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── haumea/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── io/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── jupiter/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── makemake/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── mars/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── mercury/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── moon/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── neptune/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── pluto/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── saturn/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── sun/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── titan/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   └── __init__.py
+│   │   │   │   ├── uranus/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── venus/
+│   │   │   │   │   ├── audio/
+│   │   │   │   │   ├── knowledge/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── _base.py
 │   │   │   ├── __init__.py
 │   │   │   ├── data.py
+│   │   │   ├── renderer.py
 │   │   │   └── window.py
 │   │   ├── star_catalog/
 │   │   │   ├── __init__.py
@@ -1288,17 +1350,6 @@
 - [`_archived/license_模块归档_20260619/license_crypto.py`](./_archived/license_模块归档_20260619/license_crypto.py.md)
 - [`_archived/license_模块归档_20260619/license_db.py`](./_archived/license_模块归档_20260619/license_db.py.md)
 - [`_archived/license_模块归档_20260619/license_service.py`](./_archived/license_模块归档_20260619/license_service.py.md)
-- [`astronomy/__init__.py`](./astronomy/__init__.py.md)
-- [`astronomy/hub.py`](./astronomy/hub.py.md)
-- [`astronomy/solar_system/__init__.py`](./astronomy/solar_system/__init__.py.md)
-- [`astronomy/solar_system/data.py`](./astronomy/solar_system/data.py.md)
-- [`astronomy/solar_system/window.py`](./astronomy/solar_system/window.py.md)
-- [`astronomy/star_catalog/__init__.py`](./astronomy/star_catalog/__init__.py.md)
-- [`astronomy/star_catalog/catalog.py`](./astronomy/star_catalog/catalog.py.md)
-- [`astronomy/star_catalog/data_entries.py`](./astronomy/star_catalog/data_entries.py.md)
-- [`astronomy/star_catalog/detail.py`](./astronomy/star_catalog/detail.py.md)
-- [`astronomy/star_catalog/encyclopedia.py`](./astronomy/star_catalog/encyclopedia.py.md)
-- [`astronomy/star_catalog/voice.py`](./astronomy/star_catalog/voice.py.md)
 - [`config/__init__.py`](./config/__init__.py.md)
 - [`config/supabase_config.py`](./config/supabase_config.py.md)
 - [`core/__init__.py`](./core/__init__.py.md)
@@ -1420,6 +1471,30 @@
 - [`modules/astronomy/hub.py`](./modules/astronomy/hub.py.md)
 - [`modules/astronomy/solar_system/__init__.py`](./modules/astronomy/solar_system/__init__.py.md)
 - [`modules/astronomy/solar_system/data.py`](./modules/astronomy/solar_system/data.py.md)
+- [`modules/astronomy/solar_system/planets/__init__.py`](./modules/astronomy/solar_system/planets/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/_base.py`](./modules/astronomy/solar_system/planets/_base.py.md)
+- [`modules/astronomy/solar_system/planets/callisto/__init__.py`](./modules/astronomy/solar_system/planets/callisto/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/ceres/__init__.py`](./modules/astronomy/solar_system/planets/ceres/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/earth/__init__.py`](./modules/astronomy/solar_system/planets/earth/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/enceladus/__init__.py`](./modules/astronomy/solar_system/planets/enceladus/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/eris/__init__.py`](./modules/astronomy/solar_system/planets/eris/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/europa/__init__.py`](./modules/astronomy/solar_system/planets/europa/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/ganymede/__init__.py`](./modules/astronomy/solar_system/planets/ganymede/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/haumea/__init__.py`](./modules/astronomy/solar_system/planets/haumea/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/io/__init__.py`](./modules/astronomy/solar_system/planets/io/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/jupiter/__init__.py`](./modules/astronomy/solar_system/planets/jupiter/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/makemake/__init__.py`](./modules/astronomy/solar_system/planets/makemake/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/mars/__init__.py`](./modules/astronomy/solar_system/planets/mars/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/mercury/__init__.py`](./modules/astronomy/solar_system/planets/mercury/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/moon/__init__.py`](./modules/astronomy/solar_system/planets/moon/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/neptune/__init__.py`](./modules/astronomy/solar_system/planets/neptune/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/pluto/__init__.py`](./modules/astronomy/solar_system/planets/pluto/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/saturn/__init__.py`](./modules/astronomy/solar_system/planets/saturn/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/sun/__init__.py`](./modules/astronomy/solar_system/planets/sun/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/titan/__init__.py`](./modules/astronomy/solar_system/planets/titan/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/uranus/__init__.py`](./modules/astronomy/solar_system/planets/uranus/__init__.py.md)
+- [`modules/astronomy/solar_system/planets/venus/__init__.py`](./modules/astronomy/solar_system/planets/venus/__init__.py.md)
+- [`modules/astronomy/solar_system/renderer.py`](./modules/astronomy/solar_system/renderer.py.md)
 - [`modules/astronomy/solar_system/window.py`](./modules/astronomy/solar_system/window.py.md)
 - [`modules/astronomy/star_catalog/__init__.py`](./modules/astronomy/star_catalog/__init__.py.md)
 - [`modules/astronomy/star_catalog/catalog.py`](./modules/astronomy/star_catalog/catalog.py.md)

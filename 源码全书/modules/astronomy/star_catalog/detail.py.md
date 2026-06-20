@@ -1,6 +1,6 @@
 # `modules/astronomy/star_catalog/detail.py`
 
-> 路径：`modules/astronomy/star_catalog/detail.py` | 行数：363
+> 路径：`modules/astronomy/star_catalog/detail.py` | 行数：364
 
 
 ---
@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QScrollArea, QFrame, QSizePolicy,
 )
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QPointF, QTimer
 from PyQt5.QtGui import QPainter, QFont, QColor
 
 from core.cosmic import CosmicBackground
@@ -355,7 +355,8 @@ class BodyDetailWindow(QWidget):
 
 
 def _type_name(t):
-    return {"star": "恒星", "planet": "行星", "dwarf_planet": "矮行星", "moon": "卫星"}.get(t, t)
+    from modules.astronomy.star_catalog import BODY_TYPE_LABELS
+    return BODY_TYPE_LABELS.get(t, t)
 
 
 def _btn_style():

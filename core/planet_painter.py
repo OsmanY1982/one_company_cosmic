@@ -70,6 +70,62 @@ PLANET_STYLES = {
                                      (0.7, "#bdbdbd"), (1.0, "#757575")],
         "atmosphere": QColor(200, 200, 200, 10), "craters": True,
     },
+
+    # ═══ 矮行星 ═══
+    "ceres": {
+        "name": "谷神星", "surface": [(0.0, "#6e6964"), (0.3, "#827d74"), (0.5, "#918c82"),
+                                       (0.7, "#7d7870"), (1.0, "#69645e")],
+        "atmosphere": QColor(200, 190, 180, 12), "craters": True,
+    },
+    "eris": {
+        "name": "阋神星", "surface": [(0.0, "#e6e1dc"), (0.3, "#f0eee9"), (0.5, "#faf8f5"),
+                                       (0.7, "#e8e5e0"), (1.0, "#dcd7d0")],
+        "atmosphere": QColor(220, 210, 200, 15),
+    },
+    "makemake": {
+        "name": "鸟神星", "surface": [(0.0, "#c8b4aa"), (0.3, "#dcc8b9"), (0.5, "#d2beb0"),
+                                       (0.7, "#c3afa3"), (1.0, "#b8a497")],
+        "atmosphere": QColor(190, 160, 140, 10),
+    },
+    "haumea": {
+        "name": "妊神星", "surface": [(0.0, "#c8d2dc"), (0.3, "#dce1eb"), (0.5, "#d2dae6"),
+                                       (0.7, "#c3cad4"), (1.0, "#bec5d0")],
+        "atmosphere": QColor(180, 190, 200, 8),
+    },
+
+    # ═══ 伽利略卫星 ═══
+    "io": {
+        "name": "伊奥", "surface": [(0.0, "#c8aa28"), (0.2, "#e6c83c"), (0.4, "#b48c14"),
+                                     (0.6, "#dcbe32"), (0.8, "#aa7e1e"), (1.0, "#bea028")],
+        "atmosphere": QColor(255, 220, 60, 25), "bands": True,
+    },
+    "europa": {
+        "name": "欧罗巴", "surface": [(0.0, "#d2d7dc"), (0.3, "#e1e6eb"), (0.5, "#f0f2f5"),
+                                       (0.7, "#dce1e6"), (1.0, "#c8cdd2")],
+        "atmosphere": QColor(180, 190, 210, 12),
+    },
+    "ganymede": {
+        "name": "加尼米德", "surface": [(0.0, "#8c8278"), (0.3, "#a09687"), (0.5, "#c8c3b9"),
+                                         (0.7, "#969182"), (1.0, "#827a6e")],
+        "atmosphere": QColor(170, 160, 150, 8), "craters": True,
+    },
+    "callisto": {
+        "name": "卡利斯托", "surface": [(0.0, "#645f5a"), (0.3, "#736e69"), (0.5, "#696460"),
+                                         (0.7, "#5c5853"), (1.0, "#504c47")],
+        "atmosphere": QColor(80, 75, 70, 5), "craters": True,
+    },
+
+    # ═══ 土星卫星 ═══
+    "titan": {
+        "name": "泰坦", "surface": [(0.0, "#d2aa5a"), (0.3, "#e1be6e"), (0.5, "#c8a050"),
+                                     (0.7, "#be9646"), (1.0, "#aa8640")],
+        "atmosphere": QColor(255, 180, 60, 55), "clouds": True,
+    },
+    "enceladus": {
+        "name": "恩克拉多斯", "surface": [(0.0, "#ebeff2"), (0.3, "#f5f7fa"), (0.5, "#f0f3f7"),
+                                           (0.7, "#e6e9ee"), (1.0, "#dce0e5")],
+        "atmosphere": QColor(200, 210, 230, 18),
+    },
 }
 
 

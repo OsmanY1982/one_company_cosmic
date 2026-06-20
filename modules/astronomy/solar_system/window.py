@@ -11,7 +11,7 @@ from PyQt5.QtGui import (
 )
 
 from core.cosmic import CosmicBackground
-from core.planet_painter import PLANET_STYLES, paint_planet
+from modules.astronomy.solar_system.renderer import PLANET_STYLES, paint_planet, paint_nebula
 from modules.astronomy.solar_system.data import (
     SOLAR_CATALOG, total_count, get_children, all_bodies,
     km_to_px, radius_to_px, PLANET_PALETTE,
@@ -280,12 +280,13 @@ class SolarSystemHUD(QWidget):
     def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
+        w, h = self.width(), self.height()
         w2 = self._center
 
-        visible = self._bodies_for_current_zoom()
+        # ── 星云背景 ──
+        paint_nebula(p, w, h)
 
-        # ── 太阳日冕 ──
-        self._paint_sun_corona(p)
+        visible = self._bodies_for_current_zoom()
 
         # ── 天体分组 ──
         planet_bodies = [b for b in visible if b["type"] in ("planet", "dwarf")]
@@ -355,14 +356,16 @@ class SolarSystemHUD(QWidget):
             style = PLANET_STYLES.get(body["style"], PLANET_STYLES["neptune"])
             r = radius_to_px(body["radius_km"], self._zoom)
             r = max(r, 2.5)
-            paint_planet(p, pos, r, style, hovered=False, label=body["name"], font_size=9)
+            paint_planet(p, pos, r, style, hovered=False, label=body["name"], font_size=9,
+                         anim_t=self._t * 0.05)
 
         # ── 太阳 ──
         sun = SOLAR_CATALOG["sun"]
         sun_r = radius_to_px(sun["radius_km"], self._zoom)
         sun_r = max(sun_r, 10)
         sun_style = PLANET_STYLES["sun"]
-        paint_planet(p, w2, sun_r, sun_style, hovered=False, label="太阳", font_size=10)
+        paint_planet(p, w2, sun_r, sun_style, hovered=False, label="太阳", font_size=10,
+                     anim_t=self._t * 0.3)
 
         # ── 悬停标签 ──
         self._paint_hover_label(p)

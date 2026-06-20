@@ -1,6 +1,6 @@
 # `modules/astronomy/star_catalog/catalog.py`
 
-> 路径：`modules/astronomy/star_catalog/catalog.py` | 行数：290
+> 路径：`modules/astronomy/star_catalog/catalog.py` | 行数：292
 
 
 ---
@@ -292,10 +292,12 @@ class StarCatalogWindow(QWidget):
 
 
 def _type_label(t):
-    return {"star": "恒星", "planet": "行星", "dwarf_planet": "矮行星", "moon": "卫星"}.get(t, t)
+    from modules.astronomy.star_catalog import BODY_TYPE_LABELS
+    return BODY_TYPE_LABELS.get(t, t)
 
 
 def _tab_label(t):
-    return {"star": "恒星", "planet": "行星", "dwarf_planet": "矮行星", "moon": "卫星"}.get(t, t)
+    from modules.astronomy.star_catalog import BODY_TYPE_LABELS
+    return BODY_TYPE_LABELS.get(t, t)
 
 ```

@@ -1274,27 +1274,27 @@ PLANET_ENTRIES = {
     "makemake": MAKEMAKE_ENTRY,
 }
 
-# 19 颗大卫星详细条目
+# 19 颗大卫星详细条目 (key 为 name_en，通过 SOLAR_CATALOG 的 name_en 字段匹配，不依赖索引顺序)
 MOON_ENTRIES = {
-    "jupiter_moon_2": MOON_GANYMEDE,   # 木卫三
-    "saturn_moon_5": MOON_TITAN,         # 土卫六
-    "jupiter_moon_3": MOON_CALLISTO,    # 木卫四
-    "jupiter_moon_0": MOON_IO,          # 木卫一
-    "earth_moon_0": MOON_MOON,           # 月球
-    "jupiter_moon_1": MOON_EUROPA,      # 木卫二
-    "neptune_moon_0": MOON_TRITON,      # 海卫一
-    "uranus_moon_2": MOON_TITANIA,      # 天卫三
-    "saturn_moon_7": MOON_RHEA,          # 土卫五
-    "uranus_moon_3": MOON_OBERON,       # 天卫四
-    "saturn_moon_2": MOON_IAPETUS,      # 土卫八
-    "pluto_moon_0": MOON_CHARON,        # 冥卫一
-    "uranus_moon_1": MOON_UMBRIEL,      # 天卫二
-    "uranus_moon_0": MOON_ARIEL,        # 天卫一
-    "saturn_moon_3": MOON_DIONE,        # 土卫四
-    "saturn_moon_0": MOON_TETHYS,       # 土卫三
-    "saturn_moon_1": MOON_ENCELADUS,    # 土卫二
-    "uranus_moon_4": MOON_MIRANDA,      # 天卫五
-    "neptune_moon_7": MOON_PROTEUS,     # 海卫八
+    "Ganymede":    MOON_GANYMEDE,   # 木卫三
+    "Titan":       MOON_TITAN,      # 土卫六
+    "Callisto":    MOON_CALLISTO,   # 木卫四
+    "Io":          MOON_IO,         # 木卫一
+    "Moon":        MOON_MOON,       # 月球
+    "Europa":      MOON_EUROPA,     # 木卫二
+    "Triton":      MOON_TRITON,     # 海卫一
+    "Titania":     MOON_TITANIA,    # 天卫三
+    "Rhea":        MOON_RHEA,       # 土卫五
+    "Oberon":      MOON_OBERON,     # 天卫四
+    "Iapetus":     MOON_IAPETUS,    # 土卫八
+    "Charon":      MOON_CHARON,     # 冥卫一
+    "Umbriel":     MOON_UMBRIEL,    # 天卫二
+    "Ariel":       MOON_ARIEL,      # 天卫一
+    "Dione":       MOON_DIONE,      # 土卫四
+    "Tethys":      MOON_TETHYS,     # 土卫三
+    "Enceladus":   MOON_ENCELADUS,  # 土卫二
+    "Miranda":     MOON_MIRANDA,    # 天卫五
+    "Proteus":     MOON_PROTEUS,    # 海卫八
 }
 
 ```
