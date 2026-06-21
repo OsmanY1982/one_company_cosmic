@@ -35,9 +35,9 @@ import logging
 import os
 import shutil
 from pathlib import Path
-from opcclaw.hermes_constants import get_hermes_home
+from iqra.hermes_constants import get_hermes_home
 from typing import Dict, List, Tuple
-from opcclaw.utils import atomic_replace
+from iqra.utils import atomic_replace
 
 logger = logging.getLogger(__name__)
 

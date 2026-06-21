@@ -6,7 +6,7 @@ paint_planet() 渲染 + 科普卡片 + 语音朗读。ESC 关闭。
 import os
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QScrollArea, QFrame, QSizePolicy, QTextBrowser,
+    QScrollArea, QFrame, QSizePolicy, QTextBrowser, QListWidget, QListWidgetItem,
 )
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPainter, QFont, QColor
@@ -37,6 +37,27 @@ CARD_STYLE = (
     "background: rgba(8, 14, 32, 0.75);"
     " border: 1px solid rgba(60, 120, 200, 0.2);"
     " border-radius: 10px; padding: 16px 20px;"
+)
+
+FILE_LIST_STYLE = (
+    "QListWidget {"
+    " background: rgba(8, 14, 32, 0.75);"
+    " border: 1px solid rgba(60, 120, 200, 0.2);"
+    " border-radius: 8px; padding: 4px;"
+    " font-family: 'PingFang SC'; font-size: 15px; color: #8899bb;"
+    " outline: none;"
+    "}"
+    "QListWidget::item {"
+    " padding: 10px 14px;"
+    " border-bottom: 1px solid rgba(60, 120, 200, 0.1);"
+    "}"
+    "QListWidget::item:selected {"
+    " background: rgba(30, 60, 120, 0.6); color: #aaccee;"
+    " border-left: 3px solid #3399ff;"
+    "}"
+    "QListWidget::item:hover {"
+    " background: rgba(20, 40, 80, 0.5);"
+    "}"
 )
 
 
@@ -133,7 +154,7 @@ class BodyDetailWindow(QWidget):
         style_name = self._body.get("style", "neptune")
         self._renderer = BodyRenderer(style_name, 220, container)
         render_wrapper = QFrame(container)
-        render_wrapper.setFixedSize(280, 300)
+        render_wrapper.setMinimumSize(320, 340)
         render_wrapper.setStyleSheet(CARD_STYLE)
         rl = QVBoxLayout(render_wrapper)
         rl.addWidget(self._renderer, 0, Qt.AlignCenter)
@@ -202,23 +223,31 @@ class BodyDetailWindow(QWidget):
         top_row.addWidget(info_card, 1)
         layout.addLayout(top_row)
 
-        # ── 下半部分：详细介绍（合并所有 knowledge 文件，Markdown 渲染）──
-        merged_content = self._body.get("summary", "")
-        phys = self._body.get("physics", "")
-        expl = self._body.get("exploration", "")
-        if phys and phys not in merged_content:
-            merged_content = merged_content + "\n\n---\n\n" + phys if merged_content else phys
-        if expl and expl not in merged_content:
-            merged_content = merged_content + "\n\n---\n\n" + expl if merged_content else expl
-
-        if merged_content:
+        # ── 下半部分：详细介绍（树状导航，点击展开各自 .md 内容）──
+        knowledge_files = self._body.get("knowledge_files", [])
+        if knowledge_files:
             sec_title = QLabel("详细介绍")
             sec_title.setStyleSheet(SECTION_TITLE_STYLE)
             layout.addWidget(sec_title)
 
-            sec_body = QTextBrowser()
-            sec_body.setOpenExternalLinks(True)
-            sec_body.setStyleSheet(
+            split_row = QHBoxLayout()
+            split_row.setSpacing(12)
+
+            # 左侧：文件列表
+            self._file_list = QListWidget()
+            self._file_list.setFixedWidth(230)
+            self._file_list.setStyleSheet(FILE_LIST_STYLE)
+            for kf in knowledge_files:
+                item = QListWidgetItem(kf["title"])
+                item.setData(Qt.UserRole, kf["content"])
+                self._file_list.addItem(item)
+            self._file_list.currentRowChanged.connect(self._on_select_knowledge)
+            split_row.addWidget(self._file_list)
+
+            # 右侧：内容查看器
+            self._content_view = QTextBrowser()
+            self._content_view.setOpenExternalLinks(True)
+            self._content_view.setStyleSheet(
                 "QTextBrowser {"
                 " color: #8899bb; font-size: 16px; background: rgba(8,14,32,0.6);"
                 " border: 1px solid rgba(60,120,200,0.15); border-radius: 8px;"
@@ -226,15 +255,53 @@ class BodyDetailWindow(QWidget):
                 "}"
                 "QTextBrowser:focus { border-color: rgba(0,200,255,0.3); }"
             )
-            sec_body.document().setDefaultStyleSheet(
+            self._content_view.document().setDefaultStyleSheet(
                 "body { color: #8899bb; background: rgba(8,14,32,0.6); }"
                 " a { color: #66ccff; }"
                 " p { color: #8899bb; line-height: 1.8; }"
             )
-            sec_body.setHtml(_md_to_html(merged_content))
-            sec_body.setMinimumHeight(120)
-            sec_body.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
-            layout.addWidget(sec_body)
+            self._content_view.setMinimumHeight(120)
+            self._content_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+            split_row.addWidget(self._content_view, 1)
+            layout.addLayout(split_row)
+
+            # 默认选中第一个文件
+            if self._file_list.count() > 0:
+                self._file_list.setCurrentRow(0)
+
+        else:
+            # 无知识文件时回退：显示 summary + physics + exploration 合并文本
+            merged_content = self._body.get("summary", "")
+            phys = self._body.get("physics", "")
+            expl = self._body.get("exploration", "")
+            if phys and phys not in merged_content:
+                merged_content = merged_content + "\n\n---\n\n" + phys if merged_content else phys
+            if expl and expl not in merged_content:
+                merged_content = merged_content + "\n\n---\n\n" + expl if merged_content else expl
+
+            if merged_content:
+                sec_title = QLabel("详细介绍")
+                sec_title.setStyleSheet(SECTION_TITLE_STYLE)
+                layout.addWidget(sec_title)
+                sec_body = QTextBrowser()
+                sec_body.setOpenExternalLinks(True)
+                sec_body.setStyleSheet(
+                    "QTextBrowser {"
+                    " color: #8899bb; font-size: 16px; background: rgba(8,14,32,0.6);"
+                    " border: 1px solid rgba(60,120,200,0.15); border-radius: 8px;"
+                    " padding: 12px 16px; font-family: 'PingFang SC';"
+                    "}"
+                    "QTextBrowser:focus { border-color: rgba(0,200,255,0.3); }"
+                )
+                sec_body.document().setDefaultStyleSheet(
+                    "body { color: #8899bb; background: rgba(8,14,32,0.6); }"
+                    " a { color: #66ccff; }"
+                    " p { color: #8899bb; line-height: 1.8; }"
+                )
+                sec_body.setHtml(_md_to_html(merged_content))
+                sec_body.setMinimumHeight(120)
+                sec_body.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+                layout.addWidget(sec_body)
 
         # 趣味事实
         facts = self._body.get("facts", [])
@@ -333,6 +400,14 @@ class BodyDetailWindow(QWidget):
             self._parent_win.show()
             self._parent_win._load_data()
         self.close()
+
+    def _on_select_knowledge(self, index):
+        """点击左侧文件列表项时，渲染对应 .md 内容到右侧 QTextBrowser"""
+        if index < 0:
+            return
+        item = self._file_list.item(index)
+        content = item.data(Qt.UserRole) or ""
+        self._content_view.setHtml(_md_to_html(content))
 
     def closeEvent(self, event):
         self._voice.stop()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 AI 助手模块 v3 — 支持本地模型管理
-- 标签1: 💬 AI 对话 (opcclaw ChatWindow)
+- 标签1: 💬 AI 对话 (iqra ChatWindow)
 - 标签2: ⚡ 快捷工具 (模板、本地模型、系统状态)
 - 标签3~6: 增强功能（智能对话、快捷操作、系统监控、高级功能）
 
@@ -23,7 +23,7 @@ from typing import Optional, Dict, Any
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
-# 使「from opcclaw.xxx import ...」和「from modules.intelligence.xxx import ...」
+# 使「from iqra.xxx import ...」和「from modules.intelligence.xxx import ...」
 # 在所有调用场景下均可正常工作。
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if _PROJECT_ROOT not in sys.path:

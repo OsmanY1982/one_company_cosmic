@@ -1,0 +1,5 @@
+{"timestamp": "2026-06-08T04:16:18.076859", "level": "INFO", "logger": "iqra", "message": "Iqra 日志系统已启动 (level=INFO, json=False)", "module": "iqra_logging", "function": "install", "line": 246}
+{"timestamp": "2026-06-08T04:16:18.077153", "level": "INFO", "logger": "iqra.main", "message": "Initializing Iqra...", "module": "main", "function": "main", "line": 41}
+{"timestamp": "2026-06-08T04:16:18.077153", "level": "INFO", "logger": "iqra.main", "message": "Initializing Iqra...", "module": "main", "function": "main", "line": 41}
+{"timestamp": "2026-06-08T04:16:18.258065", "level": "WARNING", "logger": "iqra.main", "message": "当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用", "module": "main", "function": "main", "line": 78}
+{"timestamp": "2026-06-08T04:16:18.258065", "level": "WARNING", "logger": "iqra.main", "message": "当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用", "module": "main", "function": "main", "line": 78}

@@ -1,10 +1,10 @@
 """
-OPCclaw - 通用样式工具函数
+Iqra - 通用样式工具函数
 """
 from PyQt5.QtWidgets import QPushButton, QLineEdit
 from PyQt5.QtGui import QFont
 
-from opcclaw.modules.widgets import COLORS
+from iqra.modules.widgets import COLORS
 
 
 def _styled_btn(text: str, color: str = COLORS["primary"], height: int = 36,

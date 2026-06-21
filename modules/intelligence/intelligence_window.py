@@ -32,8 +32,9 @@ class NavigationHUD(QWidget):
 
     planet_clicked = None
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, planets=None):
         super().__init__(parent)
+        self._planets = planets if planets is not None else PLANETS
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setMouseTracking(True)
         self._center = QPointF(0, 0)
@@ -54,8 +55,8 @@ class NavigationHUD(QWidget):
     def _planet_positions(self):
         w2 = self._center
         positions = []
-        n = len(PLANETS)
-        for i, p in enumerate(PLANETS):
+        n = len(self._planets)
+        for i, p in enumerate(self._planets):
             offset_angle = i * (360.0 / n)
             rad = math.radians(self._angle + offset_angle)
             x = w2.x() + p["orbit"] * math.cos(rad)
@@ -69,7 +70,7 @@ class NavigationHUD(QWidget):
         w2 = self._center
 
         # ── 轨道线 ──
-        for planet in PLANETS:
+        for planet in self._planets:
             paint_orbit(p, w2, planet["orbit"])
 
         # ── 能量连接线 ──
@@ -112,16 +113,18 @@ class NavigationHUD(QWidget):
 class IntelligenceWindow(QMainWindow):
     """智能中心 · NEURAL NEXUS — 真实星球导航"""
 
-    def __init__(self, parent=None, role="admin", opcclaw_engine=None):
+    def __init__(self, parent=None, role="admin", iqra_engine=None):
         super().__init__(parent)
         self._role = role
-        self._opcclaw_engine = opcclaw_engine
+        self._iqra_engine = iqra_engine
         self._account_win = None
         self._business_win = None
         self._tools_win = None
         self.setWindowTitle("一人公司 — 智能中心 · NEURAL NEXUS")
         self.setMinimumSize(1200, 850)
         self.resize(1200, 850)
+        # 非管理员过滤掉系统管理星球
+        self._planets = [p for p in PLANETS if p["id"] != "system_mgmt" or role == "admin"]
         self._build_ui()
 
     def _build_ui(self):
@@ -129,7 +132,7 @@ class IntelligenceWindow(QMainWindow):
         bg = CosmicBackground()
         self.setCentralWidget(bg)
 
-        self._hud = NavigationHUD(self)
+        self._hud = NavigationHUD(self, planets=self._planets)
         self._hud.setGeometry(0, 0, self.width(), self.height())
         self._hud.planet_clicked = self._on_planet_clicked
         self._hud.raise_()
@@ -148,7 +151,7 @@ class IntelligenceWindow(QMainWindow):
         )
         title.setAlignment(Qt.AlignCenter)
         hl.addWidget(title)
-        subtitle = QLabel("NEURAL NEXUS · 6颗真实星球")
+        subtitle = QLabel(f"NEURAL NEXUS · {len(self._planets)}颗真实星球")
         subtitle.setStyleSheet(
             "color: #776699; font-size: 11px; letter-spacing: 3px;"
             " background: transparent;"
@@ -167,6 +170,11 @@ class IntelligenceWindow(QMainWindow):
         """)
         hl.addWidget(line)
 
+    def showEvent(self, event):
+        super().showEvent(event)
+        from core.ad_launcher import check_and_prompt_ad
+        check_and_prompt_ad(self)
+
     def resizeEvent(self, event):
         super().resizeEvent(event)
         if hasattr(self, '_hud'):
@@ -175,7 +183,7 @@ class IntelligenceWindow(QMainWindow):
     def _on_planet_clicked(self, planet_id):
         if planet_id == "ai_assistant":
             from modules.intelligence.ai_assistant_window import AIAssistantWindow
-            dlg = AIAssistantWindow(self, opcclaw_engine=self._opcclaw_engine)
+            dlg = AIAssistantWindow(self, iqra_engine=self._iqra_engine)
             dlg.show()
         elif planet_id == "tools":
             from modules.intelligence.tools_window import ToolsWindow
@@ -183,7 +191,7 @@ class IntelligenceWindow(QMainWindow):
             self._tools_win.show()
         elif planet_id == "system_mgmt":
             from modules.system.system_hub_window import SystemHubWindow
-            dlg = SystemHubWindow(self)
+            dlg = SystemHubWindow(self, role=self._role)
             dlg.show()
         elif planet_id == "astronomy_hub":
             from modules.astronomy.hub import AstronomyHubWindow
@@ -191,7 +199,7 @@ class IntelligenceWindow(QMainWindow):
             dlg.show()
         elif planet_id == "account":
             from .account_window import AccountWindow
-            self._account_win = AccountWindow(self, role=self._role, opcclaw_engine=self._opcclaw_engine)
+            self._account_win = AccountWindow(self, role=self._role, iqra_engine=self._iqra_engine)
             self._account_win.show()
         elif planet_id == "business":
             from modules.business.business_window import BusinessWindow

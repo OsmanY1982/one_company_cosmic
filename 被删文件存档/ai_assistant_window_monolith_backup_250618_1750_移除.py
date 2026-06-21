@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 AI 助手模块 v3 — 支持本地模型管理
-- 标签1: 💬 AI 对话 (opcclaw ChatWindow)
+- 标签1: 💬 AI 对话 (iqra ChatWindow)
 - 标签2: ⚡ 快捷工具 (模板、本地模型、系统状态)
 - 标签3~6: 增强功能（智能对话、快捷操作、系统监控、高级功能）
 
@@ -23,7 +23,7 @@ from typing import Optional, Dict, Any
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
-# 使「from opcclaw.xxx import ...」和「from modules.intelligence.xxx import ...」
+# 使「from iqra.xxx import ...」和「from modules.intelligence.xxx import ...」
 # 在所有调用场景下均可正常工作。
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if _PROJECT_ROOT not in sys.path:
@@ -1400,7 +1400,7 @@ class APIKeyConfigDialog(QDialog):
             return
         
         try:
-            # 保存到 opcclaw 配置
+            # 保存到 iqra 配置
             from modules.intelligence._stubs import OpcConfigManager as ConfigManager
             project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../..")
             from modules.intelligence._compat import DATA_DIR as data_dir
@@ -1844,12 +1844,12 @@ class QuickToolsWidget(QWidget):
         """检查系统状态"""
         status = []
         
-        # 检查 opcclaw (cosmic: skip)
+        # 检查 iqra (cosmic: skip)
         try:
-            # opcclaw not available in cosmic; skipped
-            status.append("✅ OPCclaw 模块: 已安装")
+            # iqra not available in cosmic; skipped
+            status.append("✅ Iqra 模块: 已安装")
         except ImportError:
-            status.append("❌ OPCclaw 模块: 未安装")
+            status.append("❌ Iqra 模块: 未安装")
         
         # 检查配置
         try:
@@ -1961,7 +1961,7 @@ class QuickToolsWidget(QWidget):
             return
         
         try:
-            # 保存到 opcclaw 配置
+            # 保存到 iqra 配置
             from modules.intelligence._stubs import OpcConfigManager as ConfigManager
             project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../..")
             from modules.intelligence._compat import DATA_DIR as data_dir
@@ -2009,7 +2009,7 @@ from core.planet_painter import PLANET_STYLES, paint_planet, paint_orbit, paint_
 # ═══════ 13颗星球配置（真实纹理） ═══════
 PLANETS = [
     # ── 内核环（核心交互）──
-    {"id": "opcclaw_chat",       "name": "OPCclaw对话",  "style": "earth",    "orbit": 110, "size": 32},
+    {"id": "iqra_chat",       "name": "Iqra对话",  "style": "earth",    "orbit": 110, "size": 32},
     # ── 内环（智能引擎）──
     {"id": "super_intelligence",  "name": "超级智能",     "style": "jupiter",  "orbit": 160, "size": 26},
     {"id": "enhanced_chat",       "name": "增强对话",     "style": "venus",    "orbit": 200, "size": 26},
@@ -2114,16 +2114,16 @@ class NavigationHUD(QWidget):
 
 
 # ═══════════════════════════════════════════
-# OPCclaw 对话弹窗
+# Iqra 对话弹窗
 # ═══════════════════════════════════════════
 
-class OPCclawChatDialog(QDialog):
-    """OPCclaw 核心对话引擎弹窗"""
+class IqraChatDialog(QDialog):
+    """Iqra 核心对话引擎弹窗"""
 
-    def __init__(self, parent=None, opcclaw_engine=None):
+    def __init__(self, parent=None, iqra_engine=None):
         super().__init__(parent)
-        self._opcclaw = opcclaw_engine
-        self.setWindowTitle("OPCclaw 对话 · 核心引擎")
+        self._iqra = iqra_engine
+        self.setWindowTitle("Iqra 对话 · 核心引擎")
         self.setMinimumSize(800, 600)
         self.resize(900, 700)
         self._build_ui()
@@ -2217,13 +2217,13 @@ class OPCclawChatDialog(QDialog):
         ir.addWidget(clear_btn)
         layout.addLayout(ir)
 
-        if self._opcclaw:
+        if self._iqra:
             self._chat_log.append(
-                '<p style="color:#44cc66;">[系统] OPCclaw 引擎已就绪，可以开始对话。</p>'
+                '<p style="color:#44cc66;">[系统] Iqra 引擎已就绪，可以开始对话。</p>'
             )
         else:
             self._chat_log.append(
-                '<p style="color:#ffaa44;">[系统] OPCclaw 引擎未连接，请先完成模型配置。</p>'
+                '<p style="color:#ffaa44;">[系统] Iqra 引擎未连接，请先完成模型配置。</p>'
             )
 
     def _quick_prompt(self, prompt_text):
@@ -2244,10 +2244,10 @@ class OPCclawChatDialog(QDialog):
         )
         self._chat_input.setEnabled(False)
 
-        if not self._opcclaw:
+        if not self._iqra:
             self._chat_log.append(
                 f'<p style="color:#ff6666;font-weight:700;">[{now}] 系统:</p>'
-                f'<p style="color:#ffaaaa;">OPCclaw 引擎未连接，请先完成模型配置后重试。</p>'
+                f'<p style="color:#ffaaaa;">Iqra 引擎未连接，请先完成模型配置后重试。</p>'
             )
             self._chat_input.setEnabled(True)
             self._chat_input.setFocus()
@@ -2259,7 +2259,7 @@ class OPCclawChatDialog(QDialog):
                 "你可以：分析数据、撰写文案、头脑风暴、代码辅助、邮件撰写、"
                 "会议纪要、商业计划、决策建议。回复简洁专业，带一点太空风味。"
             )
-            response = self._opcclaw.chat([
+            response = self._iqra.chat([
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": text},
             ])
@@ -2267,16 +2267,16 @@ class OPCclawChatDialog(QDialog):
         except AttributeError:
             try:
                 full = []
-                for chunk in self._opcclaw.chat_stream([
+                for chunk in self._iqra.chat_stream([
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": text},
                 ]):
                     full.append(chunk)
                 reply = "".join(full)
             except Exception as e2:
-                reply = f"OPCclaw 引擎异常: {e2}"
+                reply = f"Iqra 引擎异常: {e2}"
         except Exception as e:
-            reply = f"OPCclaw 异常: {e}"
+            reply = f"Iqra 异常: {e}"
 
         self._chat_log.append(
             f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
@@ -2349,9 +2349,9 @@ class BusinessAIDialog(QDialog):
 class AIAssistantWindow(QMainWindow):
     """AI 助手 · CREW — 13颗星球导航模式"""
 
-    def __init__(self, parent=None, opcclaw_engine=None):
+    def __init__(self, parent=None, iqra_engine=None):
         super().__init__(parent)
-        self._opcclaw = opcclaw_engine
+        self._iqra = iqra_engine
         self._role = "admin"
         self.setWindowTitle("AI 助手 · CREW")
         self.setMinimumSize(1200, 900)
@@ -2407,8 +2407,8 @@ class AIAssistantWindow(QMainWindow):
 
     # ═══════ 行星点击路由 ═══════
     def _on_planet_clicked(self, planet_id):
-        if planet_id == "opcclaw_chat":
-            dlg = OPCclawChatDialog(self, opcclaw_engine=self._opcclaw)
+        if planet_id == "iqra_chat":
+            dlg = IqraChatDialog(self, iqra_engine=self._iqra)
             dlg.show()
         elif planet_id == "super_intelligence":
             if SUPER_INTELLIGENCE_AVAILABLE:
@@ -2507,7 +2507,7 @@ class SuperIntelligenceWidget(QWidget):
         layout.setContentsMargins(20, 20, 20, 20)
 
         # 标题
-        title = QLabel("🧠 OPCclaw 超级智能系统")
+        title = QLabel("🧠 Iqra 超级智能系统")
         title.setStyleSheet("font-size: 20px; font-weight: 600; color: #2c3e50;")
         layout.addWidget(title)
 

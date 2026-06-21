@@ -41,7 +41,7 @@ class SuperIntelligenceWidget(QWidget):
         layout.setContentsMargins(20, 20, 20, 20)
 
         # 标题
-        title = QLabel("🧠 OPCclaw 超级智能系统")
+        title = QLabel("🧠 Iqra 超级智能系统")
         title.setStyleSheet("font-size: 20px; font-weight: 600; color: #2c3e50;")
         layout.addWidget(title)
 

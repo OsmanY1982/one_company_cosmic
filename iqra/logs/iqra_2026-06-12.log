@@ -1,0 +1,5 @@
+2026-06-12 00:26:38 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 00:41:58 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 01:34:26 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 01:49:59 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-12 02:01:25 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'

@@ -75,7 +75,7 @@ modules/intelligence/key_manager.py | 133 | 有bug | line 5注释中硬编码'D:
 【E. 星球导航系统 (lines 2007-2401, ~395行) — 建议拆分: _navigation.py】
   全局: PLANETS (13颗星球配置, ~23行)
   class NavigationHUD (144行)            - 能量球+13颗行星+轨道绘制
-  class OPCclawChatDialog (171行)        - 对话引擎弹窗(真实LLM调用)
+  class IqraChatDialog (171行)        - 对话引擎弹窗(真实LLM调用)
   class SystemMonitorDialog (12行)       - 包装器
   class AIDashboardDialog (12行)         - 包装器
   class SmartWorkflowDialog (8行)        - 包装器
@@ -89,12 +89,12 @@ modules/intelligence/key_manager.py | 133 | 有bug | line 5注释中硬编码'D:
   class SmartWorkflowWidget (60行)       - 智能工作流面板
   class BusinessAIWidget (96行)          - 业务AI面板
 
-### 3.2 对话引擎评估 (OPCclawChatDialog)
+### 3.2 对话引擎评估 (IqraChatDialog)
 
 状态: 真实可用
 - 含完整UI（消息历史QTextEdit + 5个快捷提示按钮 + 输入行）
 - LLM调用链路完整: chat()取content → fallback到chat_stream()流式聚合 → 异常捕获
-- 依赖注入: opcclaw_engine通过构造函数传入
+- 依赖注入: iqra_engine通过构造函数传入
 - 引擎未连接时有明确提示和禁用逻辑
 - 无硬编码API Key
 
@@ -117,7 +117,7 @@ ai_assistant_window.py (入口文件, ~80行)
   _ollama_manager.py       | ~370行 | 正常 (OllamaManager + DownloadModelDialog + DownloadWorker + 全局配置)
   _api_key_config.py       | ~311行 | 正常
   _quick_tools.py          | ~522行 | 正常 (可进一步拆分模板区/模型管理区)
-  _navigation.py           | ~395行 | 正常 (NavigationHUD + OPCclawChatDialog + 4个弹窗包装器)
+  _navigation.py           | ~395行 | 正常 (NavigationHUD + IqraChatDialog + 4个弹窗包装器)
   _backend_panels.py       | ~656行 | 正常 (6个Widget，每个≤220行)
   ai_assistant_window.py   | ~80行  | 入口转发 + MODULE_ENTRY
 
@@ -136,7 +136,7 @@ ai_assistant_window.py (入口文件, ~80行)
 4. 创建 _ollama_manager.py → OllamaManager + DownloadModelDialog + DownloadWorker + 全局配置
 5. 创建 _api_key_config.py → APIKeyConfigDialog
 6. 创建 _quick_tools.py → QuickToolsWidget
-7. 创建 _navigation.py → NavigationHUD + OPCclawChatDialog + 包装器弹窗
+7. 创建 _navigation.py → NavigationHUD + IqraChatDialog + 包装器弹窗
 8. 创建 _backend_panels.py → 6个可视化Widget
 9. 重写 ai_assistant_window.py → 入口文件只做import转发 + MODULE_ENTRY + create_module()
 10. py_compile语法验证所有新文件

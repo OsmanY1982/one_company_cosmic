@@ -11,10 +11,10 @@ AIGC:
 
 # 月球知识库 · 索引
 
-| 编号 | 文件 | 主题 |
-|------|------|------|
-| 01 | [01_overview.md](01_overview.md) | 总览：地球的宇宙伴侣 |
-| 02 | [02_origin.md](02_origin.md) | 起源：忒伊亚巨撞击 |
-| 03 | [03_geology.md](03_geology.md) | 地质：月海与环形山 |
-| 04 | [04_exploration.md](04_exploration.md) | 探测史：阿波罗与未来 |
+| 文件 | 主题 |
+|---|---|
+| [01_overview](01_overview.md) | 总览：地球的宇宙伴侣 |
+| [02_origin](02_origin.md) | 起源：忒伊亚巨撞击 |
+| [03_geology](03_geology.md) | 地质：月海与环形山 |
+| [04_exploration](04_exploration.md) | 探测史：阿波罗与未来 |
 *（内容由AI生成，仅供参考）*

@@ -4,14 +4,14 @@
 
 ## 文件导航
 
-| 编号 | 文件 | 主题 | 内容概要 |
-|------|------|------|----------|
-| 01 | [01_overview.md](01_overview.md) | 总览 | 基本参数、轨道特性、3:2 自转轨道共振 |
-| 02 | [02_geology.md](02_geology.md) | 地质与表面 | 卡洛里斯盆地、悬崖、空洞、火山平原 |
-| 03 | [03_interior.md](03_interior.md) | 内部结构 | 巨大铁核、磁场、液态外核证据 |
-| 04 | [04_exploration.md](04_exploration.md) | 探测史 | 水手10号、MESSENGER、贝皮科伦坡 |
-| 05 | [05_polar_ice.md](05_polar_ice.md) | 极区水冰 | 永久阴影坑中的水冰沉积 |
-| 06 | [06_culture.md](06_culture.md) | 文化与命名 | 信使之神、命名系统、科学意义 |
+| 文件 | 主题 | 内容概要 |
+|---|---|---|
+| [01_overview](01_overview.md) | 总览 | 基本参数、轨道特性、3:2 自转轨道共振 |
+| [02_geology](02_geology.md) | 地质与表面 | 卡洛里斯盆地、悬崖、空洞、火山平原 |
+| [03_interior](03_interior.md) | 内部结构 | 巨大铁核、磁场、液态外核证据 |
+| [04_exploration](04_exploration.md) | 探测史 | 水手10号、MESSENGER、贝皮科伦坡 |
+| [05_polar_ice](05_polar_ice.md) | 极区水冰 | 永久阴影坑中的水冰沉积 |
+| [06_culture](06_culture.md) | 文化与命名 | 信使之神、命名系统、科学意义 |
 
 ## 音频文件
 

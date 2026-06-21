@@ -1,0 +1,622 @@
+2026-05-13 00:19:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:19:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:19:41 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:19:42 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 00:19:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:19:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:19:44 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:30:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:30:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:30:58 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:30:58 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 00:31:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:31:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:31:01 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:31:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:31:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:31:32 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:31:32 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 00:31:34 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:31:34 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:31:34 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:40:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:40:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:40:20 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:40:20 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 00:40:22 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:40:22 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:40:22 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:43:12 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:43:12 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:43:12 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:43:12 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 00:43:13 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:43:13 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:43:13 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:43:14 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 00:43:15 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:43:15 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:43:15 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:43:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:43:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:43:25 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:50:05 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:50:05 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:50:05 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:50:05 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 00:50:07 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:50:07 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:50:07 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:51:13 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 00:51:13 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 00:51:13 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 00:51:13 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:51:13 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:51:13 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:51:15 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 00:51:15 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 00:51:15 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 00:51:15 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:51:15 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:51:15 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 00:51:25 [ERROR] iqra: LLM API failed: [阿里云百炼] API error 404: {"error":{"message":"Unsupported model `qwen-omni-turbo-realtime` for OpenAI compatibility mode.","type":"invalid_request_error","param":null,"code":"model_not_supported"},"request_id":"419028ea-791b-9da9-a056-a75058642cc4"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\chat_engine.py", line 179, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 404: {"error":{"message":"Unsupported model `qwen-omni-turbo-realtime` for OpenAI compatibility mode.","type":"invalid_request_error","param":null,"code":"model_not_supported"},"request_id":"419028ea-791b-9da9-a056-a75058642cc4"}
+2026-05-13 00:52:12 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 00:52:12 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 00:52:12 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 00:52:12 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 00:52:12 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 00:52:12 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:14:00 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:14:00 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:14:00 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:14:00 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 01:14:02 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:14:02 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:14:02 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:39:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:39:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:39:44 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:39:44 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 01:39:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:39:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:39:46 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:40:29 [ERROR] iqra: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The input messages do not contain elements with the role of user","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-d2179143-4237-9e4c-93c6-33105da1c007","request_id":"d2179143-4237-9e4c-93c6-33105da1c007"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\chat_engine.py", line 179, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The input messages do not contain elements with the role of user","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-d2179143-4237-9e4c-93c6-33105da1c007","request_id":"d2179143-4237-9e4c-93c6-33105da1c007"}
+2026-05-13 01:43:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:43:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:43:25 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:43:25 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 01:43:27 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:43:27 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:43:27 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:43:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:43:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:43:41 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:43:41 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 01:43:42 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:43:42 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:43:42 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:43:42 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 01:43:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:43:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:43:43 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 01:43:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 01:43:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 01:43:48 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 02:09:52 [ERROR] iqra: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The input messages do not contain elements with the role of user","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-9f552a12-3095-9e53-ae99-0d89d326dccf","request_id":"9f552a12-3095-9e53-ae99-0d89d326dccf"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\chat_engine.py", line 179, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The input messages do not contain elements with the role of user","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-9f552a12-3095-9e53-ae99-0d89d326dccf","request_id":"9f552a12-3095-9e53-ae99-0d89d326dccf"}
+2026-05-13 02:11:20 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:20 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 02:11:20 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 02:11:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 02:11:20 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 02:11:23 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 02:11:24 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:24 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 02:11:24 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 02:11:24 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:24 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 02:11:24 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 02:11:31 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:31 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 02:11:31 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 02:11:31 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:31 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 02:11:31 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 02:11:32 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:32 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 02:11:32 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 02:11:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 02:11:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 02:11:32 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 02:58:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 02:58:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 02:58:03 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 02:58:04 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 02:58:05 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 02:58:05 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 02:58:05 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 03:01:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 03:01:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 03:01:32 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 03:01:32 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 03:01:35 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 03:01:35 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 03:01:35 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 03:20:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 03:20:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 03:20:58 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 03:20:58 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 03:21:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 03:21:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 03:21:01 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 03:23:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 03:23:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 03:23:45 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 03:23:46 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 03:23:49 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 03:23:49 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 03:23:49 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 04:01:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 04:01:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 04:01:44 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 04:01:44 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 04:01:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 04:01:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 04:01:46 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 04:05:55 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 04:05:55 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 04:05:55 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 04:05:55 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 04:05:57 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 04:05:57 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 04:05:57 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 04:23:28 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 04:23:28 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 04:23:28 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 04:23:28 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 04:23:30 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 04:23:30 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 04:23:30 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 04:59:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 04:59:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 04:59:47 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 04:59:48 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 04:59:50 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 04:59:50 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 04:59:50 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 08:12:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 08:12:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 08:12:03 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 08:12:03 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 08:12:06 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 08:12:06 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 08:12:06 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 08:12:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 08:12:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 08:12:46 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 08:12:47 [INFO] iqra: [Iqra] 11 skills loaded: ['business_query', 'code_review', 'crm_management', 'document_processing', 'email_assistant', 'finance_management', 'inventory_management', 'iqra_hermes_collaboration', 'schedule_management', 'translation', 'weather']
+2026-05-13 08:12:49 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 08:12:49 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 08:12:49 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 08:43:33 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 08:43:33 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 08:43:33 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 08:43:33 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 08:43:33 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 08:43:33 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:28:30 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:28:30 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:28:30 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:28:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:28:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:28:32 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:30:02 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:30:04 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:30:04 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:30:04 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:30:08 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:30:08 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:30:08 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:31:45 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:31:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:31:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:31:46 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:49:24 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:49:24 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:49:24 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 09:49:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 09:49:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 09:49:25 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 10:24:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 10:24:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 10:24:03 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 10:24:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 10:24:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 10:24:03 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 12:38:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 12:38:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 12:38:46 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 12:38:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 12:38:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 12:38:47 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 12:58:08 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 12:58:08 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 12:58:08 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 12:58:10 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 12:58:10 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 12:58:10 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 12:59:10 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 12:59:10 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 12:59:10 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 12:59:11 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 12:59:11 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 12:59:11 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 12:59:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 12:59:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 12:59:20 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:08:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:08:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:08:44 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:08:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:08:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:08:45 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:09:50 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:09:50 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:09:50 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:09:51 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:09:51 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:09:51 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:10:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:10:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:10:43 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:10:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:10:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:10:44 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:12:33 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:12:33 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:12:33 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:12:34 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:12:34 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:12:34 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:12:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:12:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:12:43 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:12:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:12:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:12:44 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:13:52 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:13:54 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:13:54 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:13:54 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:14:16 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:14:16 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:14:16 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:14:17 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:14:17 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:14:17 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:17:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:17:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:17:47 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:17:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:17:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:17:48 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:18:57 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:18:57 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:18:57 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:18:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:18:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:18:58 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:19:26 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:19:27 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:19:27 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:19:27 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:45:34 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:45:34 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:45:34 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:45:35 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:45:35 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:45:35 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:45:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:45:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:45:48 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:46:53 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:46:53 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:46:53 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:46:54 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:46:54 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:46:54 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:55:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:55:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:55:48 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 13:55:50 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 13:55:50 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 13:55:50 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:03:15 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:03:15 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:03:15 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:04:54 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:04:54 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:04:54 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:07:21 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:07:21 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:07:21 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:09:09 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:09:09 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:09:09 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:09:12 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:09:12 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:09:12 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:12:15 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:12:15 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:12:15 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:12:17 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:12:17 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:12:17 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:38:59 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:38:59 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:38:59 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 14:39:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 14:39:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 14:39:01 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:01:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:01:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:01:41 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:01:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:01:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:01:43 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:02:18 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:02:18 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:02:18 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:02:19 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:02:19 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:02:19 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:04:17 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:04:17 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:04:17 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:04:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:04:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:04:20 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:04:53 [ERROR] iqra: LLM API failed: [通义千问] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 248, in _make_request
+    raise RuntimeError(
+RuntimeError: [通义千问] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+2026-05-13 15:05:07 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-13 15:05:07 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-13 15:05:07 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-13 15:05:07 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:05:07 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:05:07 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:12:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:12:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:12:43 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:12:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:12:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:12:44 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:38:24 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:38:24 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:38:24 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:38:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:38:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:38:25 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:58:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:58:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:58:26 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 15:58:28 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 15:58:28 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 15:58:28 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 16:00:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 16:00:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 16:00:41 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 16:00:42 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 16:00:42 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 16:00:42 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 18:06:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 18:06:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 18:06:01 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-13 18:06:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-13 18:06:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-13 18:06:03 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key

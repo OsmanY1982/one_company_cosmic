@@ -58,7 +58,7 @@ class DashboardWindow(QMainWindow):
 
     def __init__(self, config=None, role: str = "admin",
                  membership_info: dict = None,
-                 opcclaw_engine=None):
+                 iqra_engine=None):
         super().__init__()
         self._role = role
         self._membership_info = membership_info or {}
@@ -79,8 +79,8 @@ class DashboardWindow(QMainWindow):
 
         self.setMinimumSize(1200, 760)
 
-        # opcclaw 引擎（优先级最高）
-        self._opcclaw = opcclaw_engine
+        # iqra 引擎（优先级最高）
+        self._iqra = iqra_engine
 
         # 星空背景
         self._cosmic = CosmicBackground()
@@ -142,8 +142,8 @@ class DashboardWindow(QMainWindow):
         self._fuel_indicator.setStyleSheet(
             "color: #00cc88; font-size: 9px; background: transparent;"
         )
-        if self._opcclaw:
-            self._fuel_indicator.setText("引擎: opcclaw")
+        if self._iqra:
+            self._fuel_indicator.setText("引擎: iqra")
         self._fuel_indicator.adjustSize()
 
         # 船员升级按钮
@@ -208,7 +208,7 @@ class DashboardWindow(QMainWindow):
             win = PersonnelWindow(self)
         elif module_id == "intelligence":
             from modules.intelligence.intelligence_window import IntelligenceWindow
-            win = IntelligenceWindow(self, role=self._role, opcclaw_engine=self._opcclaw)
+            win = IntelligenceWindow(self, role=self._role, iqra_engine=self._iqra)
         elif module_id == "data":
             from modules.data_center.data_window import DataWindow
             win = DataWindow(self)

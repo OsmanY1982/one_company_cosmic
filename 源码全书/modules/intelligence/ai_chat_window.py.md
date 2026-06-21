@@ -9,7 +9,7 @@
 ```python
 """
 AI助手 · NEURAL v5 — 统一 AgentBridge 对话窗口
-全部模型调用通过 AgentBridge（opcclaw 引擎），废弃独立 llm_config.json
+全部模型调用通过 AgentBridge（iqra 引擎），废弃独立 llm_config.json
 顶部嵌入紧凑模型选择器：供应商下拉 → 模型下拉 → 切换按钮
 模型切换通过 AgentBridge.switch_model() 同步更新后端
 降级路径：AgentBridge.chat_stream → AgentBridge.chat → 离线分析
@@ -143,7 +143,7 @@ class AIChatWindow(QWidget):
 
     chat_close_requested = pyqtSignal()
 
-    def __init__(self, parent=None, opcclaw_engine=None, floating_mode=False, voice=None, embedded=False, session_id=None):
+    def __init__(self, parent=None, iqra_engine=None, floating_mode=False, voice=None, embedded=False, session_id=None):
         super().__init__(parent)
         self._embedded = embedded
 
@@ -158,7 +158,7 @@ class AIChatWindow(QWidget):
 
         self.setStyleSheet("background: rgba(10,5,20,240);")
 
-        self._bridge = opcclaw_engine  # AgentBridge 实例（唯一引擎）
+        self._bridge = iqra_engine  # AgentBridge 实例（唯一引擎）
         self._streaming = False
         self._stream_buffer = ""
         self._stream_block = 0       # 流式占位行块编号
@@ -772,8 +772,8 @@ class AIChatWindow(QWidget):
         self.cb_provider.clear()
 
         # 读取已保存配置，获取当前激活的供应商
-        from modules.auth.model_config_panel import _load_opcclaw_config
-        config = _load_opcclaw_config()
+        from modules.auth.model_config_panel import _load_iqra_config
+        config = _load_iqra_config()
         active_pid = config.get("active_provider_id", "")
         self._current_provider_id = active_pid
 

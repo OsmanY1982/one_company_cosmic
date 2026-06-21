@@ -1,0 +1,16 @@
+Modify "Miranda:Uranus V" "Sol/Uranus"
+{
+	Texture 	"miranda2.*"
+	BumpMap 	"mirandabump.*"
+	BumpHeight 	 10
+	Radius   	235.8
+	Oblateness	  0.0123
+	Color 		[ 0.619 0.552 0.540 ]
+}
+
+AltSurface "Miranda artificial North" "Sol/Uranus/Miranda"
+{
+	Texture 	"miranda3.*"
+	BumpMap 	"mirandabump2.*"
+	BumpHeight 	10
+}

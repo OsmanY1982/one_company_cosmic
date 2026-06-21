@@ -19,10 +19,10 @@ except ImportError:
 class CockpitWindow(QWidget):
     """星舰舰桥：可缩放窗口，全屏支持"""
 
-    def __init__(self, role: str = "admin", opcclaw_engine=None, parent=None):
+    def __init__(self, role: str = "admin", iqra_engine=None, parent=None):
         super().__init__(parent)
         self._role = role
-        self._engine = opcclaw_engine
+        self._engine = iqra_engine
         self._anim_t = 0.0
         self._hovered_planet = None  # 当前悬停的星球 module_id
 
@@ -177,7 +177,7 @@ class CockpitWindow(QWidget):
                 win = PersonnelWindow()
             elif module_id == "intelligence":
                 from modules.intelligence.intelligence_window import IntelligenceWindow
-                win = IntelligenceWindow(role=self._role, opcclaw_engine=self._engine)
+                win = IntelligenceWindow(role=self._role, iqra_engine=self._engine)
             elif module_id == "data":
                 from modules.data_center.data_window import DataWindow
                 win = DataWindow()

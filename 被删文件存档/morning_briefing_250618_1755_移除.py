@@ -89,7 +89,7 @@ def generate_briefing() -> Dict:
     sections.append({"title": "知识库", "lines": kb_lines, "icon": "book"})
 
     # ── 生成纯文本 ──
-    plain_lines = [f"opcclaw 每日早报 · {now.strftime('%Y-%m-%d %A')}", "=" * 36]
+    plain_lines = [f"iqra 每日早报 · {now.strftime('%Y-%m-%d %A')}", "=" * 36]
     for sec in sections:
         plain_lines.append(f"\n  {sec['title']}:")
         for line in sec["lines"]:

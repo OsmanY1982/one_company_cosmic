@@ -1,5 +1,5 @@
 """
-OPCclaw - 云端模型配置面板 (宇宙版适配)
+Iqra - 云端模型配置面板 (宇宙版适配)
 """
 
 from PyQt5.QtWidgets import (
@@ -134,7 +134,7 @@ class CloudModelPanel(QWidget):
         plat_row.addWidget(QLabel("平台:"))
         self.quick_platform = QComboBox()
         self.quick_platform.setMinimumWidth(180)
-        from opcclaw.core.llm_backend import BackendFactory
+        from iqra.core.llm_backend import BackendFactory
         templates = BackendFactory.list_templates()
         cloud_templates = [t for t in templates if not t["local"]]
         self._quick_template_ids = []
@@ -271,7 +271,7 @@ class CloudModelPanel(QWidget):
 
     def _quick_connect(self):
         """快速连接：用当前选中的平台 + 手动输入的 Key 直接开始聊天"""
-        from opcclaw.core.llm_backend import BackendFactory, ProviderConfig, PROVIDER_TEMPLATES
+        from iqra.core.llm_backend import BackendFactory, ProviderConfig, PROVIDER_TEMPLATES
 
         key = self.quick_key.text().strip()
         if not key:
@@ -315,7 +315,7 @@ class CloudModelPanel(QWidget):
         self.providers_changed.emit()
 
     def _show_add_dialog(self):
-        from opcclaw.core.llm_backend import BackendFactory, ProviderConfig, PROVIDER_TEMPLATES
+        from iqra.core.llm_backend import BackendFactory, ProviderConfig, PROVIDER_TEMPLATES
 
         dlg = QDialog(self)
         dlg.setWindowTitle("添加云端 LLM 供应商")
@@ -416,7 +416,7 @@ class CloudModelPanel(QWidget):
         dlg.exec_()
 
     def _save_cloud_provider(self, dlg, name, key, url, model):
-        from opcclaw.core.llm_backend import BackendFactory, ProviderConfig
+        from iqra.core.llm_backend import BackendFactory, ProviderConfig
 
         if not name:
             QMessageBox.warning(dlg, "提示", "请输入供应商名称")
@@ -470,7 +470,7 @@ class CloudModelPanel(QWidget):
 
     def _edit_selected(self):
         """编辑已有供应商的 API Key / URL / Model"""
-        from opcclaw.core.llm_backend import PROVIDER_TEMPLATES
+        from iqra.core.llm_backend import PROVIDER_TEMPLATES
 
         item = self.provider_list.currentItem()
         if not item:
@@ -594,7 +594,7 @@ class CloudModelPanel(QWidget):
 
     def _scan_all_providers(self):
         """一键探测所有预置供应商的连通性"""
-        from opcclaw.core.llm_backend import BackendFactory, ProviderConfig, PROVIDER_TEMPLATES
+        from iqra.core.llm_backend import BackendFactory, ProviderConfig, PROVIDER_TEMPLATES
 
         self.status_label.setText("正在探测所有供应商...")
         self.status_label.setStyleSheet(f"color: {COLORS['primary']};")
@@ -627,7 +627,7 @@ class CloudModelPanel(QWidget):
 
     def _fetch_models_into_combo(self, combo: QComboBox, base_url: str, api_key: str):
         """从平台拉取模型列表并填入下拉框"""
-        from opcclaw.core.llm_backend import get_available_models
+        from iqra.core.llm_backend import get_available_models
 
         if not base_url.strip():
             QMessageBox.warning(self, "提示", "请先填写 API 地址")

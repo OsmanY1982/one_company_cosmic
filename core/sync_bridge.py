@@ -1,5 +1,5 @@
 """
-OPCclaw Sync Bridge - Web ↔ GUI 数据同步桥
+Iqra Sync Bridge - Web ↔ GUI 数据同步桥
 
 提供:
 - 双端共享文件同步

@@ -2,9 +2,9 @@
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-# ── opcclaw 引擎 ──
-from opcclaw.core.agent_loop import AgentLoop, AgentResult
-from opcclaw.core.chat_engine import ChatEngine
+# ── iqra 引擎 ──
+from iqra.core.agent_loop import AgentLoop, AgentResult
+from iqra.core.chat_engine import ChatEngine
 
 
 class _TaskWorker(QObject):

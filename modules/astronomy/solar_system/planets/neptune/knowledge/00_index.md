@@ -11,11 +11,11 @@ AIGC:
 
 # 海王星知识库 · 索引
 
-| 编号 | 文件 | 主题 |
-|------|------|------|
-| 01 | [01_overview.md](01_overview.md) | 总览：数学预测的行星 |
-| 02 | [02_interior.md](02_interior.md) | 内部：热异常与超临界海洋 |
-| 03 | [03_atmosphere.md](03_atmosphere.md) | 大气：太阳系最强风、大暗斑 |
-| 04 | [04_triton.md](04_triton.md) | 海卫一：逆行轨道、氮冰火山 |
-| 05 | [05_exploration.md](05_exploration.md) | 探测史：旅行者2号唯一飞越 |
+| 文件 | 主题 |
+|---|---|
+| [01_overview](01_overview.md) | 总览：数学预测的行星 |
+| [02_interior](02_interior.md) | 内部：热异常与超临界海洋 |
+| [03_atmosphere](03_atmosphere.md) | 大气：太阳系最强风、大暗斑 |
+| [04_triton](04_triton.md) | 海卫一：逆行轨道、氮冰火山 |
+| [05_exploration](05_exploration.md) | 探测史：旅行者2号唯一飞越 |
 *（内容由AI生成，仅供参考）*

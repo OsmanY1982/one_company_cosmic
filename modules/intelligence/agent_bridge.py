@@ -1,5 +1,5 @@
 """
-AgentBridge v2 — opcclaw 自主 Agent 引擎（对标 Codex / Claude Code）
+AgentBridge v2 — iqra 自主 Agent 引擎（对标 Codex / Claude Code）
 
 双模式：
   chat(message)       → 对话模式（单轮工具调用，ChatEngine）
@@ -29,170 +29,170 @@ from modules.intelligence.agent_bridge_workers import _TaskWorker, _StreamWorker
 from modules.intelligence.agent_bridge_models import AgentBridgeModelMixin
 from modules.intelligence.agent_bridge_tools import AgentBridgeToolsMixin
 
-# ── opcclaw 引擎路径 ──
+# ── iqra 引擎路径 ──
 _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-_opcclaw_pkg = os.path.join(_project_root, "opcclaw")
+_iqra_pkg = os.path.join(_project_root, "iqra")
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
-if _opcclaw_pkg not in sys.path:
-    sys.path.insert(0, _opcclaw_pkg)
+if _iqra_pkg not in sys.path:
+    sys.path.insert(0, _iqra_pkg)
 
-from opcclaw.core.chat_engine import ChatEngine
-from opcclaw.core.tool_registry import ToolRegistry
-from opcclaw.core.llm_backend import BaseLLMBackend
-from opcclaw.core.agent_loop import AgentLoop, AgentEvent, AgentEventType, AgentResult
-from opcclaw.core.smart_memory_adapter import SmartMemoryStore
-from opcclaw import OPCclaw, OPCclawConfig
+from iqra.core.chat_engine import ChatEngine
+from iqra.core.tool_registry import ToolRegistry
+from iqra.core.llm_backend import BaseLLMBackend
+from iqra.core.agent_loop import AgentLoop, AgentEvent, AgentEventType, AgentResult
+from iqra.core.smart_memory_adapter import SmartMemoryStore
+from iqra import Iqra, IqraConfig
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 # ── 引擎模块（try/except，缺失不阻塞启动）──
 try:
-    from opcclaw.core.code_executor import CodeExecutor
+    from iqra.core.code_executor import CodeExecutor
     _HAVE_CODE_EXECUTOR = True
 except ImportError:
     _HAVE_CODE_EXECUTOR = False
 try:
-    from opcclaw.core.code_intel import SymbolExtractor
+    from iqra.core.code_intel import SymbolExtractor
     _HAVE_CODE_INTEL = True
 except ImportError:
     _HAVE_CODE_INTEL = False
 try:
-    from opcclaw.core.workspace_indexer import WorkspaceIndexer
+    from iqra.core.workspace_indexer import WorkspaceIndexer
     _HAVE_INDEXER = True
 except ImportError:
     _HAVE_INDEXER = False
 try:
-    from opcclaw.core.patch_engine import PatchEngine
+    from iqra.core.patch_engine import PatchEngine
     _HAVE_PATCH_ENGINE = True
 except ImportError:
     _HAVE_PATCH_ENGINE = False
 try:
-    from opcclaw.core.task_scheduler import TaskScheduler
+    from iqra.core.task_scheduler import TaskScheduler
     _HAVE_TASK_SCHEDULER = True
 except ImportError:
     _HAVE_TASK_SCHEDULER = False
 try:
-    from opcclaw.core.todo_system import TodoSystem
+    from iqra.core.todo_system import TodoSystem
     _HAVE_TODO_SYSTEM = True
 except ImportError:
     _HAVE_TODO_SYSTEM = False
 try:
-    from opcclaw.core.session_search import SessionSearch
+    from iqra.core.session_search import SessionSearch
     _HAVE_SESSION_SEARCH = True
 except ImportError:
     _HAVE_SESSION_SEARCH = False
 try:
-    from opcclaw.core.semantic_search import SemanticSearcher, HybridRetriever
+    from iqra.core.semantic_search import SemanticSearcher, HybridRetriever
     _HAVE_SEMANTIC_SEARCH = True
 except ImportError:
     _HAVE_SEMANTIC_SEARCH = False
 try:
-    from opcclaw.core.super_intelligence import SuperIntelligence
+    from iqra.core.super_intelligence import SuperIntelligence
     _HAVE_SUPER_INTEL = True
 except ImportError:
     _HAVE_SUPER_INTEL = False
 try:
-    from opcclaw.core.rag_context import RAGContextInjector
+    from iqra.core.rag_context import RAGContextInjector
     _HAVE_RAG = True
 except ImportError:
     _HAVE_RAG = False
 try:
-    from opcclaw.core.token_optimizer import TokenOptimizer
+    from iqra.core.token_optimizer import TokenOptimizer
     _HAVE_TOKEN_OPT = True
 except ImportError:
     _HAVE_TOKEN_OPT = False
 try:
-    from opcclaw.core.clarify_system import ClarifySystem
+    from iqra.core.clarify_system import ClarifySystem
     _HAVE_CLARIFY = True
 except ImportError:
     _HAVE_CLARIFY = False
 try:
-    from opcclaw.core.model_status import ModelStatus
+    from iqra.core.model_status import ModelStatus
     _HAVE_MODEL_STATUS = True
 except ImportError:
     _HAVE_MODEL_STATUS = False
 try:
-    from opcclaw.core.model_status_manager import ModelStatusManager
+    from iqra.core.model_status_manager import ModelStatusManager
     _HAVE_MODEL_MGR = True
 except ImportError:
     _HAVE_MODEL_MGR = False
 try:
-    from opcclaw.core.multi_model import MultiModelRouter
+    from iqra.core.multi_model import MultiModelRouter
     _HAVE_MULTI_MODEL = True
 except ImportError:
     _HAVE_MULTI_MODEL = False
 try:
-    from opcclaw.core.skill_loader import SkillLoader
+    from iqra.core.skill_loader import SkillLoader
     _HAVE_SKILL_LOADER = True
 except ImportError:
     _HAVE_SKILL_LOADER = False
 try:
-    from opcclaw.core.skill_system import SkillSystem
+    from iqra.core.skill_system import SkillSystem
     _HAVE_SKILL_SYSTEM = True
 except ImportError:
     _HAVE_SKILL_SYSTEM = False
 try:
-    from opcclaw.core.agent_delegate import AgentDelegate
+    from iqra.core.agent_delegate import AgentDelegate
     _HAVE_DELEGATE = True
 except ImportError:
     _HAVE_DELEGATE = False
 try:
-    from opcclaw.core.cloud_sync import CloudSyncService
+    from iqra.core.cloud_sync import CloudSyncService
     _HAVE_CLOUD_SYNC = True
 except ImportError:
     _HAVE_CLOUD_SYNC = False
 try:
-    from opcclaw.core.performance_monitor import PerformanceMonitor
+    from iqra.core.performance_monitor import PerformanceMonitor
     _HAVE_PERF_MON = True
 except ImportError:
     _HAVE_PERF_MON = False
 try:
-    from opcclaw.core.process_manager import ProcessManager
+    from iqra.core.process_manager import ProcessManager
     _HAVE_PROC_MGR = True
 except ImportError:
     _HAVE_PROC_MGR = False
 try:
-    from opcclaw.core.secure_storage import SecureStorage
+    from iqra.core.secure_storage import SecureStorage
     _HAVE_SECURE = True
 except ImportError:
     _HAVE_SECURE = False
 try:
-    from opcclaw.core.token_saver import TokenOptimizer as TokenSaverOptimizer, TokenStats
+    from iqra.core.token_saver import TokenOptimizer as TokenSaverOptimizer, TokenStats
     _HAVE_TOKEN_SAVER = True
 except ImportError:
     _HAVE_TOKEN_SAVER = False
 try:
-    from opcclaw.core.opcclaw_logging import get_logger, install as install_logging
+    from iqra.core.iqra_logging import get_logger, install as install_logging
     _HAVE_LOGGING = True
 except ImportError:
     _HAVE_LOGGING = False
 try:
-    from opcclaw.core.provider_registry import ModelConfig
+    from iqra.core.provider_registry import ModelConfig
     _HAVE_PROVIDER_REG = True
 except ImportError:
     _HAVE_PROVIDER_REG = False
 try:
-    from opcclaw.core.config_validator import ConfigValidator
+    from iqra.core.config_validator import ConfigValidator
     _HAVE_CONFIG_VALID = True
 except ImportError:
     _HAVE_CONFIG_VALID = False
 try:
-    from opcclaw.core.sync_bridge import SyncBridge
+    from iqra.core.sync_bridge import SyncBridge
     _HAVE_SYNC_BRIDGE = True
 except ImportError:
     _HAVE_SYNC_BRIDGE = False
 try:
-    from opcclaw.core.observability import ObservableBridge
+    from iqra.core.observability import ObservableBridge
     _HAVE_OBSERVABILITY = True
 except ImportError:
     _HAVE_OBSERVABILITY = False
 try:
-    from opcclaw.core.collaboration_client import OPCclawHermesClient
+    from iqra.core.collaboration_client import IqraHermesClient
     _HAVE_COLLAB = True
 except ImportError:
     _HAVE_COLLAB = False
 try:
-    from opcclaw.core.supabase_client import SupabaseClient
+    from iqra.core.supabase_client import SupabaseClient
     _HAVE_SUPABASE = True
 except ImportError:
     _HAVE_SUPABASE = False
@@ -204,7 +204,7 @@ except ImportError:
 
 class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
     """
-    opcclaw 自主 Agent 引擎
+    iqra 自主 Agent 引擎
 
     用法:
         bridge = AgentBridge(backend)
@@ -213,7 +213,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
     """
 
     DEFAULT_SYSTEM_PROMPT = (
-        "你是 opcclaw，一人公司的全能 AI 助理。\n"
+        "你是 iqra，一人公司的全能 AI 助理。\n"
         "\n"
         "核心能力：\n"
         "1. 文件系统：read_file/write_file/edit_file/list_directory/search_files\n"
@@ -263,7 +263,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
         # ── 对话持久化存储 ──
         if not persistence_dir:
             persistence_dir = os.path.join(
-                os.path.expanduser("~"), ".opcclaw", "sessions"
+                os.path.expanduser("~"), ".iqra", "sessions"
             )
         os.makedirs(persistence_dir, exist_ok=True)
         self._memory = SmartMemoryStore(
@@ -320,7 +320,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
         self._stream_aborted: bool = False
 
     def _init_engine_modules(self):
-        """初始化所有 opcclaw 引擎模块（try/except 包裹，逐个失败不影响启动）"""
+        """初始化所有 iqra 引擎模块（try/except 包裹，逐个失败不影响启动）"""
         # ── SuperIntelligence ──
         if _HAVE_SUPER_INTEL:
             try:
@@ -392,7 +392,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
             self._skill_loader = None
         if _HAVE_SKILL_SYSTEM:
             try:
-                skills_dir = os.path.join(_project_root, "opcclaw", "skills")
+                skills_dir = os.path.join(_project_root, "iqra", "skills")
                 self._skill_system = SkillSystem(skills_dir) if os.path.isdir(skills_dir) else None
             except Exception:
                 self._skill_system = None
@@ -458,7 +458,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
             try:
                 config_path = os.path.join(
                     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-                    "opcclaw", "data", "opcclaw_config.json"
+                    "iqra", "data", "iqra_config.json"
                 )
                 self._config_validator = ConfigValidator(config_path)
             except Exception:
@@ -484,7 +484,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
         self._supabase = SupabaseClient() if _HAVE_SUPABASE else None
 
         # ── 多人协作 ──
-        self._collab_client = OPCclawHermesClient() if _HAVE_COLLAB else None
+        self._collab_client = IqraHermesClient() if _HAVE_COLLAB else None
 
     # ═══════════════════════════════════════════
     # 模式 1: 对话模式（chat / chat_stream）

@@ -15,7 +15,7 @@ from core.planet_painter import (
 # 12颗星球配置 — 11种 style 全覆盖，无重复
 # ═══════════════════════════════════════════
 PLANETS = [
-    {"id": "opcclaw_chat",         "name": "AI对话",       "style": "earth",    "orbit": 85,  "size": 48},
+    {"id": "iqra_chat",         "name": "AI对话",       "style": "earth",    "orbit": 85,  "size": 48},
     {"id": "super_intelligence",   "name": "超级智能",     "style": "jupiter",  "orbit": 113, "size": 44},
     {"id": "enhanced_chat",        "name": "增强对话",     "style": "neptune",  "orbit": 141, "size": 40},
     {"id": "knowledge_base",       "name": "知识库",       "style": "uranus",   "orbit": 169, "size": 42},

@@ -1,0 +1,26 @@
+
+=== 2026-06-15 06:03:14 ===
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/auth/admin_login_dialog.py", line 273, in _do_login
+    self._on_success()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/auth/login_window.py", line 511, in on_admin_success
+    self._open_model_setup("admin", "admin")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/auth/login_window.py", line 527, in _open_model_setup
+    self._setup = ModelSetupWindow(
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/auth/model_setup_window.py", line 237, in __init__
+    self._build_ui()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/auth/model_setup_window.py", line 310, in _build_ui
+    self._stack.addWidget(self._build_local_panel())
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/auth/model_setup_window.py", line 540, in _build_local_panel
+    self._on_local_service_changed()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/auth/model_setup_window.py", line 572, in _on_local_service_changed
+    self._refresh_local_models()
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/auth/model_setup_window.py", line 579, in _refresh_local_models
+    from modules.intelligence.agent_bridge import AgentBridge
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/agent_bridge.py", line 33, in <module>
+    from iqra.core.chat_engine import ChatEngine
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 14, in <module>
+    class ChatEngine(QObject):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 382, in ChatEngine
+    def _parse_text_tool_calls(self, text: str, tools: list[dict]) -> list[dict] | None:
+TypeError: unsupported operand type(s) for |: 'types.GenericAlias' and 'NoneType'

@@ -61,12 +61,12 @@ CLOUD_TO_LOCAL = {
     # ── 用户 & 会员 ──
     "users": {
         "username":      "username",
+        "password":      "password",
         "user_id":       "user_id",
         "role":          "role",
         "license_type":  "license_type",
         "created_at":   "created_at",
         "updated_at":   "updated_at",
-        # password 不同步下来
     },
     "user_memberships": {
         "username":        "username",
@@ -182,6 +182,7 @@ CLOUD_TO_LOCAL = {
 
     # ── 分销 ──
     "distribution_links": {
+        "user_name":        "user_name",
         "user_id":          "user_id",
         "code":             "code",
         "url":              "url",
@@ -192,6 +193,7 @@ CLOUD_TO_LOCAL = {
         "created_at":       "created_at",
     },
     "commissions": {
+        "user_name":    "user_name",
         "user_id":     "user_id",
         "from_user_id":"from_user_id",
         "amount":      "amount",
@@ -201,6 +203,8 @@ CLOUD_TO_LOCAL = {
         "created_at":  "created_at",
     },
     "team_members": {
+        "user_name":          "user_name",
+        "parent_name":        "parent_name",
         "user_id":            "user_id",
         "parent_id":          "parent_id",
         "username":           "username",

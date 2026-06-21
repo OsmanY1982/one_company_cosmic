@@ -1,6 +1,6 @@
 # `core/cloud_sync.py`
 
-> 路径：`core/cloud_sync.py` | 行数：387
+> 路径：`core/cloud_sync.py` | 行数：391
 
 
 ---
@@ -131,6 +131,7 @@ COLUMN_MAPPING = {
         "created_at":    "created_at",
     },
     "distribution_links": {
+        "user_name":        "user_name",
         "user_id":          "user_id",
         "code":             "code",
         "url":              "url",
@@ -141,6 +142,7 @@ COLUMN_MAPPING = {
         "created_at":       "created_at",
     },
     "commissions": {
+        "user_name":   "user_name",
         "user_id":    "user_id",
         "from_user_id":"from_user_id",
         "amount":     "amount",
@@ -150,6 +152,8 @@ COLUMN_MAPPING = {
         "created_at": "created_at",
     },
     "team_members": {
+        "user_name":          "user_name",
+        "parent_name":        "parent_name",
         "user_id":           "user_id",
         "parent_id":         "parent_id",
         "username":          "username",
@@ -159,12 +163,12 @@ COLUMN_MAPPING = {
     },
     "users": {
         "username":      "username",
+        "password":      "password",
         "user_id":      "user_id",
         "role":         "role",
         "license_type": "license_type",
         "created_at":  "created_at",
         "updated_at":  "updated_at",
-        # password 不同步到云端
     },
     "user_memberships": {
         "username":       "username",

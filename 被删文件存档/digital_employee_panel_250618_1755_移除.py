@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF
 from PyQt5.QtGui import QPainter, QColor, QPen, QBrush, QPolygonF, QPixmap
 
-from modules.intelligence.opcclaw_employee import (
+from modules.intelligence.iqra_employee import (
     BallCEOEngine, OpcclawEmployee, EmployeeStatus, ChatType, ChatLog,
 )
 

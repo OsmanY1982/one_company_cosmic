@@ -113,10 +113,19 @@ class SystemHubWindow(QMainWindow):
         self.setWindowTitle("一人公司 — 系统管理中心 · SOLAR HUB")
         self.setMinimumSize(800, 650)
         self.resize(800, 650)
-        self._build_ui()
-
         if self._role != "admin":
             self._show_access_denied()
+            return
+        self._build_ui()
+
+    def _show_access_denied(self):
+        """非管理员用户，显示拒绝访问并自动关闭窗口"""
+        from PyQt5.QtWidgets import QMessageBox, QWidget
+        w = QWidget(self)
+        w.setStyleSheet("background: #1a1020;")
+        self.setCentralWidget(w)
+        QMessageBox.warning(self, "权限不足", "仅管理员可访问系统管理中心。")
+        self.close()
 
     def _build_ui(self):
         from core.cosmic import CosmicBackground

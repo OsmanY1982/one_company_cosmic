@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+"""
+Iqra 独立启动器 — 在任何位置运行均可。
+用法: ./iqra chat | iqra chat -m "..." | iqra tools list | iqra memory search ...
+"""
+import sys
+import os
+from pathlib import Path
+
+# 将 iqra 根目录加入 sys.path，使 core/ 等模块可被导入
+IQRA_ROOT = Path(__file__).resolve().parent
+if str(IQRA_ROOT) not in sys.path:
+    sys.path.insert(0, str(IQRA_ROOT))
+
+from iqra_cli.cli import main
+
+if __name__ == "__main__":
+    main()

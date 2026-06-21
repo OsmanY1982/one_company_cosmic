@@ -13,7 +13,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(LOG_DIR, exist_ok=True)
 
 # 当前 schema 版本号（递增）
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 # DB 路径 — 覆盖全部 9 个业务数据库
 ORDER_DB        = os.path.join(DATA_DIR, "order.db")
@@ -58,6 +58,108 @@ def _ensure_schema_version(conn, db_path):
             _log_migration(f"{db_path}: 升级 schema v{old_ver} → v{SCHEMA_VERSION}")
 
 
+def _migrate_distribution_db_v2():
+    """v1→v2: 将 distribution.db 中 NOT NULL 约束改为 DEFAULT ''，兼容 cloud_pull"""
+    if not os.path.exists(DISTRIBUTION_DB):
+        return
+    conn = sqlite3.connect(DISTRIBUTION_DB)
+    c = conn.cursor()
+    try:
+        row = c.execute("SELECT version FROM _schema_version WHERE id=1").fetchone()
+        if row and row[0] >= 2:
+            _log_migration(f"{DISTRIBUTION_DB}: 已是 v{row[0]}，跳过迁移")
+            conn.close()
+            return
+    except sqlite3.OperationalError:
+        pass  # no _schema_version table yet
+    
+    _log_migration(f"{DISTRIBUTION_DB}: 开始 v1→v2 迁移（修复 NOT NULL 约束）")
+    
+    migrations = [
+        ("distribution_links", "user_name", "TEXT NOT NULL", "TEXT DEFAULT ''"),
+        ("commissions",      "user_name", "TEXT NOT NULL", "TEXT DEFAULT ''"),
+        ("team_members",     "user_name", "TEXT NOT NULL", "TEXT DEFAULT ''"),
+        ("team_members",     "parent_name", "TEXT NOT NULL", "TEXT DEFAULT ''"),
+    ]
+    
+    for table, col, old_def, new_def in migrations:
+        try:
+            # 查实际建表语句
+            ddl = c.execute(f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{table}'").fetchone()
+            if ddl and old_def in ddl[0]:
+                # 获取除该列外的所有列定义
+                info = c.execute(f"PRAGMA table_info({table})").fetchall()
+                col_names = [r[1] for r in info]
+                if col not in col_names:
+                    continue
+                # 重建表
+                new_sql = ddl[0].replace(old_def, new_def)
+                c.execute("BEGIN TRANSACTION")
+                c.execute(f"ALTER TABLE {table} RENAME TO {table}_old")
+                c.execute(new_sql)
+                cols = ", ".join(col_names)
+                try:
+                    c.execute(f"INSERT INTO {table} ({cols}) SELECT {cols} FROM {table}_old")
+                except sqlite3.Error as e:
+                    _log_migration(f"{table}: 数据迁移失败 {e}，保留旧表")
+                    c.execute("ROLLBACK")
+                    continue
+                c.execute(f"DROP TABLE {table}_old")
+                c.execute("COMMIT")
+                _log_migration(f"{table}.{col}: NOT NULL → DEFAULT '' 成功")
+        except Exception as e:
+            _log_migration(f"{table}.{col}: 迁移异常 {e}")
+            try:
+                c.execute("ROLLBACK")
+            except Exception:
+                pass
+    
+    # 检查并添加 related_id 到 wallet_transactions
+    try:
+        info = c.execute("PRAGMA table_info(wallet_transactions)").fetchall()
+        col_names = [r[1] for r in info]
+        if "related_id" not in col_names:
+            c.execute("ALTER TABLE wallet_transactions ADD COLUMN related_id TEXT DEFAULT ''")
+            _log_migration("wallet_transactions: 添加 related_id 列")
+    except sqlite3.OperationalError:
+        pass
+    
+    # 更新版本号
+    c.execute("INSERT OR REPLACE INTO _schema_version (id, version) VALUES (1, 2)")
+    conn.commit()
+    conn.close()
+    _log_migration(f"{DISTRIBUTION_DB}: v1→v2 迁移完成")
+
+
+def _migrate_users_db_v2():
+    """v1→v2: 为 users.db 添加 password 列"""
+    if not os.path.exists(USERS_DB):
+        return
+    conn = sqlite3.connect(USERS_DB)
+    c = conn.cursor()
+    try:
+        row = c.execute("SELECT version FROM _schema_version WHERE id=1").fetchone()
+        if row and row[0] >= 2:
+            conn.close()
+            return
+    except sqlite3.OperationalError:
+        pass
+    
+    try:
+        info = c.execute("PRAGMA table_info(users)").fetchall()
+        col_names = [r[1] for r in info]
+        if "password" not in col_names:
+            c.execute("ALTER TABLE users ADD COLUMN password TEXT DEFAULT ''")
+            _log_migration("users: 添加 password 列")
+            conn.commit()
+    except sqlite3.OperationalError as e:
+        _log_migration(f"users: ALTER TABLE 失败 {e}")
+    
+    c.execute("INSERT OR REPLACE INTO _schema_version (id, version) VALUES (1, 2)")
+    conn.commit()
+    conn.close()
+
+
 def init_all_dbs():
     """初始化所有业务表（9 个数据库，cloud_pull 依赖全量覆盖）
     
@@ -66,6 +168,10 @@ def init_all_dbs():
     - 字段完全对齐桌面版
     """
     os.makedirs(DATA_DIR, exist_ok=True)
+    
+    # ── v1→v2 迁移：修复 NOT NULL 约束 ──
+    _migrate_users_db_v2()
+    _migrate_distribution_db_v2()
 
     # ── 1. order.db ──
     conn = sqlite3.connect(ORDER_DB)
@@ -139,6 +245,7 @@ def init_all_dbs():
     c.execute('''CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
+        password TEXT DEFAULT '',
         user_id TEXT,
         role TEXT DEFAULT 'user',
         license_type TEXT,
@@ -146,6 +253,7 @@ def init_all_dbs():
         updated_at TEXT
     )''')
     for col, col_def in [
+        ("password", "TEXT DEFAULT ''"),
         ("user_id", "TEXT"),
         ("role", "TEXT DEFAULT 'user'"),
     ]:
@@ -278,6 +386,7 @@ def init_all_dbs():
         amount         REAL NOT NULL,
         balance_after  REAL NOT NULL,
         description    TEXT,
+        related_id     TEXT DEFAULT '',
         created_at     TEXT DEFAULT (datetime('now', 'localtime')),
         FOREIGN KEY (wallet_id) REFERENCES wallet(id)
     )''')
@@ -289,6 +398,10 @@ def init_all_dbs():
         c.execute('CREATE INDEX IF NOT EXISTS idx_wallet_txn_created ON wallet_transactions(created_at DESC)')
     except Exception:
         pass
+    try:
+        c.execute("ALTER TABLE wallet_transactions ADD COLUMN related_id TEXT DEFAULT ''")
+    except sqlite3.OperationalError:
+        pass
     _ensure_schema_version(conn, WALLET_DB)
     conn.commit()
     conn.close()
@@ -298,7 +411,7 @@ def init_all_dbs():
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS distribution_links (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_name TEXT NOT NULL,
+        user_name TEXT DEFAULT '',
         code TEXT UNIQUE NOT NULL,
         url TEXT,
         click_count INTEGER DEFAULT 0,
@@ -310,7 +423,7 @@ def init_all_dbs():
     )''')
     c.execute('''CREATE TABLE IF NOT EXISTS commissions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_name TEXT NOT NULL,
+        user_name TEXT DEFAULT '',
         from_user_name TEXT,
         amount REAL NOT NULL,
         type TEXT DEFAULT 'direct',
@@ -323,8 +436,8 @@ def init_all_dbs():
     )''')
     c.execute('''CREATE TABLE IF NOT EXISTS team_members (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_name TEXT NOT NULL,
-        parent_name TEXT NOT NULL,
+        user_name TEXT DEFAULT '',
+        parent_name TEXT DEFAULT '',
         level INTEGER DEFAULT 1,
         created_at TEXT DEFAULT (datetime('now', 'localtime')),
         user_id INTEGER,

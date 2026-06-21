@@ -1,14 +1,14 @@
 2026-06-15 07:29:42 [PlanetDaemon] INFO: PROJECT_ROOT: /Volumes/D盘工作区/一人公司/one_company_cosmic
-2026-06-15 07:29:42 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data
-2026-06-15 07:29:42 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
-2026-06-15 07:29:42 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 07:29:42 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data
+2026-06-15 07:29:42 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data/iqra_config.json
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data/iqra_config.json
 2026-06-15 07:29:42 [PlanetDaemon] INFO: 活跃 provider: id=ollama, type=local
-2026-06-15 07:29:42 [PlanetDaemon] INFO: 正在初始化 opcclaw Engine...
+2026-06-15 07:29:42 [PlanetDaemon] INFO: 正在初始化 iqra Engine...
 2026-06-15 07:29:42 [PlanetDaemon] INFO: ProviderConfig 构建完成: name=Ollama, model=qwen2.5:7b-64k, base_url=http://localhost:11434/v1
 2026-06-15 07:29:42 [PlanetDaemon] INFO: LLM Backend 创建成功: OpenAICompatibleBackend
-[2m07:29:42[0m [32mℹ️ INFO   [0m [2m[opcclaw][0m OPCclaw 日志系统已启动 (level=INFO, json=False)
-2026-06-15 07:29:42 [PlanetDaemon] INFO: OPCclaw 日志系统已启动 (level=INFO, json=False)
-2026-06-15 07:29:42 [PlanetDaemon] INFO: AgentBridge (opcclaw Engine) 初始化成功
+[2m07:29:42[0m [32mℹ️ INFO   [0m [2m[iqra][0m Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:29:42 [PlanetDaemon] INFO: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:29:42 [PlanetDaemon] INFO: AgentBridge (iqra Engine) 初始化成功
 2026-06-15 07:29:42 [PlanetDaemon] INFO: 已从磁盘恢复 41 条对话历史
 2026-06-15 07:29:42 [PlanetDaemon] INFO: ============================================================
 2026-06-15 07:29:42 [PlanetDaemon] INFO: 悬浮星球守护进程启动中...
@@ -93,16 +93,16 @@ ModuleNotFoundError: No module named 'faster_whisper'
 2026-06-15 07:29:56 [PlanetDaemon] INFO: ============================================================
 2026-06-15 07:29:56 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)
 2026-06-15 20:00:06 [PlanetDaemon] INFO: PROJECT_ROOT: /Volumes/D盘工作区/一人公司/one_company_cosmic
-2026-06-15 20:00:06 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data
-2026-06-15 20:00:06 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
-2026-06-15 20:00:06 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:00:06 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data
+2026-06-15 20:00:06 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data/iqra_config.json
+2026-06-15 20:00:06 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data/iqra_config.json
 2026-06-15 20:00:06 [PlanetDaemon] INFO: 活跃 provider: id=ollama, type=local
-2026-06-15 20:00:06 [PlanetDaemon] INFO: 正在初始化 opcclaw Engine...
+2026-06-15 20:00:06 [PlanetDaemon] INFO: 正在初始化 iqra Engine...
 2026-06-15 20:00:07 [PlanetDaemon] INFO: ProviderConfig 构建完成: name=Ollama, model=qwen2.5:7b-64k, base_url=http://localhost:11434/v1
 2026-06-15 20:00:07 [PlanetDaemon] INFO: LLM Backend 创建成功: OpenAICompatibleBackend
-2026-06-15 20:00:07 [PlanetDaemon] ERROR: opcclaw Engine 初始化失败: 'AgentBridge' object has no attribute '_reg_multi_channel'
+2026-06-15 20:00:07 [PlanetDaemon] ERROR: iqra Engine 初始化失败: 'AgentBridge' object has no attribute '_reg_multi_channel'
 Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/planet_daemon.py", line 141, in init_opcclaw_engine
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/planet_daemon.py", line 141, in init_iqra_engine
     engine = AgentBridge(backend)
              ^^^^^^^^^^^^^^^^^^^^
   File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/agent_bridge.py", line 314, in __init__
@@ -187,23 +187,23 @@ ModuleNotFoundError: No module named 'faster_whisper'
 [FloatingPlanet] 切换到形态: ✨ 能量体 (energy_being)
 [AutoSwitch] #22/35 -> ✨ 能量体 (energy_being)
 Traceback (most recent call last):
-  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/opcclaw_floating_planet.py", line 1335, in paintEvent
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 1335, in paintEvent
     painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0)
   File "/Volumes/D盘工作区/一人公司/one_company_cosmic/core/shapes/energy_being.py", line 151, in paint
     part_grad.setColorAt(0.0, QColor.fromHsv(ph, 160, 255, pa_))
                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: fromHsv(h: int, s: int, v: int, alpha: int = 255): argument 1 has unexpected type 'float'
 2026-06-15 20:07:19 [PlanetDaemon] INFO: PROJECT_ROOT: /Volumes/D盘工作区/一人公司/one_company_cosmic
-2026-06-15 20:07:19 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data
-2026-06-15 20:07:19 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
-2026-06-15 20:07:19 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:07:19 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data
+2026-06-15 20:07:19 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data/iqra_config.json
+2026-06-15 20:07:19 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data/iqra_config.json
 2026-06-15 20:07:19 [PlanetDaemon] INFO: 活跃 provider: id=ollama, type=local
-2026-06-15 20:07:19 [PlanetDaemon] INFO: 正在初始化 opcclaw Engine...
+2026-06-15 20:07:19 [PlanetDaemon] INFO: 正在初始化 iqra Engine...
 2026-06-15 20:07:20 [PlanetDaemon] INFO: ProviderConfig 构建完成: name=Ollama, model=qwen2.5:7b-64k, base_url=http://localhost:11434/v1
 2026-06-15 20:07:20 [PlanetDaemon] INFO: LLM Backend 创建成功: OpenAICompatibleBackend
-[2m20:07:20[0m [32mℹ️ INFO   [0m [2m[opcclaw][0m OPCclaw 日志系统已启动 (level=INFO, json=False)
-2026-06-15 20:07:20 [PlanetDaemon] INFO: OPCclaw 日志系统已启动 (level=INFO, json=False)
-2026-06-15 20:07:20 [PlanetDaemon] INFO: AgentBridge (opcclaw Engine) 初始化成功
+[2m20:07:20[0m [32mℹ️ INFO   [0m [2m[iqra][0m Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:07:20 [PlanetDaemon] INFO: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:07:20 [PlanetDaemon] INFO: AgentBridge (iqra Engine) 初始化成功
 2026-06-15 20:07:20 [PlanetDaemon] INFO: 已从磁盘恢复 40 条对话历史
 2026-06-15 20:07:20 [PlanetDaemon] INFO: ============================================================
 2026-06-15 20:07:20 [PlanetDaemon] INFO: 悬浮星球守护进程启动中...
@@ -271,16 +271,16 @@ ModuleNotFoundError: No module named 'faster_whisper'
 2026-06-15 20:09:04 [PlanetDaemon] INFO: ============================================================
 2026-06-15 20:09:04 [PlanetDaemon] INFO: bootout 返回 3 (已由 plist 删除兜底)
 2026-06-15 20:10:37 [PlanetDaemon] INFO: PROJECT_ROOT: /Volumes/D盘工作区/一人公司/one_company_cosmic
-2026-06-15 20:10:37 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data
-2026-06-15 20:10:37 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
-2026-06-15 20:10:37 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/opcclaw/data/opcclaw_config.json
+2026-06-15 20:10:37 [PlanetDaemon] INFO: DATA_DIR: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data
+2026-06-15 20:10:37 [PlanetDaemon] INFO: CONFIG_PATH: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data/iqra_config.json
+2026-06-15 20:10:37 [PlanetDaemon] INFO: 成功加载配置文件: /Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/data/iqra_config.json
 2026-06-15 20:10:37 [PlanetDaemon] INFO: 活跃 provider: id=ollama, type=local
-2026-06-15 20:10:37 [PlanetDaemon] INFO: 正在初始化 opcclaw Engine...
+2026-06-15 20:10:37 [PlanetDaemon] INFO: 正在初始化 iqra Engine...
 2026-06-15 20:10:37 [PlanetDaemon] INFO: ProviderConfig 构建完成: name=Ollama, model=qwen2.5:7b-64k, base_url=http://localhost:11434/v1
 2026-06-15 20:10:37 [PlanetDaemon] INFO: LLM Backend 创建成功: OpenAICompatibleBackend
-[2m20:10:38[0m [32mℹ️ INFO   [0m [2m[opcclaw][0m OPCclaw 日志系统已启动 (level=INFO, json=False)
-2026-06-15 20:10:38 [PlanetDaemon] INFO: OPCclaw 日志系统已启动 (level=INFO, json=False)
-2026-06-15 20:10:38 [PlanetDaemon] INFO: AgentBridge (opcclaw Engine) 初始化成功
+[2m20:10:38[0m [32mℹ️ INFO   [0m [2m[iqra][0m Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:10:38 [PlanetDaemon] INFO: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:10:38 [PlanetDaemon] INFO: AgentBridge (iqra Engine) 初始化成功
 2026-06-15 20:10:38 [PlanetDaemon] INFO: 已从磁盘恢复 40 条对话历史
 2026-06-15 20:10:38 [PlanetDaemon] INFO: ============================================================
 2026-06-15 20:10:38 [PlanetDaemon] INFO: 悬浮星球守护进程启动中...

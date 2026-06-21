@@ -543,7 +543,7 @@ class LoginWindow(QMainWindow):
     def _on_setup_complete(self, result: dict):
         """模型配置完成后打开智能中心 + 启动悬浮星球（宇宙版是浮球唯一主程序）"""
         from modules.intelligence.intelligence_window import IntelligenceWindow
-        from modules.intelligence.opcclaw_floating_planet import FloatingPlanet
+        from modules.intelligence.iqra_floating_planet import FloatingPlanet
 
         config = result.get("config", {})
         engine = result.get("engine", None)
@@ -553,17 +553,17 @@ class LoginWindow(QMainWindow):
 
         self._center = IntelligenceWindow(
             role=role,
-            opcclaw_engine=engine,
+            iqra_engine=engine,
         )
         self._center.show()
 
         # 宇宙版始终创建并持有悬浮球
-        _lock_file = "/tmp/opcclaw_floating_planet.pid"
-        _cmd_file = "/tmp/opcclaw_floating_cmd"
+        _lock_file = "/tmp/iqra_floating_planet.pid"
+        _cmd_file = "/tmp/iqra_floating_cmd"
 
         try:
             self._floating = FloatingPlanet(
-                opcclaw_engine=engine,
+                iqra_engine=engine,
                 role=role,
                 membership_info=membership_info,
                 config=config,

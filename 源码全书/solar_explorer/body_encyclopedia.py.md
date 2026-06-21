@@ -1,6 +1,6 @@
 # `solar_explorer/body_encyclopedia.py`
 
-> 路径：`solar_explorer/body_encyclopedia.py` | 行数：316
+> 路径：`solar_explorer/body_encyclopedia.py` | 行数：340
 
 
 ---
@@ -65,8 +65,20 @@ def _load_knowledge_facts(dir_name):
     return facts
 
 
+def _extract_title(text, filename):
+    """从 .md 文件内容第一行 h1 提取显示标题；fallback 用文件名"""
+    for line in text.split("\n"):
+        line = line.strip()
+        if line.startswith("# "):
+            return line[2:].strip()
+    name = os.path.splitext(filename)[0]
+    if len(name) > 3 and name[:3].isdigit() and name[2] == '_':
+        name = name[3:]
+    return name
+
+
 def _inject_knowledge(entry, body_id):
-    """将 knowledge/ 目录下所有 .md 文件（除 index 和 facts）合并为一个完整的深度图文内容"""
+    """加载 knowledge/ 目录下所有 .md 文件，存入 knowledge_files 列表（供树状导航用）"""
     dir_name = _BODY_ID_TO_DIR.get(body_id)
     if not dir_name:
         return
@@ -74,23 +86,35 @@ def _inject_knowledge(entry, body_id):
     if not os.path.isdir(kdir):
         return
 
-    parts = []
     try:
         files = sorted(f for f in os.listdir(kdir) if f.endswith(".md") and f != "04_facts.md")
     except Exception:
         return
 
+    knowledge_files = []
+    parts = []
     for fn in files:
         text = _load_knowledge_md(dir_name, fn)
-        if text:
-            # 跳过纯索引文件（内容太短或只有链接列表）
-            if fn == "00_index.md" and len(text) < 500:
-                continue
+        if not text:
+            continue
+        # 合并文本保留给语音朗读使用
+        if fn == "00_index.md" and len(text) < 500:
+            # 索引太短不合并，但仍在树中显示
+            pass
+        else:
             parts.append(text)
 
-    # 合并所有文件，用分割线隔开
+        title = _extract_title(text, fn)
+        knowledge_files.append({
+            "filename": fn,
+            "title": title,
+            "content": text,
+        })
+
     if parts:
         entry["summary"] = "\n\n---\n\n".join(parts)
+    if knowledge_files:
+        entry["knowledge_files"] = knowledge_files
 
     facts = _load_knowledge_facts(dir_name)
     if facts:

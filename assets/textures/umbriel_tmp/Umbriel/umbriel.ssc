@@ -1,0 +1,49 @@
+Replace "Umbriel:Uranus II" "Sol/Uranus"
+{
+	Class	"moon"
+	Mesh	"umbriel.cmod"
+	Orientation	[ 90 0 1 0 ]
+	Texture	"umbriel.dds"
+	Color	[ 1.0 0.998 0.997 ]
+	Radius	584.7
+	Mass<kg>	1.2885e21
+	CustomOrbit	"umbriel"
+
+	# Undisturbed orbit
+	# OrbitFrame
+	# {
+	#	EclipticJ2000	{ Center "Sol/Uranus" }
+	# }
+	# EllipticalOrbit
+	# {
+	#	Epoch	2451545.0  # 2000 Jan 01 12:00
+	#	Period	4.1441772
+	#	SemiMajorAxis	266000
+	#	Eccentricity	0.0039
+	#	Inclination	97.666067
+	#	AscendingNode	167.638182
+	#	ArgOfPericenter	334.951668
+	#	MeanAnomaly	271.223378
+	# }
+
+	BodyFrame	{ EquatorJ2000 {} }
+	CustomRotation	"iau-umbriel"
+
+	# Undisturbed rotation
+	# UniformRotation
+	# {
+	#	Inclination	74.90
+	#	AscendingNode	167.43
+	#	MeridianAngle	71.95
+	# }
+
+	LunarLambert	1
+	Albedo	0.26
+	InfoURL	"https://en.wikipedia.org/wiki/Umbriel_(moon)"
+}
+
+AltSurface "Limit of knowledge" "Sol/Uranus/Umbriel"
+{
+	Texture	"umbriel-lok.dds"
+	LunarLambert	1
+}

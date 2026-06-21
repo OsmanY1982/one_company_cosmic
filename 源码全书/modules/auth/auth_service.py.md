@@ -1,6 +1,6 @@
 # `modules/auth/auth_service.py`
 
-> 路径：`modules/auth/auth_service.py` | 行数：441
+> 路径：`modules/auth/auth_service.py` | 行数：556
 
 
 ---
@@ -9,12 +9,15 @@
 ```python
 """
 认证服务模块 — 用户注册/登录/会员管理
-数据持久化到 modules/auth/users.json
+数据持久化到 modules/auth/users.json + data/users.db (SQLite)
+注册时双写：JSON（本地登录） + SQLite（云端同步）
+登录时双读：JSON 优先，SQLite 兜底（跨机注册用户）
 """
 import traceback
 import json
 import os
 import sqlite3
+import threading
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -23,6 +26,7 @@ from core.operation_log import log_action
 USER_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users.json")
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
 ACTIVATION_DB = os.path.join(DATA_DIR, "activation.db")
+USERS_SQLITE_DB = os.path.join(DATA_DIR, "users.db")
 
 # ── 会员类型定义 ──
 MEMBERSHIP_TRIAL = "trial"       # 体验会员 7天 免费
@@ -158,6 +162,95 @@ class AuthService:
     def _reload(self):
         self._users = _load_users()
 
+    # ── SQLite 同步桥接 ──
+    def _sync_user_to_sqlite(self, username: str):
+        """将 users.json 中的用户同步到 data/users.db（SQLite），供 cloud_sync 上传"""
+        user = self._users.get(username)
+        if not user:
+            return
+        try:
+            os.makedirs(os.path.dirname(USERS_SQLITE_DB), exist_ok=True)
+            conn = sqlite3.connect(USERS_SQLITE_DB)
+            c = conn.cursor()
+            c.execute('''CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT DEFAULT '',
+                user_id TEXT,
+                role TEXT DEFAULT 'user',
+                license_type TEXT,
+                created_at TEXT,
+                updated_at TEXT
+            )''')
+            c.execute('''INSERT OR REPLACE INTO users
+                (username, password, role, license_type, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, datetime('now','localtime'))''',
+                (username, user.get("password", ""),
+                 user.get("role", "member"),
+                 user.get("membership", "trial"),
+                 user.get("created_at", _now())))
+            conn.commit()
+            conn.close()
+        except Exception:
+            traceback.print_exc()
+
+    def _sync_membership_to_sqlite(self, username: str):
+        """将 users.json 中的会员信息同步到 data/users.db 的 user_memberships"""
+        user = self._users.get(username)
+        if not user:
+            return
+        try:
+            conn = sqlite3.connect(USERS_SQLITE_DB)
+            c = conn.cursor()
+            c.execute('''CREATE TABLE IF NOT EXISTS user_memberships (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                membership_type TEXT,
+                activated_at TEXT,
+                expires_at TEXT,
+                activation_code TEXT
+            )''')
+            c.execute('''INSERT OR REPLACE INTO user_memberships
+                (username, membership_type, expires_at, activated_at)
+                VALUES (?, ?, ?, ?)''',
+                (username, user.get("membership", "trial"),
+                 user.get("expire_at", None),
+                 _now()))
+            conn.commit()
+            conn.close()
+        except Exception:
+            traceback.print_exc()
+
+    def _trigger_cloud_sync(self):
+        """异步触发云端同步（不阻塞 UI）"""
+        try:
+            from core.cloud_sync import sync_users
+            t = threading.Thread(target=sync_users, daemon=True)
+            t.start()
+        except Exception:
+            traceback.print_exc()
+
+    def _find_user_in_sqlite(self, username: str) -> Optional[dict]:
+        """在 data/users.db 中查找用户（跨机注册兜底）"""
+        if not os.path.exists(USERS_SQLITE_DB):
+            return None
+        try:
+            conn = sqlite3.connect(USERS_SQLITE_DB)
+            conn.row_factory = sqlite3.Row
+            row = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+            conn.close()
+            if row:
+                return {
+                    "password": row["password"] or "",
+                    "role": row["role"] or "member",
+                    "membership": row["license_type"] or MEMBERSHIP_TRIAL,
+                    "expire_at": None,
+                    "created_at": row["created_at"] or _now(),
+                }
+        except Exception:
+            traceback.print_exc()
+        return None
+
     def register(self, username: str, password: str) -> tuple:
         """
         注册新用户
@@ -183,6 +276,10 @@ class AuthService:
             "created_at": now,
         }
         _save_users(self._users)
+        # 双写：同步到 SQLite → 触发云端同步（异步，不阻塞 UI）
+        self._sync_user_to_sqlite(username)
+        self._sync_membership_to_sqlite(username)
+        self._trigger_cloud_sync()
         try:
             log_action(username, "注册", "login", "新用户注册")
         except Exception:
@@ -210,6 +307,8 @@ class AuthService:
 
         user["password"] = new_password
         _save_users(self._users)
+        self._sync_user_to_sqlite(username)
+        self._trigger_cloud_sync()
         try:
             log_action(username, "修改密码", "account", "密码修改成功")
         except Exception:
@@ -219,6 +318,7 @@ class AuthService:
     def login(self, username: str, password: str) -> dict:
         """
         登录验证，检查会员过期
+        JSON 优先 → SQLite 兜底（跨机注册用户）
         返回: {"ok": bool, "msg": str, "user": dict|None}
         """
         self._reload()
@@ -226,6 +326,10 @@ class AuthService:
             return {"ok": False, "msg": "用户名和密码不能为空", "user": None}
 
         user = self._users.get(username)
+        # JSON 未找到 → 尝试 SQLite 兜底（跨机 cloud_pull 拉取的用户）
+        if not user:
+            user = self._find_user_in_sqlite(username)
+
         if not user:
             return {"ok": False, "msg": "用户名或密码错误", "user": None}
 
@@ -283,6 +387,9 @@ class AuthService:
             user["membership"] = MEMBERSHIP_PERMANENT
             user["expire_at"] = None
             _save_users(self._users)
+            self._sync_user_to_sqlite(username)
+            self._sync_membership_to_sqlite(username)
+            self._trigger_cloud_sync()
             try:
                 log_action(username, "升级会员", "membership", "升级为永久会员")
             except Exception:
@@ -297,6 +404,9 @@ class AuthService:
             user["membership"] = MEMBERSHIP_VIP
             user["expire_at"] = (datetime.now() + timedelta(days=365)).strftime("%Y-%m-%d %H:%M:%S")
             _save_users(self._users)
+            self._sync_user_to_sqlite(username)
+            self._sync_membership_to_sqlite(username)
+            self._trigger_cloud_sync()
             try:
                 log_action(username, "升级会员", "membership", "升级为VIP会员（有效期1年）")
             except Exception:
@@ -394,6 +504,9 @@ class AuthService:
         conn.close()
 
         _save_users(self._users)
+        self._sync_user_to_sqlite(username)
+        self._sync_membership_to_sqlite(username)
+        self._trigger_cloud_sync()
         try:
             log_action(username, "激活会员", "membership", f"激活码激活，类型={code_type}")
         except Exception:
@@ -443,6 +556,8 @@ class AuthService:
 
         user["password"] = new_password
         _save_users(self._users)
+        self._sync_user_to_sqlite(username)
+        self._trigger_cloud_sync()
         try:
             log_action("admin", "重置密码", "admin", f"重置用户 {username} 的密码")
         except Exception:

@@ -1,0 +1,11 @@
+{"timestamp": "2026-06-11T00:38:14.103629", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T00:55:09.328642", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T00:55:09.954945", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T00:59:21.054447", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T00:59:21.640640", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T01:14:31.024086", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T01:14:31.297658", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T01:21:37.438186", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T01:21:37.713459", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 725}
+{"timestamp": "2026-06-11T13:02:14.896441", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 732}
+{"timestamp": "2026-06-11T13:02:15.533991", "level": "INFO", "logger": "iqra", "message": "[ConfigManager] 已恢复 local:ollama 的 API Key", "module": "chat_window", "function": "_restore_api_keys", "line": 732}

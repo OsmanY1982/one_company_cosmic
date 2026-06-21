@@ -53,18 +53,18 @@ threading.excepthook = _thread_excepthook
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QPainterPath
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QCoreApplication
 from modules.auth.login_window import LoginWindow
 
 # ── 极简浮球模式 ──
-LOCK_FILE = "/tmp/opcclaw_floating_planet.pid"
-CMD_FILE = "/tmp/opcclaw_floating_cmd"
+LOCK_FILE = "/tmp/iqra_floating_planet.pid"
+CMD_FILE = "/tmp/iqra_floating_cmd"
 PROJECT_ROOT = os.path.dirname(__file__)
-CONFIG_PATH = os.path.join(PROJECT_ROOT, "opcclaw", "data", "opcclaw_config.json")
+CONFIG_PATH = os.path.join(PROJECT_ROOT, "iqra", "data", "iqra_config.json")
 
 
 def _init_engine():
-    """初始化 opcclaw 引擎（供 floating-only 模式使用）。"""
+    """初始化 iqra 引擎（供 floating-only 模式使用）。"""
     if not os.path.exists(CONFIG_PATH):
         return None, {}
     try:
@@ -74,7 +74,7 @@ def _init_engine():
         return None, {}
 
     try:
-        from opcclaw.core.llm_backend import BackendFactory, ProviderConfig
+        from iqra.core.llm_backend import BackendFactory, ProviderConfig
         if PROJECT_ROOT not in sys.path:
             sys.path.insert(0, PROJECT_ROOT)
         elif sys.path[0] != PROJECT_ROOT:
@@ -114,10 +114,10 @@ def _init_engine():
 def _run_floating_only(app: QApplication):
     """极简浮球模式：只显示悬浮球，无登录窗口/智能中心。"""
     engine, config = _init_engine()
-    from modules.intelligence.opcclaw_floating_planet import FloatingPlanet
+    from modules.intelligence.iqra_floating_planet import FloatingPlanet
 
     planet = FloatingPlanet(
-        opcclaw_engine=engine,
+        iqra_engine=engine,
         role="admin",
         membership_info={},
         config=config,
@@ -157,6 +157,7 @@ def _run_floating_only(app: QApplication):
 if __name__ == "__main__":
     floating_only = "--floating-only" in sys.argv
 
+    QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
 

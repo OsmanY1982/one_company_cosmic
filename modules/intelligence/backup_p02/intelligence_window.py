@@ -121,10 +121,10 @@ class NavigationHUD(QWidget):
 class IntelligenceWindow(QMainWindow):
     """智能中心 · NEURAL NEXUS — 真实星球导航"""
 
-    def __init__(self, parent=None, role="admin", opcclaw_engine=None):
+    def __init__(self, parent=None, role="admin", iqra_engine=None):
         super().__init__(parent)
         self._role = role
-        self._opcclaw_engine = opcclaw_engine
+        self._iqra_engine = iqra_engine
         self.setWindowTitle("一人公司 — 智能中心 · NEURAL NEXUS")
         self.setMinimumSize(1200, 850)
         self._build_ui()
@@ -180,7 +180,7 @@ class IntelligenceWindow(QMainWindow):
     def _on_planet_clicked(self, planet_id):
         if planet_id == "ai_chat":
             from modules.intelligence.ai_chat_window import AIChatWindow
-            dlg = AIChatWindow(self, opcclaw_engine=self._opcclaw_engine)
+            dlg = AIChatWindow(self, iqra_engine=self._iqra_engine)
             dlg.show()
         elif planet_id == "digital_emp":
             from modules.intelligence.digital_emp_window import DigitalEmpWindow
@@ -188,7 +188,7 @@ class IntelligenceWindow(QMainWindow):
             dlg.exec_()
         elif planet_id == "ai_assistant":
             from modules.intelligence.ai_assistant_window import AIAssistantWindow
-            dlg = AIAssistantWindow(self, opcclaw_engine=self._opcclaw_engine)
+            dlg = AIAssistantWindow(self, iqra_engine=self._iqra_engine)
             dlg.show()
         elif planet_id == "tools":
             from modules.intelligence.tools_window import ToolsWindow

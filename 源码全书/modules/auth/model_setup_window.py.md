@@ -11,7 +11,7 @@
 模型配置窗口 — 登录 → 模型配置 → 主控面板
 三种模式：预设云端模型 / 自定义端点 / 本地推理
 
-与 opcclaw 共享配置格式（opcclaw_config.json）
+与 iqra 共享配置格式（iqra_config.json）
 """
 import os, sys, json, traceback, math, random
 from PyQt5.QtWidgets import (
@@ -29,10 +29,10 @@ from core.cosmic import CosmicBackground, ACCENT_CYAN, ACCENT_GOLD, ACCENT_PURPL
 from core.planet_painter import PLANET_STYLES, paint_planet
 from deps.install_deps import ensure
 
-# 模型列表统一走 AgentBridge.list_all_models() 静态方法（数据源：opcclaw_config.json + Ollama 动态发现）
+# 模型列表统一走 AgentBridge.list_all_models() 静态方法（数据源：iqra_config.json + Ollama 动态发现）
 
 
-# ── 预设供应商模板（精简版，完整版在 opcclaw PROVIDER_TEMPLATES）──
+# ── 预设供应商模板（精简版，完整版在 iqra PROVIDER_TEMPLATES）──
 
 PRESET_PROVIDERS = [
     {"id": "deepseek",        "name": "DeepSeek",         "base_url": "https://api.deepseek.com/v1",                "model": "deepseek-chat",     "desc": "DeepSeek-V3 通用大模型，性价比极高",           "local": False, "models": ["deepseek-chat", "deepseek-reasoner"]},
@@ -61,22 +61,22 @@ LOCAL_SERVICES = [
 
 # ── 配置路径 ──
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DATA_DIR = os.path.join(PROJECT_ROOT, "opcclaw", "data")
-OPCCLAW_CONFIG_PATH = os.path.join(DATA_DIR, "opcclaw_config.json")
+DATA_DIR = os.path.join(PROJECT_ROOT, "iqra", "data")
+IQRA_CONFIG_PATH = os.path.join(DATA_DIR, "iqra_config.json")
 
 
-def _save_opcclaw_config(config_dict: dict):
-    """保存配置到 opcclaw_config.json"""
+def _save_iqra_config(config_dict: dict):
+    """保存配置到 iqra_config.json"""
     os.makedirs(DATA_DIR, exist_ok=True)
-    with open(OPCCLAW_CONFIG_PATH, "w", encoding="utf-8") as f:
+    with open(IQRA_CONFIG_PATH, "w", encoding="utf-8") as f:
         json.dump(config_dict, f, indent=2, ensure_ascii=False)
 
 
-def _load_opcclaw_config() -> dict:
-    """加载已有 opcclaw 配置"""
+def _load_iqra_config() -> dict:
+    """加载已有 iqra 配置"""
     try:
-        if os.path.exists(OPCCLAW_CONFIG_PATH):
-            with open(OPCCLAW_CONFIG_PATH, "r", encoding="utf-8") as f:
+        if os.path.exists(IQRA_CONFIG_PATH):
+            with open(IQRA_CONFIG_PATH, "r", encoding="utf-8") as f:
                 return json.load(f)
     except Exception as e:
         print(f"[model_setup_window] 加载配置失败: {e}")
@@ -233,7 +233,7 @@ class ModelSetupWindow(QMainWindow):
         self.setMinimumSize(820, 620)
 
         # 加载已有配置
-        self._existing = _load_opcclaw_config()
+        self._existing = _load_iqra_config()
 
         # 背景
         self._bg = SetupCosmicBackground(self)
@@ -651,7 +651,7 @@ class ModelSetupWindow(QMainWindow):
     # ════════════════ 操作 ════════════════
 
     def _get_config(self) -> dict:
-        """根据当前选中的 tab 构建 opcclaw 配置字典"""
+        """根据当前选中的 tab 构建 iqra 配置字典"""
         active_tab = self._stack.currentIndex()
 
         config = {
@@ -722,14 +722,14 @@ class ModelSetupWindow(QMainWindow):
             return
 
         # 保存
-        _save_opcclaw_config(config)
+        _save_iqra_config(config)
 
-        # 初始化 opcclaw 引擎（尝试）
+        # 初始化 iqra 引擎（尝试）
         engine = None
         try:
-            engine = self._init_opcclaw_engine(config)
+            engine = self._init_iqra_engine(config)
         except Exception as e:
-            print(f"[ModelSetup] opcclaw engine init failed: {e}")
+            print(f"[ModelSetup] iqra engine init failed: {e}")
             traceback.print_exc()
 
         self.setup_complete.emit({
@@ -753,23 +753,23 @@ class ModelSetupWindow(QMainWindow):
         })
         self.close()
 
-    def _init_opcclaw_engine(self, config: dict):
-        """尝试初始化 opcclaw 引擎，失败返回 None"""
-        # 添加 opcclaw 到 path
-        # opcclaw 位于项目根目录下
-        opcclaw_root = os.path.join(PROJECT_ROOT, "opcclaw")
-        if not os.path.isdir(opcclaw_root):
-            print(f"[ModelSetup] opcclaw not found at {opcclaw_root}")
+    def _init_iqra_engine(self, config: dict):
+        """尝试初始化 iqra 引擎，失败返回 None"""
+        # 添加 iqra 到 path
+        # iqra 位于项目根目录下
+        iqra_root = os.path.join(PROJECT_ROOT, "iqra")
+        if not os.path.isdir(iqra_root):
+            print(f"[ModelSetup] iqra not found at {iqra_root}")
             return None
 
-        if opcclaw_root not in sys.path:
-            sys.path.insert(0, os.path.dirname(opcclaw_root))
-            sys.path.insert(0, opcclaw_root)
+        if iqra_root not in sys.path:
+            sys.path.insert(0, os.path.dirname(iqra_root))
+            sys.path.insert(0, iqra_root)
 
         try:
-            from opcclaw.core.llm_backend import BackendFactory, ProviderConfig
+            from iqra.core.llm_backend import BackendFactory, ProviderConfig
 
-            # opcclaw/core/__init__.py 会将自身路径插入 sys.path[0]，可能遮蔽 modules/
+            # iqra/core/__init__.py 会将自身路径插入 sys.path[0]，可能遮蔽 modules/
             if PROJECT_ROOT not in sys.path:
                 sys.path.insert(0, PROJECT_ROOT)
             elif sys.path[0] != PROJECT_ROOT:
@@ -800,14 +800,14 @@ class ModelSetupWindow(QMainWindow):
             try:
                 from modules.intelligence.agent_bridge import AgentBridge
                 bridge = AgentBridge(backend)
-                print(f"[ModelSetup] opcclaw engine + agent bridge initialized: {provider_id}")
+                print(f"[ModelSetup] iqra engine + agent bridge initialized: {provider_id}")
                 return bridge
             except ImportError as e:
                 print(f"[ModelSetup] AgentBridge import failed: {e}, falling back to raw backend")
                 return backend
 
         except Exception as e:
-            print(f"[ModelSetup] opcclaw init error: {e}")
+            print(f"[ModelSetup] iqra init error: {e}")
             return None
 
 ```

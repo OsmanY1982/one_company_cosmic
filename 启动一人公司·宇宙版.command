@@ -1,7 +1,7 @@
 #!/bin/bash
 # 停掉所有旧实例
-launchctl unload ~/Library/LaunchAgents/com.opcclaw.one-company.plist 2>/dev/null
-screen -X -S opcclaw quit 2>/dev/null
+launchctl unload ~/Library/LaunchAgents/com.iqra.one-company.plist 2>/dev/null
+screen -X -S iqra quit 2>/dev/null
 pkill -f "python.*main.py" 2>/dev/null
 sleep 1
 
@@ -11,7 +11,7 @@ export DYLD_FRAMEWORK_PATH=/Users/opc/Library/Python/3.9/lib/python/site-package
 cd "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic"
 
 # 用 screen 启动（继承终端麦克风权限）
-screen -dmS opcclaw /usr/bin/python3 main.py
+screen -dmS iqra /usr/bin/python3 main.py
 if [ $? -eq 0 ]; then
     echo "一人公司·宇宙版 已启动"
 else

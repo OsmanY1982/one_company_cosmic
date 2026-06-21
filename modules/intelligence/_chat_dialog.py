@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 AI 助手模块 v3 — 支持本地模型管理
-- 标签1: 💬 AI 对话 (opcclaw ChatWindow)
+- 标签1: 💬 AI 对话 (iqra ChatWindow)
 - 标签2: ⚡ 快捷工具 (模板、本地模型、系统状态)
 - 标签3~6: 增强功能（智能对话、快捷操作、系统监控、高级功能）
 
@@ -23,7 +23,7 @@ from typing import Optional, Dict, Any
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
-# 使「from opcclaw.xxx import ...」和「from modules.intelligence.xxx import ...」
+# 使「from iqra.xxx import ...」和「from modules.intelligence.xxx import ...」
 # 在所有调用场景下均可正常工作。
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if _PROJECT_ROOT not in sys.path:
@@ -44,11 +44,11 @@ from modules.intelligence._stubs import app_state
 
 
 # ═══════════════════════════════════════════
-# OPCclaw 对话弹窗
+# Iqra 对话弹窗
 # ═══════════════════════════════════════════
 
-class OPCclawChatDialog(QDialog):
-    """OPCclaw 核心对话引擎弹窗 — 含模型切换 UI，与 AgentBridge 同步"""
+class IqraChatDialog(QDialog):
+    """Iqra 核心对话引擎弹窗 — 含模型切换 UI，与 AgentBridge 同步"""
 
     _STAGE_LABELS = {
         "THINK": "分析中...",
@@ -59,13 +59,13 @@ class OPCclawChatDialog(QDialog):
         "COMPLETE": "任务完成",
     }
 
-    def __init__(self, parent=None, opcclaw_engine=None, floating_mode=False, voice=None):
+    def __init__(self, parent=None, iqra_engine=None, floating_mode=False, voice=None):
         super().__init__(parent)
-        self._opcclaw = opcclaw_engine
+        self._iqra = iqra_engine
         self._all_models = []
         self._current_model = ""
-        if self._opcclaw and hasattr(self._opcclaw, "get_model"):
-            self._current_model = self._opcclaw.get_model()
+        if self._iqra and hasattr(self._iqra, "get_model"):
+            self._current_model = self._iqra.get_model()
 
         self._floating_mode = floating_mode
         self._voice = voice
@@ -75,21 +75,21 @@ class OPCclawChatDialog(QDialog):
         self._session_id = None   # 由外部 AIChatWindow 设置
 
         if floating_mode:
-            self.setWindowTitle("opcclaw · AI 对话")
+            self.setWindowTitle("iqra · AI 对话")
             self.setWindowFlags(
                 Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint | Qt.WindowStaysOnTopHint
             )
             self.setMinimumSize(420, 480)
         else:
-            self.setWindowTitle("OPCclaw 对话 · 核心引擎")
+            self.setWindowTitle("Iqra 对话 · 核心引擎")
             self.setMinimumSize(800, 600)
             self.resize(900, 700)
         self._build_ui()
         self._refresh_model_list()
 
         # 监听全局模型变更（AIChatWindow / FloatingPlanet 切换后自动同步）
-        if self._opcclaw and hasattr(self._opcclaw, "model_changed"):
-            mc = self._opcclaw.model_changed
+        if self._iqra and hasattr(self._iqra, "model_changed"):
+            mc = self._iqra.model_changed
             if mc:
                 mc.connect(self._on_external_model_change)
 
@@ -109,9 +109,9 @@ class OPCclawChatDialog(QDialog):
         model_row = QHBoxLayout()
         model_row.setSpacing(6)
 
-        if self._opcclaw is not None:
-            prov = self._opcclaw.get_provider_info() if hasattr(self._opcclaw, "get_provider_info") else {}
-            status_text = f"引擎: {prov.get('name', 'OPCclaw')} / {prov.get('model', self._current_model)}"
+        if self._iqra is not None:
+            prov = self._iqra.get_provider_info() if hasattr(self._iqra, "get_provider_info") else {}
+            status_text = f"引擎: {prov.get('name', 'Iqra')} / {prov.get('model', self._current_model)}"
             status_color = "#44cc88"
         else:
             status_text = "引擎未连接"
@@ -272,13 +272,13 @@ class OPCclawChatDialog(QDialog):
             ir.addWidget(clear_btn)
         layout.addLayout(ir)
 
-        if self._opcclaw:
+        if self._iqra:
             self._chat_log.append(
-                '<p style="color:#44cc66;">[系统] OPCclaw 引擎已就绪，可以开始对话。</p>'
+                '<p style="color:#44cc66;">[系统] Iqra 引擎已就绪，可以开始对话。</p>'
             )
         else:
             self._chat_log.append(
-                '<p style="color:#ffaa44;">[系统] OPCclaw 引擎未连接，请先完成模型配置。</p>'
+                '<p style="color:#ffaa44;">[系统] Iqra 引擎未连接，请先完成模型配置。</p>'
             )
 
     # ─── 模型管理（通过 AgentBridge 统一管理，与 AIChatWindow 同步）───
@@ -295,9 +295,9 @@ class OPCclawChatDialog(QDialog):
         self._cb_model.clear()
         self._all_models = []
 
-        if self._opcclaw and hasattr(self._opcclaw, "list_all_models"):
+        if self._iqra and hasattr(self._iqra, "list_all_models"):
             try:
-                all_models = self._opcclaw.list_all_models()
+                all_models = self._iqra.list_all_models()
             except Exception:
                 all_models = []
         else:
@@ -352,14 +352,14 @@ class OPCclawChatDialog(QDialog):
 
         self._current_model = model
 
-        if self._opcclaw and hasattr(self._opcclaw, "switch_model"):
+        if self._iqra and hasattr(self._iqra, "switch_model"):
             try:
-                self._opcclaw.switch_model(provider_id, model)
+                self._iqra.switch_model(provider_id, model)
                 prov_name = data.get("provider_name", provider_id)
                 self._chat_log.append(
                     f'<p style="color:#44cc88;font-size:10px;">[系统] 已切换到: {prov_name} / {model}</p>'
                 )
-                prov = self._opcclaw.get_provider_info() if hasattr(self._opcclaw, "get_provider_info") else {}
+                prov = self._iqra.get_provider_info() if hasattr(self._iqra, "get_provider_info") else {}
                 self._lbl_status.setText(
                     f"引擎: {prov.get('name', prov_name)} / {model}"
                 )
@@ -392,9 +392,9 @@ class OPCclawChatDialog(QDialog):
         self._chat_input.clear()
         # 消息追踪 + 实时增量保存
         self._messages.append({"role": "user", "content": text})
-        if self._session_id and hasattr(self._opcclaw, "append_message"):
+        if self._session_id and hasattr(self._iqra, "append_message"):
             try:
-                self._opcclaw.append_message("user", text, self._session_id)
+                self._iqra.append_message("user", text, self._session_id)
             except Exception:
                 pass
         now = datetime.now().strftime("%H:%M:%S")
@@ -404,17 +404,17 @@ class OPCclawChatDialog(QDialog):
         )
         self._chat_input.setEnabled(False)
 
-        if not self._opcclaw:
+        if not self._iqra:
             self._chat_log.append(
                 f'<p style="color:#ff6666;font-weight:700;">[{now}] 系统:</p>'
-                f'<p style="color:#ffaaaa;">OPCclaw 引擎未连接，请先完成模型配置后重试。</p>'
+                f'<p style="color:#ffaaaa;">Iqra 引擎未连接，请先完成模型配置后重试。</p>'
             )
             self._chat_input.setEnabled(True)
             self._chat_input.setFocus()
             return
 
         # 流式输出（打字机效果）
-        if hasattr(self._opcclaw, 'chat_stream'):
+        if hasattr(self._iqra, 'chat_stream'):
             self._stream_accumulated = ""
             self._stream_header = f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
             self._stream_chunks_received = False
@@ -427,7 +427,7 @@ class OPCclawChatDialog(QDialog):
             )
 
             try:
-                self._opcclaw.chat_stream(
+                self._iqra.chat_stream(
                     text,
                     self._on_stream_chunk,
                     self._on_stream_done,
@@ -440,9 +440,9 @@ class OPCclawChatDialog(QDialog):
 
         # 同步模式（回退 / 非流式引擎）
         try:
-            reply = self._opcclaw.chat(text)
+            reply = self._iqra.chat(text)
         except Exception as e:
-            reply = f"OPCclaw 异常: {e}"
+            reply = f"Iqra 异常: {e}"
 
         self._chat_log.append(
             f'<p style="color:#44ccff;font-weight:700;">[{now}] AI:</p>'
@@ -452,9 +452,9 @@ class OPCclawChatDialog(QDialog):
         self._chat_input.setFocus()
         # 实时保存 AI 回复
         self._messages.append({"role": "assistant", "content": reply})
-        if self._session_id and hasattr(self._opcclaw, "append_message"):
+        if self._session_id and hasattr(self._iqra, "append_message"):
             try:
-                self._opcclaw.append_message("assistant", reply, self._session_id)
+                self._iqra.append_message("assistant", reply, self._session_id)
             except Exception:
                 pass
         sb = self._chat_log.verticalScrollBar()
@@ -509,9 +509,9 @@ class OPCclawChatDialog(QDialog):
         sb.setValue(sb.maximum())
         # 实时保存 AI 回复
         self._messages.append({"role": "assistant", "content": full_text})
-        if self._session_id and hasattr(self._opcclaw, "append_message"):
+        if self._session_id and hasattr(self._iqra, "append_message"):
             try:
-                self._opcclaw.append_message("assistant", full_text, self._session_id)
+                self._iqra.append_message("assistant", full_text, self._session_id)
             except Exception:
                 pass
 
@@ -543,9 +543,9 @@ class OPCclawChatDialog(QDialog):
     def closeEvent(self, event):
         """关闭对话框时保存会话并恢复悬浮球语音连接"""
         if self._floating_mode:
-            if hasattr(self._opcclaw, 'save_session'):
+            if hasattr(self._iqra, 'save_session'):
                 try:
-                    self._opcclaw.save_session()
+                    self._iqra.save_session()
                 except Exception:
                     pass
             parent = self.parent()
@@ -553,9 +553,9 @@ class OPCclawChatDialog(QDialog):
                 parent._enable_voice_handlers()
         # 非悬浮球模式：用 messages + session_id 保存
         elif self._messages and self._session_id:
-            if hasattr(self._opcclaw, 'save_session'):
+            if hasattr(self._iqra, 'save_session'):
                 try:
-                    self._opcclaw.save_session(
+                    self._iqra.save_session(
                         self._messages, self._session_id
                     )
                 except Exception:
@@ -610,10 +610,10 @@ class OPCclawChatDialog(QDialog):
 
     def _load_history(self):
         """启动时从 MemoryStore 恢复对话历史并在 UI 中显示"""
-        if not hasattr(self._opcclaw, 'get_history'):
+        if not hasattr(self._iqra, 'get_history'):
             return
         try:
-            msgs = self._opcclaw.get_history()
+            msgs = self._iqra.get_history()
         except Exception:
             return
         if not msgs:
@@ -629,7 +629,7 @@ class OPCclawChatDialog(QDialog):
             elif role == "assistant" and content:
                 content_escaped = content.replace('\n', '<br>')
                 self._chat_log.append(
-                    f'<p style="color:#c0ffc0;"><b>opcclaw:</b> {content_escaped}</p>'
+                    f'<p style="color:#c0ffc0;"><b>iqra:</b> {content_escaped}</p>'
                 )
             elif role == "tool":
                 c = msg.get("content", "")[:200]
@@ -641,12 +641,12 @@ class OPCclawChatDialog(QDialog):
 
     def _connect_agent_signals(self):
         """连接 AgentLoop 工具信号（实时展示工具调用进度）"""
-        if hasattr(self._opcclaw, 'on_tool_start'):
-            self._opcclaw.on_tool_start.connect(self._on_agent_tool_start)
-        if hasattr(self._opcclaw, 'on_tool_result'):
-            self._opcclaw.on_tool_result.connect(self._on_agent_tool_result)
-        if hasattr(self._opcclaw, 'on_agent_event'):
-            self._opcclaw.on_agent_event.connect(self._on_agent_stage)
+        if hasattr(self._iqra, 'on_tool_start'):
+            self._iqra.on_tool_start.connect(self._on_agent_tool_start)
+        if hasattr(self._iqra, 'on_tool_result'):
+            self._iqra.on_tool_result.connect(self._on_agent_tool_result)
+        if hasattr(self._iqra, 'on_agent_event'):
+            self._iqra.on_agent_event.connect(self._on_agent_stage)
 
     def _on_agent_tool_start(self, name: str, args: dict):
         """AgentLoop 工具调用开始"""

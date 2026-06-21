@@ -1,5 +1,5 @@
 """
-OPCclaw - AI Agent 对话窗口 (v3)
+Iqra - AI Agent 对话窗口 (v3)
 类似 QClaw 的对话框界面, 带侧栏配置面板。
 
 功能:
@@ -28,30 +28,30 @@ from PyQt5.QtCore import (
 )
 from PyQt5.QtGui import QFont, QColor, QPalette
 
-# ── OPCclaw 核心 ──
-from opcclaw.core.llm_backend import (
+# ── Iqra 核心 ──
+from iqra.core.llm_backend import (
     BaseLLMBackend, BackendFactory, ProviderConfig,
     PROVIDER_TEMPLATES, get_available_models,
     list_all_providers, batch_scan_platforms,
 )
-from opcclaw.core.tool_registry import ToolRegistry
-from opcclaw.core.chat_engine import ChatEngine
-from opcclaw.core.skill_loader import SkillLoader
-from opcclaw.core.memory_store import MemoryStore
-from opcclaw.core.super_intelligence import enhance_chat_engine, SuperIntelligence
-from opcclaw.core.multi_model import MultiModelRouter, TaskType, BUILTIN_TASK_TYPES
-from opcclaw.core.multi_model_chat_engine import MultiModelChatEngine
-from opcclaw.core.agent_loop import AgentLoop
-from opcclaw.core.rag_context import RAGContextInjector
-from opcclaw.tools.builtin.system_tools import register_system_tools
-from opcclaw.tools.builtin.developer_tools import register_developer_tools
-from opcclaw.tools.builtin.git_tools import register_git_tools
-from opcclaw.tools.builtin.code_tools import register_code_tools
-from opcclaw.core.opcclaw_logging import logger
-from opcclaw.core.secure_storage import SecureStorage
-from opcclaw.tools.business_tools import register_business_tools
+from iqra.core.tool_registry import ToolRegistry
+from iqra.core.chat_engine import ChatEngine
+from iqra.core.skill_loader import SkillLoader
+from iqra.core.memory_store import MemoryStore
+from iqra.core.super_intelligence import enhance_chat_engine, SuperIntelligence
+from iqra.core.multi_model import MultiModelRouter, TaskType, BUILTIN_TASK_TYPES
+from iqra.core.multi_model_chat_engine import MultiModelChatEngine
+from iqra.core.agent_loop import AgentLoop
+from iqra.core.rag_context import RAGContextInjector
+from iqra.tools.builtin.system_tools import register_system_tools
+from iqra.tools.builtin.developer_tools import register_developer_tools
+from iqra.tools.builtin.git_tools import register_git_tools
+from iqra.tools.builtin.code_tools import register_code_tools
+from iqra.core.iqra_logging import logger
+from iqra.core.secure_storage import SecureStorage
+from iqra.tools.business_tools import register_business_tools
 try:
-    from opcclaw.modules.voice_manager import VoiceManager, check_voice_dependencies
+    from iqra.modules.voice_manager import VoiceManager, check_voice_dependencies
 except ImportError:
     VoiceManager = None
     check_voice_dependencies = lambda: {}
@@ -232,7 +232,7 @@ class MessageBubble(QFrame):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(14, 10, 14, 10)
 
-        label_map = {"user": "我", "ai": "OPCclaw", "tool": "⚡ 工具", "error": "⚠️ 错误"}
+        label_map = {"user": "我", "ai": "Iqra", "tool": "⚡ 工具", "error": "⚠️ 错误"}
         sender_label = QLabel(label_map.get(sender, ""))
         sender_label.setStyleSheet("font-size: 11px; color: #64748B; font-weight: bold;")
         align = Qt.AlignRight if sender == "user" else Qt.AlignLeft
@@ -327,13 +327,13 @@ class MessageBubble(QFrame):
 # ═══════════════════════════════════════════
 
 class LoginDialog(QDialog):
-    """OPCclaw 登录 - 使用一人公司注册账号"""
+    """Iqra 登录 - 使用一人公司注册账号"""
 
     login_success = pyqtSignal(dict)  # {username, role, ...}
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("OPCclaw - 登录")
+        self.setWindowTitle("Iqra - 登录")
         self.setFixedSize(400, 490)
         self.setStyleSheet(f"""
             QDialog {{ background-color: {COLORS['card']}; }}
@@ -346,7 +346,7 @@ class LoginDialog(QDialog):
         layout.setSpacing(16)
 
         # Logo / 标题
-        title = QLabel("OPCclaw")
+        title = QLabel("Iqra")
         title.setFont(QFont("PingFang SC", 26, QFont.Bold))
         title.setStyleSheet(f"color: {COLORS['primary']};")
         title.setAlignment(Qt.AlignCenter)
@@ -576,7 +576,7 @@ class LoginDialog(QDialog):
 # ═══════════════════════════════════════════
 
 class ConfigManager:
-    """管理 OPCclaw 全部配置: 云端模型 + 本地模型 + 技能状态 + 通用设置
+    """管理 Iqra 全部配置: 云端模型 + 本地模型 + 技能状态 + 通用设置
     
     安全特性:
     - API Key 使用 Windows DPAPI 加密存储，不保存在明文 config.json 中
@@ -672,7 +672,7 @@ class ConfigManager:
         dlg.exec_()
     def __init__(self, data_dir: str):
         self.data_dir = data_dir
-        self.config_path = os.path.join(data_dir, "opcclaw_config.json")
+        self.config_path = os.path.join(data_dir, "iqra_config.json")
         self._data = self._load_defaults()
         self._secure = self._init_secure_storage()
         self._load()
@@ -700,7 +700,7 @@ class ConfigManager:
             if core_dir not in sys.path:
                 sys.path.insert(0, core_dir)
             from secure_storage import SecureStorage
-            return SecureStorage(app_name="opcclaw")
+            return SecureStorage(app_name="iqra")
         except Exception as e:
             logger.error(f"[ConfigManager] 安全存储初始化失败: {e}")
             return None
@@ -1476,7 +1476,7 @@ class CloudModelPanel(QWidget):
 
     def _scan_all_providers(self):
         """一键探测所有预置供应商的连通性"""
-        from opcclaw.core.llm_backend import BackendFactory, ProviderConfig
+        from iqra.core.llm_backend import BackendFactory, ProviderConfig
 
         self.status_label.setText("正在探测所有供应商...")
         self.status_label.setStyleSheet(f"color: {COLORS['primary']};")
@@ -1792,7 +1792,7 @@ class SkillsPanel(QWidget):
         title.setStyleSheet(f"color: {COLORS['text']};")
         layout.addWidget(title)
 
-        desc = QLabel("管理 OPCclaw 的技能模块。技能是 AI Agent 的\"灵魂\", 定义了何时使用什么工具。")
+        desc = QLabel("管理 Iqra 的技能模块。技能是 AI Agent 的\"灵魂\", 定义了何时使用什么工具。")
         desc.setStyleSheet(f"color: {COLORS['text_light']}; font-size: 13px;")
         desc.setWordWrap(True)
         layout.addWidget(desc)
@@ -2149,7 +2149,7 @@ class ChatWorker(QThread):
 
 class ChatWindow(QWidget):
     """
-    OPCclaw 主窗口 - 类似 QClaw 的 AI Agent 对话框。
+    Iqra 主窗口 - 类似 QClaw 的 AI Agent 对话框。
 
     特性:
     - 侧栏导航: 对话 / 云端模型 / 本地模型 / 技能 / 设置
@@ -2174,7 +2174,7 @@ class ChatWindow(QWidget):
                           为 None 时独立运行, 弹出登录对话框。
         """
         super().__init__(parent)
-        self.setWindowTitle("OPCclaw - AI Agent 助手")
+        self.setWindowTitle("Iqra - AI Agent 助手")
         self.setMinimumSize(900, 600)
 
         self.user_context = user_context
@@ -2185,7 +2185,7 @@ class ChatWindow(QWidget):
         )
         data_dir = os.path.join(project_root, "data")
         self.config = ConfigManager(data_dir)
-        self.memory_store = MemoryStore(base_dir=os.path.expanduser("~/.opcclaw"))
+        self.memory_store = MemoryStore(base_dir=os.path.expanduser("~/.iqra"))
         self.skill_loader = SkillLoader()
         self.registry = ToolRegistry()
 
@@ -2232,7 +2232,7 @@ class ChatWindow(QWidget):
             self._voice_manager.listening_state.connect(self._on_listening_state)
             self._voice_manager.tts_error.connect(lambda msg: self._add_message(f"🔊 {msg}", "error"))
         except Exception as e:
-            logger.error(f"[OPCclaw] Voice init failed: {e}")
+            logger.error(f"[Iqra] Voice init failed: {e}")
             self._voice_manager = None
 
         # 初始化技能
@@ -2271,7 +2271,7 @@ class ChatWindow(QWidget):
         if not cfg:
             if not self.config._data.get("cloud_providers") and not self.config._data.get("local_providers"):
                 self._add_message(
-                    "👋 欢迎使用 OPCclaw!\n\n"
+                    "👋 欢迎使用 Iqra!\n\n"
                     "开始前请先配置 LLM 供应商:\n"
                     "1. 点击左侧 ☁️ 云端模型\n"
                     "2. 点击 + 添加供应商\n"
@@ -2294,10 +2294,10 @@ class ChatWindow(QWidget):
             )
             builtin = os.path.join(project_root, "skills", "builtin")
             self.skill_loader.add_dir(builtin)
-            user_skills = os.path.expanduser("~/.opcclaw/skills")
+            user_skills = os.path.expanduser("~/.iqra/skills")
             self.skill_loader.add_dir(user_skills)
             count = self.skill_loader.load_all()
-            logger.info(f"[OPCclaw] {count} skills loaded: {self.skill_loader.list_names()}")
+            logger.info(f"[Iqra] {count} skills loaded: {self.skill_loader.list_names()}")
 
         # ── UI 构建 ──
 
@@ -2332,7 +2332,7 @@ class ChatWindow(QWidget):
         header_layout = QHBoxLayout(header)
         header_layout.setContentsMargins(20, 10, 20, 10)
 
-        self.title_label = QLabel("OPCclaw")
+        self.title_label = QLabel("Iqra")
         self.title_label.setFont(QFont("PingFang SC", 16, QFont.Bold))
         self.title_label.setStyleSheet(f"color: white;")
         header_layout.addWidget(self.title_label)
@@ -2455,7 +2455,7 @@ class ChatWindow(QWidget):
         self.stack.addWidget(self.settings_panel)
 
         # ── 5: Git 面板 ──
-        from opcclaw.modules.git_panel import GitPanel
+        from iqra.modules.git_panel import GitPanel
         self.git_panel = GitPanel()
         self.stack.addWidget(self.git_panel)
 
@@ -2676,7 +2676,7 @@ class ChatWindow(QWidget):
         self.user_context = ctx
         self._update_user_display()
         self._add_message(
-            f"欢迎回来, {ctx.get('username', '用户')}! 👋\n我是 OPCclaw, 你的 AI Agent 助手。",
+            f"欢迎回来, {ctx.get('username', '用户')}! 👋\n我是 Iqra, 你的 AI Agent 助手。",
             "ai"
         )
 
@@ -2684,7 +2684,7 @@ class ChatWindow(QWidget):
         if self.user_context:
             u = self.user_context.get("username", "?")
             self.user_label.setText(f"👤 {u}")
-            self.title_label.setText(f"OPCclaw")
+            self.title_label.setText(f"Iqra")
         else:
             self.user_label.setText("未登录")
 
@@ -2703,7 +2703,7 @@ class ChatWindow(QWidget):
             self.send_btn.setEnabled(False)
             self._set_quick_btns_enabled(False)
             self._add_message(
-                "👋 欢迎使用 OPCclaw!\n\n"
+                "👋 欢迎使用 Iqra!\n\n"
                 "开始前请先配置 LLM 供应商:\n"
                 "1. 点击左侧 ☁️ 云端模型\n"
                 "2. 点击 + 添加供应商, 选择 DeepSeek 模板\n"
@@ -2747,7 +2747,7 @@ class ChatWindow(QWidget):
         skills_ctx = self._get_skills_context()
 
         system_prompt = (
-            "你是 OPCclaw, 一人公司管理系统中的 AI Agent 助手。\n"
+            "你是 Iqra, 一人公司管理系统中的 AI Agent 助手。\n"
             "用中文回复, 保持简洁、专业、友好。主动使用工具完成任务。\n\n"
             f"[可用工具 {len(tool_names)} 个]\n{tool_summary}\n\n"
             f"{skills_ctx}"

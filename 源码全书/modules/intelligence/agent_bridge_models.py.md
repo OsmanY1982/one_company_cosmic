@@ -24,15 +24,15 @@ class AgentBridgeModelMixin:
 
     @staticmethod
     def _config_path() -> str:
-        """opcclaw_config.json 的绝对路径"""
+        """iqra_config.json 的绝对路径"""
         return os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-            "opcclaw", "data", "opcclaw_config.json"
+            "iqra", "data", "iqra_config.json"
         )
 
     @staticmethod
     def _load_config() -> dict:
-        """加载 opcclaw_config.json"""
+        """加载 iqra_config.json"""
         try:
             cfg_path = AgentBridgeModelMixin._config_path()
             if os.path.exists(cfg_path):
@@ -44,7 +44,7 @@ class AgentBridgeModelMixin:
 
     @staticmethod
     def _save_config(config_dict: dict):
-        """持久化 opcclaw_config.json"""
+        """持久化 iqra_config.json"""
         try:
             cfg_path = AgentBridgeModelMixin._config_path()
             os.makedirs(os.path.dirname(cfg_path), exist_ok=True)
@@ -72,7 +72,7 @@ class AgentBridgeModelMixin:
     @staticmethod
     def list_all_models() -> list:
         """
-        从 opcclaw_config.json 读取所有已配置的模型（云端+自定义+本地+Ollama动态发现）。
+        从 iqra_config.json 读取所有已配置的模型（云端+自定义+本地+Ollama动态发现）。
         返回: [{"provider_id": str, "provider_name": str, "model": str, "category": str, "base_url": str}, ...]
           category: "cloud" | "local"
         """
@@ -172,7 +172,7 @@ class AgentBridgeModelMixin:
 
     def switch_model(self, provider_id: str, model: str) -> bool:
         """
-        切换模型：从 opcclaw_config.json 查找供应商配置，
+        切换模型：从 iqra_config.json 查找供应商配置，
         更新 backend config（name/base_url/api_key/model/provider_type），
         重建 ChatEngine 保留对话历史。
         """
@@ -200,8 +200,8 @@ class AgentBridgeModelMixin:
         cfg.provider_type = provider_data.get("provider_type", "openai_compatible")
 
         # 重建 ChatEngine，继承对话历史
-        from opcclaw.core.chat_engine import ChatEngine
-        from opcclaw.core.agent_loop import AgentLoop
+        from iqra.core.chat_engine import ChatEngine
+        from iqra.core.agent_loop import AgentLoop
 
         self._engine = ChatEngine(
             backend=self.backend,

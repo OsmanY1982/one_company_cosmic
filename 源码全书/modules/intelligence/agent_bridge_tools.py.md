@@ -23,7 +23,7 @@ import time
 
 
 class AgentBridgeToolsMixin:
-    """工具注册：文件/代码/系统/Git/网络/OPCclaw 高级工具"""
+    """工具注册：文件/代码/系统/Git/网络/Iqra 高级工具"""
 
     def _register_tools(self):
         """注册全部 19 个 LLM 工具"""
@@ -46,7 +46,7 @@ class AgentBridgeToolsMixin:
         self._reg_web_fetch_page()
         self._reg_web_scrape()
         self._reg_batch_scrape()
-        # ── opcclaw 高级工具 ──
+        # ── iqra 高级工具 ──
         self._reg_execute_python()
         self._reg_analyze_code()
         self._reg_search_codebase()
@@ -540,18 +540,18 @@ class AgentBridgeToolsMixin:
             category="web",
         )(handler)
 
-    # ── 12b. web_scrape（OPCclaw 智能爬虫）──
+    # ── 12b. web_scrape（Iqra 智能爬虫）──
     def _reg_web_scrape(self):
-        """OPCclaw 智能单页爬虫：JS 渲染 + 代理轮转 + 频率限制 + 重试"""
+        """Iqra 智能单页爬虫：JS 渲染 + 代理轮转 + 频率限制 + 重试"""
         def handler(url: str, use_selenium: bool = False, max_paragraphs: int = 20) -> dict:
             try:
-                from opcclaw import OPCclaw, OPCclawConfig
-                config = OPCclawConfig(
+                from iqra import Iqra, IqraConfig
+                config = IqraConfig(
                     use_selenium=use_selenium,
                     output_format="dict",
                     timeout=30,
                 )
-                scraper = OPCclaw(config)
+                scraper = Iqra(config)
                 result = scraper.scrape_url(url)
                 scraper.close()
                 if isinstance(result, dict) and "paragraphs" in result:
@@ -562,7 +562,7 @@ class AgentBridgeToolsMixin:
 
         self.registry.register(
             name="web_scrape",
-            description="OPCclaw 智能网页爬虫：带 JS 渲染、代理轮转、频率限制、指数退避重试。返回标题/元描述/段落。适合需要 JS 渲染的动态页面。",
+            description="Iqra 智能网页爬虫：带 JS 渲染、代理轮转、频率限制、指数退避重试。返回标题/元描述/段落。适合需要 JS 渲染的动态页面。",
             parameters={
                 "type": "object",
                 "properties": {
@@ -575,18 +575,18 @@ class AgentBridgeToolsMixin:
             category="web",
         )(handler)
 
-    # ── 12c. batch_scrape（OPCclaw 批量爬虫）──
+    # ── 12c. batch_scrape（Iqra 批量爬虫）──
     def _reg_batch_scrape(self):
-        """OPCclaw 批量爬虫：一次抓取多个 URL"""
+        """Iqra 批量爬虫：一次抓取多个 URL"""
         def handler(urls: list, use_selenium: bool = False) -> dict:
             try:
-                from opcclaw import OPCclaw, OPCclawConfig
-                config = OPCclawConfig(
+                from iqra import Iqra, IqraConfig
+                config = IqraConfig(
                     use_selenium=use_selenium,
                     output_format="dict",
                     timeout=30,
                 )
-                scraper = OPCclaw(config)
+                scraper = Iqra(config)
                 results = scraper.batch_scrape(urls)
                 scraper.close()
                 success_count = sum(1 for r in results if isinstance(r, dict) and r.get("status") == "success")
@@ -601,7 +601,7 @@ class AgentBridgeToolsMixin:
 
         self.registry.register(
             name="batch_scrape",
-            description="OPCclaw 批量网页爬虫：一次性抓取多个 URL，返回汇总统计和逐页结果。",
+            description="Iqra 批量网页爬虫：一次性抓取多个 URL，返回汇总统计和逐页结果。",
             parameters={
                 "type": "object",
                 "properties": {
@@ -656,7 +656,7 @@ class AgentBridgeToolsMixin:
                 from modules.intelligence.agent_bridge import _HAVE_CODE_INTEL
                 if _HAVE_CODE_INTEL:
                     import ast
-                    from opcclaw.core.code_intel import SymbolExtractor
+                    from iqra.core.code_intel import SymbolExtractor
                     extractor = SymbolExtractor(source.split("\n"))
                     extractor.visit(ast.parse(source))
                     symbols = extractor._symbols if hasattr(extractor, '_symbols') else []
@@ -691,7 +691,7 @@ class AgentBridgeToolsMixin:
             from modules.intelligence.agent_bridge import _HAVE_INDEXER
             if _HAVE_INDEXER:
                 try:
-                    from opcclaw.core.workspace_indexer import WorkspaceIndexer
+                    from iqra.core.workspace_indexer import WorkspaceIndexer
                     project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
                     indexer = WorkspaceIndexer(project_root)
                     results = indexer.search(query, top_k=top_k)

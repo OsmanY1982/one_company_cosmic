@@ -32,7 +32,7 @@ from typing import Optional, Dict, Any
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
-# 使「from opcclaw.xxx import ...」和「from modules.intelligence.xxx import ...」
+# 使「from iqra.xxx import ...」和「from modules.intelligence.xxx import ...」
 # 在所有调用场景下均可正常工作。
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if _PROJECT_ROOT not in sys.path:
@@ -71,9 +71,9 @@ from ._ai_widgets import (
 class AIAssistantWindow(QMainWindow):
     """AI 助手 · CREW — 13颗星球导航模式"""
 
-    def __init__(self, parent=None, opcclaw_engine=None):
+    def __init__(self, parent=None, iqra_engine=None):
         super().__init__(parent)
-        self._opcclaw = opcclaw_engine
+        self._iqra = iqra_engine
         self._role = "admin"
         self.setWindowTitle("AI 助手 · CREW")
         self.setMinimumSize(1200, 900)
@@ -130,9 +130,9 @@ class AIAssistantWindow(QMainWindow):
 
     # ═══════ 行星点击路由 ═══════
     def _on_planet_clicked(self, planet_id):
-        if planet_id == "opcclaw_chat":
+        if planet_id == "iqra_chat":
             from modules.intelligence.ai_chat_window import AIChatWindow
-            self._chat_win = AIChatWindow(opcclaw_engine=self._opcclaw)
+            self._chat_win = AIChatWindow(iqra_engine=self._iqra)
             self._chat_win.show()
         elif planet_id == "super_intelligence":
             if SUPER_INTELLIGENCE_AVAILABLE:

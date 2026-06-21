@@ -19,8 +19,8 @@ logging.basicConfig(
 logger = logging.getLogger("PlanetLauncher")
 
 PROJECT_ROOT = "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic"
-LOCK_FILE = "/tmp/opcclaw_floating_planet.pid"
-CMD_FILE = "/tmp/opcclaw_floating_cmd"
+LOCK_FILE = "/tmp/iqra_floating_planet.pid"
+CMD_FILE = "/tmp/iqra_floating_cmd"
 
 
 def _floating_planet_exists() -> bool:

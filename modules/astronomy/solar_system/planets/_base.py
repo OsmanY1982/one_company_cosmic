@@ -92,7 +92,9 @@ def _paint_surface(p: QPainter, center: QPointF, r: float, style: dict, anim_t: 
     # ── 大红斑 ──
     if great_spot:
         gs = great_spot
-        gx = cx + (gs["x"] - 0.5) * r * 2
+        # 自转：让大红斑随 anim_t 横移
+        spot_shift = math.sin(anim_t * 0.5) * 0.28
+        gx = cx + (gs["x"] - 0.5 + spot_shift) * r * 2
         gy = cy + (gs["y"] - 0.5) * r * 2
         gw = gs["w"] * r * 2
         gh = gs["h"] * r * 2

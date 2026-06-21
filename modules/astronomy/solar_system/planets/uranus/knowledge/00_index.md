@@ -11,11 +11,11 @@ AIGC:
 
 # 天王星知识库 · 索引
 
-| 编号 | 文件 | 主题 |
-|------|------|------|
-| 01 | [01_overview.md](01_overview.md) | 总览：横向自转的冰巨星 |
-| 02 | [02_interior.md](02_interior.md) | 内部：超临界流体海洋 |
-| 03 | [03_atmosphere.md](03_atmosphere.md) | 大气：极弱带状、冷大气 |
-| 04 | [04_rings_moons.md](04_rings_moons.md) | 环与卫星系统 |
-| 05 | [05_exploration.md](05_exploration.md) | 探测史：仅旅行者2号一次飞越 |
+| 文件 | 主题 |
+|---|---|
+| [01_overview](01_overview.md) | 总览：横向自转的冰巨星 |
+| [02_interior](02_interior.md) | 内部：超临界流体海洋 |
+| [03_atmosphere](03_atmosphere.md) | 大气：极弱带状、冷大气 |
+| [04_rings_moons](04_rings_moons.md) | 环与卫星系统 |
+| [05_exploration](05_exploration.md) | 探测史：仅旅行者2号一次飞越 |
 *（内容由AI生成，仅供参考）*

@@ -401,11 +401,11 @@ if __name__ == "__main__":
     
     # 导入测试文档
     result = kb.import_text(
-        text="OPCclaw是一个智能助手系统，支持多种AI能力。",
-        title="OPCclaw介绍",
+        text="Iqra是一个智能助手系统，支持多种AI能力。",
+        title="Iqra介绍",
     )
     print(f"导入结果: {result}")
     
     # 查询
-    result = kb.query("什么是OPCclaw？")
+    result = kb.query("什么是Iqra？")
     print(f"查询结果: {result}")

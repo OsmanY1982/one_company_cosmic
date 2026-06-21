@@ -395,7 +395,7 @@ class AnalysisTools:
         sections.append("")
         
         sections.append("---")
-        sections.append("*本报告由 OPCclaw AI 自动生成*")
+        sections.append("*本报告由 Iqra AI 自动生成*")
         
         return "\n".join(sections)
 

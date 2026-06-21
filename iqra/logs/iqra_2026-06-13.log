@@ -1,0 +1,22 @@
+2026-06-13 08:19:01 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:37:22 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:39:22 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:39:25 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:39:30 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:44:26 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:50:05 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:50:13 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:53:42 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 08:59:08 [WARNING] iqra: Non-stream tool check failed, falling through to streaming: [SiliconFlow] API error 500: {"code":50507,"message":"Request failed: Unknown error.","data":null}
+2026-06-13 09:24:39 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 09:54:18 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 09:54:41 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-13 11:32:13 [INFO] iqra.tools.dispatch_tool: 派发子任务 → code_agent: 你是“数字人A：对话同步官”。请只修改 /Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/...
+2026-06-13 11:32:30 [INFO] iqra.tools.dispatch_tool: 派发子任务 → code_agent: 你是“数字人B：悬浮球导航官”。请只修改 /Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence...
+2026-06-13 11:32:54 [INFO] iqra.tools.dispatch_tool: 派发子任务 → file_agent: 你是“数字人C：工作台接线员”。请只读取和搜索 /Volumes/D盘工作区/一人公司/one_company_cosmic 中 digital_emp_win...
+2026-06-13 11:49:16 [WARNING] iqra: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 11:49:30 [WARNING] iqra: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 11:55:50 [WARNING] iqra: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 11:57:17 [WARNING] iqra: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 11:57:53 [WARNING] iqra: Non-stream tool check failed, falling through to streaming: [DeepSeek] Token 用尽或额度不足: Authentication Fails (governor)
+2026-06-13 23:09:51 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying

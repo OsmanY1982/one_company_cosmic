@@ -1,6 +1,6 @@
 # `modules/auth/connect_window.py`
 
-> 路径：`modules/auth/connect_window.py` | 行数：601
+> 路径：`modules/auth/connect_window.py` | 行数：607
 
 
 ---
@@ -282,8 +282,9 @@ class ConnectWindow(QMainWindow):
         ml = QLabel("模型")
         ml.setStyleSheet("color: #8899bb; font-size: 12px; background: transparent;")
         am_row.addWidget(ml)
-        self._model_input = QLineEdit()
-        self._model_input.setPlaceholderText("qwen2.5:7b")
+        self._model_input = QComboBox()
+        self._model_input.setEditable(True)
+        self._model_input.lineEdit().setPlaceholderText("qwen2.5:7b")
         self._model_input.setStyleSheet(INPUT_STYLE)
         am_row.addWidget(self._model_input, 2)
 
@@ -411,7 +412,9 @@ class ConnectWindow(QMainWindow):
             "qwen": "qwen-plus",
             "custom": "",
         }
-        self._model_input.setText(defaults.get(pid, ""))
+        self._model_input.clear()
+        self._model_input.addItem(defaults.get(pid, ""))
+        self._model_input.setEditText(defaults.get(pid, ""))
 
         self._status_label.setText(f"已选择燃料：{fuel['name']}")
         self._status_label.setStyleSheet(f"color: {fuel['icon_color']}; font-size: 12px; background: transparent;")
@@ -426,7 +429,7 @@ class ConnectWindow(QMainWindow):
             provider=self._selected_provider,
             api_key=self._key_input.text().strip() if info["needs_key"] else "",
             base_url=self._url_input.text().strip() or info["base_url"],
-            model_name=self._model_input.text().strip(),
+            model_name=self._model_input.currentText().strip(),
         )
 
     def _test_connection(self):
@@ -467,8 +470,11 @@ class ConnectWindow(QMainWindow):
         try:
             client = LLMClient(config)
             models = client.fetch_ollama_models()
+            self._model_input.clear()
             if models:
-                self._model_input.setText(models[0])
+                for m in models:
+                    self._model_input.addItem(m, m)
+                self._model_input.setCurrentIndex(0)
                 self._status_label.setText(f"已扫描到 {len(models)} 个本地引擎")
                 self._status_label.setStyleSheet("color: #00cc88; font-size: 12px; background: transparent;")
             else:
@@ -510,21 +516,21 @@ class ConnectWindow(QMainWindow):
 
     def _enter_dashboard(self):
         config = self._build_config()
-        self._save_to_opcclaw(config)
+        self._save_to_iqra(config)
         from modules.intelligence.intelligence_window import IntelligenceWindow
         self._center = IntelligenceWindow()
         self._center.show()
         self.close()
 
-    def _save_to_opcclaw(self, config):
-        """将 connect_window 选中的配置写入 opcclaw_config.json"""
+    def _save_to_iqra(self, config):
+        """将 connect_window 选中的配置写入 iqra_config.json"""
         import json, os
         data_dir = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-            "opcclaw", "data"
+            "iqra", "data"
         )
         os.makedirs(data_dir, exist_ok=True)
-        cfg_path = os.path.join(data_dir, "opcclaw_config.json")
+        cfg_path = os.path.join(data_dir, "iqra_config.json")
 
         # 读取已有配置（保留其他供应商）
         existing = {}
@@ -567,7 +573,7 @@ class ConnectWindow(QMainWindow):
         else:
             cloud_providers[provider_id] = provider_data
 
-        opcclaw_config = {
+        iqra_config = {
             "active_provider_id": provider_id,
             "active_provider_type": "local" if is_local else "cloud",
             "cloud_providers": cloud_providers,
@@ -575,7 +581,7 @@ class ConnectWindow(QMainWindow):
         }
 
         with open(cfg_path, "w", encoding="utf-8") as f:
-            json.dump(opcclaw_config, f, indent=2, ensure_ascii=False)
+            json.dump(iqra_config, f, indent=2, ensure_ascii=False)
 
     def _enter_normal_mode(self):
         """无 AI 引擎 — 直接进入智能中心，使用规则引擎"""

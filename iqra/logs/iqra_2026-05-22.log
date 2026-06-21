@@ -1,0 +1,615 @@
+2026-05-22 00:00:42 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 00:00:42 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 00:00:43 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 00:00:50 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 00:12:41 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 00:12:41 [INFO] main: Initializing Iqra...
+2026-05-22 00:12:41 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 00:12:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 00:12:41 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 00:13:41 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 00:13:41 [INFO] main: Initializing Iqra...
+2026-05-22 00:13:41 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 00:13:41 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 00:13:41 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 00:15:01 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 00:15:01 [INFO] main: Initializing Iqra...
+2026-05-22 00:15:01 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 00:15:01 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 00:15:02 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 00:15:24 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3238, in _toggle_dual_ai_mode
+    self._show_toast('🤖 双AI协作模式已开启')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:15:31 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3242, in _toggle_dual_ai_mode
+    self._show_toast('双AI协作模式已关闭')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:15:38 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3238, in _toggle_dual_ai_mode
+    self._show_toast('🤖 双AI协作模式已开启')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:15:40 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3242, in _toggle_dual_ai_mode
+    self._show_toast('双AI协作模式已关闭')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:15:40 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3238, in _toggle_dual_ai_mode
+    self._show_toast('🤖 双AI协作模式已开启')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:15:40 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3242, in _toggle_dual_ai_mode
+    self._show_toast('双AI协作模式已关闭')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:16:27 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3238, in _toggle_dual_ai_mode
+    self._show_toast('🤖 双AI协作模式已开启')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:16:28 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3242, in _toggle_dual_ai_mode
+    self._show_toast('双AI协作模式已关闭')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:16:28 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3238, in _toggle_dual_ai_mode
+    self._show_toast('🤖 双AI协作模式已开启')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:16:28 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3242, in _toggle_dual_ai_mode
+    self._show_toast('双AI协作模式已关闭')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:16:28 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 2399, in <lambda>
+    btn.clicked.connect(lambda checked, p=prompt: self._quick_action(p))
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3092, in _quick_action
+    self._toggle_dual_ai_mode()
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3238, in _toggle_dual_ai_mode
+    self._show_toast('🤖 双AI协作模式已开启')
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'ChatWindow' object has no attribute '_show_toast'. Did you mean: '_show_login'?
+2026-05-22 00:16:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 00:16:59 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 00:16:59 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 00:17:06 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 01:56:30 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 01:56:31 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 01:56:31 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 01:56:38 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 01:56:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 01:56:48 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 01:56:48 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 01:57:54 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 01:57:54 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 01:57:54 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 03:08:37 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 03:08:37 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 03:08:37 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 03:08:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 03:08:56 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 03:08:57 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 03:08:57 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 09:46:31 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 09:46:32 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 09:46:32 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 09:46:39 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 09:47:07 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 09:47:08 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 09:47:08 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 10:11:00 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:11:00 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:11:00 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 10:11:08 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:32:50 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:32:50 [INFO] main: Initializing Iqra...
+2026-05-22 10:32:50 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:32:50 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:32:51 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:34:03 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:34:03 [INFO] main: Initializing Iqra...
+2026-05-22 10:34:03 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:34:03 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:34:03 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:36:18 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:36:18 [INFO] main: Initializing Iqra...
+2026-05-22 10:36:18 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:36:18 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:36:18 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:38:28 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:38:28 [INFO] main: Initializing Iqra...
+2026-05-22 10:38:28 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:38:28 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:38:28 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:39:45 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:39:45 [INFO] main: Initializing Iqra...
+2026-05-22 10:39:45 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:39:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:39:46 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:41:24 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:41:24 [INFO] main: Initializing Iqra...
+2026-05-22 10:41:24 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:41:24 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:41:24 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:42:22 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:42:22 [INFO] main: Initializing Iqra...
+2026-05-22 10:42:22 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:42:22 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:42:23 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:42:38 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:42:38 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:42:38 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 10:42:46 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:42:57 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:42:58 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:42:58 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 10:43:48 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:43:48 [INFO] main: Initializing Iqra...
+2026-05-22 10:43:48 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:43:48 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:43:48 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:45:36 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:45:36 [INFO] main: Initializing Iqra...
+2026-05-22 10:45:36 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:45:36 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:45:37 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:46:56 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:46:57 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:46:57 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 10:47:04 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:47:27 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:47:27 [INFO] main: Initializing Iqra...
+2026-05-22 10:47:28 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:47:28 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:47:28 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:48:43 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:48:43 [INFO] main: Initializing Iqra...
+2026-05-22 10:48:43 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:48:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:48:44 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:50:04 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:50:04 [INFO] main: Initializing Iqra...
+2026-05-22 10:50:04 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:50:04 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:50:04 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:51:17 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:51:17 [INFO] main: Initializing Iqra...
+2026-05-22 10:51:17 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:51:17 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:51:17 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:52:59 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:52:59 [INFO] main: Initializing Iqra...
+2026-05-22 10:52:59 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:52:59 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:52:59 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 10:54:25 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 10:54:25 [INFO] main: Initializing Iqra...
+2026-05-22 10:54:25 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 10:54:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 10:54:26 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 11:27:10 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 11:27:10 [INFO] main: Initializing Iqra...
+2026-05-22 11:27:10 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 11:27:10 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 11:27:10 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 11:32:13 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 11:32:13 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 11:32:13 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 11:32:21 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 11:38:08 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 11:38:09 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 11:38:09 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 11:38:16 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 11:55:47 [INFO] iqra: Iqra 日志系统已启动
+2026-05-22 11:55:47 [INFO] main: Initializing Iqra...
+2026-05-22 11:55:47 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-05-22 11:55:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 11:55:48 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 12:31:18 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3181, in _add_attachment
+    paths, _ = QFileDialog.getOpenFileNames(
+               ^^^^^^^^^^^
+NameError: name 'QFileDialog' is not defined
+2026-05-22 12:31:23 [ERROR] iqra: LLM API failed: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 248, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+2026-05-22 12:33:21 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-22 12:33:21 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 12:33:25 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-22 12:33:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 12:33:31 [ERROR] iqra: LLM API failed: [阿里云百炼] API error 500: {"error":{"message":"<500> InternalError.Algo: 'MultiModalParameters' object has no attribute 'get'","type":"internal_server_error","param":null,"code":"internal_server_error"},"id":"chatcmpl-6f850dab-ddd8-9d2e-b384-73d8f5155b37","request_id":"6f850dab-ddd8-9d2e-b384-73d8f5155b37"}
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Internal Server Error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 500: {"error":{"message":"<500> InternalError.Algo: 'MultiModalParameters' object has no attribute 'get'","type":"internal_server_error","param":null,"code":"internal_server_error"},"id":"chatcmpl-6f850dab-ddd8-9d2e-b384-73d8f5155b37","request_id":"6f850dab-ddd8-9d2e-b384-73d8f5155b37"}
+2026-05-22 12:34:06 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-22 12:34:06 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 12:34:08 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-22 12:34:08 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 12:41:04 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3181, in _add_attachment
+    paths, _ = QFileDialog.getOpenFileNames(
+               ^^^^^^^^^^^
+NameError: name 'QFileDialog' is not defined
+2026-05-22 12:41:05 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3181, in _add_attachment
+    paths, _ = QFileDialog.getOpenFileNames(
+               ^^^^^^^^^^^
+NameError: name 'QFileDialog' is not defined
+2026-05-22 12:41:06 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3181, in _add_attachment
+    paths, _ = QFileDialog.getOpenFileNames(
+               ^^^^^^^^^^^
+NameError: name 'QFileDialog' is not defined
+2026-05-22 12:41:06 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3181, in _add_attachment
+    paths, _ = QFileDialog.getOpenFileNames(
+               ^^^^^^^^^^^
+NameError: name 'QFileDialog' is not defined
+2026-05-22 12:41:06 [CRITICAL] main: Uncaught exception
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\modules\chat_window.py", line 3181, in _add_attachment
+    paths, _ = QFileDialog.getOpenFileNames(
+               ^^^^^^^^^^^
+NameError: name 'QFileDialog' is not defined
+2026-05-22 14:00:06 [ERROR] iqra: LLM API failed: [阿里云百炼] 连接失败: EOF occurred in violation of protocol (_ssl.c:2417)
+请检查: 1) 网络连接 2) base_url 是否正确 (https://dashscope.aliyuncs.com/compatible-mode/v1)
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1344, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1336, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1382, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1130, in _send_output
+    self.send(chunk)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1055, in send
+    self.sock.sendall(data)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1210, in sendall
+    v = self.send(byte_view[count:])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1179, in send
+    return self._sslobj.write(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+ssl.SSLEOFError: EOF occurred in violation of protocol (_ssl.c:2417)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1392, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1347, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error EOF occurred in violation of protocol (_ssl.c:2417)>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] 连接失败: EOF occurred in violation of protocol (_ssl.c:2417)
+请检查: 1) 网络连接 2) base_url 是否正确 (https://dashscope.aliyuncs.com/compatible-mode/v1)
+2026-05-22 14:22:10 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 14:22:10 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 14:22:10 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 14:22:16 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 14:22:28 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 14:22:29 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 14:22:29 [ERROR] iqra: [Chat] Hermes 桥接失败: No module named 'core.tool_registry'
+2026-05-22 14:22:34 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 14:27:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 14:27:44 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-05-22 14:27:59 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 17:18:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 17:18:54 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 17:19:06 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 17:42:42 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 17:42:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 18:19:26 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 18:19:31 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 19:24:22 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 19:24:28 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 20:50:45 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 20:50:51 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 20:53:40 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 20:54:09 [ERROR] iqra: LLM API failed: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 248, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+2026-05-22 23:16:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 23:16:44 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 23:18:45 [ERROR] iqra: LLM API failed: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 248, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+2026-05-22 23:21:23 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-22 23:21:23 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 23:21:25 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-22 23:21:25 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-22 23:23:42 [ERROR] iqra: LLM API failed: [阿里云百炼] 连接失败: EOF occurred in violation of protocol (_ssl.c:2417)
+请检查: 1) 网络连接 2) base_url 是否正确 (https://dashscope.aliyuncs.com/compatible-mode/v1)
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1344, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1336, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1382, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1130, in _send_output
+    self.send(chunk)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1055, in send
+    self.sock.sendall(data)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1210, in sendall
+    v = self.send(byte_view[count:])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1179, in send
+    return self._sslobj.write(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+ssl.SSLEOFError: EOF occurred in violation of protocol (_ssl.c:2417)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1392, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py", line 1347, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error EOF occurred in violation of protocol (_ssl.c:2417)>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\chat_engine.py", line 245, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 359, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] 连接失败: EOF occurred in violation of protocol (_ssl.c:2417)
+请检查: 1) 网络连接 2) base_url 是否正确 (https://dashscope.aliyuncs.com/compatible-mode/v1)

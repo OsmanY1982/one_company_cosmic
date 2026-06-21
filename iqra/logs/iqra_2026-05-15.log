@@ -1,0 +1,175 @@
+2026-05-15 01:16:21 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 01:16:21 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 01:16:21 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 08:59:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 08:59:47 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 08:59:47 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 08:59:49 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 08:59:49 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 08:59:49 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 09:01:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 09:01:20 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 09:01:20 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 09:10:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 09:10:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 09:10:58 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 09:10:59 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 09:10:59 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 09:10:59 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 12:09:29 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 12:09:29 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 12:09:29 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 12:09:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 12:09:32 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 12:09:32 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 13:27:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 13:27:58 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 13:27:58 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 15:07:13 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 15:07:13 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 15:07:13 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 17:51:09 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 17:51:09 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 17:51:09 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 17:51:11 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 17:51:11 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 17:51:11 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 17:51:31 [ERROR] iqra: LLM API failed: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 248, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] Token 用尽或额度不足: {"error":{"message":"The free tier of the model has been exhausted. If you wish to continue access the model on a paid basis, please disable the \"use free tier only\" mode in the management console.","type":"AllocationQuota.FreeTierOnly","param":null,"code":"AllocationQuota.FreeTierOnly"},"id":"cha
+2026-05-15 17:52:43 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-15 17:52:43 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-15 17:52:43 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-15 17:52:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 17:52:43 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 17:52:43 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 17:53:21 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-15 17:53:21 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-15 17:53:21 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-15 17:53:21 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 17:53:21 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 17:53:21 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 17:53:23 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-15 17:53:23 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-15 17:53:23 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-15 17:53:23 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 17:53:23 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 17:53:23 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 17:53:35 [ERROR] iqra: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool call is not supported.","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-dc97176e-a994-9de3-819a-9e26942f19d7","request_id":"dc97176e-a994-9de3-819a-9e26942f19d7"}
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\one_company_desktop\iqra\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\one_company_desktop\iqra\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool call is not supported.","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-dc97176e-a994-9de3-819a-9e26942f19d7","request_id":"dc97176e-a994-9de3-819a-9e26942f19d7"}
+2026-05-15 18:12:19 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 18:12:19 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 18:12:19 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 18:12:37 [INFO] iqra: [ConfigManager] 已加密保存 cloud:qwen 的 API Key
+2026-05-15 18:12:37 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-15 18:12:37 [INFO] iqra: [ConfigManager] 已恢复 cloud:qwen 的 API Key
+2026-05-15 18:12:37 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 18:12:40 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-15 18:12:40 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 18:14:00 [INFO] iqra: [ConfigManager] 已加密保存 cloud:阿里云百炼 的 API Key
+2026-05-15 18:14:00 [INFO] iqra: [ConfigManager] 已加密保存 local:ollama 的 API Key
+2026-05-15 18:14:00 [INFO] iqra: [ConfigManager] 已恢复 cloud:阿里云百炼 的 API Key
+2026-05-15 18:14:00 [INFO] iqra: [ConfigManager] 已恢复 local:ollama 的 API Key
+2026-05-15 18:14:16 [ERROR] iqra: LLM API failed: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool call is not supported.","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-3337ae67-8d37-9f36-871f-d7dedc6a90e5","request_id":"3337ae67-8d37-9f36-871f-d7dedc6a90e5"}
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 232, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\urllib\request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\one_company_desktop\iqra\core\chat_engine.py", line 183, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 355, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\one_company_desktop\iqra\core\llm_backend.py", line 252, in _make_request
+    raise RuntimeError(
+RuntimeError: [阿里云百炼] API error 400: {"error":{"message":"<400> InternalError.Algo.InvalidParameter: The tool call is not supported.","type":"invalid_request_error","param":null,"code":"invalid_parameter_error"},"id":"chatcmpl-3337ae67-8d37-9f36-871f-d7dedc6a90e5","request_id":"3337ae67-8d37-9f36-871f-d7dedc6a90e5"}

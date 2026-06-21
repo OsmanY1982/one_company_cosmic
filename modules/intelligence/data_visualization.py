@@ -229,7 +229,7 @@ class DataVisualization:
             
             html += f'''
         <div class="footer">
-            <p>由 OPCclaw AI助手生成</p>
+            <p>由 Iqra AI助手生成</p>
         </div>
     </div>
 </body>

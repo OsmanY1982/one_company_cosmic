@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-opcclaw 数字员工 — 每个员工都是完整 opcclaw agent 实例
+iqra 数字员工 — 每个员工都是完整 iqra agent 实例
 舰队指挥系统 · 数字员工层
-舰长 → 球球(CEO) → 6 名 opcclaw 数字员工
+舰长 → 球球(CEO) → 6 名 iqra 数字员工
 
 与旧版 digital_employee.py 区别：
 - 旧版：DigitalEmployee 是 dataclass + 预设任务池假数据，poll() 随机模拟状态
-- 新版：OpcclawEmployee 封装完整 OPCclawEngine，每个员工具备真实 AI 能力
+- 新版：OpcclawEmployee 封装完整 IqraEngine，每个员工具备真实 AI 能力
 """
 import sys
 import os
@@ -17,13 +17,13 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Callable
 from enum import Enum
 
-# 注入 opcclaw 路径
-_OPCCLAW_ROOT = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'opcclaw')
-if _OPCCLAW_ROOT not in sys.path:
-    sys.path.insert(0, _OPCCLAW_ROOT)
+# 注入 iqra 路径
+_IQRA_ROOT = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'iqra')
+if _IQRA_ROOT not in sys.path:
+    sys.path.insert(0, _IQRA_ROOT)
 
-from opcclaw.core.core_engine import OPCclawCoreEngine as OPCclawEngine
-from opcclaw.core.llm_backend import ProviderConfig
+from iqra.core.core_engine import IqraCoreEngine as IqraEngine
+from iqra.core.llm_backend import ProviderConfig
 
 
 # ═══════════ 员工状态枚举 ═══════════
@@ -92,7 +92,7 @@ ROLE_KEYWORDS: Dict[str, List[str]] = {
 
 def _build_role_prompt(name: str, role: str) -> str:
     """根据角色生成定制化系统提示词"""
-    base = f"""你是 {name}，一人公司的{role}数字员工，受 CEO 球球(opcclaw)调度。
+    base = f"""你是 {name}，一人公司的{role}数字员工，受 CEO 球球(iqra)调度。
 
 核心原则：
 - 专注于你的专业领域（{role}），不越界处理其他岗位的工作
@@ -154,10 +154,10 @@ UI设计专属能力：
     return base + role_addons.get(role, "")
 
 
-# ═══════════ OpcclawEmployee — 完整 opcclaw agent ═══════════
+# ═══════════ OpcclawEmployee — 完整 iqra agent ═══════════
 
 class OpcclawEmployee:
-    """封装完整 OPCclawEngine 的数字员工，具备真实 AI 能力"""
+    """封装完整 IqraEngine 的数字员工，具备真实 AI 能力"""
 
     def __init__(self, emp_id: str, name: str, role: str,
                  role_color: str, shape: str,
@@ -168,8 +168,8 @@ class OpcclawEmployee:
         self.role_color = role_color
         self.shape = shape
 
-        # 完整 opcclaw agent 引擎
-        self.engine = OPCclawEngine(provider_config=provider_config)
+        # 完整 iqra agent 引擎
+        self.engine = IqraEngine(provider_config=provider_config)
         self.engine.system_prompt = _build_role_prompt(name, role)
 
         # 状态
@@ -183,7 +183,7 @@ class OpcclawEmployee:
         self._future: Optional[Future] = None
 
     def chat(self, message: str) -> str:
-        """同步对话（直接调用 opcclaw chat）"""
+        """同步对话（直接调用 iqra chat）"""
         return self.engine.chat(message)
 
     def assign_task(self, task: str, executor: ThreadPoolExecutor,
@@ -252,7 +252,7 @@ BALL_CAPTAIN_REPORT_TEMPLATES = [
 
 
 class BallCEOEngine:
-    """球球 CEO 调度引擎 v2 — 每个员工都是完整 opcclaw agent"""
+    """球球 CEO 调度引擎 v2 — 每个员工都是完整 iqra agent"""
 
     MAX_WORKERS = 6
 

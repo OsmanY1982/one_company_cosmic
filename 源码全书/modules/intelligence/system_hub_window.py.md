@@ -1,6 +1,6 @@
 # `modules/intelligence/system_hub_window.py`
 
-> 路径：`modules/intelligence/system_hub_window.py` | 行数：188
+> 路径：`modules/intelligence/system_hub_window.py` | 行数：200
 
 
 ---
@@ -114,12 +114,24 @@ class SystemHubHUD(QWidget):
 class SystemHubWindow(QMainWindow):
     """系统管理中心 · SOLAR VAULT"""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, role="admin"):
         super().__init__(parent)
+        self._role = role
         self.setWindowTitle("一人公司 — 系统管理 · SOLAR VAULT")
         self.setMinimumSize(900, 700)
         self.resize(900, 700)
-        self._build_ui()
+        if self._role != "admin":
+            self._show_access_denied()
+        else:
+            self._build_ui()
+
+    def _show_access_denied(self):
+        """非管理员拒绝访问"""
+        from PyQt5.QtWidgets import QMessageBox
+        w = QWidget(self)
+        w.setStyleSheet("background: #1a1020;")
+        self.setCentralWidget(w)
+        QMessageBox.warning(self, "权限不足", "仅管理员可访问系统管理中心。")
 
     def _build_ui(self):
         from core.cosmic import CosmicBackground

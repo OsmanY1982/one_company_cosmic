@@ -1,0 +1,678 @@
+2026-06-15 04:09:32 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 04:11:44 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 04:23:03 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 04:24:24 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 06:09:01 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 06:28:53 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 06:30:10 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 06:36:01 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 06:38:53 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 07:00:15 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 07:03:18 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 07:20:32 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:27:10 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:29:42 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:30:23 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 07:30:36 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6124941312.
+2026-06-15 07:30:36 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 07:32:08 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6106968064.
+2026-06-15 07:32:08 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:08:34 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:08:44 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6148976640.
+2026-06-15 09:08:44 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:09:23 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6131003392.
+2026-06-15 09:09:23 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:10:15 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6129856512.
+2026-06-15 09:10:15 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:10:53 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6148976640.
+2026-06-15 09:10:53 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:11:29 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6148403200.
+2026-06-15 09:11:29 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:12:02 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6131003392.
+2026-06-15 09:12:02 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 09:17:33 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:21:58 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:22:18 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:24:44 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:27:05 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:29:25 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:31:08 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 09:32:07 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 10:20:41 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 10:20:49 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6189494272.
+2026-06-15 10:25:10 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6184333312.
+2026-06-15 10:25:34 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 10:25:43 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6148698112.
+2026-06-15 10:26:56 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6130151424.
+2026-06-15 10:29:02 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 10:29:20 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6121238528.
+2026-06-15 10:37:44 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 10:38:17 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6116290560.
+2026-06-15 10:46:58 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 10:47:07 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6189166592.
+2026-06-15 10:47:31 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6168326144.
+2026-06-15 10:48:02 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6170619904.
+2026-06-15 10:49:10 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 10:57:59 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6184677376.
+2026-06-15 10:58:34 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 10:58:48 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6174797824.
+2026-06-15 11:12:50 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:13:06 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6189084672.
+2026-06-15 11:18:48 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:27:33 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6118813696.
+2026-06-15 11:28:54 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:29:08 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6190067712.
+2026-06-15 11:32:14 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:33:18 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6191788032.
+2026-06-15 11:38:34 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6172094464.
+2026-06-15 11:38:59 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6172667904.
+2026-06-15 11:40:03 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6191214592.
+2026-06-15 11:43:10 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6191788032.
+2026-06-15 11:44:14 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6191788032.
+2026-06-15 11:44:22 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:44:30 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 11:45:12 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:45:25 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6188134400.
+2026-06-15 11:48:19 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:48:33 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:49:14 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:49:39 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 11:51:01 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6188707840.
+2026-06-15 11:51:27 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:52:18 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6190428160.
+2026-06-15 11:52:18 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 11:52:49 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:21:08 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:27:24 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:28:25 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6157217792.
+2026-06-15 12:30:55 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:35:57 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:36:19 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:36:57 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:39:24 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:40:18 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6112391168.
+2026-06-15 12:40:44 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6094417920.
+2026-06-15 12:41:34 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6094417920.
+2026-06-15 12:41:53 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 12:43:10 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6094417920.
+2026-06-15 12:43:11 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 12:44:12 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6094991360.
+2026-06-15 12:44:12 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 12:45:47 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6114111488.
+2026-06-15 12:45:47 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 12:47:08 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6112391168.
+2026-06-15 12:47:08 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 12:55:18 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 12:56:32 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6189297664.
+2026-06-15 12:56:32 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 12:57:26 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6187577344.
+2026-06-15 12:57:26 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 12:58:11 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6187577344.
+2026-06-15 12:58:11 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 12:58:56 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 12:59:35 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6169030656.
+2026-06-15 12:59:35 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:00:36 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6169030656.
+2026-06-15 13:00:36 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:01:53 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6169030656.
+2026-06-15 13:01:53 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:03:05 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6169030656.
+2026-06-15 13:03:05 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:05:00 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6169604096.
+2026-06-15 13:05:00 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:06:22 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6169604096.
+2026-06-15 13:06:22 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:47:29 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 13:47:29 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6152597504.
+2026-06-15 13:47:29 [ERROR] iqra: LLM API failed: 'str' object has no attribute 'content'
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 311, in chat_stream
+    print(f"[DIAG][{datetime.datetime.now().strftime('%H:%M:%S')}] ChatEngine.chat_stream round={round_idx} backend.chat() returned — content_len={len(check_response.content or '')}, tool_calls={'YES' if check_response.tool_calls else 'NO'}", flush=True)
+                                                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'content'
+2026-06-15 13:48:16 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 13:48:27 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6164590592.
+2026-06-15 13:48:27 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:48:56 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 13:49:47 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6157135872.
+2026-06-15 13:49:47 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:50:39 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6157135872.
+2026-06-15 13:50:39 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:52:00 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6138589184.
+2026-06-15 13:52:00 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:54:44 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6157709312.
+2026-06-15 13:54:44 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:55:53 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6157709312.
+2026-06-15 13:55:53 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:56:53 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6157709312.
+2026-06-15 13:56:53 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 13:59:00 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6138589184.
+2026-06-15 13:59:00 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 14:00:49 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6157135872.
+2026-06-15 14:00:49 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 14:03:22 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6157709312.
+2026-06-15 14:03:22 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 14:04:47 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 14:05:10 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6173749248.
+2026-06-15 14:05:10 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 14:08:40 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6175469568.
+2026-06-15 14:08:40 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 14:20:08 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6174322688.
+2026-06-15 14:20:08 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 14:23:06 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6156349440.
+2026-06-15 14:23:06 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-15 14:25:14 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6174322688.
+2026-06-15 14:28:06 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6173749248.
+2026-06-15 14:31:15 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6174322688.
+2026-06-15 14:56:13 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6174322688.
+2026-06-15 15:00:30 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6174322688.
+2026-06-15 15:08:09 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6173749248.
+2026-06-15 15:10:40 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 15:11:13 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6186020864.
+2026-06-15 15:15:51 [ERROR] iqra: LLM API failed: [Ollama] API error 500: {"error":{"message":"llama-server chat error: map[code:500 message:Failed to parse input at pos 22: \u003cthink\u003e\nThe user wants me to read the previously generated text aloud.\nI need to use a tool or function that can convert text-to-speech (TTS).\nLooking at my available tools:\n1. `desktop_control` has an option for \"type_text\" and \"press_keys\", but reading directly might require opening a specific app or using system utilities like `say` on macOS if I assume the environment is macO
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: Internal Server Error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 321, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 256, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] API error 500: {"error":{"message":"llama-server chat error: map[code:500 message:Failed to parse input at pos 22: \u003cthink\u003e\nThe user wants me to read the previously generated text aloud.\nI need to use a tool or function that can convert text-to-speech (TTS).\nLooking at my available tools:\n1. `desktop_control` has an option for \"type_text\" and \"press_keys\", but reading directly might require opening a specific app or using system utilities like `say` on macOS if I assume the environment is macO
+2026-06-15 15:16:04 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6184300544.
+2026-06-15 15:21:04 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 321, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-15 15:22:39 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6184300544.
+2026-06-15 15:28:10 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6183727104.
+2026-06-15 15:36:57 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6184300544.
+2026-06-15 15:41:57 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 321, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-15 15:42:28 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6184300544.
+2026-06-15 15:57:17 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 15:59:44 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6124122112.
+2026-06-15 16:03:03 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6122975232.
+2026-06-15 16:07:41 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6124122112.
+2026-06-15 16:08:48 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 16:09:10 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6125875200.
+2026-06-15 16:14:10 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 333, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-15 16:18:10 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6145568768.
+2026-06-15 16:21:13 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 16:35:49 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6168391680.
+2026-06-15 16:49:52 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:04:37 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:04:38 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 215, in _start_wake_on_init
+    print(f"[Wake] _start_wake_on_init: stt={stt}")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:04:44 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:04:51 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:04:58 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:05:05 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:05:12 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:05:19 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:05:26 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:05:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:05:40 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:05:47 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:05:54 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:01 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:08 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:15 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:22 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:29 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:36 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:43 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:50 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:06:57 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:07:04 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:07:11 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 688, in _auto_cycle_shape
+    self._switch_to_shape(category, key)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 643, in _switch_to_shape
+    print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
+BrokenPipeError: [Errno 32] Broken pipe
+2026-06-15 20:07:11 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 1335, in paintEvent
+    painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/core/shapes/energy_being.py", line 151, in paint
+    part_grad.setColorAt(0.0, QColor.fromHsv(ph, 160, 255, pa_))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: fromHsv(h: int, s: int, v: int, alpha: int = 255): argument 1 has unexpected type 'float'
+2026-06-15 20:07:11 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 1335, in paintEvent
+    painter_fn(p, center, scaled_r, self._anim_t, self._hover, 1.0)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/core/shapes/energy_being.py", line 151, in paint
+    part_grad.setColorAt(0.0, QColor.fromHsv(ph, 160, 255, pa_))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: fromHsv(h: int, s: int, v: int, alpha: int = 255): argument 1 has unexpected type 'float'
+2026-06-15 20:07:20 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:09:07 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:10:38 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:17:56 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:18:17 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:18:39 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:21:11 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:21:15 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:22:18 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:23:13 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:25:12 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:27:35 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:35:38 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:38:09 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:38:09 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:44:36 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:55:46 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:56:29 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 20:57:52 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6133002240.
+2026-06-15 20:58:49 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6132428800.
+2026-06-15 20:58:55 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:00:13 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:00:47 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6166949888.
+2026-06-15 21:02:13 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6110621696.
+2026-06-15 21:02:40 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6169817088.
+2026-06-15 21:03:01 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 21:04:26 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 21:08:01 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 519, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1377, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1352, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 1395, in getresponse
+    response.begin()
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 325, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 286, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 333, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-15 21:09:26 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 236, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 333, in chat_stream
+    check_response = self.backend.chat(self.messages, tools)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/observability/token_observer.py", line 68, in wrapped_chat
+    response = original_chat(messages, tools, tool_choice=tool_choice)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 364, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-15 21:14:27 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:14:32 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:15:21 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6167343104.
+2026-06-15 21:15:40 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6167343104.
+2026-06-15 21:16:42 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6167343104.
+2026-06-15 21:19:03 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:20:16 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6101692416.
+2026-06-15 21:20:42 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6099398656.
+2026-06-15 21:20:51 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 21:22:36 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6098825216.
+2026-06-15 21:22:36 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 21:23:58 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6098825216.
+2026-06-15 21:23:58 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 21:25:31 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6098825216.
+2026-06-15 21:25:31 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 21:26:31 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6098825216.
+2026-06-15 21:26:31 [WARNING] iqra.core.token_optimizer: Token optimization failed: 'NoneType' object has no attribute 'lower'
+2026-06-15 21:26:58 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:27:31 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6142455808.
+2026-06-15 21:29:20 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:29:49 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:30:59 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6180073472.
+2026-06-15 21:32:55 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:33:22 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6094008320.
+2026-06-15 21:55:05 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 21:56:46 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6160838656.
+2026-06-15 21:57:19 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6178238464.
+2026-06-15 21:58:26 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6178238464.
+2026-06-15 21:59:10 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6178238464.
+2026-06-15 22:07:04 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 22:21:36 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 22:25:33 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6117814272.
+2026-06-15 22:26:29 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:28:00 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:29:49 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:31:12 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6117814272.
+2026-06-15 22:31:53 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:32:22 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:32:47 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:34:23 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:35:45 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:37:37 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:39:38 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:44:33 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:48:57 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:52:17 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 22:59:19 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6096973824.
+2026-06-15 23:09:44 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 23:13:59 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6098579456.
+2026-06-15 23:18:44 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-15 23:20:26 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6108475392.
+2026-06-15 23:25:54 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6088781824.
+2026-06-15 23:39:29 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6108475392.
+2026-06-15 23:52:04 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6088781824.
+2026-06-16 00:04:43 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6106755072.
+2026-06-16 00:19:47 [WARNING] iqra: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8511086208 and this is thread id 6109048832.

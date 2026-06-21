@@ -45,7 +45,7 @@ class EdgeTTSThread(QThread):
             self.status_changed.emit("合成语音中...")
 
             # 写入临时文件
-            fd, self._output_path = tempfile.mkstemp(suffix=".wav", prefix="opcclaw_tts_")
+            fd, self._output_path = tempfile.mkstemp(suffix=".wav", prefix="iqra_tts_")
             os.close(fd)
 
             cmd = [

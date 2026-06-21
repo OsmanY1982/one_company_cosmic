@@ -1,6 +1,6 @@
 # `core/planet_painter.py`
 
-> 路径：`core/planet_painter.py` | 行数：521
+> 路径：`core/planet_painter.py` | 行数：589
 
 
 ---
@@ -24,7 +24,10 @@ _TEXTURE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fi
                              "assets", "textures")
 
 # 球体直径低于此值走程序化回退（避免极小缩略图浪费纹理开销）
-TEXTURE_MIN_DIAMETER = 28
+TEXTURE_MIN_DIAMETER = 2
+
+# 程序化纹理缓存（body_key → tex_arr），避免每帧重复生成
+_proc_tex_cache = {}
 
 # ═══════════════════════════════════════════
 # 预设星球风格
@@ -35,66 +38,66 @@ PLANET_STYLES = {
         "name": "地球", "surface": [(0.0, "#1a5276"), (0.25, "#2e86c1"), (0.45, "#27ae60"),
                                      (0.55, "#f39c12"), (0.65, "#27ae60"), (0.8, "#2e86c1"), (1.0, "#1a5276")],
         "atmosphere": QColor(80, 160, 255, 40), "clouds": True,
-        "texture": "2k_earth_daymap.jpg", "rotation_factor": 720,
+        "texture": "2k_earth_daymap.jpg", "rotation_factor": 200,
     },
     "jupiter": {
         "name": "木星", "surface": [(0.0, "#c0392b"), (0.15, "#e8c46a"), (0.28, "#d4a056"),
                                      (0.42, "#c0392b"), (0.55, "#f5d78e"), (0.68, "#b87333"),
                                      (0.82, "#e8c46a"), (1.0, "#8b4513")],
         "atmosphere": QColor(200, 150, 80, 35), "bands": True,
-        "texture": "2k_jupiter.jpg", "rotation_factor": 3600,
+        "texture": "2k_jupiter.jpg", "rotation_factor": 300,
     },
     "saturn": {
         "name": "土星", "surface": [(0.0, "#d4a574"), (0.2, "#f5deb3"), (0.5, "#c4a265"),
                                      (0.7, "#f5deb3"), (1.0, "#a0825a")],
         "atmosphere": QColor(220, 200, 150, 35), "has_ring": True, "bands": True,
-        "texture": "2k_saturn.jpg", "rotation_factor": 3000,
+        "texture": "2k_saturn.jpg", "rotation_factor": 250,
     },
     "neptune": {
         "name": "海王星", "surface": [(0.0, "#1a237e"), (0.3, "#283593"), (0.5, "#3949ab"),
                                        (0.7, "#42a5f5"), (1.0, "#1a237e")],
         "atmosphere": QColor(80, 120, 255, 45), "clouds": True,
-        "texture": "2k_neptune.jpg", "rotation_factor": 2400,
+        "texture": "2k_neptune.jpg", "rotation_factor": 200,
     },
     "mars": {
         "name": "火星", "surface": [(0.0, "#8b4513"), (0.3, "#c0392b"), (0.5, "#e67e22"),
                                      (0.7, "#d35400"), (1.0, "#6e2c00")],
         "atmosphere": QColor(255, 140, 60, 25),
-        "texture": "2k_mars.jpg", "rotation_factor": 680,
+        "texture": "2k_mars.jpg", "rotation_factor": 180,
     },
     "venus": {
         "name": "金星", "surface": [(0.0, "#f5c542"), (0.3, "#f9e076"), (0.5, "#f5c542"),
                                      (0.7, "#e8b730"), (1.0, "#c49520")],
         "atmosphere": QColor(255, 220, 100, 50), "clouds": True,
-        "texture": "2k_venus_atmosphere.jpg", "rotation_factor": -120,
+        "texture": "2k_venus_atmosphere.jpg", "rotation_factor": -60,
     },
     "mercury": {
         "name": "水星", "surface": [(0.0, "#7f8c8d"), (0.4, "#bdc3c7"), (0.6, "#95a5a6"), (1.0, "#5d6d7e")],
         "atmosphere": QColor(180, 180, 180, 15),
-        "texture": "2k_mercury.jpg", "rotation_factor": 80,
+        "texture": "2k_mercury.jpg", "rotation_factor": 40,
     },
     "uranus": {
         "name": "天王星", "surface": [(0.0, "#004d40"), (0.3, "#26a69a"), (0.5, "#80cbc4"),
                                        (0.7, "#26a69a"), (1.0, "#004d40")],
         "atmosphere": QColor(100, 220, 200, 40), "has_ring": True, "ring_vertical": True,
-        "texture": "2k_uranus.jpg", "rotation_factor": -2400,
+        "texture": "2k_uranus.jpg", "rotation_factor": -160,
     },
     "pluto": {
         "name": "冥王星", "surface": [(0.0, "#5d4037"), (0.3, "#8d6e63"), (0.5, "#bcaaa4"),
                                        (0.7, "#8d6e63"), (1.0, "#4e342e")],
-        "atmosphere": QColor(180, 160, 140, 20), "rotation_factor": 200,
+        "atmosphere": QColor(180, 160, 140, 20), "texture": "2k_pluto.png", "rotation_factor": 100,
     },
     "sun": {
         "name": "太阳", "surface": [(0.0, "#fff176"), (0.2, "#ffb300"), (0.5, "#ff6f00"),
                                      (0.7, "#ffb300"), (1.0, "#fff176")],
         "atmosphere": QColor(255, 200, 50, 80), "glow": True,
-        "texture": "2k_sun.jpg", "rotation_factor": 400,
+        "texture": "2k_sun.jpg", "rotation_factor": 120,
     },
     "moon": {
         "name": "月球", "surface": [(0.0, "#9e9e9e"), (0.3, "#bdbdbd"), (0.5, "#e0e0e0"),
                                      (0.7, "#bdbdbd"), (1.0, "#757575")],
         "atmosphere": QColor(200, 200, 200, 10), "craters": True,
-        "texture": "2k_moon.jpg", "rotation_factor": 180,
+        "texture": "2k_moon.jpg", "rotation_factor": 80,
     },
 
     # ═══ 矮行星 ═══
@@ -102,25 +105,69 @@ PLANET_STYLES = {
         "name": "谷神星", "surface": [(0.0, "#6e6964"), (0.3, "#827d74"), (0.5, "#918c82"),
                                        (0.7, "#7d7870"), (1.0, "#69645e")],
         "atmosphere": QColor(200, 190, 180, 12), "craters": True,
-        "texture": "2k_ceres_fictional.jpg", "rotation_factor": 280,
+        "texture": "2k_ceres.png", "rotation_factor": 80,
+    },
+    "mimas": {
+        "name": "土卫一",
+        "texture": "2k_mimas.jpg", "rotation_factor": 60,
+    },
+    "dione": {
+        "name": "土卫四",
+        "texture": "2k_dione.jpg", "rotation_factor": 60,
+    },
+    "rhea": {
+        "name": "土卫五",
+        "texture": "2k_rhea.jpg", "rotation_factor": 60,
+    },
+    "tethys": {
+        "name": "土卫三",
+        "texture": "2k_tethys.jpg", "rotation_factor": 60,
+    },
+    "iapetus": {
+        "name": "土卫八",
+        "texture": "2k_iapetus.jpg", "rotation_factor": 60,
+    },
+    "phoebe": {
+        "name": "土卫九",
+        "texture": "2k_phoebe.png", "rotation_factor": 60,
+    },
+    "hyperion": {
+        "name": "土卫七",
+        "texture": "2k_hyperion.png", "rotation_factor": 60,
+    },
+    "miranda": {
+        "name": "天卫五",
+        "texture": "2k_miranda.jpg", "rotation_factor": 60,
+    },
+    "ariel": {
+        "name": "天卫一",
+        "texture": "2k_ariel.jpg", "rotation_factor": 60,
+    },
+    "umbriel": {
+        "name": "天卫二",
+        "texture": "2k_umbriel.jpg", "rotation_factor": 60,
+    },
+    "oberon": {
+        "name": "天卫四",
+        "texture": "2k_oberon.jpg", "rotation_factor": 60,
     },
     "eris": {
         "name": "阋神星", "surface": [(0.0, "#e6e1dc"), (0.3, "#f0eee9"), (0.5, "#faf8f5"),
                                        (0.7, "#e8e5e0"), (1.0, "#dcd7d0")],
         "atmosphere": QColor(220, 210, 200, 15),
-        "texture": "2k_eris_fictional.jpg", "rotation_factor": 100,
+        "texture": "2k_eris_fictional.jpg", "rotation_factor": 50,
     },
     "makemake": {
         "name": "鸟神星", "surface": [(0.0, "#c8b4aa"), (0.3, "#dcc8b9"), (0.5, "#d2beb0"),
                                        (0.7, "#c3afa3"), (1.0, "#b8a497")],
         "atmosphere": QColor(190, 160, 140, 10),
-        "texture": "2k_makemake_fictional.jpg", "rotation_factor": 120,
+        "texture": "2k_makemake_fictional.jpg", "rotation_factor": 60,
     },
     "haumea": {
         "name": "妊神星", "surface": [(0.0, "#c8d2dc"), (0.3, "#dce1eb"), (0.5, "#d2dae6"),
                                        (0.7, "#c3cad4"), (1.0, "#bec5d0")],
         "atmosphere": QColor(180, 190, 200, 8),
-        "texture": "2k_haumea_fictional.jpg", "rotation_factor": 1600,
+        "texture": "2k_haumea_fictional.jpg", "rotation_factor": 180,
     },
 
     # ═══ 伽利略卫星 ═══
@@ -128,25 +175,25 @@ PLANET_STYLES = {
         "name": "伊奥", "surface": [(0.0, "#c8aa28"), (0.2, "#e6c83c"), (0.4, "#b48c14"),
                                      (0.6, "#dcbe32"), (0.8, "#aa7e1e"), (1.0, "#bea028")],
         "atmosphere": QColor(255, 220, 60, 25), "bands": True,
-        "texture": "2k_io_fictional.jpg", "rotation_factor": 400,
+        "texture": "2k_io.png", "rotation_factor": 120,
     },
     "europa": {
         "name": "欧罗巴", "surface": [(0.0, "#d2d7dc"), (0.3, "#e1e6eb"), (0.5, "#f0f2f5"),
                                        (0.7, "#dce1e6"), (1.0, "#c8cdd2")],
         "atmosphere": QColor(180, 190, 210, 12),
-        "texture": "2k_europa_fictional.jpg", "rotation_factor": 380,
+        "texture": "2k_europa.jpg", "rotation_factor": 100,
     },
     "ganymede": {
         "name": "加尼米德", "surface": [(0.0, "#8c8278"), (0.3, "#a09687"), (0.5, "#c8c3b9"),
                                          (0.7, "#969182"), (1.0, "#827a6e")],
         "atmosphere": QColor(170, 160, 150, 8), "craters": True,
-        "texture": "2k_ganymede_fictional.jpg", "rotation_factor": 160,
+        "texture": "2k_ganymede.jpg", "rotation_factor": 80,
     },
     "callisto": {
         "name": "卡利斯托", "surface": [(0.0, "#645f5a"), (0.3, "#736e69"), (0.5, "#696460"),
                                          (0.7, "#5c5853"), (1.0, "#504c47")],
         "atmosphere": QColor(80, 75, 70, 5), "craters": True,
-        "texture": "2k_callisto_fictional.jpg", "rotation_factor": 100,
+        "texture": "2k_callisto.jpg", "rotation_factor": 60,
     },
 
     # ═══ 土星卫星 ═══
@@ -154,13 +201,31 @@ PLANET_STYLES = {
         "name": "泰坦", "surface": [(0.0, "#d2aa5a"), (0.3, "#e1be6e"), (0.5, "#c8a050"),
                                      (0.7, "#be9646"), (1.0, "#aa8640")],
         "atmosphere": QColor(255, 180, 60, 55), "clouds": True,
-        "texture": "2k_titan_fictional.jpg", "rotation_factor": 120,
+        "texture": "2k_titan.jpg", "rotation_factor": 80,
     },
     "enceladus": {
         "name": "恩克拉多斯", "surface": [(0.0, "#ebeff2"), (0.3, "#f5f7fa"), (0.5, "#f0f3f7"),
                                            (0.7, "#e6e9ee"), (1.0, "#dce0e5")],
         "atmosphere": QColor(200, 210, 230, 18),
-        "texture": "2k_enceladus_fictional.jpg", "rotation_factor": 320,
+        "texture": "2k_enceladus.jpg", "rotation_factor": 100,
+    },
+
+    # ═══ 海王星卫星 ═══
+    "triton": {
+        "name": "海卫一",
+        "texture": "2k_triton_fictional.jpg", "rotation_factor": 60,
+    },
+
+    # ═══ 天王星卫星 ═══
+    "titania": {
+        "name": "天卫三",
+        "texture": "2k_titania_fictional.jpg", "rotation_factor": 60,
+    },
+
+    # ═══ 冥王星卫星 ═══
+    "charon": {
+        "name": "冥卫一",
+        "texture": "2k_charon_fictional.jpg", "rotation_factor": 60,
     },
 }
 
@@ -297,16 +362,19 @@ def _paint_textured_sphere(p: QPainter, c: QPointF, r: float, tex_path: str, dia
     # 真实纹理不存在时，尝试程序化噪声纹理
     if pixmap is None and not os.path.isfile(tex_path):
         body_name = os.path.splitext(os.path.basename(tex_path))[0]
-        try:
-            from core.procedural_texture import generate_moon_texture
-            # 从文件名推断 body_key（如 "2k_europa_fictional" → "europa"）
-            body_key = body_name.replace("2k_", "").replace("_fictional", "")
-            tex_arr = generate_moon_texture(body_key, width=render_diameter*2, height=render_diameter)
+        body_key = body_name.replace("2k_", "").replace("_fictional", "")
+        tex_arr = _proc_tex_cache.get(body_key)
+        if tex_arr is None:
+            try:
+                from core.procedural_texture import generate_moon_texture
+                tex_arr = generate_moon_texture(body_key, width=64, height=32)
+            except ImportError:
+                pass
             if tex_arr is not None:
-                pixmap = render_sphere(tex_arr, render_diameter, light_angle=40,
-                                        rotation_deg=rotation_deg)
-        except ImportError:
-            pass
+                _proc_tex_cache[body_key] = tex_arr
+        if tex_arr is not None:
+            pixmap = render_sphere(tex_arr, render_diameter, light_angle=40,
+                                    rotation_deg=rotation_deg)
 
     if pixmap is None:
         return False

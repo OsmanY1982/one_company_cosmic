@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 AI 助手模块 v3 — 支持本地模型管理
-- 标签1: 💬 AI 对话 (opcclaw ChatWindow)
+- 标签1: 💬 AI 对话 (iqra ChatWindow)
 - 标签2: ⚡ 快捷工具 (模板、本地模型、系统状态)
 - 标签3~6: 增强功能（智能对话、快捷操作、系统监控、高级功能）
 
@@ -23,7 +23,7 @@ from typing import Optional, Dict, Any
 
 # ── 路径管理 ──────────────────────────────────────────────────────────────────
 # 确保项目根目录（one_company_desktop）在 sys.path 中，
-# 使「from opcclaw.xxx import ...」和「from modules.intelligence.xxx import ...」
+# 使「from iqra.xxx import ...」和「from modules.intelligence.xxx import ...」
 # 在所有调用场景下均可正常工作。
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if _PROJECT_ROOT not in sys.path:
@@ -424,12 +424,12 @@ class QuickToolsWidget(QWidget):
         """检查系统状态"""
         status = []
         
-        # 检查 opcclaw (cosmic: skip)
+        # 检查 iqra (cosmic: skip)
         try:
-            # opcclaw not available in cosmic; skipped
-            status.append("✅ OPCclaw 模块: 已安装")
+            # iqra not available in cosmic; skipped
+            status.append("✅ Iqra 模块: 已安装")
         except ImportError:
-            status.append("❌ OPCclaw 模块: 未安装")
+            status.append("❌ Iqra 模块: 未安装")
         
         # 检查配置
         try:
@@ -541,7 +541,7 @@ class QuickToolsWidget(QWidget):
             return
         
         try:
-            # 保存到 opcclaw 配置
+            # 保存到 iqra 配置
             from modules.intelligence._stubs import OpcConfigManager as ConfigManager
             project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../..")
             from modules.intelligence._compat import DATA_DIR as data_dir
@@ -589,7 +589,7 @@ from core.planet_painter import PLANET_STYLES, paint_planet, paint_orbit, paint_
 # ═══════ 13颗星球配置（真实纹理） ═══════
 PLANETS = [
     # ── 内核环（核心交互）──
-    {"id": "opcclaw_chat",       "name": "OPCclaw对话",  "style": "earth",    "orbit": 110, "size": 32},
+    {"id": "iqra_chat",       "name": "Iqra对话",  "style": "earth",    "orbit": 110, "size": 32},
     # ── 内环（智能引擎）──
     {"id": "super_intelligence",  "name": "超级智能",     "style": "jupiter",  "orbit": 160, "size": 26},
     {"id": "enhanced_chat",       "name": "增强对话",     "style": "venus",    "orbit": 200, "size": 26},

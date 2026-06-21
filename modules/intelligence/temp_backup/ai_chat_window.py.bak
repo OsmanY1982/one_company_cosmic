@@ -1,6 +1,6 @@
 """
 AI助手 · NEURAL v5 — 统一 AgentBridge 对话窗口
-全部模型调用通过 AgentBridge（opcclaw 引擎），废弃独立 llm_config.json
+全部模型调用通过 AgentBridge（iqra 引擎），废弃独立 llm_config.json
 顶部嵌入紧凑模型选择器：供应商下拉 → 模型下拉 → 切换按钮
 模型切换通过 AgentBridge.switch_model() 同步更新后端
 降级路径：AgentBridge.chat_stream → AgentBridge.chat → 离线分析
@@ -63,7 +63,7 @@ class AIChatWindow(QWidget):
 
     chat_close_requested = pyqtSignal()
 
-    def __init__(self, parent=None, opcclaw_engine=None, floating_mode=False, voice=None, embedded=False):
+    def __init__(self, parent=None, iqra_engine=None, floating_mode=False, voice=None, embedded=False):
         super().__init__(parent)
         self._embedded = embedded
 
@@ -78,7 +78,7 @@ class AIChatWindow(QWidget):
 
         self.setStyleSheet("background: rgba(10,5,20,240);")
 
-        self._bridge = opcclaw_engine  # AgentBridge 实例（唯一引擎）
+        self._bridge = iqra_engine  # AgentBridge 实例（唯一引擎）
         self._streaming = False
         self._stream_buffer = ""
         self._all_models = []  # 全量模型列表（云端+本地）
@@ -111,7 +111,7 @@ class AIChatWindow(QWidget):
 
         if self._bridge is not None:
             prov = self._bridge.get_provider_info() if hasattr(self._bridge, "get_provider_info") else {}
-            status_text = f"AgentBridge: {prov.get('name', 'OPCclaw')} / {prov.get('model', self._current_model)}"
+            status_text = f"AgentBridge: {prov.get('name', 'Iqra')} / {prov.get('model', self._current_model)}"
             status_color = "#44cc88"
         else:
             status_text = "引擎未连接 — 离线分析模式"
@@ -250,8 +250,8 @@ class AIChatWindow(QWidget):
         self.cb_provider.clear()
 
         # 读取已保存配置，获取当前激活的供应商
-        from modules.auth.model_config_panel import _load_opcclaw_config
-        config = _load_opcclaw_config()
+        from modules.auth.model_config_panel import _load_iqra_config
+        config = _load_iqra_config()
         active_pid = config.get("active_provider_id", "")
         self._current_provider_id = active_pid
 
@@ -451,7 +451,7 @@ class AIChatWindow(QWidget):
         if self._bridge and hasattr(self._bridge, "get_provider_info"):
             prov = self._bridge.get_provider_info()
             self.lbl_status.setText(
-                f"AgentBridge: {prov.get('name', 'OPCclaw')} / {prov.get('model', self._current_model)}"
+                f"AgentBridge: {prov.get('name', 'Iqra')} / {prov.get('model', self._current_model)}"
             )
             self.lbl_status.setStyleSheet("color: #44cc88; font-size: 11px; background: transparent;")
 

@@ -1,0 +1,362 @@
+2026-06-14 01:54:52 [ERROR] iqra: LLM API failed: [Ollama] 连接失败: [Errno 61] Connection refused
+请检查: 1) 网络连接 2) base_url 是否正确 (http://localhost:11434/v1)
+Traceback (most recent call last):
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1348, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 1303, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 1349, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 1298, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 1058, in _send_output
+    self.send(msg)
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 996, in send
+    self.connect()
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 962, in connect
+    self.sock = self._create_connection(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/socket.py", line 851, in create_connection
+    raise exceptions[0]
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/socket.py", line 836, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 61] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 519, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1377, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1351, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 61] Connection refused>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 298, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 375, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 265, in _make_request
+    raise RuntimeError(
+RuntimeError: [Ollama] 连接失败: [Errno 61] Connection refused
+请检查: 1) 网络连接 2) base_url 是否正确 (http://localhost:11434/v1)
+2026-06-14 05:01:02 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 05:04:12 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 298, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 375, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 270, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-14 05:06:02 [ERROR] iqra: LLM API failed on retry: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 319, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 375, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 270, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-14 08:32:13 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 09:00:34 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 519, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1377, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1352, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 1395, in getresponse
+    response.begin()
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 325, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 286, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 218, in chat
+    response = self.backend.chat(self.messages, tools, tool_choice="required")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 375, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 270, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-14 10:03:16 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 298, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 375, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 270, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-14 10:04:23 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 517, in open
+    response = self._open(req, data)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 534, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1375, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 1350, in do_open
+    r = h.getresponse()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 1349, in getresponse
+    response.begin()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 316, in begin
+    version, status, reason = self._read_status()
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py", line 277, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 298, in chat_stream
+    check_response = self.backend.chat(self.messages, tools, tool_choice="required")
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 375, in chat
+    data = self._make_request(payload)
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 270, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-14 10:35:04 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 519, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1377, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1352, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 1395, in getresponse
+    response.begin()
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 325, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 286, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 218, in chat
+    response = self.backend.chat(self.messages, tools, tool_choice="required")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 375, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 270, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-14 10:40:34 [ERROR] iqra: LLM API failed: [Ollama] 请求异常: timed out
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 241, in _make_request
+    with urllib.request.urlopen(req, context=self._ssl_context, timeout=timeout) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 519, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1377, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/urllib/request.py", line 1352, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 1395, in getresponse
+    response.begin()
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 325, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/http/client.py", line 286, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/opc/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10080/runtime/python311/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/chat_engine.py", line 218, in chat
+    response = self.backend.chat(self.messages, tools, tool_choice="required")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 375, in chat
+    data = self._make_request(payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/D盘工作区/一人公司/one_company_cosmic/iqra/core/llm_backend.py", line 270, in _make_request
+    raise RuntimeError(f"[{self.config.name}] 请求异常: {e}")
+RuntimeError: [Ollama] 请求异常: timed out
+2026-06-14 10:59:22 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 11:00:46 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 11:01:12 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 11:02:07 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 11:10:13 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 11:49:02 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 12:10:03 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 13:48:01 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 13:49:08 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying
+2026-06-14 13:50:07 [WARNING] iqra: force_tools enabled but no tool_call returned; injecting reminder and retrying

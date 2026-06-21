@@ -2,7 +2,7 @@
 模型配置面板 — 可复用于登录后模型设置、智能中心AI对话、悬浮球对话框
 三种模式：预设云端模型 / 自定义端点 / 本地推理
 
-与 opcclaw 共享配置格式（opcclaw_config.json）
+与 iqra 共享配置格式（iqra_config.json）
 """
 import os, json, re
 from PyQt5.QtWidgets import (
@@ -36,19 +36,22 @@ PROVIDER_MODELS = {
     "OpenAI": ["gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini", "o4-mini", "o3", "o3-mini"],
     "DeepSeek": ["deepseek-chat", "deepseek-reasoner"],
     "Google": ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"],
-    "Anthropic": ["claude-sonnet-4-20250514", "claude-3.5-sonnet", "claude-3.5-haiku"],
+    "Anthropic Claude": ["claude-sonnet-4-20250514", "claude-3.5-sonnet", "claude-3.5-haiku"],
     "Groq": ["llama-4-scout-17b-16e", "llama-3.3-70b", "deepseek-r1-distill-llama-70b"],
-    "Together": ["meta-llama/Llama-4-Maverick-17B", "meta-llama/Llama-3.3-70B-Instruct-Turbo", "deepseek-ai/DeepSeek-R1"],
-    "智谱AI": ["glm-4-plus", "glm-4-flash", "glm-4-air"],
-    "Moonshot": ["moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"],
-    "百川": ["Baichuan4-Turbo", "Baichuan4-Air"],
-    "零一万物": ["yi-large", "yi-medium", "yi-lightning"],
-    "MiniMax": ["abab7-chat", "abab6.5s-chat"],
-    "硅基流动": ["Qwen/Qwen3-235B-A22B", "Qwen/Qwen2.5-72B-Instruct", "deepseek-ai/DeepSeek-V3"],
+    "Together AI": ["meta-llama/Llama-4-Maverick-17B", "meta-llama/Llama-3.3-70B-Instruct-Turbo", "deepseek-ai/DeepSeek-R1"],
+    "智谱 GLM": ["glm-4-plus", "glm-4-flash", "glm-4-air"],
+    "Moonshot (月之暗面)": ["moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"],
+    "通义千问 (阿里云)": ["qwen-plus", "qwen-max", "qwen-turbo", "qwen3-235b-a22b"],
+    "MiniMax (海螺AI)": ["abab7-chat", "abab6.5s-chat"],
+    "SiliconFlow": ["Qwen/Qwen3-235B-A22B", "Qwen/Qwen2.5-72B-Instruct", "deepseek-ai/DeepSeek-V3"],
     "OpenRouter": ["openai/gpt-4o", "anthropic/claude-sonnet-4", "google/gemini-2.5-pro", "meta-llama/llama-4-maverick"],
+    "Mistral AI": ["mistral-large-latest", "codestral-latest"],
+    "Cohere": ["command-r-plus", "command-r"],
+    "阶跃星辰 StepFun": ["step-2-16k", "step-1-flash"],
 }
 
 LOCAL_SERVICES = [
+    {"id": "ollama",    "name": "Ollama",     "base_url": "http://localhost:11434/v1", "desc": "本地开源大模型运行平台，完全离线",                  "models": []},
     {"id": "lmstudio",  "name": "LM Studio",  "base_url": "http://localhost:1234/v1",  "desc": "图形界面管理模型，开箱即用",                       "models": ["local-model"]},
     {"id": "vllm",      "name": "vLLM",       "base_url": "http://localhost:8000/v1",  "desc": "高性能推理引擎，适合生产环境",                      "models": ["default"]},
     {"id": "llamacpp",  "name": "llama.cpp",  "base_url": "http://localhost:8080/v1",  "desc": "轻量 GGUF 模型推理",                              "models": ["local"]},
@@ -56,20 +59,20 @@ LOCAL_SERVICES = [
 
 # ── 配置路径 ──
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DATA_DIR = os.path.join(PROJECT_ROOT, "opcclaw", "data")
-OPCCLAW_CONFIG_PATH = os.path.join(DATA_DIR, "opcclaw_config.json")
+DATA_DIR = os.path.join(PROJECT_ROOT, "iqra", "data")
+IQRA_CONFIG_PATH = os.path.join(DATA_DIR, "iqra_config.json")
 
 
-def _save_opcclaw_config(config_dict: dict):
+def _save_iqra_config(config_dict: dict):
     os.makedirs(DATA_DIR, exist_ok=True)
-    with open(OPCCLAW_CONFIG_PATH, "w", encoding="utf-8") as f:
+    with open(IQRA_CONFIG_PATH, "w", encoding="utf-8") as f:
         json.dump(config_dict, f, indent=2, ensure_ascii=False)
 
 
-def _load_opcclaw_config() -> dict:
+def _load_iqra_config() -> dict:
     try:
-        if os.path.exists(OPCCLAW_CONFIG_PATH):
-            with open(OPCCLAW_CONFIG_PATH, "r", encoding="utf-8") as f:
+        if os.path.exists(IQRA_CONFIG_PATH):
+            with open(IQRA_CONFIG_PATH, "r", encoding="utf-8") as f:
                 return json.load(f)
     except Exception as e:
         print(f"[model_config_panel] 加载配置失败: {e}")
@@ -176,10 +179,47 @@ class _ManualModelFetcher(QThread):
 
     def run(self):
         try:
-            from opcclaw.core.llm_backend import get_available_models
+            from iqra.core.llm_backend import get_available_models
             raw = get_available_models(self._base_url, self._api_key, timeout=self._timeout)
             usable = _filter_usable_models(raw)
             self.finished.emit(usable, "")
+        except Exception as e:
+            self.finished.emit([], str(e))
+
+
+class _OllamaModelFetcher(QThread):
+    """后台线程：从 Ollama /api/tags 端点获取本地模型列表。"""
+    finished = pyqtSignal(list, str)  # (model_list, error_msg)
+
+    def __init__(self, base_url: str, timeout: int = 15):
+        super().__init__()
+        self._base_url = base_url
+        self._timeout = timeout
+
+    def run(self):
+        import urllib.request
+        import urllib.parse
+        import ssl
+        try:
+            parsed = urllib.parse.urlparse(self._base_url)
+            origin = f"{parsed.scheme}://{parsed.hostname}:{parsed.port or 11434}"
+            endpoint = urllib.parse.urljoin(origin + "/", "api/tags")
+
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+
+            req = urllib.request.Request(endpoint, method="GET")
+            with urllib.request.urlopen(req, context=ctx, timeout=self._timeout) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            models = []
+            for m in data.get("models", []):
+                name = m.get("name", "")
+                if name:
+                    size = m.get("size", 0)
+                    size_str = f" ({size / 1024 / 1024 / 1024:.1f}GB)" if size else ""
+                    models.append(f"{name}{size_str}")
+            self.finished.emit(models, "")
         except Exception as e:
             self.finished.emit([], str(e))
 
@@ -279,6 +319,16 @@ class ModelConfigDialog(QWidget):
         self._panel.config_saved.connect(self._on_config_saved)
         layout.addWidget(self._panel)
 
+    def closeEvent(self, event):
+        """弹窗关闭时清理正在运行的模型拉取线程"""
+        if hasattr(self._panel, '_model_fetcher') and self._panel._model_fetcher:
+            try:
+                self._panel._model_fetcher.quit()
+                self._panel._model_fetcher.wait(2000)
+            except Exception:
+                pass
+        super().closeEvent(event)
+
     def _on_config_saved(self, config: dict):
         """保存后自动切换引擎模型"""
         provider_id = config.get("active_provider_id", "")
@@ -325,7 +375,7 @@ class ModelConfigPanel(QWidget):
     def __init__(self, parent=None, standalone: bool = False):
         super().__init__(parent)
         self._standalone = standalone
-        self._existing = _load_opcclaw_config()
+        self._existing = _load_iqra_config()
         self._build_ui()
 
     def _build_ui(self):
@@ -632,24 +682,29 @@ class ModelConfigPanel(QWidget):
         combo.insertItem(0, loading_label, "")
         combo.setCurrentIndex(0)
 
-        fetcher = _ManualModelFetcher(url, key, timeout=15)
+        self._model_fetcher = _ManualModelFetcher(url, key, timeout=15)
 
         def on_finished(models, error):
-            lidx = combo.findText(loading_label)
-            if lidx >= 0:
-                combo.removeItem(lidx)
-            if error:
-                print(f"[ModelConfigPanel] 获取模型列表失败: {error}")
-                if saved_model and combo.findText(saved_model) < 0:
-                    combo.setEditText(saved_model)
-            elif models:
-                _populate_model_combo(combo, models, saved_model)
-            if btn:
-                btn.setEnabled(True)
-                btn.setText("获取模型")
+            try:
+                lidx = combo.findText(loading_label)
+                if lidx >= 0:
+                    combo.removeItem(lidx)
+                if error:
+                    print(f"[ModelConfigPanel] 获取模型列表失败: {error}")
+                    if saved_model and combo.findText(saved_model) < 0:
+                        combo.setEditText(saved_model)
+                elif models:
+                    _populate_model_combo(combo, models, saved_model)
+                if btn:
+                    btn.setEnabled(True)
+                    btn.setText("获取模型")
+            except RuntimeError:
+                pass  # widget 已销毁
+            finally:
+                self._model_fetcher = None
 
-        fetcher.finished.connect(on_finished)
-        fetcher.start()
+        self._model_fetcher.finished.connect(on_finished)
+        self._model_fetcher.start()
 
     # ─── 本地模式面板 ───
 
@@ -743,6 +798,7 @@ class ModelConfigPanel(QWidget):
     def _refresh_local_models(self):
         """手动刷新：从本地服务端点重新拉取模型列表。"""
         url = self._local_url.text().strip()
+        sid = self._local_service.currentData()
         saved_model = self._local_model.currentText().strip()
         self._refresh_btn.setEnabled(False)
         self._refresh_btn.setText("获取中...")
@@ -755,23 +811,32 @@ class ModelConfigPanel(QWidget):
         combo.insertItem(0, loading_label, "")
         combo.setCurrentIndex(0)
 
-        fetcher = _ManualModelFetcher(url, "", timeout=15)
+        # Ollama 使用 /api/tags 端点（非 OpenAI 兼容 /v1/models）
+        if sid == "ollama" or "11434" in url:
+            self._model_fetcher = _OllamaModelFetcher(url, timeout=15)
+        else:
+            self._model_fetcher = _ManualModelFetcher(url, "", timeout=15)
 
         def on_finished(models, error):
-            lidx = combo.findText(loading_label)
-            if lidx >= 0:
-                combo.removeItem(lidx)
-            if error:
-                print(f"[ModelConfigPanel] 获取本地模型列表失败: {error}")
-                if saved_model and combo.findText(saved_model) < 0:
-                    combo.setEditText(saved_model)
-            elif models:
-                _populate_model_combo(combo, models, saved_model)
-            self._refresh_btn.setEnabled(True)
-            self._refresh_btn.setText("刷新模型")
+            try:
+                lidx = combo.findText(loading_label)
+                if lidx >= 0:
+                    combo.removeItem(lidx)
+                if error:
+                    print(f"[ModelConfigPanel] 获取本地模型列表失败: {error}")
+                    if saved_model and combo.findText(saved_model) < 0:
+                        combo.setEditText(saved_model)
+                elif models:
+                    _populate_model_combo(combo, models, saved_model)
+                self._refresh_btn.setEnabled(True)
+                self._refresh_btn.setText("刷新模型")
+            except RuntimeError:
+                pass  # widget 已销毁
+            finally:
+                self._model_fetcher = None
 
-        fetcher.finished.connect(on_finished)
-        fetcher.start()
+        self._model_fetcher.finished.connect(on_finished)
+        self._model_fetcher.start()
 
     # ─── 配置构建 ───
 
@@ -839,7 +904,7 @@ class ModelConfigPanel(QWidget):
         config = self._get_config()
         if config is None:
             return
-        _save_opcclaw_config(config)
+        _save_iqra_config(config)
 
         # standalone 模式：仅保存，由外部（ModelSetupWindow）处理引擎初始化
         # 非 standalone 模式：仅保存，由外部（ModelConfigDialog/AIChatWindow/FloatingPlanet）调用 switch_model 处理
@@ -854,7 +919,7 @@ class ModelConfigPanel(QWidget):
     def _reinit_engine(self, config: dict):
         """
         已废弃 — 旧版通过创建新 AgentBridge 初始化引擎，存在以下问题：
-        1. 创建新 bridge 会导致 AIChatWindow / FloatingPlanet / OPCclawChatDialog 持有旧引用
+        1. 创建新 bridge 会导致 AIChatWindow / FloatingPlanet / IqraChatDialog 持有旧引用
         2. 新 bridge 的 model_changed signal 广播后无人监听
         3. 线程状态（chat_stream / AgentLoop）未迁移
 

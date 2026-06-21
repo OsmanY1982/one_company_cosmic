@@ -1,7 +1,7 @@
 """
-OPCclaw Core Engine v2.0 - 智能核心引擎
+Iqra Core Engine v2.0 - 智能核心引擎
 支持 Function Calling、多轮工具调用、任务规划、代码执行
-让 OPCclaw 具备与 Hermes 相当的智能水平
+让 Iqra 具备与 Hermes 相当的智能水平
 """
 
 import json
@@ -332,7 +332,7 @@ def init_builtin_tools(registry: ToolRegistry):
     # Claude Code 对标工具 v3.0
     # ═══════════════════════════════════════════
     
-    # 项目根目录 = opcclaw 所在目录的父目录（即 one_company_desktop）
+    # 项目根目录 = iqra 所在目录的父目录（即 one_company_desktop）
     _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     def _resolve_path(rel_path: str) -> str:
@@ -640,9 +640,9 @@ class ChatMessage:
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
 
-class OPCclawCoreEngine:
+class IqraCoreEngine:
     """
-    OPCclaw 智能核心引擎 v2.0
+    Iqra 智能核心引擎 v2.0
     支持 Function Calling、多轮工具调用、任务规划
     """
     
@@ -667,7 +667,7 @@ class OPCclawCoreEngine:
         self.messages: List[ChatMessage] = []
         
         # 系统提示词
-        self.system_prompt = """你是 OPCclaw，一个运行在用户本地电脑上的 AI 编程助手，定位对标 Claude Code。
+        self.system_prompt = """你是 Iqra，一个运行在用户本地电脑上的 AI 编程助手，定位对标 Claude Code。
 
 核心原则：
 - 行动优先，能直接用工具解决就不要追问
@@ -819,7 +819,7 @@ class OPCclawCoreEngine:
 # 快捷函数
 # ═══════════════════════════════════════════
 
-def create_engine(model: str = "qwen3.6-35b-iq2m", base_url: str = "http://localhost:8080/v1") -> OPCclawCoreEngine:
+def create_engine(model: str = "qwen3.6-35b-iq2m", base_url: str = "http://localhost:8080/v1") -> IqraCoreEngine:
     """创建引擎实例"""
     config = ProviderConfig(
         name="llama.cpp",
@@ -829,7 +829,7 @@ def create_engine(model: str = "qwen3.6-35b-iq2m", base_url: str = "http://local
         temperature=0.7,
         max_tokens=4096
     )
-    return OPCclawCoreEngine(config)
+    return IqraCoreEngine(config)
 
 
 def quick_chat(question: str, model: str = "qwen2.5:7b") -> str:
@@ -843,7 +843,7 @@ def quick_chat(question: str, model: str = "qwen2.5:7b") -> str:
 # ═══════════════════════════════════════════
 
 if __name__ == "__main__":
-    print("OPCclaw Core Engine v2.0")
+    print("Iqra Core Engine v2.0")
     print("=" * 50)
     
     engine = create_engine()

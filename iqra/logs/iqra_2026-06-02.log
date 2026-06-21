@@ -1,0 +1,25 @@
+2026-06-02 20:38:35 [INFO] iqra: Iqra 日志系统已启动
+2026-06-02 20:38:35 [INFO] main: Initializing Iqra...
+2026-06-02 20:38:35 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-06-02 20:39:21 [INFO] iqra: Iqra 日志系统已启动
+2026-06-02 20:39:21 [INFO] main: Initializing Iqra...
+2026-06-02 20:39:21 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-06-02 20:40:22 [INFO] iqra: Iqra 日志系统已启动
+2026-06-02 20:40:22 [INFO] main: Initializing Iqra...
+2026-06-02 20:40:22 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-06-02 20:41:29 [INFO] iqra: Iqra 日志系统已启动
+2026-06-02 20:41:29 [INFO] main: Initializing Iqra...
+2026-06-02 20:41:29 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-06-02 21:01:52 [INFO] iqra: Iqra 日志系统已启动
+2026-06-02 21:01:52 [INFO] main: Initializing Iqra...
+2026-06-02 21:01:52 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-06-02 21:20:31 [INFO] iqra: Iqra 日志系统已启动
+2026-06-02 21:20:31 [INFO] main: Initializing Iqra...
+2026-06-02 21:20:31 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-06-02 21:21:47 [INFO] iqra: Iqra 日志系统已启动
+2026-06-02 21:21:47 [INFO] main: Initializing Iqra...
+2026-06-02 21:21:47 [WARNING] main: 当前 Provider (阿里云百炼) 的 api_key 为空，AI 功能可能无法使用
+2026-06-02 23:00:26 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-06-02 23:01:17 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-06-02 23:08:16 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable
+2026-06-02 23:08:44 [ERROR] iqra: [Iqra] Voice init failed: 'NoneType' object is not callable

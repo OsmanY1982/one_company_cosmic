@@ -1,6 +1,6 @@
 # `modules/astronomy/star_catalog/detail.py`
 
-> 路径：`modules/astronomy/star_catalog/detail.py` | 行数：477
+> 路径：`modules/astronomy/star_catalog/detail.py` | 行数：672
 
 
 ---
@@ -15,7 +15,7 @@ paint_planet() 渲染 + 科普卡片 + 语音朗读。ESC 关闭。
 import os
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QScrollArea, QFrame, QSizePolicy, QTextBrowser,
+    QScrollArea, QFrame, QSizePolicy, QTextBrowser, QListWidget, QListWidgetItem,
 )
 from PyQt5.QtCore import Qt, QPointF, QTimer
 from PyQt5.QtGui import QPainter, QFont, QColor
@@ -46,6 +46,27 @@ CARD_STYLE = (
     "background: rgba(8, 14, 32, 0.75);"
     " border: 1px solid rgba(60, 120, 200, 0.2);"
     " border-radius: 10px; padding: 16px 20px;"
+)
+
+FILE_LIST_STYLE = (
+    "QListWidget {"
+    " background: rgba(8, 14, 32, 0.75);"
+    " border: 1px solid rgba(60, 120, 200, 0.2);"
+    " border-radius: 8px; padding: 4px;"
+    " font-family: 'PingFang SC'; font-size: 15px; color: #8899bb;"
+    " outline: none;"
+    "}"
+    "QListWidget::item {"
+    " padding: 10px 14px;"
+    " border-bottom: 1px solid rgba(60, 120, 200, 0.1);"
+    "}"
+    "QListWidget::item:selected {"
+    " background: rgba(30, 60, 120, 0.6); color: #aaccee;"
+    " border-left: 3px solid #3399ff;"
+    "}"
+    "QListWidget::item:hover {"
+    " background: rgba(20, 40, 80, 0.5);"
+    "}"
 )
 
 
@@ -211,23 +232,31 @@ class BodyDetailWindow(QWidget):
         top_row.addWidget(info_card, 1)
         layout.addLayout(top_row)
 
-        # ── 下半部分：详细介绍（合并所有 knowledge 文件）──
-        merged_content = self._body.get("summary", "")
-        phys = self._body.get("physics", "")
-        expl = self._body.get("exploration", "")
-        if phys and phys not in merged_content:
-            merged_content = merged_content + "\n\n---\n\n" + phys if merged_content else phys
-        if expl and expl not in merged_content:
-            merged_content = merged_content + "\n\n---\n\n" + expl if merged_content else expl
-
-        if merged_content:
+        # ── 下半部分：详细介绍（树状导航，点击展开各自 .md 内容）──
+        knowledge_files = self._body.get("knowledge_files", [])
+        if knowledge_files:
             sec_title = QLabel("详细介绍")
             sec_title.setStyleSheet(SECTION_TITLE_STYLE)
             layout.addWidget(sec_title)
 
-            sec_body = QTextBrowser()
-            sec_body.setOpenExternalLinks(True)
-            sec_body.setStyleSheet(
+            split_row = QHBoxLayout()
+            split_row.setSpacing(12)
+
+            # 左侧：文件列表
+            self._file_list = QListWidget()
+            self._file_list.setFixedWidth(230)
+            self._file_list.setStyleSheet(FILE_LIST_STYLE)
+            for kf in knowledge_files:
+                item = QListWidgetItem(kf["title"])
+                item.setData(Qt.UserRole, kf["content"])
+                self._file_list.addItem(item)
+            self._file_list.currentRowChanged.connect(self._on_select_knowledge)
+            split_row.addWidget(self._file_list)
+
+            # 右侧：内容查看器
+            self._content_view = QTextBrowser()
+            self._content_view.setOpenExternalLinks(True)
+            self._content_view.setStyleSheet(
                 "QTextBrowser {"
                 " color: #8899bb; font-size: 16px; background: rgba(8,14,32,0.6);"
                 " border: 1px solid rgba(60,120,200,0.15); border-radius: 8px;"
@@ -235,15 +264,53 @@ class BodyDetailWindow(QWidget):
                 "}"
                 "QTextBrowser:focus { border-color: rgba(0,200,255,0.3); }"
             )
-            sec_body.document().setDefaultStyleSheet(
+            self._content_view.document().setDefaultStyleSheet(
                 "body { color: #8899bb; background: rgba(8,14,32,0.6); }"
                 " a { color: #66ccff; }"
                 " p { color: #8899bb; line-height: 1.8; }"
             )
-            sec_body.setHtml(_md_to_html(merged_content))
-            sec_body.setMinimumHeight(120)
-            sec_body.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
-            layout.addWidget(sec_body)
+            self._content_view.setMinimumHeight(120)
+            self._content_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+            split_row.addWidget(self._content_view, 1)
+            layout.addLayout(split_row)
+
+            # 默认选中第一个文件
+            if self._file_list.count() > 0:
+                self._file_list.setCurrentRow(0)
+
+        else:
+            # 无知识文件时回退：显示 summary + physics + exploration 合并文本
+            merged_content = self._body.get("summary", "")
+            phys = self._body.get("physics", "")
+            expl = self._body.get("exploration", "")
+            if phys and phys not in merged_content:
+                merged_content = merged_content + "\n\n---\n\n" + phys if merged_content else phys
+            if expl and expl not in merged_content:
+                merged_content = merged_content + "\n\n---\n\n" + expl if merged_content else expl
+
+            if merged_content:
+                sec_title = QLabel("详细介绍")
+                sec_title.setStyleSheet(SECTION_TITLE_STYLE)
+                layout.addWidget(sec_title)
+                sec_body = QTextBrowser()
+                sec_body.setOpenExternalLinks(True)
+                sec_body.setStyleSheet(
+                    "QTextBrowser {"
+                    " color: #8899bb; font-size: 16px; background: rgba(8,14,32,0.6);"
+                    " border: 1px solid rgba(60,120,200,0.15); border-radius: 8px;"
+                    " padding: 12px 16px; font-family: 'PingFang SC';"
+                    "}"
+                    "QTextBrowser:focus { border-color: rgba(0,200,255,0.3); }"
+                )
+                sec_body.document().setDefaultStyleSheet(
+                    "body { color: #8899bb; background: rgba(8,14,32,0.6); }"
+                    " a { color: #66ccff; }"
+                    " p { color: #8899bb; line-height: 1.8; }"
+                )
+                sec_body.setHtml(_md_to_html(merged_content))
+                sec_body.setMinimumHeight(120)
+                sec_body.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+                layout.addWidget(sec_body)
 
         # 趣味事实
         facts = self._body.get("facts", [])
@@ -324,6 +391,11 @@ class BodyDetailWindow(QWidget):
         if not text:
             return
 
+        # 朗读前剥离 Markdown 语法，避免 TTS 读出井号/竖线/方括号等排版符号
+        text = _md_strip(text)
+        # 口语化转换：英文术语 → 中文、括号去掉、单位口语化
+        text = _to_spoken_form(text)
+
         self._voice_btn.setText("⏹ 停止朗读")
         self._voice.speak(text)
         self._poll_timer = QTimer(self)
@@ -342,6 +414,14 @@ class BodyDetailWindow(QWidget):
             self._parent_win.show()
             self._parent_win._load_data()
         self.close()
+
+    def _on_select_knowledge(self, index):
+        """点击左侧文件列表项时，渲染对应 .md 内容到右侧 QTextBrowser"""
+        if index < 0:
+            return
+        item = self._file_list.item(index)
+        content = item.data(Qt.UserRole) or ""
+        self._content_view.setHtml(_md_to_html(content))
 
     def closeEvent(self, event):
         self._voice.stop()
@@ -400,6 +480,121 @@ def _btn_style():
 # ═══════════════════════════════════════════════════════
 
 import re as _re
+
+
+def _md_strip(text: str) -> str:
+    """剥离 Markdown 语法，保留纯文本供 TTS 朗读。
+    移除: 标题#号、表格|线、分隔线---、链接语法[]()、加粗**、斜体*、
+          行内代码``、代码块```、编号前缀。
+    """
+    lines = text.split("\n")
+    out = []
+    in_code = False
+    for line in lines:
+        stripped = line.strip()
+        # 代码块边界
+        if stripped.startswith("```"):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        # 分隔线
+        if stripped in ("---", "***", "* * *"):
+            continue
+        # 表格行（含管道符）
+        if stripped.startswith("|") and stripped.endswith("|"):
+            continue
+        # 剥离标题标记
+        s = _re.sub(r"^#{1,6}\s+", "", stripped)
+        # 剥离链接 → 保留文字部分
+        s = _re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", s)
+        # 剥离加粗/斜体
+        s = _re.sub(r"\*\*(.+?)\*\*", r"\1", s)
+        s = _re.sub(r"\*(.+?)\*", r"\1", s)
+        # 剥离行内代码
+        s = _re.sub(r"`([^`]+)`", r"\1", s)
+        # 剥离编号前缀（如 "01."、"1、"）
+        s = _re.sub(r"^\d{1,2}[\.、]\s*", "", s)
+        if s.strip():
+            out.append(s.strip())
+    return "。".join(out)
+
+
+# ── 天文术语 → 口语替换（仅用于 TTS 朗读）──
+_SPOKEN_MAP = [
+    # 英文缩写/术语 → 中文口语
+    ("AU", "天文单位"),
+    ("au", "天文单位"),
+    (" T ", " 温度 "),
+    (" K)", " 开尔文)"),
+    (" K。", " 开尔文。"),
+    (" K,", " 开尔文，"),
+    (" K ", " 开尔文 "),
+    (" K\n", " 开尔文\n"),
+    # 单位口语化
+    ("g/cm³", "克每立方厘米"),
+    ("km/s", "公里每秒"),
+    ("m/s²", "米每二次方秒"),
+    ("km/h", "公里每小时"),
+    ("kg/m³", "千克每立方米"),
+    # 科学计数法 → 口语
+    ("× 10²⁶", "乘以十的二十六次方"),
+    ("× 10²⁵", "乘以十的二十五次方"),
+    ("× 10²⁴", "乘以十的二十四次方"),
+    ("× 10²³", "乘以十的二十三次方"),
+    ("× 10²²", "乘以十的二十二次方"),
+    ("× 10²¹", "乘以十的二十一次方"),
+    ("× 10²⁰", "乘以十的二十次方"),
+    ("× 10¹⁹", "乘以十的十九次方"),
+    ("× 10⁶", "乘以十的六次方"),
+    ("× 10⁵", "乘以十的五次方"),
+    ("× 10⁴", "乘以十的四次方"),
+    ("× 10³", "乘以十的三次方"),
+    # 百分比 → 口语
+    ("%", "百分之"),
+    # 温度符号
+    ("°C", "摄氏度"),
+    ("°c", "摄氏度"),
+    # 常见英文名词
+    ("Cassini", "卡西尼"),
+    ("Voyager", "旅行者"),
+    ("Galileo", "伽利略"),
+    ("Juno", "朱诺"),
+    ("New Horizons", "新视野"),
+    ("Dawn", "黎明"),
+    ("Hubble", "哈勃"),
+    ("Titan", "土卫六"),
+    ("Enceladus", "土卫二"),
+    ("Europa", "木卫二"),
+    ("Ganymede", "木卫三"),
+    ("Callisto", "木卫四"),
+    ("Io", "木卫一"),
+    ("Triton", "海卫一"),
+    ("Charon", "冥卫一"),
+    ("IAU", "国际天文学联合会"),
+    ("NASA", "美国宇航局"),
+    ("ESA", "欧洲航天局"),
+    ("JAXA", "日本宇宙航空研究开发机构"),
+    ("CNSA", "中国国家航天局"),
+    # 乘号变体（统一转为中文"乘以"）
+    (" × ", "乘以"),
+    ("×", "乘以"),
+]
+
+
+def _to_spoken_form(text: str) -> str:
+    """将天文科普文本转为口语化朗读文本。"""
+    for old, new in _SPOKEN_MAP:
+        text = text.replace(old, new)
+    # 负号温度表达：−180°C → 零下180摄氏度（精确匹配，不误伤破折号）
+    text = _re.sub(r"−(\d+)", r"零下\1", text)
+    # 去括号内容（TTS 读括号很别扭）
+    text = _re.sub(r"（[^）]*）", "，", text)
+    text = _re.sub(r"\([^)]*\)", "，", text)
+    # 多个逗号合并
+    text = _re.sub(r"，+", "，", text)
+    text = _re.sub(r",+", "，", text)
+    return text
 
 
 def _md_to_html(text: str) -> str:

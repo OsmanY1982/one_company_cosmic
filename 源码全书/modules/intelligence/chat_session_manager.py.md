@@ -154,7 +154,7 @@ class ChatSessionManager(QWidget):
             self._sessions = []
 
     def set_sessions(self, sessions: list, current_id: str = ""):
-        """兼容 OPCclaw Sidebar 的推送式 API"""
+        """兼容 Iqra Sidebar 的推送式 API"""
         self._sessions = sessions
         self._current_session_id = current_id
         self._refresh_list()

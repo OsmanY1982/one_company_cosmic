@@ -1,7 +1,7 @@
 """
 星空版 → 宇宙版 兼容桩（Stubs）
 
-为依赖 opcclaw 或星空版特有基础设施的模块提供最小化替代实现。
+为依赖 iqra 或星空版特有基础设施的模块提供最小化替代实现。
 """
 
 import os
@@ -12,14 +12,14 @@ from typing import Dict, List, Any, Optional
 
 
 # ═══════════════════════════════════════════
-# EnhancedAIAssistant 桩（替代 opcclaw 依赖）
+# EnhancedAIAssistant 桩（替代 iqra 依赖）
 # ═══════════════════════════════════════════
 
 class EnhancedAIAssistant:
     """桩实现：替代星空版 enhanced/enhanced_tools.py 中的 EnhancedAIAssistant
     
-    原版依赖 opcclaw.core.tool_registry（ToolRegistry/ToolDefinition），
-    宇宙版暂不引入完整 opcclaw 框架。
+    原版依赖 iqra.core.tool_registry（ToolRegistry/ToolDefinition），
+    宇宙版暂不引入完整 iqra 框架。
     """
     def __init__(self, data_dir: str = None):
         self.data_dir = data_dir
@@ -89,11 +89,11 @@ class AppState:
 
 
 # ═══════════════════════════════════════════
-# ConfigManager 桩（替代 opcclaw.modules.chat_window.ConfigManager）
+# ConfigManager 桩（替代 iqra.modules.chat_window.ConfigManager）
 # ═══════════════════════════════════════════
 
 class OpcConfigManager:
-    """桩实现：替代星空版 opcclaw.modules.chat_window.ConfigManager"""
+    """桩实现：替代星空版 iqra.modules.chat_window.ConfigManager"""
     def __init__(self, data_dir: str):
         self.data_dir = data_dir
         self._config = {}
@@ -112,11 +112,11 @@ class OpcConfigManager:
 
 
 # ═══════════════════════════════════════════
-# SecureStorage 桩（替代 opcclaw.modules.chat_window.SecureStorage）
+# SecureStorage 桩（替代 iqra.modules.chat_window.SecureStorage）
 # ═══════════════════════════════════════════
 
 class OpcSecureStorage:
-    """桩实现：替代星空版 opcclaw 的 SecureStorage"""
+    """桩实现：替代星空版 iqra 的 SecureStorage"""
     def __init__(self, data_dir: str):
         self.data_dir = data_dir
         self._store: Dict[str, str] = {}

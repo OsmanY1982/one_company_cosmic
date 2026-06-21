@@ -256,21 +256,21 @@ class StarCatalogWindow(QWidget):
         else:
             text += f"       [{type_label}]"
 
-        # ── 渲染 40x40 星球缩略图 ──
-        pix = QPixmap(40, 40)
+        # ── 渲染 60x60 星球缩略图（大气光晕/光环不裁剪）──
+        pix = QPixmap(60, 60)
         pix.fill(Qt.transparent)
         p = QPainter(pix)
         p.setRenderHint(QPainter.Antialiasing)
         style_name = entry.get("style", "neptune")
         style = PLANET_STYLES.get(style_name, PLANET_STYLES["neptune"])
-        paint_planet(p, QPointF(20, 20), 16, style,
+        paint_planet(p, QPointF(30, 30), 16, style,
                      hovered=False, label="", font_size=9,
                      anim_t=0.0)
         p.end()
 
         item = QListWidgetItem(QIcon(pix), text)
         item.setData(Qt.UserRole, entry)
-        item.setSizeHint(QSize(0, 56))
+        item.setSizeHint(QSize(0, 64))
         item.setFont(QFont("PingFang SC", 16))
         return item
 

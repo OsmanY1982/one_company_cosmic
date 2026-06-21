@@ -4,7 +4,7 @@
 300+ IAU 已命名天体 | 滚轮缩放 | 拖拽平移 | 悬停标签 | 多层级渲染
 """
 import math
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QSlider
 from PyQt5.QtCore import Qt, QTimer, QPointF
 from PyQt5.QtGui import (
     QPainter, QPen, QColor, QRadialGradient, QFont,
@@ -430,6 +430,49 @@ class SolarSystemWindow(QWidget):
         self._catalog_btn.clicked.connect(self._open_catalog)
         self._catalog_btn.setGeometry(8, self.height() - 26, 110, 24)
 
+        # 缩放控制按钮（样式与 _catalog_btn 一致）
+        _btn_style = (
+            "QPushButton {"
+            " color: #7799cc; background: rgba(20, 35, 65, 0.85);"
+            " border: 1px solid rgba(60, 130, 200, 0.3); border-radius: 6px;"
+            " padding: 2px 6px; font-size: 13px; font-family: 'PingFang SC';"
+            " }"
+            " QPushButton:hover {"
+            " background: rgba(40, 70, 130, 0.9); color: #00ccff;"
+            " border-color: rgba(0, 200, 255, 0.5);"
+            " }"
+        )
+
+        self._zoom_out_btn = QPushButton("−", self)
+        self._zoom_out_btn.setStyleSheet(_btn_style)
+        self._zoom_out_btn.clicked.connect(self._on_zoom_out)
+        self._zoom_out_btn.setGeometry(130, self.height() - 26, 28, 24)
+
+        self._zoom_slider = QSlider(Qt.Horizontal, self)
+        self._zoom_slider.setRange(int(ZOOM_MIN * 100), int(ZOOM_MAX * 100))
+        self._zoom_slider.setValue(int(ZOOM_DEFAULT * 100))
+        self._zoom_slider.setStyleSheet(
+            "QSlider::groove:horizontal {"
+            " background: rgba(30, 50, 80, 0.5); border: 1px solid rgba(60, 130, 200, 0.2);"
+            " border-radius: 3px; height: 6px;"
+            " }"
+            " QSlider::handle:horizontal {"
+            " background: #5588cc; border: 1px solid #7799dd;"
+            " border-radius: 5px; width: 12px; margin: -4px 0;"
+            " }"
+            " QSlider::handle:horizontal:hover { background: #00ccff; }"
+            " QSlider::sub-page:horizontal {"
+            " background: rgba(60, 120, 200, 0.4); border-radius: 3px;"
+            " }"
+        )
+        self._zoom_slider.valueChanged.connect(self._on_zoom_changed)
+        self._zoom_slider.setGeometry(162, self.height() - 26, 130, 24)
+
+        self._zoom_in_btn = QPushButton("+", self)
+        self._zoom_in_btn.setStyleSheet(_btn_style)
+        self._zoom_in_btn.clicked.connect(self._on_zoom_in)
+        self._zoom_in_btn.setGeometry(296, self.height() - 26, 28, 24)
+
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
@@ -441,6 +484,30 @@ class SolarSystemWindow(QWidget):
         self._catalog_win = StarCatalogWindow(self)
         self._catalog_win.show()
         self.hide()
+
+    # ── 缩放控制 ─────────────────────────────────────
+
+    def _on_zoom_changed(self, value):
+        """滑块值变化 → 以窗口中心为基准缩放"""
+        new_zoom = value / 100.0
+        old_zoom = self._hud._zoom
+        if abs(new_zoom - old_zoom) < 1e-6:
+            return
+        cx, cy = self.width() / 2.0, self.height() / 2.0
+        scale = new_zoom / old_zoom
+        self._hud._pan_x = cx + scale * (self._hud._pan_x - cx)
+        self._hud._pan_y = cy + scale * (self._hud._pan_y - cy)
+        self._hud._zoom = new_zoom
+
+    def _on_zoom_in(self):
+        """放大 1.12 倍"""
+        new_zoom = min(self._hud._zoom * 1.12, ZOOM_MAX)
+        self._zoom_slider.setValue(int(new_zoom * 100))
+
+    def _on_zoom_out(self):
+        """缩小 1.12 倍"""
+        new_zoom = max(self._hud._zoom / 1.12, ZOOM_MIN)
+        self._zoom_slider.setValue(int(new_zoom * 100))
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -455,3 +522,9 @@ class SolarSystemWindow(QWidget):
             self._hint.setGeometry(w - 260, h - 24, 250, 20)
         if hasattr(self, '_catalog_btn'):
             self._catalog_btn.setGeometry(8, h - 26, 110, 24)
+        if hasattr(self, '_zoom_out_btn'):
+            self._zoom_out_btn.setGeometry(130, h - 26, 28, 24)
+        if hasattr(self, '_zoom_slider'):
+            self._zoom_slider.setGeometry(162, h - 26, 130, 24)
+        if hasattr(self, '_zoom_in_btn'):
+            self._zoom_in_btn.setGeometry(296, h - 26, 28, 24)

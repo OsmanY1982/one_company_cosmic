@@ -267,7 +267,7 @@ class AICenterWindow(QDialog):
             # ── 智能报表（真实数据） ──
             report_lines = [
                 f"{'═' * 52}",
-                f"  OPCclaw 智能中心 · 数据报表",
+                f"  Iqra 智能中心 · 数据报表",
                 f"{'═' * 52}",
                 f"",
                 f"  报告时间: {self._now_str()}",

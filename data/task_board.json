@@ -2,7 +2,7 @@
   "version": "1.0",
   "updated_at": "2026-05-16T00:00:00+08:00",
   "board_name": "一人公司宇宙版任务板",
-  "owner": "opcclaw",
+  "owner": "iqra",
   "chairman": "董事长 / 老板 / 大大",
   "columns": {
     "backlog": "待处理",
@@ -19,7 +19,7 @@
       "description": "为一人公司宇宙版建立固定数字员工、内部聊天室、任务板、公司记忆和基础协作流程。",
       "status": "doing",
       "priority": "high",
-      "assigned_to": "opcclaw",
+      "assigned_to": "iqra",
       "supporting_agents": [
         "agent_product_001",
         "agent_research_001",

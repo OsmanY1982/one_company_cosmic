@@ -8,7 +8,7 @@
 
 ```python
 # Supabase 云端同步配置
-# 与 opcclaw/core/supabase_client.py 共用同一 Supabase 项目
+# 与 iqra/core/supabase_client.py 共用同一 Supabase 项目
 
 SUPABASE_URL = "https://zkpymaioolnxxbqsapnj.supabase.co"
 SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprcHltYWlvb2xueHhicXNhcG5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNTI2NzIsImV4cCI6MjA5MjcyODY3Mn0.c7IO7Cf2u4EgwMwB-zF7KGO38XkAg19guwmfEUGEJk8"

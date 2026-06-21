@@ -11,10 +11,10 @@ AIGC:
 
 # 冥王星知识库 · 索引
 
-| 编号 | 文件 | 主题 |
-|------|------|------|
-| 01 | [01_overview.md](01_overview.md) | 总览：降级的第九行星 |
-| 02 | [02_geology.md](02_geology.md) | 地质：心形区域、氮冰冰川 |
-| 03 | [03_system.md](03_system.md) | 冥王星系统：卡戎与四小卫星 |
-| 04 | [04_exploration.md](04_exploration.md) | 新视野号：唯一访客 |
+| 文件 | 主题 |
+|---|---|
+| [01_overview](01_overview.md) | 总览：降级的第九行星 |
+| [02_geology](02_geology.md) | 地质：心形区域、氮冰冰川 |
+| [03_system](03_system.md) | 冥王星系统：卡戎与四小卫星 |
+| [04_exploration](04_exploration.md) | 新视野号：唯一访客 |
 *（内容由AI生成，仅供参考）*

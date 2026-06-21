@@ -1,6 +1,6 @@
 # `modules/astronomy/solar_system/data.py`
 
-> 路径：`modules/astronomy/solar_system/data.py` | 行数：457
+> 路径：`modules/astronomy/solar_system/data.py` | 行数：498
 
 
 ---
@@ -76,11 +76,11 @@ PLANETS = [
 # 5 矮行星
 # ═══════════════════════════════════════════════════════
 DWARFS = [
-    ("pluto",    "冥王星", 5_906_000_000, 1188,  90560,  "pluto",   False),
-    ("eris",     "阋神星", 10_120_000_000, 1163, 203830, "pluto",   False),
-    ("ceres",    "谷神星", 414_000_000,    473,   1680,   "mercury", False),
-    ("haumea",   "妊神星", 6_450_000_000,  780,   103774, "mars",    False),
-    ("makemake", "鸟神星", 6_850_000_000,  715,   113183, "pluto",   False),
+    ("pluto",    "冥王星", 5_906_000_000, 1188,  90560,  "pluto",    False),
+    ("eris",     "阋神星", 10_120_000_000, 1163, 203830, "eris",     False),
+    ("ceres",    "谷神星", 414_000_000,    473,   1680,   "ceres",    False),
+    ("haumea",   "妊神星", 6_450_000_000,  780,   103774, "haumea",   False),
+    ("makemake", "鸟神星", 6_850_000_000,  715,   113183, "makemake", False),
 ]
 
 # ═══════════════════════════════════════════════════════
@@ -431,6 +431,40 @@ def build_catalog():
     return catalog
 
 
+def _moon_style(base_hex):
+    """为无专用风格的卫星生成表面纹理（兼容 core/planet_painter 格式）"""
+    from PyQt5.QtGui import QColor
+    c = QColor(base_hex)
+    h, s, v = c.hue(), c.saturation(), c.value()
+    surface_stops = []
+    for t in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0):
+        dv = int((t - 0.5) * 40)
+        ds = int((t - 0.5) * 30)
+        color = QColor.fromHsv(
+            (h + int(t * 20)) % 360,
+            min(255, max(30, s + ds)),
+            min(255, max(40, v + dv)),
+        )
+        surface_stops.append((t, color.name()))
+    return {
+        "name": "", "type": "moon",
+        "surface": surface_stops,
+        "craters": True,
+        "atmosphere": QColor(c.red(), c.green(), c.blue(), 8),
+    }
+
+
+# ── 已命名的专用风格卫星 ──
+_MOON_STYLE_MAP = {
+    "Moon": "moon",
+    "Io": "io", "Europa": "europa", "Ganymede": "ganymede", "Callisto": "callisto",
+    "Titan": "titan", "Enceladus": "enceladus",
+    "Mimas": "mimas", "Dione": "dione", "Rhea": "rhea", "Tethys": "tethys",
+    "Iapetus": "iapetus", "Phoebe": "phoebe", "Hyperion": "hyperion",
+    "Miranda": "miranda", "Ariel": "ariel", "Umbriel": "umbriel", "Oberon": "oberon",
+    "Triton": "triton", "Titania": "titania", "Charon": "charon",
+}
+
 def _add_moons(catalog, moon_list, parent_id, palette_key):
     """批量添加卫星"""
     for i, (name_cn, name_en, orbit, radius, period) in enumerate(moon_list):
@@ -443,11 +477,18 @@ def _add_moons(catalog, moon_list, parent_id, palette_key):
             tier = 2
         else:
             tier = 3
+        # 已知卫星分配专用风格，其他卫星生成多色带纹理
+        style = _MOON_STYLE_MAP.get(name_en)
+        if style is None:
+            style = _moon_style(color)
+            # 添加程序化纹理路径，使 satellite 各有独特外观
+            style["texture"] = f"2k_{name_en.lower()}_fictional.jpg"
+            style["rotation_factor"] = 60
         catalog[mid] = {
             "id": mid, "name": name_cn, "name_en": name_en,
             "parent": parent_id, "type": "moon",
             "orbit_km": orbit, "radius_km": radius, "period_d": period,
-            "style": None, "color": color, "ring": False, "tier": tier,
+            "style": style, "color": color, "ring": False, "tier": tier,
         }
 
 # 全局单例

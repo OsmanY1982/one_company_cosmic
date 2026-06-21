@@ -4,18 +4,18 @@
 
 ## 文件导航
 
-| 编号 | 文件 | 主题 | 内容概要 |
-|------|------|------|----------|
-| 01 | [01_overview.md](01_overview.md) | 总览 | 基本参数、分类、在太阳系中的位置、生命周期概述 |
-| 02 | [02_structure.md](02_structure.md) | 内部结构 | 核心、辐射层、差旋层、对流层、光球、色球、日冕 |
-| 03 | [03_atmosphere.md](03_atmosphere.md) | 大气层 | 光球层细节、色球层现象、日冕加热谜题、太阳风 |
-| 04 | [04_activity.md](04_activity.md) | 太阳活动 | 黑子、耀斑、日冕物质抛射、11年周期、太阳发电机 |
-| 05 | [05_exploration.md](05_exploration.md) | 探测史 | 古代观测、伽利略、现代望远镜、帕克探测器、夸父一号 |
-| 06 | [06_culture.md](06_culture.md) | 文化与影响 | 神话、命名、地日关系、空间天气、太阳对文明的意义 |
+| 文件 | 主题 | 内容概要 |
+|---|---|---|
+| [01_overview](01_overview.md) | 总览 | 基本参数、分类、在太阳系中的位置、生命周期概述 |
+| [02_structure](02_structure.md) | 内部结构 | 核心、辐射层、差旋层、对流层、光球、色球、日冕 |
+| [03_atmosphere](03_atmosphere.md) | 大气层 | 光球层细节、色球层现象、日冕加热谜题、太阳风 |
+| [04_activity](04_activity.md) | 太阳活动 | 黑子、耀斑、日冕物质抛射、11年周期、太阳发电机 |
+| [05_exploration](05_exploration.md) | 探测史 | 古代观测、伽利略、现代望远镜、帕克探测器、夸父一号 |
+| [06_culture](06_culture.md) | 文化与影响 | 神话、命名、地日关系、空间天气、太阳对文明的意义 |
 
 ## 交叉引用
 
-- 日地关系 → 地球知识库 [05_exploration.md](../earth/knowledge/05_exploration.md)
+- 日地关系 → 地球知识库 [05_exploration](../earth/knowledge/05_exploration.md)
 - 太阳风对行星影响 → 各行星知识库
 - 太阳生命周期与恒星演化 → 可参照赫罗图、主序星理论
 

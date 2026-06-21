@@ -133,7 +133,7 @@ class FloatingPlanetMenuMixin:
 
         categories = [
             ("ai_assistant", "AI助手", [
-                ("opcclaw_chat",     "AI对话"),
+                ("iqra_chat",     "AI对话"),
                 ("super_intelligence","超级智能"),
                 ("enhanced_chat",    "增强对话"),
                 ("knowledge_base",   "知识库"),

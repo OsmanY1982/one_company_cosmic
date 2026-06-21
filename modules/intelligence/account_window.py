@@ -114,10 +114,10 @@ class AccountNavHUD(QWidget):
 class AccountWindow(QMainWindow):
     """账号与安全 — 小星球导航"""
 
-    def __init__(self, parent=None, role="admin", opcclaw_engine=None):
+    def __init__(self, parent=None, role="admin", iqra_engine=None):
         super().__init__(parent)
         self._role = role
-        self._opcclaw_engine = opcclaw_engine
+        self._iqra_engine = iqra_engine
         self.setWindowTitle("一人公司 — 账号与安全")
         self.setMinimumSize(700, 600)
         self.resize(700, 600)

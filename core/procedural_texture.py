@@ -131,23 +131,101 @@ MOON_TEXTURE_PRESETS = {
                     (245, 248, 252), (225, 230, 235)],
         "octaves": 5, "contrast": 2.0,
     },
+    # ── 大型卫星程序化纹理（无真实纹理可用）──
+    "triton": {
+        "colors": [(180, 160, 170), (200, 180, 190), (160, 140, 155), (190, 170, 180),
+                    (210, 190, 200), (170, 150, 165)],
+        "octaves": 5, "contrast": 1.6,
+    },
+    "titania": {
+        "colors": [(140, 135, 140), (160, 155, 160), (120, 115, 120), (150, 145, 150),
+                    (170, 165, 170), (130, 125, 130)],
+        "octaves": 4, "contrast": 1.5,
+    },
+    "rhea": {
+        "colors": [(200, 195, 190), (220, 215, 210), (180, 175, 170), (210, 205, 200),
+                    (230, 225, 220), (190, 185, 180)],
+        "octaves": 4, "contrast": 1.4,
+    },
+    "oberon": {
+        "colors": [(100, 90, 85), (120, 110, 100), (80, 70, 65), (110, 100, 90),
+                    (130, 120, 110), (90, 80, 75)],
+        "octaves": 4, "contrast": 1.3,
+    },
+    "iapetus": {
+        "colors": [(90, 85, 80), (180, 170, 155), (70, 65, 60), (120, 110, 95),
+                    (200, 190, 170), (85, 80, 70)],
+        "octaves": 4, "contrast": 1.8,
+    },
+    "charon": {
+        "colors": [(140, 110, 100), (160, 130, 115), (120, 90, 80), (150, 120, 105),
+                    (170, 140, 125), (130, 100, 90)],
+        "octaves": 5, "contrast": 1.5,
+    },
+    "umbriel": {
+        "colors": [(80, 75, 80), (95, 90, 95), (65, 60, 65), (90, 85, 90),
+                    (105, 100, 105), (70, 65, 70)],
+        "octaves": 3, "contrast": 1.3,
+    },
+    "ariel": {
+        "colors": [(170, 165, 170), (190, 185, 190), (150, 145, 150), (180, 175, 180),
+                    (200, 195, 200), (160, 155, 160)],
+        "octaves": 5, "contrast": 1.6,
+    },
+    "dione": {
+        "colors": [(190, 185, 180), (210, 205, 200), (170, 165, 160), (200, 195, 190),
+                    (220, 215, 210), (180, 175, 170)],
+        "octaves": 4, "contrast": 1.5,
+    },
+    "tethys": {
+        "colors": [(210, 205, 200), (230, 225, 220), (190, 185, 180), (220, 215, 210),
+                    (240, 235, 230), (200, 195, 190)],
+        "octaves": 4, "contrast": 1.6,
+    },
 }
+
+
+def _auto_preset(body_key):
+    """无专用预设时，基于哈希生成确定性配色和参数，每颗卫星外观唯一。"""
+    import hashlib
+    h = int(hashlib.md5(body_key.encode()).hexdigest()[:8], 16)
+    np.random.seed(h)
+    # 生成 5-6 个颜色
+    n_colors = 5 + (h % 2)
+    base_h = np.random.randint(0, 360)
+    base_s = np.random.randint(20, 90)
+    base_v = np.random.randint(40, 200)
+    colors = []
+    for i in range(n_colors):
+        dh = np.random.randint(-25, 25)
+        ds = np.random.randint(-20, 20)
+        dv = np.random.randint(-25, 25)
+        hsv = (base_h + dh) % 360, min(255, max(30, base_s + ds)), min(255, max(30, base_v + dv))
+        # HSV→RGB 简化版
+        import colorsys
+        r, g, b = colorsys.hsv_to_rgb(hsv[0] / 360, hsv[1] / 255, hsv[2] / 255)
+        colors.append((int(r * 255), int(g * 255), int(b * 255)))
+    octaves = 3 + (h % 3)
+    contrast = 1.0 + (h % 100) / 100.0
+    return {"colors": colors, "octaves": octaves, "contrast": contrast}
 
 
 def generate_moon_texture(body_key, width=256, height=128):
     """
     为指定卫星生成等角矩形程序化纹理。
+    有专属预设（MOON_TEXTURE_PRESETS）则用专属；否则自动生成。
     返回 (H, W, 4) RGBA numpy 数组，可直接送入 texture_mapper。
     """
     import sys
     preset = MOON_TEXTURE_PRESETS.get(body_key)
     if preset is None:
-        return None
+        # auto-generate deterministic preset based on name hash
+        preset = _auto_preset(body_key)
     
     noise = _fbm_noise(width, height, seed=hash(body_key) % 2**31,
                         octaves=preset["octaves"], gain=0.55)
     
-    # 陨石坑叠加（欧罗巴和恩克拉多斯除了冰裂缝外也有小陨石坑）
+    # 陨石坑叠加
     if body_key in ("ganymede", "callisto"):
         noise = make_crater_noise(noise, crater_count=40 if body_key == "callisto" else 25,
                                   min_r=2, max_r=10)

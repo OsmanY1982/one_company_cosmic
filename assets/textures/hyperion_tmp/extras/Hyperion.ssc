@@ -1,0 +1,11 @@
+Modify "Hyperion" "Sol/Saturn"
+{
+	Texture "JVV_Hyperion.png"
+      
+	
+}
+AltSurface "limit of knowledge" "Sol/Saturn/Hyperion"
+{
+	Texture "JVV_HyperionLOK.png"
+	
+}

@@ -24,10 +24,10 @@ except ImportError:
 from pathlib import Path
 from typing import Callable
 
-from opcclaw.hermes_constants import get_hermes_home
+from iqra.hermes_constants import get_hermes_home
 
 
-# ── 内联替代 _file_mtime_key，避免拉入 opcclaw.tools.environments.base 的重量级依赖链 ──
+# ── 内联替代 _file_mtime_key，避免拉入 iqra.tools.environments.base 的重量级依赖链 ──
 def _file_mtime_key(host_path: str) -> tuple[float, int] | None:
     """Return ``(mtime, size)`` for cache comparison, or ``None`` if unreadable."""
     try:
@@ -65,7 +65,7 @@ def iter_sync_files(container_base: str = "/root/.hermes") -> list[tuple[str, st
     """
     # Late import: credential_files imports agent modules that create
     # circular dependencies if loaded at file_sync module level.
-    from opcclaw.tools.credential_files import (
+    from iqra.tools.credential_files import (
         get_credential_file_mounts,
         iter_cache_files,
         iter_skills_files,
