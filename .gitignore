@@ -5,3 +5,8 @@ __pycache__/
 *.pyo
 data/*.db
 .DS_Store
+build/
+dist/
+*.dmg
+*.app
+*.spec.bak
