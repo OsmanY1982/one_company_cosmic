@@ -1,6 +1,6 @@
 # `core/cloud_pull.py`
 
-> 路径：`core/cloud_pull.py` | 行数：472
+> 路径：`core/cloud_pull.py` | 行数：465
 
 
 ---
@@ -98,7 +98,7 @@ CLOUD_TO_LOCAL = {
     },
 
     # ── 会员 ──
-    "member": {
+    "members": {
         "name":       "name",
         "phone":      "phone",
         "email":      "email",
@@ -115,27 +115,21 @@ CLOUD_TO_LOCAL = {
         "name":        "name",
         "category":    "category",
         "unit_price":  "price",        # 云端 unit_price → 本地 price
-        "cost":        "cost",
         "stock":       "stock",
-        "unit":        "unit",
         "status":      "status",
         "note":        "description",  # 云端 note → 本地 description
         "created_at":  "created_at",
-        "updated_at":  "updated_at",
     },
     "orders": {
         "order_no":     "order_no",
         "customer":     "customer_name",  # 云端 customer → 本地 customer_name
-        "customer_id":  "customer_id",
         "product":      "product_name",   # 云端 product → 本地 product_name
         "quantity":     "quantity",
         "unit_price":   "unit_price",
-        "amount":       "total_amount",   # 云端 amount → 本地 total_amount
+        "total_price":  "total_amount",   # 云端 total_price → 本地 total_amount
         "status":       "status",
-        "payment_method": "payment_method",
         "note":         "note",
         "created_at":   "created_at",
-        "updated_at":   "updated_at",
     },
     "customers": {
         "name":       "name",
@@ -191,7 +185,7 @@ CLOUD_TO_LOCAL = {
 
     # ── 分销 ──
     "distribution_links": {
-        "user_name":        "user_name",
+        # 云端无 user_name 列
         "user_id":          "user_id",
         "code":             "code",
         "url":              "url",
@@ -202,7 +196,7 @@ CLOUD_TO_LOCAL = {
         "created_at":       "created_at",
     },
     "commissions": {
-        "user_name":    "user_name",
+        # 云端无 user_name 列
         "user_id":     "user_id",
         "from_user_id":"from_user_id",
         "amount":      "amount",
@@ -212,8 +206,7 @@ CLOUD_TO_LOCAL = {
         "created_at":  "created_at",
     },
     "team_members": {
-        "user_name":          "user_name",
-        "parent_name":        "parent_name",
+        # 云端无 user_name/parent_name 列
         "user_id":            "user_id",
         "parent_id":          "parent_id",
         "username":           "username",
@@ -230,7 +223,7 @@ TABLE_META = {
     "users":               {"db": "users.db",             "table": "users"},
     "user_memberships":   {"db": "users.db",             "table": "user_memberships"},
     "activation_codes":    {"db": "activation_admin.db",  "table": "admin_codes"},
-    "member":             {"db": "member.db",           "table": "member"},
+    "members":             {"db": "member.db",           "table": "member"},
     "products":           {"db": "product.db",           "table": "products"},
     "orders":             {"db": "order.db",             "table": "orders"},
     "customers":          {"db": "customer.db",          "table": "customer"},
@@ -353,9 +346,9 @@ def pull_user_memberships():
 
 
 def pull_member():
-    """拉取云端 member → 本地 member.db（含锁保护）"""
+    """拉取云端 members → 本地 member.db（含锁保护）"""
     time.sleep(0.5)
-    result = _pull_simple("member")
+    result = _pull_simple("members")
     time.sleep(0.5)
     return result
 

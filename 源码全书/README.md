@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-21 13:39
-> 共 836 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-21 14:24
+> 共 838 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -1020,6 +1020,8 @@
 │   │   ├── admin_login_dialog.py
 │   │   ├── admin_login_window.py
 │   │   ├── auth_service.py
+│   │   ├── auth_service_membership.py
+│   │   ├── auth_service_sync.py
 │   │   ├── change_password_dialog.py
 │   │   ├── connect_window.py
 │   │   ├── login_window.py
@@ -1897,6 +1899,8 @@
 - [`modules/auth/admin_login_dialog.py`](./modules/auth/admin_login_dialog.py.md)
 - [`modules/auth/admin_login_window.py`](./modules/auth/admin_login_window.py.md)
 - [`modules/auth/auth_service.py`](./modules/auth/auth_service.py.md)
+- [`modules/auth/auth_service_membership.py`](./modules/auth/auth_service_membership.py.md)
+- [`modules/auth/auth_service_sync.py`](./modules/auth/auth_service_sync.py.md)
 - [`modules/auth/change_password_dialog.py`](./modules/auth/change_password_dialog.py.md)
 - [`modules/auth/connect_window.py`](./modules/auth/connect_window.py.md)
 - [`modules/auth/dao/user_dao.py`](./modules/auth/dao/user_dao.py.md)

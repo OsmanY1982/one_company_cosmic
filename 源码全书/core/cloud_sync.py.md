@@ -1,6 +1,6 @@
 # `core/cloud_sync.py`
 
-> 路径：`core/cloud_sync.py` | 行数：391
+> 路径：`core/cloud_sync.py` | 行数：384
 
 
 ---
@@ -51,34 +51,28 @@ LOCAL_TABLE_NAMES = {
 # 与 Flutter 端 _columnMappings 保持一致
 COLUMN_MAPPING = {
     "products": {
-        # 本地 product.db/products: price, cost, stock, unit, description
-        # 云端 products: unit_price, note
+        # 本地 product.db/products: name, category, price, description, stock, status, created_at
+        # 云端 products: name, category, unit_price, stock, status, note, created_at
         "name":        "name",
         "category":    "category",
         "price":       "unit_price",   # 本地 price → 云端 unit_price
-        "cost":        "cost",
         "stock":       "stock",
-        "unit":        "unit",
         "status":      "status",
         "description": "note",         # 本地 description → 云端 note
         "created_at":  "created_at",
-        "updated_at":  "updated_at",
     },
     "orders": {
-        # 本地 order.db/orders: customer_name, product_name, unit_price, total_amount
-        # 云端 orders: customer, product, amount, quantity, status
+        # 本地 order.db/orders: customer_name, product_name, unit_price, total_amount, quantity, status, note, created_at
+        # 云端 orders: customer, product, unit_price, total_price, quantity, status, note, created_at
         "order_no":      "order_no",
         "customer_name": "customer",     # 本地 customer_name → 云端 customer
-        "customer_id":   "customer_id",
         "product_name":  "product",      # 本地 product_name → 云端 product
         "quantity":      "quantity",
         "unit_price":    "unit_price",
-        "total_amount":  "amount",       # 本地 total_amount → 云端 amount
+        "total_amount":  "total_price",  # 本地 total_amount → 云端 total_price
         "status":        "status",
-        "payment_method":"payment_method",
         "note":          "note",
         "created_at":    "created_at",
-        "updated_at":    "updated_at",
     },
     "customers": {
         # 本地 customer.db/customer: name, company, phone, email, address, level, note
@@ -131,7 +125,7 @@ COLUMN_MAPPING = {
         "created_at":    "created_at",
     },
     "distribution_links": {
-        "user_name":        "user_name",
+        # 云端无 user_name 列，本地 user_name 不同步
         "user_id":          "user_id",
         "code":             "code",
         "url":              "url",
@@ -142,7 +136,7 @@ COLUMN_MAPPING = {
         "created_at":       "created_at",
     },
     "commissions": {
-        "user_name":   "user_name",
+        # 云端无 user_name 列，本地 user_name 不同步
         "user_id":    "user_id",
         "from_user_id":"from_user_id",
         "amount":     "amount",
@@ -152,8 +146,7 @@ COLUMN_MAPPING = {
         "created_at": "created_at",
     },
     "team_members": {
-        "user_name":          "user_name",
-        "parent_name":        "parent_name",
+        # 云端无 user_name/parent_name 列，本地这两个字段不同步
         "user_id":           "user_id",
         "parent_id":         "parent_id",
         "username":          "username",
