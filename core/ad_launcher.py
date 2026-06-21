@@ -17,7 +17,14 @@ def check_and_prompt_ad(parent_window=None):
     """
     检查授权状态，过期则自动弹窗询问是否观看广告延长时间。
     适合放在主窗口 showEvent 中调用。
+
+    管理员（admin/super_admin）不触发广告弹窗。
     """
+    # ── 角色检查：管理员跳过广告 ──
+    role = _get_window_role(parent_window)
+    if role in ("admin", "super_admin"):
+        return
+
     from services.license_service import LicenseService
     try:
         lic = LicenseService().check_license()
@@ -45,6 +52,40 @@ def check_and_prompt_ad(parent_window=None):
 
     if msg.clickedButton() == watch_btn:
         launch_ad(parent_window)
+
+
+def _get_window_role(parent_window) -> str:
+    """从父窗口获取当前用户角色，同时查 PermissionService 数据库做双重校验。"""
+    # 1. 从窗口对象直接获取 _role 属性
+    if parent_window is not None and hasattr(parent_window, "_role"):
+        win_role = parent_window._role
+        if win_role:
+            return win_role
+
+    # 2. 兜底：查询权限数据库中是否有 admin/super_admin 角色分配
+    try:
+        from services.permission_service import PermissionService
+        import sqlite3
+        db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                               "data", "permissions.db")
+        if os.path.exists(db_path):
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT r.code FROM user_roles ur
+                JOIN roles r ON ur.role_id = r.id
+                WHERE r.code IN ('admin', 'super_admin')
+                AND (ur.expires_at IS NULL OR ur.expires_at > datetime('now'))
+                LIMIT 1
+            """)
+            row = cursor.fetchone()
+            conn.close()
+            if row:
+                return row[0]
+    except Exception:
+        pass
+
+    return ""  # 无法确定角色，按普通用户处理
 
 
 def launch_ad(parent_window=None):

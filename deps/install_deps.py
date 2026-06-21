@@ -85,6 +85,13 @@ DEPENDENCY_GROUPS = {
         "packages": [
             "fsspec", "filelock", "tqdm", "packaging",
             "soupsieve", "flatbuffers", "hf_xet",
+            "matplotlib", "jinja2", "openpyxl",
+        ],
+    },
+    "notify": {
+        "desc": "系统通知",
+        "packages": [
+            "plyer",
         ],
     },
 }

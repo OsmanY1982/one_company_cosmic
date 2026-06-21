@@ -18,3 +18,19 @@
 [2026-06-19 12:29:04] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/wallet.db: 初始化 schema v1
 [2026-06-19 12:29:04] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 初始化 schema v1
 [2026-06-19 12:29:04] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/activation_admin.db: 初始化 schema v1
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 开始 v1→v2 迁移（修复 NOT NULL 约束）
+[2026-06-21 14:38:15] distribution_links.user_name: NOT NULL → DEFAULT '' 成功
+[2026-06-21 14:38:15] commissions.user_name: NOT NULL → DEFAULT '' 成功
+[2026-06-21 14:38:15] team_members.user_name: NOT NULL → DEFAULT '' 成功
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: v1→v2 迁移完成
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/order.db: 升级 schema v1 → v2
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/finance.db: 升级 schema v1 → v2
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/member.db: 升级 schema v1 → v2
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/product.db: 升级 schema v1 → v2
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/staff.db: 升级 schema v1 → v2
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/customer.db: 升级 schema v1 → v2
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/wallet.db: 升级 schema v1 → v2
+[2026-06-21 14:38:15] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/activation_admin.db: 升级 schema v1 → v2
+[2026-06-21 14:39:28] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 已是 v2，跳过迁移
+[2026-06-21 14:39:34] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 已是 v2，跳过迁移
+[2026-06-21 14:39:56] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 已是 v2，跳过迁移
