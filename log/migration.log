@@ -42,3 +42,7 @@
 [2026-06-22 22:14:25] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/staff.db: 升级 schema v1 → v2
 [2026-06-22 22:14:25] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/wallet.db: 升级 schema v1 → v2
 [2026-06-22 22:14:25] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/activation_admin.db: 升级 schema v1 → v2
+[2026-06-24 00:28:45] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 已是 v2，跳过迁移
+[2026-06-24 01:29:36] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 已是 v2，跳过迁移
+[2026-06-24 01:30:13] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 已是 v2，跳过迁移
+[2026-06-24 01:46:19] /Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/data/distribution.db: 已是 v2，跳过迁移
