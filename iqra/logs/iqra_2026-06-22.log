@@ -5,3 +5,1115 @@ Traceback (most recent call last):
   File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 195, in showEvent
     from core.ad_launcher import check_and_prompt_ad
 ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-22 22:13:17 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-22 22:13:17 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 197, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:32 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:33 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 468, in _on_hud_mouse_move
+    self._hovered_planet = self._planet_at_pos(event.pos())
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 460, in _planet_at_pos
+    pp = self._get_planet_pos(p)
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 449, in _get_planet_pos
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:34 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:13:35 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/dashboard/dashboard_window.py", line 490, in _paint_hud
+    cx = self._get_orbit_center()
+AttributeError: 'DashboardWindow' object has no attribute '_get_orbit_center'
+2026-06-22 22:14:00 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-22 22:14:00 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-22 22:14:31 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-22 22:14:31 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/intelligence_window.py", line 176, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-22 22:14:31 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 197, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-22 22:14:36 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-22 22:14:36 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-22 23:45:47 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-22 23:45:47 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 197, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-22 23:46:04 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
+2026-06-22 23:46:04 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/data_center/bi_window.py", line 105, in paintEvent
+    points.append(QPointF(x, y))
+NameError: name 'QPointF' is not defined
