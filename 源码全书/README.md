@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-21 14:24
-> 共 838 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-26 19:33
+> 共 830 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -64,7 +64,6 @@
 │   │   ├── white_dwarf.py
 │   │   └── wormhole.py
 │   ├── __init__.py
-│   ├── ad_launcher.py
 │   ├── agent.py
 │   ├── app_state.py
 │   ├── auth_service.py
@@ -114,11 +113,11 @@
 │   ├── voice.py
 │   └── workflow_engine.py
 ├── data/
-│   ├── ads/
-│   │   └── videos/
 │   ├── drafts/
 │   ├── enhanced/
 │   ├── metrics/
+│   ├── patches/
+│   │   └── backups/
 │   ├── sync/
 ├── iqra/
 │   ├── adapters/
@@ -997,7 +996,6 @@
 │   │   │   │   ├── __init__.py
 │   │   │   │   └── _base.py
 │   │   │   ├── __init__.py
-│   │   │   ├── ad_player.py
 │   │   │   ├── data.py
 │   │   │   ├── renderer.py
 │   │   │   └── window.py
@@ -1069,11 +1067,6 @@
 │   │   └── industry_window.py
 │   ├── intelligence/
 │   │   ├── _archived/
-│   │   ├── backup_p02/
-│   │   │   ├── agent_bridge.py
-│   │   │   ├── ai_chat_window.py
-│   │   │   ├── intelligence_window.py
-│   │   │   └── iqra_floating_planet.py
 │   │   ├── core/
 │   │   │   ├── __init__.py
 │   │   │   └── llm_backend.py
@@ -1083,7 +1076,6 @@
 │   │   ├── enhanced/
 │   │   │   ├── __init__.py
 │   │   │   └── enhanced_tools.py
-│   │   ├── temp_backup/
 │   │   ├── __init__.py
 │   │   ├── _ai_shared.py
 │   │   ├── _ai_widgets.py
@@ -1224,12 +1216,10 @@
 │   ├── tools/
 │   ├── workflow/
 │   │   └── workflow_window.py
-│   ├── __init__.py
-│   └── ad_player.py
+│   └── __init__.py
 ├── rules_project/
 ├── services/
 │   ├── __init__.py
-│   ├── ad_service.py
 │   ├── ai_chatbot_service.py
 │   ├── audit_service.py
 │   ├── backup_service.py
@@ -1280,8 +1270,6 @@
 │   │   └── file_sync.py
 │   ├── __init__.py
 │   └── skills_sync.py
-├── ~/
-│   └── Desktop/
 ├── gen_book.py
 ├── main.py
 ├── planet_daemon.py
@@ -1300,7 +1288,6 @@
 - [`config/__init__.py`](./config/__init__.py.md)
 - [`config/supabase_config.py`](./config/supabase_config.py.md)
 - [`core/__init__.py`](./core/__init__.py.md)
-- [`core/ad_launcher.py`](./core/ad_launcher.py.md)
 - [`core/agent.py`](./core/agent.py.md)
 - [`core/app_state.py`](./core/app_state.py.md)
 - [`core/auth_service.py`](./core/auth_service.py.md)
@@ -1840,7 +1827,6 @@
 - [`modules/account/activation_stats.py`](./modules/account/activation_stats.py.md)
 - [`modules/account/activation_stats_service.py`](./modules/account/activation_stats_service.py.md)
 - [`modules/account/license_local.py`](./modules/account/license_local.py.md)
-- [`modules/ad_player.py`](./modules/ad_player.py.md)
 - [`modules/admin/__init__.py`](./modules/admin/__init__.py.md)
 - [`modules/admin/admin_activation.py`](./modules/admin/admin_activation.py.md)
 - [`modules/admin/admin_backup.py`](./modules/admin/admin_backup.py.md)
@@ -1861,7 +1847,6 @@
 - [`modules/astronomy/__init__.py`](./modules/astronomy/__init__.py.md)
 - [`modules/astronomy/hub.py`](./modules/astronomy/hub.py.md)
 - [`modules/astronomy/solar_system/__init__.py`](./modules/astronomy/solar_system/__init__.py.md)
-- [`modules/astronomy/solar_system/ad_player.py`](./modules/astronomy/solar_system/ad_player.py.md)
 - [`modules/astronomy/solar_system/data.py`](./modules/astronomy/solar_system/data.py.md)
 - [`modules/astronomy/solar_system/planets/__init__.py`](./modules/astronomy/solar_system/planets/__init__.py.md)
 - [`modules/astronomy/solar_system/planets/_base.py`](./modules/astronomy/solar_system/planets/_base.py.md)
@@ -1975,10 +1960,6 @@
 - [`modules/intelligence/analysis_tools.py`](./modules/intelligence/analysis_tools.py.md)
 - [`modules/intelligence/anomaly_detector.py`](./modules/intelligence/anomaly_detector.py.md)
 - [`modules/intelligence/auto_task_executor.py`](./modules/intelligence/auto_task_executor.py.md)
-- [`modules/intelligence/backup_p02/agent_bridge.py`](./modules/intelligence/backup_p02/agent_bridge.py.md)
-- [`modules/intelligence/backup_p02/ai_chat_window.py`](./modules/intelligence/backup_p02/ai_chat_window.py.md)
-- [`modules/intelligence/backup_p02/intelligence_window.py`](./modules/intelligence/backup_p02/intelligence_window.py.md)
-- [`modules/intelligence/backup_p02/iqra_floating_planet.py`](./modules/intelligence/backup_p02/iqra_floating_planet.py.md)
 - [`modules/intelligence/batch_text.py`](./modules/intelligence/batch_text.py.md)
 - [`modules/intelligence/business_ai_assistant.py`](./modules/intelligence/business_ai_assistant.py.md)
 - [`modules/intelligence/business_tools.py`](./modules/intelligence/business_tools.py.md)
@@ -2082,7 +2063,6 @@
 - [`planet_daemon.py`](./planet_daemon.py.md)
 - [`rollback_control.py`](./rollback_control.py.md)
 - [`services/__init__.py`](./services/__init__.py.md)
-- [`services/ad_service.py`](./services/ad_service.py.md)
 - [`services/ai_chatbot_service.py`](./services/ai_chatbot_service.py.md)
 - [`services/audit_service.py`](./services/audit_service.py.md)
 - [`services/backup_service.py`](./services/backup_service.py.md)

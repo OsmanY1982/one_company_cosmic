@@ -1,6 +1,6 @@
 # `modules/intelligence/intelligence_window.py`
 
-> 路径：`modules/intelligence/intelligence_window.py` | 行数：238
+> 路径：`modules/intelligence/intelligence_window.py` | 行数：247
 
 
 ---
@@ -14,10 +14,11 @@
 """
 import os, math
 from PyQt5.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QLabel, QFrame,
+    QMainWindow, QWidget, QVBoxLayout, QLabel, QFrame, QMessageBox,
 )
 from PyQt5.QtCore import Qt, QTimer, QPointF
 from PyQt5.QtGui import QPainter
+import logging
 
 from core.planet_painter import (
     PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line,
@@ -190,34 +191,42 @@ class IntelligenceWindow(QMainWindow):
             self._hud.setGeometry(0, 0, self.width(), self.height())
 
     def _on_planet_clicked(self, planet_id):
-        if planet_id == "ai_assistant":
-            from modules.intelligence.ai_assistant_window import AIAssistantWindow
-            dlg = AIAssistantWindow(self, iqra_engine=self._iqra_engine)
-            dlg.show()
-        elif planet_id == "tools":
-            from modules.intelligence.tools_window import ToolsWindow
-            self._tools_win = ToolsWindow(self)
-            self._tools_win.show()
-        elif planet_id == "system_mgmt":
-            from modules.system.system_hub_window import SystemHubWindow
-            dlg = SystemHubWindow(self, role=self._role)
-            dlg.show()
-        elif planet_id == "astronomy_hub":
-            from modules.astronomy.hub import AstronomyHubWindow
-            dlg = AstronomyHubWindow(self)
-            dlg.show()
-        elif planet_id == "account":
-            from .account_window import AccountWindow
-            self._account_win = AccountWindow(self, role=self._role, iqra_engine=self._iqra_engine)
-            self._account_win.show()
-        elif planet_id == "business":
-            from modules.business.business_window import BusinessWindow
-            self._business_win = BusinessWindow(self)
-            self._business_win.show()
-        elif planet_id == "data_center":
-            from modules.data_center.data_window import DataWindow
-            self._data_win = DataWindow(self)
-            self._data_win.show()
+        try:
+            if planet_id == "ai_assistant":
+                from modules.intelligence.ai_assistant_window import AIAssistantWindow
+                dlg = AIAssistantWindow(self, iqra_engine=self._iqra_engine)
+                dlg.show()
+            elif planet_id == "tools":
+                from modules.intelligence.tools_window import ToolsWindow
+                self._tools_win = ToolsWindow(self)
+                self._tools_win.show()
+            elif planet_id == "system_mgmt":
+                from modules.system.system_hub_window import SystemHubWindow
+                dlg = SystemHubWindow(self, role=self._role)
+                dlg.show()
+            elif planet_id == "astronomy_hub":
+                from modules.astronomy.hub import AstronomyHubWindow
+                dlg = AstronomyHubWindow(self)
+                dlg.show()
+            elif planet_id == "account":
+                from .account_window import AccountWindow
+                self._account_win = AccountWindow(self, role=self._role, iqra_engine=self._iqra_engine)
+                self._account_win.show()
+            elif planet_id == "business":
+                from modules.business.business_window import BusinessWindow
+                self._business_win = BusinessWindow(self)
+                self._business_win.show()
+            elif planet_id == "data_center":
+                from modules.data_center.data_window import DataWindow
+                self._data_win = DataWindow(self)
+                self._data_win.show()
+        except Exception as e:
+            logging.getLogger(__name__).exception(
+                f"模块加载失败 planet_id={planet_id}: {e}"
+            )
+            QMessageBox.warning(
+                self, "加载失败", "模块加载失败，请重新安装应用"
+            )
 
 
     @property

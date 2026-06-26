@@ -1,6 +1,6 @@
 # `modules/astronomy/solar_system/window.py`
 
-> 路径：`modules/astronomy/solar_system/window.py` | 行数：835
+> 路径：`modules/astronomy/solar_system/window.py` | 行数：836
 
 
 ---
@@ -827,7 +827,8 @@ class SolarSystemWindow(QWidget):
         self._catalog_win.show()
         self.hide()
 
-    # ── 窗口调整 ──
+    def resizeEvent(self, event):
+        # ── 窗口调整 ──
         super().resizeEvent(event)
         w, h = self.width(), self.height()
         if hasattr(self, '_bg'):

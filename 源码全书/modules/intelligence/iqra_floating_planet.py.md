@@ -1,6 +1,6 @@
 # `modules/intelligence/iqra_floating_planet.py`
 
-> 路径：`modules/intelligence/iqra_floating_planet.py` | 行数：556
+> 路径：`modules/intelligence/iqra_floating_planet.py` | 行数：917
 
 
 ---
@@ -17,7 +17,9 @@ import subprocess
 import threading
 from datetime import datetime
 from PyQt5.QtWidgets import (
-    QWidget, QApplication, QMessageBox,
+    QWidget, QApplication, QMessageBox, QDialog, QVBoxLayout,
+    QHBoxLayout, QPushButton, QLineEdit, QTextEdit, QListWidget,
+    QFileDialog, QLabel,
 )
 from PyQt5.QtCore import (
     Qt, QTimer, QPoint, QRect, QSize, QPointF, QRectF,
@@ -293,19 +295,6 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
 
     # ── 第三层子模块 → 第二层大类回退映射 ──
     _SUB_TO_CATEGORY = {
-        # AI 助手子模块 → AIAssistantWindow
-        "iqra_chat": "ai_assistant",
-        "super_intelligence": "ai_assistant",
-        "enhanced_chat": "ai_assistant",
-        "knowledge_base": "ai_assistant",
-        "system_monitor": "ai_assistant",
-        "quick_actions": "ai_assistant",
-        "anomaly_detector": "ai_assistant",
-        "recommendation_engine": "ai_assistant",
-        "data_visualization": "ai_assistant",
-        "smart_workflow": "ai_assistant",
-        "business_ai": "ai_assistant",
-        "voice_interface": "ai_assistant",
         # 工具箱 → calculator 回退到 ToolsWindow；其余有独立窗口
         "calculator": "tools",
         # 系统管理子模块 → SystemHubWindow
@@ -376,6 +365,274 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
             elif module_id == "wallet":
                 from modules.personnel.wallet_window import WalletWindow
                 win = WalletWindow()
+
+            # ── AI 助手子模块精确路由 ──
+            elif module_id == "iqra_chat":
+                self._open_chat()
+                return
+            elif module_id == "super_intelligence":
+                from ._ai_shared import SUPER_INTELLIGENCE_AVAILABLE
+                if SUPER_INTELLIGENCE_AVAILABLE:
+                    from ._ai_widgets import SuperIntelligenceWidget
+                    dlg = QDialog()
+                    dlg.setWindowTitle("超级智能")
+                    dlg.setMinimumSize(750, 550)
+                    layout = QVBoxLayout(dlg)
+                    layout.addWidget(SuperIntelligenceWidget(dlg))
+                    self._open_windows[module_id] = dlg
+                    dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                    dlg.show()
+                else:
+                    QMessageBox.information(self, "提示", "超级智能模块未安装，请检查依赖")
+                return
+            elif module_id == "enhanced_chat":
+                try:
+                    from modules.intelligence.enhanced_chat import EnhancedChatWidget
+                    dlg = QDialog()
+                    dlg.setWindowTitle("增强对话")
+                    dlg.setMinimumSize(800, 600)
+                    layout = QVBoxLayout(dlg)
+                    layout.addWidget(EnhancedChatWidget(dlg))
+                    self._open_windows[module_id] = dlg
+                    dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                    dlg.show()
+                except ImportError as e:
+                    QMessageBox.warning(self, "错误", f"增强对话模块加载失败: {e}")
+                return
+            elif module_id == "knowledge_base":
+                try:
+                    from modules.intelligence.knowledge_base import KnowledgeBase
+                    kb = KnowledgeBase()
+                    dlg = QDialog()
+                    dlg.setWindowTitle("知识库")
+                    dlg.setMinimumSize(700, 500)
+                    dl = QVBoxLayout(dlg)
+
+                    search_layout = QHBoxLayout()
+                    search_input = QLineEdit()
+                    search_input.setPlaceholderText("输入查询关键词...")
+                    search_btn = QPushButton("搜索")
+                    search_layout.addWidget(search_input)
+                    search_layout.addWidget(search_btn)
+                    dl.addLayout(search_layout)
+
+                    result_area = QTextEdit()
+                    result_area.setReadOnly(True)
+                    result_area.setStyleSheet("font-family: monospace; font-size: 11px;")
+                    dl.addWidget(result_area)
+
+                    dl.addWidget(QLabel("已导入文档:"))
+                    doc_list = QListWidget()
+                    dl.addWidget(doc_list)
+
+                    btn_layout = QHBoxLayout()
+                    import_btn = QPushButton("导入文档")
+                    import_text_btn = QPushButton("导入文本")
+                    refresh_btn = QPushButton("刷新列表")
+                    btn_layout.addWidget(import_btn)
+                    btn_layout.addWidget(import_text_btn)
+                    btn_layout.addWidget(refresh_btn)
+                    btn_layout.addStretch()
+                    dl.addLayout(btn_layout)
+
+                    def refresh_docs():
+                        doc_list.clear()
+                        docs = kb.list_documents()
+                        for d in docs:
+                            title = d.get("title", d.get("id", "?"))
+                            doc_list.addItem(title)
+
+                    def do_search():
+                        q = search_input.text().strip()
+                        if not q:
+                            return
+                        res = kb.query(q, top_k=10)
+                        result_area.clear()
+                        if not res.get("success"):
+                            result_area.append(f"查询失败: {res.get('error', '未知错误')}")
+                            return
+                        sources = res.get("sources", [])
+                        if not sources:
+                            result_area.append("无匹配结果。")
+                            return
+                        result_area.append(f"答案: {res.get('answer', 'N/A')}\n{'-'*50}")
+                        for s in sources:
+                            result_area.append(
+                                f"【{s.get('title', '?')}】"
+                                f"(相似度: {s.get('score', 0):.2f})\n"
+                                f"{s.get('chunk', '')}\n{'-'*50}"
+                            )
+
+                    def import_doc():
+                        from PyQt5.QtWidgets import QFileDialog as QFD
+                        fp, _ = QFD.getOpenFileName(dlg, "选择文档", "", "文本文件 (*.txt *.md *.json *.csv)")
+                        if fp:
+                            outcome = kb.import_document(fp, title="")
+                            result_area.append(f"导入: {outcome}")
+                            refresh_docs()
+
+                    def import_txt():
+                        from PyQt5.QtWidgets import QFileDialog as QFD
+                        fp, _ = QFD.getOpenFileName(dlg, "选择文件", "", "所有文件 (*)")
+                        if fp:
+                            try:
+                                with open(fp, 'r', encoding='utf-8') as f:
+                                    content = f.read()
+                                outcome = kb.import_text(content, title=os.path.basename(fp))
+                                result_area.append(f"导入文本: {outcome}")
+                                refresh_docs()
+                            except Exception as ex:
+                                result_area.append(f"导入失败: {ex}")
+
+                    search_btn.clicked.connect(do_search)
+                    import_btn.clicked.connect(import_doc)
+                    import_text_btn.clicked.connect(import_txt)
+                    refresh_btn.clicked.connect(refresh_docs)
+                    refresh_docs()
+
+                    self._open_windows[module_id] = dlg
+                    dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                    dlg.show()
+                except ImportError as e:
+                    QMessageBox.warning(self, "错误", f"知识库模块加载失败: {e}")
+                return
+            elif module_id == "system_monitor":
+                from ._shell_dialogs import SystemMonitorDialog
+                dlg = SystemMonitorDialog()
+                self._open_windows[module_id] = dlg
+                dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                dlg.show()
+                return
+            elif module_id == "quick_actions":
+                try:
+                    from modules.intelligence.quick_actions import QuickActionsWidget
+                    dlg = QDialog()
+                    dlg.setWindowTitle("快捷操作")
+                    dlg.setMinimumSize(700, 550)
+                    layout = QVBoxLayout(dlg)
+                    layout.addWidget(QuickActionsWidget(dlg))
+                    self._open_windows[module_id] = dlg
+                    dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                    dlg.show()
+                except ImportError as e:
+                    QMessageBox.warning(self, "错误", f"快捷操作模块加载失败: {e}")
+                return
+            elif module_id == "anomaly_detector":
+                from ._ai_widgets import AnomalyDetectorWidget
+                dlg = QDialog()
+                dlg.setWindowTitle("异常检测")
+                dlg.setMinimumSize(650, 500)
+                layout = QVBoxLayout(dlg)
+                layout.addWidget(AnomalyDetectorWidget(dlg))
+                self._open_windows[module_id] = dlg
+                dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                dlg.show()
+                return
+            elif module_id == "recommendation_engine":
+                from ._ai_widgets import RecommendationEngineWidget
+                dlg = QDialog()
+                dlg.setWindowTitle("推荐引擎")
+                dlg.setMinimumSize(650, 500)
+                layout = QVBoxLayout(dlg)
+                layout.addWidget(RecommendationEngineWidget(dlg))
+                self._open_windows[module_id] = dlg
+                dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                dlg.show()
+                return
+            elif module_id == "data_visualization":
+                from ._ai_widgets import DataVisualizationWidget
+                dlg = QDialog()
+                dlg.setWindowTitle("数据可视化")
+                dlg.setMinimumSize(650, 500)
+                layout = QVBoxLayout(dlg)
+                layout.addWidget(DataVisualizationWidget(dlg))
+                self._open_windows[module_id] = dlg
+                dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                dlg.show()
+                return
+            elif module_id == "smart_workflow":
+                from ._shell_dialogs import SmartWorkflowDialog
+                dlg = SmartWorkflowDialog()
+                self._open_windows[module_id] = dlg
+                dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                dlg.show()
+                return
+            elif module_id == "business_ai":
+                from ._shell_dialogs import BusinessAIDialog
+                dlg = BusinessAIDialog()
+                self._open_windows[module_id] = dlg
+                dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                dlg.show()
+                return
+            elif module_id == "voice_interface":
+                try:
+                    from modules.intelligence.voice_interface import VoiceWidget
+                    dlg = VoiceWidget()
+                    self._open_windows[module_id] = dlg
+                    dlg.destroyed.connect(lambda mid=module_id: self._open_windows.pop(mid, None))
+                    dlg.show()
+                except ImportError as e:
+                    QMessageBox.warning(self, "错误", f"语音接口模块加载失败: {e}")
+                return
+
+            # ── 工具箱 计算器 ──
+            elif module_id == "calculator":
+                from modules.intelligence.tools_window import CalcDialog
+                dlg = CalcDialog()
+                dlg.exec_()
+                return
+
+            # ── 数据中心子模块 ──
+            elif module_id == "dashboard":
+                from modules.dashboard.dashboard_window import DashboardWindow
+                win = DashboardWindow()
+            elif module_id == "report":
+                from modules.data_center.report_window import ReportWindow
+                win = ReportWindow()
+            elif module_id == "bi":
+                from modules.data_center.bi_window import BIWindow
+                win = BIWindow()
+            elif module_id == "chart":
+                from modules.data_center.chart_window import ChartWindow
+                win = ChartWindow()
+
+            # ── 系统管理子模块 ──
+            elif module_id == "system_settings":
+                from modules.system.base_info_window import BaseInfoWindow
+                dlg = BaseInfoWindow()
+                dlg.exec_()
+                return
+            elif module_id == "activation":
+                from modules.account.account_activation import AccountActivationWindow
+                dlg = AccountActivationWindow()
+                dlg.exec_()
+                return
+            elif module_id == "cloud_sync":
+                from modules.system.cloud_window import CloudWindow
+                dlg = CloudWindow()
+                dlg.exec_()
+                return
+            elif module_id == "cloud_server":
+                from modules.system.cloud_server_window import CloudServerWindow
+                win = CloudServerWindow()
+            elif module_id == "system_logs":
+                from modules.system.logs_window import LogsWindow
+                dlg = LogsWindow()
+                dlg.exec_()
+                return
+            elif module_id == "admin":
+                from modules.admin.admin_window import AdminWindow
+                win = AdminWindow()
+
+            # ── 账号与安全子模块 ──
+            elif module_id == "backup":
+                self._do_backup()
+                return
+            elif module_id == "update":
+                from modules.account.account_update import AccountUpdateDialog
+                dlg = AccountUpdateDialog()
+                dlg.exec_()
+                return
 
             # ── 回退：子模块 → 大类窗口 ──
             elif module_id in self._SUB_TO_CATEGORY:
@@ -449,6 +706,110 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
             parent=None,
         )
         dlg.exec_()
+
+    def _do_backup(self):
+        """数据备份 — 从悬浮球直接触发"""
+        import io, zipfile, struct, hashlib
+        from PyQt5.QtWidgets import QInputDialog, QLineEdit
+        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        username = self._membership_info.get("username", "admin")
+
+        # ── 验证 / 设置备份密码 ──
+        config_dir = os.path.join(root, "config")
+        config_file = os.path.join(config_dir, f"backup_{username}.json")
+        stored_hash = ""
+        if os.path.exists(config_file):
+            try:
+                import json
+                with open(config_file, "r") as f:
+                    stored_hash = json.load(f).get("password_hash", "")
+            except Exception:
+                pass
+
+        pwd = None
+        if not stored_hash:
+            pwd, ok = QInputDialog.getText(
+                self, "设置备份密码", "首次使用，请设置备份主密码（至少4位）：",
+                QLineEdit.Password)
+            if not ok or len(pwd) < 4:
+                if ok:
+                    QMessageBox.warning(self, "错误", "密码至少4位")
+                return
+            confirm, ok = QInputDialog.getText(
+                self, "确认", "请再次输入备份密码确认：",
+                QLineEdit.Password)
+            if not ok or pwd != confirm:
+                if ok:
+                    QMessageBox.warning(self, "错误", "两次密码不一致")
+                return
+            os.makedirs(config_dir, exist_ok=True)
+            import json
+            with open(config_file, "w") as f:
+                json.dump({
+                    "password_hash": hashlib.sha256(pwd.encode()).hexdigest(),
+                    "created_at": datetime.now().isoformat()
+                }, f)
+        else:
+            for _ in range(3):
+                pwd, ok = QInputDialog.getText(
+                    self, "验证备份密码", "请输入备份主密码：",
+                    QLineEdit.Password)
+                if not ok:
+                    return
+                if hashlib.sha256(pwd.encode()).hexdigest() == stored_hash:
+                    break
+                QMessageBox.warning(self, "错误", "备份密码错误！")
+            else:
+                return
+
+        # ── 选择保存路径 ──
+        default_dir = os.path.join(root, "backup")
+        os.makedirs(default_dir, exist_ok=True)
+        default_name = f"user_{username}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.usrbak"
+        path, _ = QFileDialog.getSaveFileName(
+            self, "备份数据",
+            os.path.join(default_dir, default_name),
+            "加密备份 (*.usrbak)"
+        )
+        if not path:
+            return
+
+        # ── 打包加密 ──
+        try:
+            user_data_files = [
+                "data/member.db", "data/customer.db",
+                "data/order.db", "data/product.db",
+                "data/finance.db", "data/wallet.db",
+                "data/distribution.db", "data/vault.enc",
+                "data/notes/",
+            ]
+            buf = io.BytesIO()
+            with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+                for f in user_data_files:
+                    full_path = os.path.join(root, f)
+                    if os.path.isfile(full_path):
+                        zf.write(full_path, f)
+                    elif os.path.isdir(full_path):
+                        for dr, _, files in os.walk(full_path):
+                            for file in files:
+                                fp = os.path.join(dr, file)
+                                arcname = os.path.relpath(fp, root)
+                                zf.write(fp, arcname)
+            zip_data = buf.getvalue()
+
+            MAGIC = b"USRBAK_V1\x00"
+            salt = os.urandom(16)
+            key = hashlib.pbkdf2_hmac("sha256", pwd.encode(), salt, 100000)
+            enc = bytes([b ^ key[i % len(key)] for i, b in enumerate(zip_data)])
+            data_len = struct.pack(">I", len(enc))
+
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, "wb") as f:
+                f.write(MAGIC + salt + data_len + enc)
+
+            QMessageBox.information(self, "备份成功", f"数据已加密备份至：\n{path}")
+        except Exception as e:
+            QMessageBox.critical(self, "备份失败", f"备份出错：{e}")
 
     def _switch_to_shape(self, category: str, key: str):
         if category == "planet":
