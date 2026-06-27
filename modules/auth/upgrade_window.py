@@ -9,9 +9,10 @@ import csv
 import hashlib
 import subprocess
 import uuid
+from typing import Any
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QGroupBox, QWidget,
-    QMessageBox, QLineEdit, QApplication
+    QMessageBox, QLineEdit, QApplication, QSizePolicy, QScrollArea
 )
 from PyQt5.QtCore import Qt, QTimer, QDateTime
 from PyQt5.QtGui import QFont, QPixmap, QImage
@@ -219,6 +220,43 @@ def _is_code_used(code):
 # --------------------------
 # 核心窗口类（使用固定机器码）
 # --------------------------
+class QRLabel(QLabel):
+    """支持动态缩放的 QLabel，用于二维码显示"""
+
+    def __init__(self, parent: Any = None) -> None:
+        super().__init__(parent)
+        self.setAlignment(Qt.AlignCenter)
+        self.setStyleSheet("border:1px solid #eee; border-radius:8px;")
+        self._qimage: QImage | None = None
+        self._pixmap: QPixmap | None = None
+
+    def set_qimage(self, image: QImage) -> None:
+        self._qimage = image
+        self._update_pixmap()
+
+    def set_qpixmap(self, pixmap: QPixmap) -> None:
+        self._pixmap = pixmap
+        self._qimage = None
+        self._update_pixmap()
+
+    def _update_pixmap(self) -> None:
+        if self.width() <= 0 or self.height() <= 0:
+            return
+        if self._qimage:
+            scaled = self._qimage.scaled(
+                self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation
+            )
+            self.setPixmap(QPixmap.fromImage(scaled))
+        elif self._pixmap:
+            scaled = self._pixmap.scaled(
+                self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation
+            )
+            self.setPixmap(scaled)
+
+    def resizeEvent(self, event: Any) -> None:
+        super().resizeEvent(event)
+        self._update_pixmap()
+
 class UpgradeWindow(QDialog):
     def __init__(self, username="123", parent=None, role="user", membership="trial", expire_at=None):
         super().__init__(parent)
@@ -234,7 +272,7 @@ class UpgradeWindow(QDialog):
             self.machine_code = get_fixed_machine_code()
         self.setWindowTitle("升级会员")
         self.setModal(True)
-        self.setMinimumSize(960, 700)
+        self.setMinimumSize(960, 840)
         self.setStyleSheet("""
             QDialog { background-color: #f0f2f5; }
             QLabel { background: transparent; }
@@ -242,7 +280,7 @@ class UpgradeWindow(QDialog):
                 border: 1px solid #e2e8f0; border-radius: 10px;
                 font-family: PingFang SC, Arial; font-size: 14px; font-weight: bold;
                 background-color: white; margin-top: 10px;
-                padding: 15px;
+                padding: 8px;
             }
             QGroupBox::title { subcontrol-origin: margin; left: 15px; padding: 0 5px; }
             QPushButton {
@@ -263,8 +301,13 @@ class UpgradeWindow(QDialog):
         self._build_ui()
 
     def _build_ui(self):
-        """构建UI界面"""
-        main_layout = QVBoxLayout(self)
+        """构建UI界面（包裹 QScrollArea 适配低分辨率屏幕）"""
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QScrollArea.NoFrame)
+        content = QWidget()
+
+        main_layout = QVBoxLayout(content)
         main_layout.setContentsMargins(40, 30, 40, 30)
         main_layout.setSpacing(20)
 
@@ -309,10 +352,12 @@ class UpgradeWindow(QDialog):
         package_layout.setSpacing(30)
         
         pro_group = QGroupBox("⭐ VIP会员 — ¥49 / 年")
+        pro_group.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         pro_layout = QVBoxLayout(pro_group)
-        pro_layout.setSpacing(15)
+        pro_layout.setContentsMargins(3, 3, 3, 3)
+        pro_layout.setSpacing(8)
         pro_qr = QHBoxLayout()
-        pro_qr.setSpacing(20)
+        pro_qr.setSpacing(10)
         pro_qr.addWidget(self._create_qr(QR_WECHAT_49, "微信支付（49元）"))
         pro_qr.addWidget(self._create_qr(QR_ALIPAY_49, "支付宝支付（49元）"))
         pro_layout.addLayout(pro_qr)
@@ -320,10 +365,12 @@ class UpgradeWindow(QDialog):
         package_layout.addWidget(pro_group)
 
         vip_group = QGroupBox("👑 钻石会员 — ¥99 / 终身")
+        vip_group.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         vip_layout = QVBoxLayout(vip_group)
-        vip_layout.setSpacing(15)
+        vip_layout.setContentsMargins(1, 1, 1, 1)
+        vip_layout.setSpacing(4)
         vip_qr = QHBoxLayout()
-        vip_qr.setSpacing(20)
+        vip_qr.setSpacing(10)
         vip_qr.addWidget(self._create_qr(QR_WECHAT_99, "微信支付（99元）"))
         vip_qr.addWidget(self._create_qr(QR_ALIPAY_99, "支付宝支付（99元）"))
         vip_layout.addLayout(vip_qr)
@@ -403,12 +450,19 @@ class UpgradeWindow(QDialog):
         close_btn.clicked.connect(self.close)
         main_layout.addWidget(close_btn, alignment=Qt.AlignCenter)
 
-    def _create_qr(self, qr_path, title):
-        """收款码加载"""
+        scroll.setWidget(content)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.addWidget(scroll)
+
+    def _create_qr(self, qr_path: str, title: str) -> Any:
+        """收款码加载 — 弹性布局，动态缩放"""
         w = QWidget()
-        w.setFixedSize(180, 210)
+        w.setMinimumSize(160, 220)
+        w.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         l = QVBoxLayout(w)
-        l.setSpacing(10)
+        l.setContentsMargins(5, 5, 5, 5)
+        l.setSpacing(6)
         l.setAlignment(Qt.AlignCenter)
         
         title_lbl = QLabel(title)
@@ -416,10 +470,7 @@ class UpgradeWindow(QDialog):
         title_lbl.setAlignment(Qt.AlignCenter)
         l.addWidget(title_lbl)
         
-        img_label = QLabel()
-        img_label.setFixedSize(170, 170)
-        img_label.setAlignment(Qt.AlignCenter)
-        img_label.setStyleSheet("border:1px solid #eee; border-radius:8px;")
+        img_label = QRLabel(w)
         
         # 调试信息
         print("\n===== 二维码加载调试 =====")
@@ -443,14 +494,7 @@ class UpgradeWindow(QDialog):
             if not image.loadFromData(img_data):
                 raise ValueError("图片格式不支持/解码失败")
             
-            scaled_image = image.scaled(
-                img_label.size(),
-                Qt.KeepAspectRatio,
-                Qt.SmoothTransformation
-            )
-            
-            pixmap = QPixmap.fromImage(scaled_image)
-            img_label.setPixmap(pixmap)
+            img_label.set_qimage(image)
             
         except FileNotFoundError:
             img_label.setText(f"❌ 收款码缺失\n{os.path.basename(qr_path)}\n请确认文件存在")
@@ -465,7 +509,7 @@ class UpgradeWindow(QDialog):
             img_label.setText(f"❌ 加载失败\n{str(e)[:10]}")
             img_label.setStyleSheet("color:#ff6b6b; font-size:10px; border:1px solid #eee; border-radius:8px;")
         
-        l.addWidget(img_label)
+        l.addWidget(img_label, stretch=1)
         return w
 
     def _copy_machine_code(self):

@@ -1,0 +1,33 @@
+2026-06-28 00:26:07 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-28 00:26:07 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/intelligence_window.py", line 176, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 00:26:07 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 197, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 00:28:40 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-28 00:28:40 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/intelligence_window.py", line 176, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 00:28:40 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 197, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 00:38:52 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-28 00:38:52 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/intelligence_window.py", line 176, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 00:38:52 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 197, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
