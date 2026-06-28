@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 语音朗读模块 — macOS TTS (say)
@@ -56,5 +60,5 @@ class VoiceReader:
                 try:
                     self._proc.kill()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
         self._state = "ready"

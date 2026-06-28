@@ -250,7 +250,7 @@ def install():
         if cleaned > 0:
             logger.info("日志清理完成: 已删除 %d 个过期文件", cleaned)
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 
 # ── 日志清理 ───────────────────────────────────────────────
@@ -274,7 +274,7 @@ def cleanup_old_logs(days: int = 14) -> int:
                 os.remove(fpath)
                 removed += 1
         except Exception:
-            pass
+            logger.exception("异常详情")
     
     if removed > 0:
         logger.info(f"已清理 {removed} 个过期日志文件 (>{days}天)")

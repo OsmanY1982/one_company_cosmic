@@ -1,12 +1,16 @@
 # `iqra/core/multi_model_chat_engine.py`
 
-> 路径：`iqra/core/multi_model_chat_engine.py` | 行数：239
+> 路径：`iqra/core/multi_model_chat_engine.py` | 行数：243
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 MultiModelChatEngine — 多模型 ChatEngine 适配层
@@ -104,7 +108,7 @@ class MultiModelChatEngine(QObject):
                 self._engine.on_tool_start.disconnect()
                 self._engine.on_tool_result.disconnect()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         self._engine = ChatEngine(
             backend=backend,

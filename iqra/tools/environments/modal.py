@@ -453,7 +453,7 @@ class ModalEnvironment(BaseEnvironment):
         try:
             self._worker.run_coroutine(self._sandbox.terminate.aio(), timeout=15)
         except Exception:
-            pass
+            logger.exception("异常详情")
         finally:
             self._worker.stop()
             self._sandbox = None

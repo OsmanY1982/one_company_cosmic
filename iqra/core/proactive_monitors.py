@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 proactive_monitors — 主动引擎监控器模块
@@ -305,7 +309,7 @@ if _WATCHDOG_AVAILABLE:
                 try:
                     self._observer.join(timeout=3)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
                 logger.info("FSEventMonitor: 已停止")
 
         def stop(self):
@@ -436,7 +440,7 @@ class ProjectHealthMonitor(BaseMonitor):
                         pycache_size += os.path.getsize(fp)
                         pycache_count += 1
                     except OSError:
-                        pass
+                        logger.exception("异常详情")
 
         if pycache_size > 50 * 1024 * 1024:  # 50MB
             events.append(ProactiveEvent(

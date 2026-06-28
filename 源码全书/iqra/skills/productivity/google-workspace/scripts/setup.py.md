@@ -1,12 +1,16 @@
 # `iqra/skills/productivity/google-workspace/scripts/setup.py`
 
-> 路径：`iqra/skills/productivity/google-workspace/scripts/setup.py` | 行数：454
+> 路径：`iqra/skills/productivity/google-workspace/scripts/setup.py` | 行数：458
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """Google Workspace OAuth2 setup for Hermes Agent.
 
@@ -109,7 +113,7 @@ def install_deps():
         print("Dependencies already installed.")
         return True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     print("Installing Google API dependencies...")
     try:

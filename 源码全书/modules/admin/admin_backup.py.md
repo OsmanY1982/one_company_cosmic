@@ -1,12 +1,16 @@
 # `modules/admin/admin_backup.py`
 
-> 路径：`modules/admin/admin_backup.py` | 行数：404
+> 路径：`modules/admin/admin_backup.py` | 行数：408
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 后台管理 - 备份设置（自动备份、云端备份、本地备份）
@@ -363,7 +367,7 @@ class AdminBackupWidget(QWidget):
                         dt = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
                         created_at = dt.strftime('%Y-%m-%d %H:%M')
                     except:
-                        pass
+                        logger.exception("异常详情")
                 self.cloud_backup_table.setItem(i, 2, QTableWidgetItem(created_at))
 
                 btn_download = QPushButton("下载")

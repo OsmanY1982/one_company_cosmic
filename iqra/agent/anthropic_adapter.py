@@ -298,7 +298,7 @@ def _detect_claude_code_version() -> str:
                 if version and version[0].isdigit():
                     return version
         except Exception:
-            pass
+            logger.exception("异常详情")
     return _CLAUDE_CODE_VERSION_FALLBACK
 
 
@@ -1086,7 +1086,7 @@ def run_hermes_oauth_login_pure() -> Optional[Dict[str, Any]]:
         webbrowser.open(auth_url)
         print("  (Browser opened automatically)")
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     print()
     print("After authorizing, you'll see a code. Paste it below.")

@@ -1,6 +1,6 @@
 # `modules/admin/admin_user.py`
 
-> 路径：`modules/admin/admin_user.py` | 行数：420
+> 路径：`modules/admin/admin_user.py` | 行数：425
 
 
 ---
@@ -10,6 +10,10 @@
 # -*- coding: utf-8 -*-
 import sys
 from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import sqlite3
@@ -247,6 +251,7 @@ class AdminUserWidget(QWidget):
             conn.commit()
             conn.close()
         except Exception:
+            logger.exception("异常详情")
             pass  # 云端同步失败不影响本地展示
 
     def add_user(self):

@@ -1,12 +1,16 @@
 # `iqra/core/harness/__init__.py`
 
-> 路径：`iqra/core/harness/__init__.py` | 行数：278
+> 路径：`iqra/core/harness/__init__.py` | 行数：282
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Harness — iqra Agent 设计器核心
 
@@ -207,7 +211,7 @@ def get_available_tools() -> List[Dict[str, str]]:
         if tools:
             return sorted(tools, key=lambda t: t.get("category", ""))
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     # 兜底：内置核心工具列表
     return [
@@ -233,7 +237,7 @@ def get_available_skills() -> List[Dict[str, str]]:
         if result:
             return result
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     try:
         from iqra.core.skill_loader import SkillLoader

@@ -162,7 +162,7 @@ def _post_json(
         try:
             detail = exc.read().decode("utf-8", errors="replace")
         except Exception:
-            pass
+            logger.exception("异常详情")
         # Special case: VPC-SC violation should be distinguishable
         if _is_vpc_sc_violation(detail):
             raise CodeAssistError(

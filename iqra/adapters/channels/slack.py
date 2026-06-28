@@ -32,7 +32,7 @@ try:
     from slack_bolt.adapter.socket_mode import SocketModeHandler
     _HAS_SLACK = True
 except ImportError:
-    pass
+    logger.exception("异常详情")
 
 
 class SlackAdapter(BaseChannelAdapter):

@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 ws_monitor.py — Real-time ComfyUI WebSocket monitor.
@@ -260,7 +264,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             ws.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
 
 if __name__ == "__main__":

@@ -9,6 +9,9 @@ from core.paths import CONFIG_DIR, BASE_DIR, DATA_DIR
 from core.app_state import AppState
 import os
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 LOGO_FILE = os.path.join(BASE_DIR, "opc_logo.ico")
 
@@ -124,7 +127,7 @@ class ChangePasswordWindow(QDialog):
                     with open(save_file, 'w', encoding='utf-8') as f:
                         json.dump(data, f, ensure_ascii=False, indent=2)
             except Exception:
-                pass
+                logger.exception("异常详情")
             self.accept()
             self._logout_after_change()
         else:

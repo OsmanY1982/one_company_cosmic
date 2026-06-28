@@ -10,6 +10,9 @@ from .memory_store import MemoryStore
 from .smart_memory_adapter import SmartMemoryStore
 from .iqra_logging import logger
 from .rag_context import RAGContextInjector
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ChatEngine(QObject):
     on_tool_start = pyqtSignal(str, dict)
@@ -84,7 +87,7 @@ class ChatEngine(QObject):
                     )
                     parts.append(skills_index)
             except Exception:
-                pass
+                logger.exception("异常详情")
         if self.memory_store:
             personalized = self.memory_store.get_personalized_context()
             if personalized:
@@ -474,7 +477,7 @@ class ChatEngine(QObject):
                         'arguments': item.get('arguments', {}),
                     })
             except json.JSONDecodeError:
-                pass
+                logger.exception("异常详情")
             return ''
         visible = _re.sub(r'<tool>\s*(.*?)\s*</tool>', _replace_tool, text, flags=_re.DOTALL).strip()
         return visible, tool_calls
@@ -651,7 +654,7 @@ class ChatEngine(QObject):
                             if fallback_resp.usage:
                                 last_usage = fallback_resp.usage
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
                 self.messages.append({'role': 'assistant', 'content': accumulated})
                 self._maybe_save()
                 if self.obs:
@@ -680,7 +683,7 @@ class ChatEngine(QObject):
             try:
                 self.memory_store.sync_all()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def reset(self) -> None:
         if self.auto_save and self.memory_store:
@@ -697,7 +700,7 @@ class ChatEngine(QObject):
             injector = RAGContextInjector()
             injector.save_index_to_memory(self.memory_store, index_name="default")
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def get_history(self) -> list[dict]:
         return list(self.messages)

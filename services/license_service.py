@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 授权服务
 软件授权验证、激活
@@ -158,7 +162,7 @@ class LicenseService:
                     "machine_code": license_data.get("machine_code"),
                 })
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         return info
 

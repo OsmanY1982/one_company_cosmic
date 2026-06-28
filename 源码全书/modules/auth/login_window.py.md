@@ -1,12 +1,16 @@
 # `modules/auth/login_window.py`
 
-> 路径：`modules/auth/login_window.py` | 行数：613
+> 路径：`modules/auth/login_window.py` | 行数：620
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 蓝星登录窗口 — 地球注册/登录
 底部蓝色地球缓慢旋转 + 上方全息登录/注册表单
@@ -43,6 +47,7 @@ def _load_remembered():
                 data["password"] = base64.b64decode(data["password"]).decode()
             return data
     except Exception:
+        logger.exception("异常详情")
         pass  # gracefully degrade on I/O failure
     return {}
 
@@ -53,6 +58,7 @@ def _save_remembered(username, password):
         with open(REMEMBERED_LOGIN, "w") as f:
             json.dump(data, f)
     except Exception:
+        logger.exception("异常详情")
         pass  # gracefully degrade on I/O failure
 
 def _clear_remembered():
@@ -61,6 +67,7 @@ def _clear_remembered():
         if os.path.exists(REMEMBERED_LOGIN):
             os.remove(REMEMBERED_LOGIN)
     except Exception:
+        logger.exception("异常详情")
         pass  # gracefully degrade on I/O failure
 
 
@@ -488,7 +495,7 @@ class LoginWindow(QMainWindow):
         try:
             log_action(username, "登录", "login", "用户登录成功")
         except Exception:
-            pass
+            logger.exception("异常详情")
         self._open_model_setup(username, role)
 
     def _do_register(self):
@@ -512,7 +519,7 @@ class LoginWindow(QMainWindow):
         try:
             log_action(username, "注册", "login", "新用户注册")
         except Exception:
-            pass
+            logger.exception("异常详情")
         self._switch_to_login()
         self._login_user.setText(username)
         self._login_pass.setFocus()
@@ -603,7 +610,7 @@ class LoginWindow(QMainWindow):
                     elif cmd == "hide":
                         self._floating.hide()
                 except OSError:
-                    pass
+                    logger.exception("异常详情")
 
             from PyQt5.QtCore import QTimer
             self._ipc_timer = QTimer(self._floating)

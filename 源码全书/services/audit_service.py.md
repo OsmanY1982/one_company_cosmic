@@ -1,12 +1,16 @@
 # `services/audit_service.py`
 
-> 路径：`services/audit_service.py` | 行数：537
+> 路径：`services/audit_service.py` | 行数：541
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Audit Service - 操作日志审计服务
 完整的操作追踪、用户行为分析、异常检测
@@ -325,7 +329,7 @@ class AuditService:
                     try:
                         log[field] = json.loads(log[field])
                     except:
-                        pass
+                        logger.exception("异常详情")
             logs.append(log)
         
         conn.close()
@@ -480,7 +484,7 @@ def audit_log(
                 try:
                     old_values = get_old_values(*args, **kwargs)
                 except:
-                    pass
+                    logger.exception("异常详情")
             
             # 执行函数
             result = func(*args, **kwargs)
@@ -491,7 +495,7 @@ def audit_log(
                 try:
                     new_values = get_new_values(result)
                 except:
-                    pass
+                    logger.exception("异常详情")
             
             # 获取资源ID
             resource_id = None
@@ -499,7 +503,7 @@ def audit_log(
                 try:
                     resource_id = get_resource_id(result)
                 except:
-                    pass
+                    logger.exception("异常详情")
             
             # 记录审计日志
             service = AuditService()

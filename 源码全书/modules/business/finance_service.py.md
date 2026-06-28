@@ -1,12 +1,16 @@
 # `modules/business/finance_service.py`
 
-> 路径：`modules/business/finance_service.py` | 行数：279
+> 路径：`modules/business/finance_service.py` | 行数：283
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 财务服务模块
@@ -98,7 +102,7 @@ def add_record(date: str, record_type: str, category: str,
             log_action("system", f"财务{record_type}", "finance",
                        f"{category}: {amount}, {description}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         
         return {"ok": True, "id": record_id}
     except Exception as e:
@@ -178,7 +182,7 @@ def delete_record(record_id: int) -> dict:
         try:
             log_action("system", "财务删除", "finance", f"删除记录 ID={record_id}")
         except Exception:
-            pass
+            logger.exception("异常详情")
     return {"ok": deleted > 0, "deleted": deleted}
 
 
@@ -217,7 +221,7 @@ def update_record(record_id: int, date: str = None,
         try:
             log_action("system", "财务更新", "finance", f"更新记录 ID={record_id}")
         except Exception:
-            pass
+            logger.exception("异常详情")
     return {"ok": updated > 0, "updated": updated}
 
 

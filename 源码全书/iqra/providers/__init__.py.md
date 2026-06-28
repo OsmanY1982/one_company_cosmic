@@ -197,6 +197,6 @@ def _discover_providers() -> None:
                     "Failed to import legacy provider module %s: %s", modname, exc
                 )
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 ```

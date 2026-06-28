@@ -1,12 +1,16 @@
 # `modules/auth/admin_login_dialog.py`
 
-> 路径：`modules/auth/admin_login_dialog.py` | 行数：295
+> 路径：`modules/auth/admin_login_dialog.py` | 行数：302
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 管理员入口 — 独立登录对话框
 深色金属风格，预设管理员账号 admin/admin
@@ -37,6 +41,7 @@ def _load_admin_remembered():
                 data["password"] = base64.b64decode(data["password"]).decode()
             return data
     except Exception:
+        logger.exception("异常详情")
         pass  # gracefully degrade on I/O failure
     return {}
 
@@ -46,6 +51,7 @@ def _save_admin_remembered(username, password):
         with open(REMEMBERED_ADMIN, "w") as f:
             json.dump(data, f)
     except Exception:
+        logger.exception("异常详情")
         pass  # gracefully degrade on I/O failure
 
 def _clear_admin_remembered():
@@ -53,6 +59,7 @@ def _clear_admin_remembered():
         if os.path.exists(REMEMBERED_ADMIN):
             os.remove(REMEMBERED_ADMIN)
     except Exception:
+        logger.exception("异常详情")
         pass  # gracefully degrade on I/O failure
 
 

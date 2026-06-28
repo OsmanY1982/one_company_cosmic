@@ -1,12 +1,16 @@
 # `modules/dashboard/dashboard_window.py`
 
-> 路径：`modules/dashboard/dashboard_window.py` | 行数：640
+> 路径：`modules/dashboard/dashboard_window.py` | 行数：644
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 舰桥主控面板 — AI Agent 指挥中心
 轨道星球导航
@@ -332,7 +336,7 @@ class DashboardWindow(QMainWindow):
                 with open(config_file, "r", encoding="utf-8") as f:
                     return json.load(f)
             except Exception:
-                pass
+                logger.exception("异常详情")
         return {}
 
     def _save_backup_config(self, config: dict):

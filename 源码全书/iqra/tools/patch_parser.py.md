@@ -1,12 +1,16 @@
 # `iqra/tools/patch_parser.py`
 
-> 路径：`iqra/tools/patch_parser.py` | 行数：592
+> 路径：`iqra/tools/patch_parser.py` | 行数：596
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 V4A Patch Format Parser
@@ -307,7 +311,7 @@ def _validate_operations(
                         from tools.fuzzy_match import format_no_match_hint
                         msg += format_no_match_hint(match_error, count, search_pattern, simulated)
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
                     errors.append(msg)
                 else:
                     # Advance simulation so subsequent hunks validate correctly.
@@ -557,7 +561,7 @@ def _apply_update(op: PatchOperation, file_ops: Any) -> Tuple[bool, str]:
                         from tools.fuzzy_match import format_no_match_hint
                         err_msg += format_no_match_hint(error, 0, search_pattern, new_content)
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
                     return False, err_msg
         else:
             # Addition-only hunk (no context or removed lines).

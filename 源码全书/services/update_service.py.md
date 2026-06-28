@@ -1,12 +1,16 @@
 # `services/update_service.py`
 
-> 路径：`services/update_service.py` | 行数：185
+> 路径：`services/update_service.py` | 行数：189
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 更新服务
 应用自动更新检查和下载
@@ -87,7 +91,7 @@ class UpdateService:
                 with open(self.update_file, "r", encoding="utf-8") as f:
                     self._update_info = json.load(f)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         return self._update_info
 

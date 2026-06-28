@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 手机版 HTTP API
@@ -98,7 +102,7 @@ class MobileAPIHandler(BaseHTTPRequestHandler):
                 cursor.execute("SELECT * FROM orders ORDER BY created_at DESC LIMIT ? OFFSET ?", (limit, offset))
                 orders = [dict(r) for r in cursor.fetchall()]
             except sqlite3.OperationalError:
-                pass
+                logger.exception("异常详情")
             conn.close()
         self._json_response({"orders": orders, "limit": limit, "offset": offset})
     

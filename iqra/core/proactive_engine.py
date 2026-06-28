@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 ProactiveEngine — AI 主动执行与推送引擎
@@ -282,7 +286,7 @@ class ProactiveEngine(QObject):
                     m.stop()
                     m.join(timeout=5)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
                 new_monitor = self._recreate_monitor(m)
                 if new_monitor:
                     self._monitors.remove(m)

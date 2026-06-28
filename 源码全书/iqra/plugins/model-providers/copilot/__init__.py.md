@@ -1,12 +1,16 @@
 # `iqra/plugins/model-providers/copilot/__init__.py`
 
-> 路径：`iqra/plugins/model-providers/copilot/__init__.py` | 行数：58
+> 路径：`iqra/plugins/model-providers/copilot/__init__.py` | 行数：62
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Copilot / GitHub Models provider profile.
 
 Copilot uses per-model api_mode routing:
@@ -52,7 +56,7 @@ class CopilotProfile(ProviderProfile):
                 elif supported_efforts:
                     extra_body["reasoning"] = {"effort": "medium"}
             except Exception:
-                pass
+                logger.exception("异常详情")
         return extra_body, {}
 
 

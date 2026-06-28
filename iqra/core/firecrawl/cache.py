@@ -71,7 +71,7 @@ def _get_cache(url: str) -> Optional[Dict[str, Any]]:
             try:
                 os.remove(path)
             except OSError:
-                pass
+                logger.exception("异常详情")
             return None
 
         return entry.get("content")

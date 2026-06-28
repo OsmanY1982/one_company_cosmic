@@ -1,12 +1,16 @@
 # `services/notification_service.py`
 
-> 路径：`services/notification_service.py` | 行数：150
+> 路径：`services/notification_service.py` | 行数：154
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 系统通知服务
 Windows/macOS 原生通知
@@ -37,7 +41,7 @@ class NotificationService:
                     data = json.load(f)
                     self._notifications = data.get("items", [])
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _save_notifications(self):
         """保存通知记录"""

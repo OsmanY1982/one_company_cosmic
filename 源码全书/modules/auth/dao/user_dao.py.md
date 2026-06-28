@@ -1,6 +1,6 @@
 # `modules/auth/dao/user_dao.py`
 
-> 路径：`modules/auth/dao/user_dao.py` | 行数：138
+> 路径：`modules/auth/dao/user_dao.py` | 行数：141
 
 
 ---
@@ -10,6 +10,9 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Use core.paths for consistent DB location (same as AdminUserWidget)
 import sqlite3
@@ -53,7 +56,7 @@ def _ensure_db():
             try:
                 cursor.execute(f"ALTER TABLE users ADD COLUMN {col_name} {col_type}")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     # Create user_memberships table
     cursor.execute('''

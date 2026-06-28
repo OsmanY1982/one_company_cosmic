@@ -1,12 +1,16 @@
 # `iqra/core/rag_context.py`
 
-> 路径：`iqra/core/rag_context.py` | 行数：347
+> 路径：`iqra/core/rag_context.py` | 行数：351
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 RAGContextInjector — 工作区上下文自动注入（对标 Codex 的 Context Engine）
@@ -234,7 +238,7 @@ class RAGContextInjector:
                     content = open(path, encoding="utf-8").read()
                     return f"<project_rules>\n{content.strip()}\n</project_rules>"
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
         return ""
 
     def search(self, query: str, top_k: int = 10, use_semantic: bool = True) -> list:
@@ -304,7 +308,7 @@ class RAGContextInjector:
                 try:
                     _os.unlink(tmp.name)
                 except OSError:
-                    pass
+                    logger.exception("异常详情")
             return memory_store.set_semantic_index(data, index_name)
         except Exception as e:
             logger.debug("Failed to save semantic index to memory: %s", e)
@@ -339,7 +343,7 @@ class RAGContextInjector:
                 try:
                     _os.unlink(tmp.name)
                 except OSError:
-                    pass
+                    logger.exception("异常详情")
             return True
         except Exception as e:
             logger.debug("Failed to load semantic index from memory: %s", e)

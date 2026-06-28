@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 云端同步 · 数据中心 — Tab 式多功能窗口
 Tab 0: 数据备份 | Tab 1: 云端同步 | Tab 2: 文件同步 | Tab 3: 模型管理
@@ -594,7 +598,7 @@ class CloudWindow(QDialog):
             try:
                 os.remove(os.path.join(BACKUP_DIR, old))
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     # ═══════════════════════════════════════════
     #  样式

@@ -1,12 +1,16 @@
 # `modules/intelligence/agent_bridge_models.py`
 
-> 路径：`modules/intelligence/agent_bridge_models.py` | 行数：227
+> 路径：`modules/intelligence/agent_bridge_models.py` | 行数：231
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """AgentBridge 模型管理 Mixin（从 agent_bridge.py 拆出）
 
 提供模型查询、切换、配置持久化能力。
@@ -39,7 +43,7 @@ class AgentBridgeModelMixin:
                 with open(cfg_path, "r", encoding="utf-8") as f:
                     return json.load(f)
         except Exception:
-            pass
+            logger.exception("异常详情")
         return {"cloud_providers": {}, "local_providers": {}}
 
     @staticmethod

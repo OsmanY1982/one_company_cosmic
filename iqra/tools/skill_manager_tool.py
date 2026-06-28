@@ -517,7 +517,7 @@ def _patch_skill(
             from tools.fuzzy_match import format_no_match_hint
             err_msg += format_no_match_hint(match_error, match_count, old_string, content)
         except Exception:
-            pass
+            logger.exception("异常详情")
         return {
             "success": False,
             "error": err_msg,
@@ -767,7 +767,7 @@ def skill_manage(
             from agent.prompt_builder import clear_skills_system_prompt_cache
             clear_skills_system_prompt_cache(clear_snapshot=True)
         except Exception:
-            pass
+            logger.exception("异常详情")
         # Curator telemetry: bump patch_count on edit/patch/write_file (the actions
         # that mutate an existing skill's guidance), drop the record on delete.
         # Only mark a skill as agent-created when the background self-improvement
@@ -785,7 +785,7 @@ def skill_manage(
             elif action == "delete":
                 forget(name)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     return json.dumps(result, ensure_ascii=False)
 

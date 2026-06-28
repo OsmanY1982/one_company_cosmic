@@ -1,12 +1,16 @@
 # `iqra/tools/environments/modal_utils.py`
 
-> 路径：`iqra/tools/environments/modal_utils.py` | 行数：199
+> 路径：`iqra/tools/environments/modal_utils.py` | 行数：203
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Shared Hermes-side execution flow for Modal transports.
 
 This module deliberately stops at the Hermes boundary:
@@ -125,7 +129,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 try:
                     self._cancel_modal_exec(start.handle)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
                 return self._result(self._interrupt_output, 130)
 
             try:
@@ -140,7 +144,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 try:
                     self._cancel_modal_exec(start.handle)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
                 return self._timeout_result_for_modal(prepared.timeout)
 
             # Periodic activity touch so the gateway knows we're alive
@@ -148,7 +152,7 @@ class BaseModalExecutionEnvironment(BaseEnvironment):
                 from tools.environments.base import touch_activity_if_due
                 touch_activity_if_due(_activity_state, "modal command running")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
             time.sleep(self._poll_interval_seconds)
 

@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Transport layer types and registry for provider response normalization.
 
 Usage:
@@ -53,16 +57,16 @@ def _discover_transports() -> None:
     try:
         import agent.transports.anthropic  # noqa: F401
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         import agent.transports.codex  # noqa: F401
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         import agent.transports.chat_completions  # noqa: F401
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         import agent.transports.bedrock  # noqa: F401
     except ImportError:
-        pass
+        logger.exception("异常详情")

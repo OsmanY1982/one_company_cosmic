@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Iqra Sync Bridge - Web ↔ GUI 数据同步桥
 
@@ -70,7 +74,7 @@ class SyncBridge:
             if self.LOCK_FILE.exists():
                 self.LOCK_FILE.unlink()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def _check_lock_expired(self) -> bool:
         """检查锁是否已过期"""

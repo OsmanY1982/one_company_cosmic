@@ -1,12 +1,16 @@
 # `services/cache_service.py`
 
-> 路径：`services/cache_service.py` | 行数：167
+> 路径：`services/cache_service.py` | 行数：171
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 缓存服务
 基于内存和SQLite的轻量级缓存
@@ -73,7 +77,7 @@ class CacheService:
                         conn.execute("DELETE FROM cache WHERE key = ?", (key,))
                         conn.commit()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return None
 
@@ -99,7 +103,7 @@ class CacheService:
                 )
                 conn.commit()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def delete(self, key: str):
         """删除缓存"""
@@ -111,7 +115,7 @@ class CacheService:
                 conn.execute("DELETE FROM cache WHERE key = ?", (key,))
                 conn.commit()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def clear(self):
         """清除所有缓存"""
@@ -123,7 +127,7 @@ class CacheService:
                 conn.execute("DELETE FROM cache")
                 conn.commit()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def cleanup_expired(self):
         """清理过期缓存"""
@@ -139,7 +143,7 @@ class CacheService:
                 conn.execute("DELETE FROM cache WHERE expires_at IS NOT NULL AND expires_at < ?", (now,))
                 conn.commit()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def cached(self, ttl: Optional[int] = None):
         """缓存装饰器"""

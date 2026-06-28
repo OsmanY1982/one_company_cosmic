@@ -1,12 +1,16 @@
 # `modules/intelligence/voice_interface.py`
 
-> 路径：`modules/intelligence/voice_interface.py` | 行数：417
+> 路径：`modules/intelligence/voice_interface.py` | 行数：422
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 语音交互模块 — macOS 原生 Apple Speech Framework + say 命令
@@ -94,6 +98,7 @@ class AppleSpeechRecognizer(QThread):
             try:
                 request.shouldReportPartialResults = True
             except (AttributeError, Exception):
+                logger.exception("异常详情")
                 pass  # 新版 SDK 默认已启用部分结果
             request.requiresOnDeviceRecognition = recognizer.supportsOnDeviceRecognition()
 

@@ -5,6 +5,9 @@ import os
 import traceback
 from datetime import datetime
 from core.paths import DATA_DIR
+import logging
+
+logger = logging.getLogger(__name__)
 
 LOG_DB = os.path.join(DATA_DIR, "operation_log.db")
 AUDIT_DB = os.path.join(DATA_DIR, "audit.db")
@@ -122,7 +125,7 @@ def log_action(username: str, action: str, module: str = "", detail: str = ""):
             conn.commit()
             conn.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
 
 def _write_error(module: str, error_type: str, message: str, tb: str = ""):
@@ -137,7 +140,7 @@ def _write_error(module: str, error_type: str, message: str, tb: str = ""):
         conn.commit()
         conn.close()
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 def get_logs(username=None, module=None, limit=200):
     try:

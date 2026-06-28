@@ -1,12 +1,16 @@
 # `modules/personnel/personnel_window.py`
 
-> 路径：`modules/personnel/personnel_window.py` | 行数：666
+> 路径：`modules/personnel/personnel_window.py` | 行数：673
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 人员管理 → 居住环 · CREW QUARTERS
 宇宙主题窗口：小星球导航 — 员工 / 会员 / 钱包 / 分销
@@ -196,11 +200,14 @@ def wallet_init_db():
         created_at TEXT DEFAULT (datetime('now','localtime'))
     )''')
     try: conn.execute("ALTER TABLE wallet ADD COLUMN status TEXT DEFAULT 'active'")
-    except sqlite3.OperationalError: pass
+    except sqlite3.OperationalError:
+        logger.exception("异常详情")
     try: conn.execute("ALTER TABLE wallet_withdraw ADD COLUMN reviewed_by TEXT DEFAULT ''")
-    except sqlite3.OperationalError: pass
+    except sqlite3.OperationalError:
+        logger.exception("异常详情")
     try: conn.execute("ALTER TABLE wallet_withdraw ADD COLUMN reviewed_at TEXT DEFAULT ''")
-    except sqlite3.OperationalError: pass
+    except sqlite3.OperationalError:
+        logger.exception("异常详情")
     conn.commit(); conn.close()
 
 def wallet_get_all():

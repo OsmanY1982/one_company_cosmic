@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """独立的注册窗口 —— 与登录窗口完全分开"""
 
@@ -145,7 +149,7 @@ class RegisterWindow(QMainWindow):
                 try:
                     log_action(account, "注册", "login", "新用户注册")
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
 
                 # ── 打通全模块：注册后自动创建本地会员记录 ──
                 try:

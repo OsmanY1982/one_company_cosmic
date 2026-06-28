@@ -386,7 +386,7 @@ class SmartMemoryStore:
                 if role == 'user' and content:
                     self._smart.update_retrieval_profile({'last_query': content})
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def close(self) -> None:
         """关闭智能记忆（无实际操作）"""

@@ -1,12 +1,16 @@
 # `modules/intelligence/floating_planet_menu_mixin.py`
 
-> 路径：`modules/intelligence/floating_planet_menu_mixin.py` | 行数：215
+> 路径：`modules/intelligence/floating_planet_menu_mixin.py` | 行数：219
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """悬浮球右键菜单 Mixin — QMenu 原生实现（从备份恢复）"""
 import sys, os
@@ -40,7 +44,7 @@ class FloatingPlanetMenuMixin:
                 if widget.isVisible() and widget.windowFlags() & Qt.Window:
                     return
         except Exception:
-            pass
+            logger.exception("异常详情")
         self.raise_()
 
     def _show_context_menu(self, global_pos: QPoint):

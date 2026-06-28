@@ -1,6 +1,6 @@
 # `modules/startup/startup_selector_window.py`
 
-> 路径：`modules/startup/startup_selector_window.py` | 行数：109
+> 路径：`modules/startup/startup_selector_window.py` | 行数：114
 
 
 ---
@@ -14,6 +14,10 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QPushButton, QLab
 from PyQt5.QtCore import Qt
 
 from core.dark_theme import apply_dark_theme, BG_MAIN, BG_CARD, BG_INPUT, BTN_NORMAL, BTN_HOVER, BTN_PRESSED, TEXT_WHITE, TEXT_LIGHT, TEXT_MUTED, ACCENT, SUCCESS, WARNING, DANGER, BORDER, BORDER_LIGHT
+import logging
+
+logger = logging.getLogger(__name__)
+
 class StartupSelectorWindow(QMainWindow):
     def __init__(self, on_select_mode, parent=None):
         super().__init__(parent)
@@ -82,7 +86,8 @@ class StartupSelectorWindow(QMainWindow):
             if os.path.exists(config_path):
                 with open(config_path, 'r') as f:
                     return f.read().strip()
-        except Exception: pass
+        except Exception:
+            logger.exception("异常详情")
         return None
 
     def _save_last_mode(self, mode):
@@ -92,7 +97,7 @@ class StartupSelectorWindow(QMainWindow):
             with open(os.path.join(CONFIG_DIR, "last_mode.txt"), 'w') as f:
                 f.write(mode)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def _check_dependencies(self):
         """检查系统依赖，包括数据库、配置文件等"""

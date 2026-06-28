@@ -1,12 +1,16 @@
 # `iqra/agent/copilot_acp_client.py`
 
-> 路径：`iqra/agent/copilot_acp_client.py` | 行数：646
+> 路径：`iqra/agent/copilot_acp_client.py` | 行数：650
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """OpenAI-compatible shim that forwards Hermes requests to `copilot --acp`.
 
 This adapter lets Hermes treat the GitHub Copilot ACP server as a chat-style
@@ -65,7 +69,7 @@ def _resolve_home_dir() -> str:
         if profile_home:
             return profile_home
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     home = os.environ.get("HOME", "").strip()
     if home:
@@ -82,7 +86,7 @@ def _resolve_home_dir() -> str:
         if resolved:
             return resolved
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     # Last resort: /tmp (writable on any POSIX system). Avoids crashing the
     # subprocess with no HOME; callers can set HERMES_HOME explicitly if they
@@ -360,7 +364,7 @@ class CopilotACPClient:
             try:
                 proc.kill()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _create_chat_completion(
         self,

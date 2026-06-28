@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 系统托盘
 Windows/macOS 系统托盘图标
@@ -34,7 +38,7 @@ class SystemTray:
                     self._icon_path = config.get("icon_path")
                     self._tooltip = config.get("tooltip", "一人公司")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         if not self._menu_items:
             self._init_default_menu()
@@ -92,7 +96,7 @@ class SystemTray:
             self._tray_icon.run_detached()
 
         except ImportError:
-            pass
+            logger.exception("异常详情")
 
     def _show_macos_tray(self):
         """macOS托盘"""
@@ -125,7 +129,7 @@ class SystemTray:
             self._app.run()
 
         except ImportError:
-            pass
+            logger.exception("异常详情")
 
     def _build_menu(self):
         """构建菜单"""
@@ -199,12 +203,12 @@ class SystemTray:
             try:
                 self._tray_icon.notify(message, title)
             except Exception:
-                pass
+                logger.exception("异常详情")
         elif self._system == "Darwin" and hasattr(self, "_app"):
             try:
                 self._app.notification(title, "", message)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def get_menu_items(self) -> List[Dict]:
         """获取菜单项"""

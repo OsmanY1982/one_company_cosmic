@@ -621,7 +621,7 @@ class GeminiCloudCodeClient:
         try:
             self._http.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     # Implement the OpenAI SDK's context-manager-ish closure check
     def __enter__(self):
@@ -832,7 +832,7 @@ def _gemini_http_error(response: httpx.Response) -> CodeAssistError:
                 try:
                     retry_delay_seconds = float(delay_raw[:-1])
                 except ValueError:
-                    pass
+                    logger.exception("异常详情")
             elif isinstance(delay_raw, (int, float)):
                 retry_delay_seconds = float(delay_raw)
 

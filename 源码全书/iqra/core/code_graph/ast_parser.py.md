@@ -1,12 +1,16 @@
 # `iqra/core/code_graph/ast_parser.py`
 
-> 路径：`iqra/core/code_graph/ast_parser.py` | 行数：341
+> 路径：`iqra/core/code_graph/ast_parser.py` | 行数：345
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 AST 解析器 — 遍历 Python 源文件提取结构化代码元素
@@ -154,7 +158,7 @@ class CodeGraphASTVisitor(ast.NodeVisitor):
             try:
                 returns = ast.unparse(node.returns)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         fn = FunctionNode(
             name=node.name,

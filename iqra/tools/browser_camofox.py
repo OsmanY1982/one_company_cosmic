@@ -84,7 +84,7 @@ def check_camofox_available() -> bool:
                     host = parsed.hostname or "localhost"
                     _vnc_url = f"http://{host}:{vnc_port}"
             except (ValueError, KeyError):
-                pass
+                logger.exception("异常详情")
             _vnc_url_checked = True
         return resp.status_code == 200
     except Exception:
@@ -281,6 +281,7 @@ def camofox_navigate(url: str, task_id: Optional[str] = None) -> str:
             result["snapshot"] = snapshot_text
             result["element_count"] = snap_data.get("refsCount", 0)
         except Exception:
+            logger.exception("异常详情")
             pass  # Navigation succeeded; snapshot is a bonus
 
         return json.dumps(result)
@@ -526,7 +527,7 @@ def camofox_vision(question: str, annotate: bool = False,
                 )
                 annotation_context = f"\n\nAccessibility tree (element refs for interaction):\n{snap_data.get('snapshot', '')[:3000]}"
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # Redact secrets from annotation context before sending to vision LLM.
         # The screenshot image itself cannot be redacted, but at least the

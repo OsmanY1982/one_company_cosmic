@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """CLI commands for Honcho integration management.
 
 Handles: hermes honcho setup | status | sessions | map | peer
@@ -260,7 +264,7 @@ def _read_config() -> dict:
         try:
             return json.loads(path.read_text(encoding="utf-8"))
         except Exception:
-            pass
+            logger.exception("异常详情")
     return {}
 
 
@@ -330,7 +334,7 @@ def _ensure_sdk_installed() -> bool:
         import honcho  # noqa: F401
         return True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     print("  honcho-ai is not installed.")
     answer = _prompt("Install it now? (honcho-ai>=2.0.1)", default="y")
@@ -487,6 +491,7 @@ def cmd_setup(args) -> None:
             if val >= 0:
                 hermes_host["contextTokens"] = val
         except (ValueError, TypeError):
+            logger.exception("异常详情")
             pass  # keep current
 
     # --- 7b. Dialectic cadence ---

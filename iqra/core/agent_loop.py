@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 AgentLoop — 自主 Agent 执行循环 (对标 Codex / Claude Code)
@@ -535,7 +539,7 @@ class AgentLoop(QObject):
                 os.kill(pid, signal.SIGTERM)
                 killed += 1
             except (ProcessLookupError, PermissionError):
-                pass
+                logger.exception("异常详情")
         self._running_pids.clear()
 
         # 方案 B：通过 ps 找当前工具线程的子孙 shell 进程兜底
@@ -552,9 +556,9 @@ class AgentLoop(QObject):
                             os.kill(int(child_pid_str), signal.SIGTERM)
                             killed += 1
                         except (ProcessLookupError, PermissionError):
-                            pass
+                            logger.exception("异常详情")
             except Exception:
-                pass
+                logger.exception("异常详情")
             # 如果 SIGTERM 不够，延迟一点再 SIGKILL
             if killed > 0:
                 time.sleep(0.3)
@@ -562,7 +566,7 @@ class AgentLoop(QObject):
                     try:
                         os.kill(pid, signal.SIGKILL)
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
 
         if killed > 0:
             logger.info("已终止 %d 个工具子进程", killed)

@@ -1,6 +1,6 @@
 # `modules/intelligence/text_editor.py`
 
-> 路径：`modules/intelligence/text_editor.py` | 行数：800
+> 路径：`modules/intelligence/text_editor.py` | 行数：804
 
 
 ---
@@ -11,6 +11,10 @@
 from core.paths import BASE_DIR, DATA_DIR, CONFIG_DIR
 
 import os, json, base64, hashlib, secrets
+import logging
+
+logger = logging.getLogger(__name__)
+
 from datetime import datetime
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
@@ -652,7 +656,7 @@ class TextEditorWidget(QMainWindow):
                     return migrated
                 return data
             except Exception:
-                pass
+                logger.exception("异常详情")
         return {'folders': [], 'notes': []}
 
     def _save_index(self, index: dict):

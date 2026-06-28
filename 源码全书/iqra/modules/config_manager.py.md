@@ -1,12 +1,16 @@
 # `iqra/modules/config_manager.py`
 
-> 路径：`iqra/modules/config_manager.py` | 行数：259
+> 路径：`iqra/modules/config_manager.py` | 行数：263
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Iqra 配置管理器
 管理 Iqra 全部配置: 云端模型 + 本地模型 + 技能状态 + 通用设置
@@ -173,7 +177,7 @@ class ConfigManager:
                 # 从安全存储恢复 API Key
                 self._restore_api_keys()
             except Exception:
-                pass
+                logger.exception("异常详情")
     
     def _restore_api_keys(self):
         """从安全存储恢复 API Key 到内存配置"""

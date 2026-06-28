@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 实时消息服务
 WebSocket实时通信
@@ -101,7 +105,7 @@ class RealtimeService:
                 handler = self._message_handlers[event]
                 handler(client_id, message.get("data", {}))
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def _start_heartbeat(self):
         """启动心跳"""

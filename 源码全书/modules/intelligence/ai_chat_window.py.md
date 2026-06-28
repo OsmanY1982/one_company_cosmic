@@ -1,12 +1,16 @@
 # `modules/intelligence/ai_chat_window.py`
 
-> 路径：`modules/intelligence/ai_chat_window.py` | 行数：1402
+> 路径：`modules/intelligence/ai_chat_window.py` | 行数：1406
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 AI助手 · NEURAL v5 — 统一 AgentBridge 对话窗口
 全部模型调用通过 AgentBridge（iqra 引擎），废弃独立 llm_config.json
@@ -554,7 +558,7 @@ class AIChatWindow(QWidget):
                 try:
                     self._speak_process.kill()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
         self._speak_process = None
 
     def closeEvent(self, event):
@@ -1232,7 +1236,7 @@ class AIChatWindow(QWidget):
                             self._bridge.notify_message_added()
                             self._suppress_self_notify = False
                         except Exception:
-                            pass
+                            logger.exception("异常详情")
                     return
             except Exception as e:
                 self.ai_chat.append(

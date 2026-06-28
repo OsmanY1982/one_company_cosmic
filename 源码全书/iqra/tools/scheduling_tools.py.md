@@ -1,6 +1,6 @@
 # `iqra/tools/scheduling_tools.py`
 
-> 路径：`iqra/tools/scheduling_tools.py` | 行数：75
+> 路径：`iqra/tools/scheduling_tools.py` | 行数：79
 
 
 ---
@@ -12,6 +12,9 @@
 import os, sqlite3, json
 from datetime import datetime, timedelta
 from collections import Counter
+import logging
+
+logger = logging.getLogger(__name__)
 
 class SchedulingTools:
     def __init__(self, data_dir): self.data_dir = data_dir
@@ -56,7 +59,8 @@ class SchedulingTools:
         if os.path.exists(events_file):
             with open(events_file, 'r', encoding='utf-8') as f:
                 try: events = json.load(f)
-                except: pass
+                except:
+                    logger.exception("异常详情")
         
         # 分类统计
         by_type = Counter(e.get("type", "其他") for e in events if e.get("date", "").startswith(datetime.now().strftime("%Y-%m")))

@@ -1,12 +1,16 @@
 # `iqra/plugins/google_meet/meet_bot.py`
 
-> 路径：`iqra/plugins/google_meet/meet_bot.py` | 行数：852
+> 路径：`iqra/plugins/google_meet/meet_bot.py` | 行数：856
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Headless Google Meet bot — Playwright + live-caption scraping.
 
 Runs as a standalone subprocess spawned by ``process_manager.py``. Reads config
@@ -584,7 +588,7 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
                 page.evaluate(_enable_captions_js())
                 state.set(captions_enabled_attempted=True)
             except Exception:
-                pass
+                logger.exception("异常详情")
             try:
                 page.evaluate(_CAPTION_OBSERVER_JS)
             except Exception as e:
@@ -679,7 +683,7 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
                                         if cancelled:
                                             state.set(last_barge_in_at=now)
                                     except Exception:
-                                        pass
+                                        logger.exception("异常详情")
                 except Exception:
                     # Meet reloaded or we got booted — try to detect and
                     # exit gracefully rather than spinning.
@@ -704,7 +708,7 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
                     " if (b) b.click(); }"
                 )
             except Exception:
-                pass
+                logger.exception("异常详情")
 
             context.close()
             browser.close()
@@ -713,22 +717,22 @@ def run_bot() -> int:  # noqa: C901 — orchestration, explicit branches
                 try:
                     rt["speaker_stop"]()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             if rt["speaker_thread"] is not None:
                 try:
                     rt["speaker_thread"].join(timeout=5.0)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             if rt["session"]:
                 try:
                     rt["session"].close()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             if rt["bridge"]:
                 try:
                     rt["bridge"].teardown()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             state.set(in_call=False, captioning=False, exited=True)
             return 0
 
@@ -745,7 +749,7 @@ def _try_guest_name(page, guest_name: str) -> None:
         if locator.count() and locator.is_visible():
             locator.fill(guest_name, timeout=2_000)
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 
 def _detect_admission(page) -> bool:

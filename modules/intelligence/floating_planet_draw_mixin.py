@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """悬浮球绘制 Mixin — paintEvent + 外星人绘制"""
 import sys, os, math
@@ -147,4 +151,4 @@ class FloatingPlanetDrawMixin:
                 atype.paint(painter, draw_center, asize,
                            a[5], hovered, 0.85)
             except Exception:
-                pass
+                logger.exception("异常详情")

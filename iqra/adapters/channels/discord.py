@@ -34,7 +34,7 @@ try:
     from discord.ext import commands
     _HAS_DISCORD = True
 except ImportError:
-    pass
+    logger.exception("异常详情")
 
 
 class DiscordAdapter(BaseChannelAdapter):

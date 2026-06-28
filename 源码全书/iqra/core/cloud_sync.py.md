@@ -1,12 +1,16 @@
 # `iqra/core/cloud_sync.py`
 
-> 路径：`iqra/core/cloud_sync.py` | 行数：361
+> 路径：`iqra/core/cloud_sync.py` | 行数：365
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 云端同步服务 v3 — 2026-05-23
 桌面端 Iqra ↔ Supabase 双向同步
@@ -235,7 +239,7 @@ class CloudSyncService:
                         try:
                             self.supabase.table(table).delete().neq('id', 0).execute()
                         except:
-                            pass
+                            logger.exception("异常详情")
                         
                         if dict_rows:
                             try:

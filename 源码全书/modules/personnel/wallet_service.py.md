@@ -1,12 +1,16 @@
 # `modules/personnel/wallet_service.py`
 
-> 路径：`modules/personnel/wallet_service.py` | 行数：1357
+> 路径：`modules/personnel/wallet_service.py` | 行数：1362
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 钱包服务模块
@@ -64,6 +68,7 @@ def _sync_wallet_cloud(wallet: dict):
             status=wallet.get("status", "active"),
         )
     except ImportError:
+        logger.exception("异常详情")
         pass  # core.supabase_client 不可用时跳过
 
 
@@ -81,7 +86,7 @@ def _sync_txn_cloud(txn: dict):
             created_at=txn.get("created_at"),
         )
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
 
 # ──────────────────────────────────────────
@@ -123,14 +128,14 @@ def init_db():
             "ON wallet_transactions(wallet_id, type)"
         )
     except Exception:
-        pass
+        logger.exception("异常详情")
     try:
         cursor.execute(
             "CREATE INDEX IF NOT EXISTS idx_wallet_txn_created "
             "ON wallet_transactions(created_at DESC)"
         )
     except Exception:
-        pass
+        logger.exception("异常详情")
     conn.commit()
 
 def _connect():
@@ -252,7 +257,7 @@ def get_or_create_wallet(user_id: str) -> dict:
         )
         conn.commit()
     except Exception:
-        pass
+        logger.exception("异常详情")
     row = conn.execute(
         "SELECT * FROM wallet WHERE user_id = ?", (str(user_id),)
     ).fetchone()
@@ -925,7 +930,7 @@ def init_withdrawal_queue():
     try:
         conn.execute("CREATE INDEX IF NOT EXISTS idx_withdrawal_status ON withdrawal_queue(status)")
     except Exception:
-        pass
+        logger.exception("异常详情")
     conn.commit()
 
 def submit_withdrawal_request(user_id: str, amount: float,

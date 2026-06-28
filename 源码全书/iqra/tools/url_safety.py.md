@@ -131,7 +131,7 @@ def _global_allow_private_urls() -> bool:
             _cached_allow_private = True
             return _cached_allow_private
     except Exception:
-        # Config unavailable (e.g. tests, early import) — keep default
+        logger.exception("异常详情")
         pass
 
     return _cached_allow_private

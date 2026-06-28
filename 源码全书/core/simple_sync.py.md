@@ -138,7 +138,7 @@ def push_to_cloud(table_name):
                 try:
                     row_dict['quantity'] = int(float(row_dict['quantity']))
                 except:
-                    pass
+                    logger.exception("异常详情")
             
             ok, result = _request("POST", f"/rest/v1/{table_name}", 
                                 data=row_dict, service_key=True)

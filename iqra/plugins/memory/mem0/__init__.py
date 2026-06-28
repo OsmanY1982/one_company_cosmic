@@ -61,7 +61,7 @@ def _load_config() -> dict:
             config.update({k: v for k, v in file_cfg.items()
                            if v is not None and v != ""})
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     return config
 
@@ -153,7 +153,7 @@ class Mem0MemoryProvider(MemoryProvider):
             try:
                 existing = json.loads(config_path.read_text())
             except Exception:
-                pass
+                logger.exception("异常详情")
         existing.update(values)
         config_path.write_text(json.dumps(existing, indent=2))
 

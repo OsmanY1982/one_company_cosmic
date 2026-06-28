@@ -1,12 +1,16 @@
 # `iqra/plugins/google_meet/process_manager.py`
 
-> 路径：`iqra/plugins/google_meet/process_manager.py` | 行数：323
+> 路径：`iqra/plugins/google_meet/process_manager.py` | 行数：327
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Subprocess lifecycle manager for the google_meet bot.
 
 Single active meeting at a time. Stores the running pid + out_dir in a
@@ -75,7 +79,7 @@ def _clear_active() -> None:
     try:
         _active_file().unlink()
     except FileNotFoundError:
-        pass
+        logger.exception("异常详情")
 
 
 def _pid_alive(pid: int) -> bool:
@@ -139,7 +143,7 @@ def start(
             try:
                 f.unlink()
             except OSError:
-                pass
+                logger.exception("异常详情")
 
     env = os.environ.copy()
     env["HERMES_MEET_URL"] = url
@@ -211,7 +215,7 @@ def status() -> Dict[str, Any]:
         try:
             bot_status = json.loads(status_path.read_text(encoding="utf-8"))
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     return {
         "ok": True,
@@ -312,7 +316,7 @@ def stop(*, reason: str = "requested") -> Dict[str, Any]:
         try:
             os.kill(pid, signal.SIGTERM)
         except ProcessLookupError:
-            pass
+            logger.exception("异常详情")
         for _ in range(20):
             if not _pid_alive(pid):
                 break
@@ -321,7 +325,7 @@ def stop(*, reason: str = "requested") -> Dict[str, Any]:
             try:
                 os.kill(pid, signal.SIGKILL)  # windows-footgun: ok — POSIX-only plugin (google_meet registers no-op on Windows; see __init__.py)
             except ProcessLookupError:
-                pass
+                logger.exception("异常详情")
 
     _clear_active()
     return {

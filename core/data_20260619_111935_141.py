@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 统一数据层 — 路径管理 + 数据库初始化 + 版本迁移
 从桌面版 business_service.init_business_dbs() 完整迁移，确保两版表结构一致
@@ -36,7 +40,7 @@ def _log_migration(msg):
             from datetime import datetime
             f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}\n")
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 def _ensure_schema_version(conn, db_path):
     """为数据库创建 _schema_version 表并检查/写入版本号"""
@@ -88,7 +92,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE orders ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     _ensure_schema_version(conn, ORDER_DB)
     conn.commit()
     conn.close()
@@ -158,7 +162,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE users ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     _ensure_schema_version(conn, USERS_DB)
     conn.commit()
 
@@ -211,7 +215,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE products ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     c.execute('CREATE INDEX IF NOT EXISTS idx_products_name ON products(name)')
     c.execute('CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)')
     _ensure_schema_version(conn, PRODUCT_DB)
@@ -262,7 +266,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE customer ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     _ensure_schema_version(conn, CUSTOMER_DB)
     conn.commit()
     conn.close()
@@ -296,15 +300,15 @@ def init_all_dbs():
     try:
         c.execute('ALTER TABLE wallet_transactions ADD COLUMN related_id TEXT')
     except sqlite3.OperationalError:
-        pass
+        logger.exception("异常详情")
     try:
         c.execute('CREATE INDEX IF NOT EXISTS idx_wallet_txn_type ON wallet_transactions(wallet_id, type)')
     except Exception:
-        pass
+        logger.exception("异常详情")
     try:
         c.execute('CREATE INDEX IF NOT EXISTS idx_wallet_txn_created ON wallet_transactions(created_at DESC)')
     except Exception:
-        pass
+        logger.exception("异常详情")
     _ensure_schema_version(conn, WALLET_DB)
     conn.commit()
     conn.close()
@@ -358,7 +362,7 @@ def init_all_dbs():
             try:
                 c.execute(f"ALTER TABLE {tbl} ADD COLUMN {col} {col_def}")
             except sqlite3.OperationalError:
-                pass
+                logger.exception("异常详情")
     _ensure_schema_version(conn, DISTRIBUTION_DB)
     conn.commit()
     conn.close()

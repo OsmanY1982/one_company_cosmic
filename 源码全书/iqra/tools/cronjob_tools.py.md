@@ -1,6 +1,6 @@
 # `iqra/tools/cronjob_tools.py`
 
-> 路径：`iqra/tools/cronjob_tools.py` | 行数：693
+> 路径：`iqra/tools/cronjob_tools.py` | 行数：694
 
 
 ---
@@ -184,6 +184,7 @@ def _resolve_model_override(model_obj: Optional[Dict[str, Any]]) -> tuple:
             if isinstance(model_cfg, dict):
                 provider_name = model_cfg.get("provider") or None
         except Exception:
+            logger.exception("异常详情")
             pass  # Best-effort; provider stays None
     return (provider_name, model_name)
 

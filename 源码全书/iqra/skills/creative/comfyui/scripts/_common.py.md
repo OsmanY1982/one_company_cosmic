@@ -1,12 +1,16 @@
 # `iqra/skills/creative/comfyui/scripts/_common.py`
 
-> 路径：`iqra/skills/creative/comfyui/scripts/_common.py` | 行数：835
+> 路径：`iqra/skills/creative/comfyui/scripts/_common.py` | 行数：839
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 _common.py — Shared logic for ComfyUI skill scripts.
 
@@ -525,7 +529,7 @@ if HAS_REQUESTS:
                         if key.lower() in _SENSITIVE_HEADERS:
                             del headers[key]
             except Exception:
-                # Defensive: never let header stripping break a redirect.
+                logger.exception("异常详情")
                 pass
 
 

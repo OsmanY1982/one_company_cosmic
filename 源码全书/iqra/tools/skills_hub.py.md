@@ -1440,7 +1440,7 @@ class SkillsShSource(SkillSource):
                             if self._matches_skill_tokens(meta, tokens):
                                 return meta.identifier
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return None
 
@@ -2560,7 +2560,7 @@ def _write_index_cache(key: str, data: Any) -> None:
         try:
             ignore_file.write_text("# Exclude hub internals from search tools\n*\n")
         except OSError:
-            pass
+            logger.exception("异常详情")
     cache_file = INDEX_CACHE_DIR / f"{key}.json"
     try:
         cache_file.write_text(json.dumps(data, ensure_ascii=False, default=str))
@@ -2793,7 +2793,7 @@ def install_from_quarantine(
                     f"{skill_size:,}",
                 )
         except OSError:
-            pass
+            logger.exception("异常详情")
 
     install_dir.parent.mkdir(parents=True, exist_ok=True)
     shutil.move(str(quarantine_path), str(install_dir))
@@ -2937,7 +2937,7 @@ def _load_hermes_index() -> Optional[dict]:
             if age < HERMES_INDEX_TTL:
                 return json.loads(HERMES_INDEX_CACHE_FILE.read_text())
         except (OSError, json.JSONDecodeError):
-            pass
+            logger.exception("异常详情")
 
     # Fetch from docs site
     try:
@@ -2959,7 +2959,7 @@ def _load_hermes_index() -> Optional[dict]:
         HERMES_INDEX_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
         HERMES_INDEX_CACHE_FILE.write_text(json.dumps(data))
     except OSError:
-        pass
+        logger.exception("异常详情")
 
     return data
 
@@ -2970,7 +2970,7 @@ def _load_stale_index_cache() -> Optional[dict]:
         try:
             return json.loads(HERMES_INDEX_CACHE_FILE.read_text())
         except (OSError, json.JSONDecodeError):
-            pass
+            logger.exception("异常详情")
     return None
 
 
@@ -3233,7 +3233,7 @@ def parallel_search_sources(
                     if on_source_done:
                         on_source_done(sid, len(results))
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
         except TimeoutError:
             timed_out_ids = [
                 futures[f] for f in futures if not f.done()

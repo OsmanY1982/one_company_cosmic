@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """文件批量重命名工具"""
 import os
@@ -212,11 +216,12 @@ class FileRenameTools(QWidget):
                     count = int(self.delete_count.text() or "0")
                     new_name = name[count:]
                 except ValueError:
-                    pass
+                    logger.exception("异常详情")
             elif rule == "正则替换":
                 try:
                     new_name = re.sub(self.replace_from.text(), self.replace_to.text(), name)
-                except Exception: pass
+                except Exception:
+                    logger.exception("异常详情")
             
             new_file = new_name + ext
             self.table.setItem(i, 1, QTableWidgetItem(new_file))

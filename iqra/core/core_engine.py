@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Iqra Core Engine v2.0 - 智能核心引擎
 支持 Function Calling、多轮工具调用、任务规划、代码执行
@@ -40,7 +44,7 @@ def _get_active_provider_config(fallback_model: str = "qwen2.5:7b") -> Optional[
         if active:
             return active
     except Exception:
-        pass
+        logger.exception("异常详情")
     # 回退：直接读 JSON
     try:
         config_path = os.path.join(

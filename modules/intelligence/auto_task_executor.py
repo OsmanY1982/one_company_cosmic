@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 自动任务执行器
@@ -176,7 +180,7 @@ class AutoTaskExecutor:
                 # 首次执行
                 return True
         except:
-            pass
+            logger.exception("异常详情")
         
         return False
     

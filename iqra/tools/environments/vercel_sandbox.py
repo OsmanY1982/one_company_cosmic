@@ -402,7 +402,7 @@ class VercelSandboxEnvironment(BaseEnvironment):
         try:
             sandbox.client.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def _stop_sandbox(self, sandbox: Sandbox | None) -> None:
         if sandbox is None:
@@ -417,9 +417,9 @@ class VercelSandboxEnvironment(BaseEnvironment):
             try:
                 sandbox.stop()
             except Exception:
-                pass
+                logger.exception("异常详情")
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def _snapshot_sandbox(self, sandbox: Sandbox) -> str | None:
         if not self._persistent or not self._task_id:
@@ -562,7 +562,7 @@ class VercelSandboxEnvironment(BaseEnvironment):
                     cwd=self._workspace_root,
                 )
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _before_execute(self) -> None:
         with self._lock:

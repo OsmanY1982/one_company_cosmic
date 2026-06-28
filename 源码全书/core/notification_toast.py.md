@@ -1,12 +1,16 @@
 # `core/notification_toast.py`
 
-> 路径：`core/notification_toast.py` | 行数：139
+> 路径：`core/notification_toast.py` | 行数：143
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 系统通知弹窗组件
@@ -78,7 +82,7 @@ class NotificationToast(QFrame):
             shadow.setColor(QColor(0, 0, 0, 60))
             self.setGraphicsEffect(shadow)
         except Exception:
-            pass
+            logger.exception("异常详情")
     
     def show_toast(self):
         """显示通知"""

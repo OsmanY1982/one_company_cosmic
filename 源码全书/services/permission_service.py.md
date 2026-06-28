@@ -1,12 +1,16 @@
 # `services/permission_service.py`
 
-> 路径：`services/permission_service.py` | 行数：559
+> 路径：`services/permission_service.py` | 行数：563
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Permission Service - 权限系统服务
 RBAC模型 + 数据级权限 + 动态权限分配
@@ -392,7 +396,7 @@ class PermissionService:
             log_action(assigned_by, "分配角色", "permission",
                        f"用户={user_id}, 角色={role_code}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         
         return True
     
@@ -424,7 +428,7 @@ class PermissionService:
                 log_action("system", "撤销角色", "permission",
                            f"用户={user_id}, 角色={role_code}")
             except Exception:
-                pass
+                logger.exception("异常详情")
         
         return deleted
     
@@ -459,7 +463,7 @@ class PermissionService:
                 log_action("system", "创建自定义角色", "permission",
                            f"角色={name}({code}), 权限数={len(permission_codes)}")
             except Exception:
-                pass
+                logger.exception("异常详情")
             return True
             
         except sqlite3.IntegrityError:

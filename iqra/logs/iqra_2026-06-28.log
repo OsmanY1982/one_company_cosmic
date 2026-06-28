@@ -31,3 +31,61 @@ Traceback (most recent call last):
   File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 197, in showEvent
     from core.ad_launcher import check_and_prompt_ad
 ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 12:40:09 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-28 12:40:09 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/intelligence_window.py", line 178, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 12:40:09 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 201, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 14:04:54 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-28 14:04:54 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/intelligence_window.py", line 178, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 14:04:54 [CRITICAL] iqra: 未捕获的异常
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/modules/intelligence/iqra_floating_planet.py", line 201, in showEvent
+    from core.ad_launcher import check_and_prompt_ad
+ModuleNotFoundError: No module named 'core.ad_launcher'
+2026-06-28 14:05:14 [WARNING] iqra.core.chat_engine: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8291606144 and this is thread id 6165360640.
+2026-06-28 14:05:14 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-28 14:05:52 [ERROR] iqra.core.chat_engine: 异常详情
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/iqra/core/chat_engine.py", line 684, in _maybe_save
+    self.memory_store.sync_all()
+TypeError: SmartMemoryStore.sync_all() missing 2 required positional arguments: 'user_content' and 'assistant_content'
+2026-06-28 14:07:07 [WARNING] iqra.core.chat_engine: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8291606144 and this is thread id 6159626240.
+2026-06-28 14:07:07 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-28 14:08:00 [ERROR] iqra.core.chat_engine: 异常详情
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/iqra/core/chat_engine.py", line 684, in _maybe_save
+    self.memory_store.sync_all()
+TypeError: SmartMemoryStore.sync_all() missing 2 required positional arguments: 'user_content' and 'assistant_content'
+2026-06-28 14:09:41 [WARNING] iqra.core.chat_engine: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8291606144 and this is thread id 6161920000.
+2026-06-28 14:09:41 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-28 14:10:49 [ERROR] iqra.core.chat_engine: 异常详情
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/iqra/core/chat_engine.py", line 684, in _maybe_save
+    self.memory_store.sync_all()
+TypeError: SmartMemoryStore.sync_all() missing 2 required positional arguments: 'user_content' and 'assistant_content'
+2026-06-28 14:12:47 [WARNING] iqra.core.chat_engine: LLM 摘要压缩失败: TokenObserver.wrap_backend.<locals>.wrapped_chat() got an unexpected keyword argument 'max_tokens'，回退机械裁剪
+2026-06-28 14:12:47 [WARNING] iqra.core.chat_engine: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8291606144 and this is thread id 6161920000.
+2026-06-28 14:12:47 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-28 14:13:50 [ERROR] iqra.core.chat_engine: 异常详情
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/iqra/core/chat_engine.py", line 684, in _maybe_save
+    self.memory_store.sync_all()
+TypeError: SmartMemoryStore.sync_all() missing 2 required positional arguments: 'user_content' and 'assistant_content'
+2026-06-28 14:16:40 [WARNING] iqra.core.chat_engine: Workspace context injection failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 8291606144 and this is thread id 6161920000.
+2026-06-28 14:16:40 [WARNING] iqra.core.token_optimizer: Token optimization failed: object of type 'NoneType' has no len()
+2026-06-28 14:17:38 [ERROR] iqra.core.chat_engine: 异常详情
+Traceback (most recent call last):
+  File "/Volumes/D盘工作区/一人公司宇宙版/one_company_cosmic/iqra/core/chat_engine.py", line 684, in _maybe_save
+    self.memory_store.sync_all()
+TypeError: SmartMemoryStore.sync_all() missing 2 required positional arguments: 'user_content' and 'assistant_content'

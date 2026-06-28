@@ -1,12 +1,16 @@
 # `iqra/core/smart_memory.py`
 
-> 路径：`iqra/core/smart_memory.py` | 行数：168
+> 路径：`iqra/core/smart_memory.py` | 行数：172
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 SmartMemory - 智能记忆系统
 独立实现，支持检索画像、学习特征、偏好档案、建议记录
@@ -121,7 +125,7 @@ class SmartMemory:
                     data = json.load(f)
                 return data
             except Exception:
-                pass
+                logger.exception("异常详情")
         return self._default_preferences()
 
     def _default_preferences(self) -> Dict[str, Any]:

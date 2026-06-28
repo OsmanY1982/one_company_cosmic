@@ -1,6 +1,6 @@
 # `core/database.py`
 
-> 路径：`core/database.py` | 行数：191
+> 路径：`core/database.py` | 行数：195
 
 
 ---
@@ -9,6 +9,10 @@
 ```python
 # -*- coding: utf-8 -*-
 from __future__ import annotations
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 统一数据库连接管理器
 所有 service 层统一通过此处获取 SQLite 连接，替代分散的 sqlite3.connect()
@@ -62,7 +66,7 @@ def close_conn(db_name: str) -> None:
             try:
                 _connections[key].close()
             except Exception:
-                pass
+                logger.exception("异常详情")
             del _connections[key]
 
 
@@ -73,7 +77,7 @@ def close_all() -> None:
             try:
                 conn.close()
             except Exception:
-                pass
+                logger.exception("异常详情")
         _connections.clear()
 
 

@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 订单管理 · ORBIT — 独立弹窗模块
 """
@@ -46,7 +50,8 @@ def _init_order_db():
         ("payment_method", "TEXT DEFAULT ''"),
     ]:
         try: c.execute(f"ALTER TABLE orders ADD COLUMN {col} {col_def}")
-        except sqlite3.OperationalError: pass
+        except sqlite3.OperationalError:
+            logger.exception("异常详情")
     conn.commit()
     conn.close()
 
@@ -73,7 +78,8 @@ def _init_finance_db():
         ("finance_no", "TEXT DEFAULT ''"),
     ]:
         try: c.execute(f"ALTER TABLE finance ADD COLUMN {col} {col_def}")
-        except sqlite3.OperationalError: pass
+        except sqlite3.OperationalError:
+            logger.exception("异常详情")
     conn.commit()
     conn.close()
 

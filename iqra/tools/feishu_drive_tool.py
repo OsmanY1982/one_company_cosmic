@@ -75,7 +75,7 @@ def _do_request(client, method, uri, paths=None, queries=None, body=None):
             body_json = json.loads(raw.content)
             data = body_json.get("data", {})
         except (json.JSONDecodeError, AttributeError):
-            pass
+            logger.exception("异常详情")
     if not data:
         resp_data = getattr(response, "data", None)
         if isinstance(resp_data, dict):

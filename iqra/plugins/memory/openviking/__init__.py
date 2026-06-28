@@ -66,6 +66,7 @@ def _atexit_commit_sessions():
     try:
         provider.on_session_end([])
     except Exception:
+        logger.exception("异常详情")
         pass  # best-effort at shutdown time
 
 

@@ -1,12 +1,16 @@
 # `modules/intelligence/whisper_recognizer.py`
 
-> 路径：`modules/intelligence/whisper_recognizer.py` | 行数：382
+> 路径：`modules/intelligence/whisper_recognizer.py` | 行数：386
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 Whisper 语音识别引擎 — faster-whisper large-v3 + sounddevice
@@ -29,7 +33,7 @@ def _wprint(*args, **kwargs):
     try:
         print(*args, **kwargs)
     except OSError:
-        pass
+        logger.exception("异常详情")
 
 
 # ═══════════ 配置 ═══════════
@@ -354,7 +358,7 @@ class WhisperRecognizer(QThread):
             try:
                 traceback.print_exc()
             except OSError:
-                pass
+                logger.exception("异常详情")
             self.error_occurred.emit(f"模型加载失败: {e}")
             return
 

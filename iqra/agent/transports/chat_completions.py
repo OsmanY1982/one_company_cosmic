@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """OpenAI Chat Completions transport.
 
 Handles the default api_mode ('chat_completions') used by ~16 OpenAI-compatible
@@ -536,7 +540,7 @@ class ChatCompletionsTransport(ProviderTransport):
                         try:
                             extra = extra.model_dump()
                         except Exception:
-                            pass
+                            logger.exception("异常详情")
                     tc_provider_data["extra_content"] = extra
                 tool_calls.append(
                     ToolCall(

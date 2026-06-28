@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Iqra LLM Backend - 多供应商统一接口
 Universal multi-provider LLM interface with function calling.
@@ -264,7 +268,7 @@ class OpenAICompatibleBackend(BaseLLMBackend):
                     from iqra.core.model_status import mark_model_no_token
                     mark_model_no_token(self.config.model, self.config.name)
                 except ImportError:
-                    pass
+                    logger.exception("异常详情")
                 
                 raise RuntimeError(
                     f"[{self.config.name}] Token 用尽或额度不足: {error_body[:300]}"

@@ -1,12 +1,16 @@
 # `modules/auth/admin_login_window.py`
 
-> 路径：`modules/auth/admin_login_window.py` | 行数：732
+> 路径：`modules/auth/admin_login_window.py` | 行数：736
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """独立的管理员登录窗口 — 专业优化版
 视觉亮点：暗色渐变背景 + 白色卡片面板 + 盾牌图标 + 现代化交互
@@ -126,14 +130,14 @@ def _verify_password(password: str, stored_hash: str) -> bool:
             import bcrypt
             return bcrypt.checkpw(password.encode("utf-8"), stored_hash.encode("utf-8"))
         except Exception:
-            pass
+            logger.exception("异常详情")
     # SHA256 (64位hex)
     if len(stored_hash) == 64:
         try:
             import hashlib
             return hashlib.sha256(password.encode("utf-8")).hexdigest() == stored_hash
         except Exception:
-            pass
+            logger.exception("异常详情")
     # 兼容：明文（过渡期）
     return password == stored_hash
 
@@ -501,10 +505,10 @@ class AdminLoginWindow(QMainWindow):
                         try:
                             self.pwd_input.setText(_decrypt_password(pwd))
                         except Exception:
-                            pass
+                            logger.exception("异常详情")
                     self.remember_checkbox.setChecked(True)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _save_remember(self, pwd):
         """保存/清除记住的密码"""
@@ -522,7 +526,7 @@ class AdminLoginWindow(QMainWindow):
             with open(SAVE_FILE, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def _do_login(self):
         """执行登录验证"""
@@ -713,7 +717,7 @@ class AdminLoginWindow(QMainWindow):
             try:
                 app_state._current_dashboard.close()
             except Exception:
-                pass
+                logger.exception("异常详情")
             app_state._current_dashboard = None
         
         try:

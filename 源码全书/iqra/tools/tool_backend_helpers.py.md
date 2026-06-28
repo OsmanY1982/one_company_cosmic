@@ -1,6 +1,6 @@
 # `iqra/tools/tool_backend_helpers.py`
 
-> 路径：`iqra/tools/tool_backend_helpers.py` | 行数：144
+> 路径：`iqra/tools/tool_backend_helpers.py` | 行数：147
 
 
 ---
@@ -16,6 +16,9 @@ from pathlib import Path
 from typing import Any, Dict
 
 from utils import is_truthy_value
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 _DEFAULT_BROWSER_PROVIDER = "local"
@@ -128,7 +131,7 @@ def prefers_gateway(config_section: str) -> bool:
         if isinstance(section, dict):
             return is_truthy_value(section.get("use_gateway"), default=False)
     except Exception:
-        pass
+        logger.exception("异常详情")
     return False
 
 

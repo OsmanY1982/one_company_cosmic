@@ -248,7 +248,7 @@ def get_skills_directory_mount(
                     "container_path": f"{container_base.rstrip('/')}/external_skills/{idx}",
                 })
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     return mounts
 
@@ -340,7 +340,7 @@ def iter_skills_files(
                     "container_path": f"{container_root}/{rel}",
                 })
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     return result
 

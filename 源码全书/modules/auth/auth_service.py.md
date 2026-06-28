@@ -1,12 +1,16 @@
 # `modules/auth/auth_service.py`
 
-> 路径：`modules/auth/auth_service.py` | 行数：263
+> 路径：`modules/auth/auth_service.py` | 行数：304
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 认证服务模块 — 用户注册/登录/会员管理
 数据持久化到 modules/auth/users.json + data/users.db (SQLite)
@@ -18,7 +22,9 @@
 import traceback
 import json
 import os
+import hashlib
 import sqlite3
+import bcrypt
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -50,7 +56,7 @@ MEMBERSHIP_LABELS = {
 }
 
 ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "admin"
+ADMIN_PASSWORD = "$2b$12$yd1e1mRKXK1C6naNiD/WTuP1wkLCcVnfSBbj1OXdIPQiWGvHzorbq"
 
 
 def _now():
@@ -79,7 +85,7 @@ def _load_users() -> dict:
             os.rename(USER_DB, corrupted)
             print(f"[auth] users.json 损坏，已备份到 {corrupted}：{e}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         users = {
             ADMIN_USERNAME: {
                 "password": ADMIN_PASSWORD, "role": "admin",
@@ -140,6 +146,35 @@ def _save_users(users: dict):
     os.replace(tmp_path, USER_DB)
 
 
+# ── 密码哈希工具（bcrypt + sha256 + 明文 三重兼容）──
+
+def _hash_password(password: str) -> str:
+    """用 bcrypt 哈希密码。"""
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+
+def _verify_password(password: str, stored: str) -> bool:
+    """三重兼容密码验证：bcrypt → sha256 → 明文。"""
+    if not password or not stored:
+        return False
+    # bcrypt ($2 前缀)
+    if stored.startswith("$2"):
+        try:
+            return bcrypt.checkpw(password.encode("utf-8"), stored.encode("utf-8"))
+        except Exception:
+            return False
+    # sha256（64 位十六进制）
+    if len(stored) == 64 and all(c in "0123456789abcdef" for c in stored):
+        return hashlib.sha256(password.encode("utf-8")).hexdigest() == stored
+    # 明文兜底
+    return password == stored
+
+
+def _needs_rehash(stored: str) -> bool:
+    """判断是否需要升级为 bcrypt 哈希。"""
+    return not (stored and stored.startswith("$2"))
+
+
 class AuthService(SyncMixin, MembershipMixin):
     """认证服务 — 核心认证 + Mixin(SQLite桥接 + 会员管理)"""
 
@@ -181,7 +216,7 @@ class AuthService(SyncMixin, MembershipMixin):
         now = _now()
         expire_at = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
         self._users[username] = {
-            "password": password, "role": "member",
+            "password": _hash_password(password), "role": "member",
             "membership": MEMBERSHIP_TRIAL, "expire_at": expire_at,
             "created_at": now,
         }
@@ -192,7 +227,7 @@ class AuthService(SyncMixin, MembershipMixin):
         try:
             log_action(username, "注册", "login", "新用户注册")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return True, "注册成功"
 
     def login(self, username: str, password: str) -> dict:
@@ -206,14 +241,20 @@ class AuthService(SyncMixin, MembershipMixin):
 
         if not user:
             return {"ok": False, "msg": "用户名或密码错误", "user": None}
-        if user["password"] != password:
+        if not _verify_password(password, user.get("password", "")):
             return {"ok": False, "msg": "用户名或密码错误", "user": None}
+
+        # 自动升级旧哈希到 bcrypt
+        if _needs_rehash(user.get("password", "")):
+            user["password"] = _hash_password(password)
+            _save_users(self._users)
+            self._sync_user_to_sqlite(username)
 
         if user["role"] == "admin":
             try:
                 log_action(username, "登录", "login", "管理员登录成功")
             except Exception:
-                pass
+                logger.exception("异常详情")
             return {"ok": True, "msg": "管理员登录成功", "user": user}
 
         expire_str = user.get("expire_at")
@@ -232,7 +273,7 @@ class AuthService(SyncMixin, MembershipMixin):
         try:
             log_action(username, "登录", "login", "用户登录成功")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return {"ok": True, "msg": "登录成功", "user": user}
 
     def admin_login(self, password: str) -> dict:
@@ -244,23 +285,23 @@ class AuthService(SyncMixin, MembershipMixin):
         user = self._users.get(username)
         if not user:
             return False, "用户不存在"
-        if user.get("password") != old_password:
+        if not _verify_password(old_password, user.get("password", "")):
             return False, "原密码错误"
         if not new_password or len(new_password) < 6:
             return False, "新密码至少6位"
         if new_password != confirm_password:
             return False, "两次输入的新密码不一致"
-        if new_password == old_password:
+        if _verify_password(new_password, user.get("password", "")):
             return False, "新密码不能与原密码相同"
 
-        user["password"] = new_password
+        user["password"] = _hash_password(new_password)
         _save_users(self._users)
         self._sync_user_to_sqlite(username)
         self._trigger_cloud_sync()
         try:
             log_action(username, "修改密码", "account", "密码修改成功")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return True, "密码修改成功，请重新登录"
 
     def get_user_info(self, username: str) -> Optional[dict]:

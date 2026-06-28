@@ -1,12 +1,16 @@
 # `modules/intelligence/floating_planet_anim_mixin.py`
 
-> 路径：`modules/intelligence/floating_planet_anim_mixin.py` | 行数：194
+> 路径：`modules/intelligence/floating_planet_anim_mixin.py` | 行数：198
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """悬浮球动画 Mixin — 物理漫游、外星人、形态循环"""
 import sys, os, math, random
@@ -161,7 +165,7 @@ class FloatingPlanetAnimMixin:
             try:
                 self._voice.speak(f"你好，我是{name}")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _cycle_shape(self, direction: int):
         if self._current_category == "planet":
@@ -181,7 +185,7 @@ class FloatingPlanetAnimMixin:
         try:
             self._auto_switch_idx = self._all_shape_keys.index(key)
         except (AttributeError, ValueError):
-            pass
+            logger.exception("异常详情")
 
     def _auto_cycle_shape(self):
         total = len(self._all_shape_keys)
@@ -200,6 +204,6 @@ class FloatingPlanetAnimMixin:
         try:
             print(f"[AutoSwitch] #{self._auto_switch_idx}/{total} -> {name} ({key})")
         except OSError:
-            pass
+            logger.exception("异常详情")
 
 ```

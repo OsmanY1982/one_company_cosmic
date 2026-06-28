@@ -69,7 +69,7 @@ def _build_provider_env_blocklist() -> frozenset:
             if pconfig.base_url_env_var:
                 blocked.add(pconfig.base_url_env_var)
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     try:
         from iqra_cli.config import OPTIONAL_ENV_VARS
@@ -80,7 +80,7 @@ def _build_provider_env_blocklist() -> frozenset:
             elif category == "setting" and metadata.get("password"):
                 blocked.add(name)
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     blocked.update({
         "OPENAI_BASE_URL",
@@ -485,7 +485,7 @@ class LocalEnvironment(BaseEnvironment):
             try:
                 proc._hermes_pgid = os.getpgid(proc.pid)
             except ProcessLookupError:
-                pass
+                logger.exception("异常详情")
 
         if stdin_data is not None:
             _pipe_stdin(proc, stdin_data)
@@ -514,14 +514,14 @@ class LocalEnvironment(BaseEnvironment):
                 try:
                     proc.poll()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
                 if not _group_alive(pgid):
                     return True
                 time.sleep(0.05)
             try:
                 proc.poll()
             except Exception:
-                pass
+                logger.exception("异常详情")
             return not _group_alive(pgid)
 
         try:
@@ -555,12 +555,12 @@ class LocalEnvironment(BaseEnvironment):
                 try:
                     proc.wait(timeout=0.2)
                 except (subprocess.TimeoutExpired, OSError):
-                    pass
+                    logger.exception("异常详情")
         except (ProcessLookupError, PermissionError, OSError):
             try:
                 proc.kill()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _update_cwd(self, result: dict):
         """Read CWD from temp file (local-only, no round-trip needed).
@@ -576,7 +576,7 @@ class LocalEnvironment(BaseEnvironment):
             if cwd_path and os.path.isdir(cwd_path):
                 self.cwd = cwd_path
         except (OSError, FileNotFoundError):
-            pass
+            logger.exception("异常详情")
 
         # Still strip the marker from output so it's not visible
         self._extract_cwd_from_output(result)
@@ -587,6 +587,6 @@ class LocalEnvironment(BaseEnvironment):
             try:
                 os.unlink(f)
             except OSError:
-                pass
+                logger.exception("异常详情")
 
 ```

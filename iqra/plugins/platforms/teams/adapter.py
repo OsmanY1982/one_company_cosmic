@@ -428,7 +428,7 @@ def _env_enablement() -> dict | None:
         try:
             seed["port"] = int(port)
         except ValueError:
-            pass
+            logger.exception("异常详情")
     service_url = os.getenv("TEAMS_SERVICE_URL", "").strip()
     if service_url:
         seed["service_url"] = service_url
@@ -1008,7 +1008,7 @@ class TeamsAdapter(BasePlatformAdapter):
         try:
             await self._app.send(chat_id, TypingActivityInput())
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     async def send_image(
         self,

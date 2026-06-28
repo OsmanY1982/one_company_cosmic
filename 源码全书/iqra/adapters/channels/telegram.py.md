@@ -46,7 +46,7 @@ try:
     from telegram.constants import ParseMode
     _HAS_TELEGRAM = True
 except ImportError:
-    pass
+    logger.exception("异常详情")
 
 
 class TelegramAdapter(BaseChannelAdapter):

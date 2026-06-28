@@ -1,6 +1,6 @@
 # `modules/auth/upgrade_window.py`
 
-> 路径：`modules/auth/upgrade_window.py` | 行数：801
+> 路径：`modules/auth/upgrade_window.py` | 行数：804
 
 
 ---
@@ -12,6 +12,9 @@ from core.paths import BASE_DIR, DATA_DIR, CONFIG_DIR
 import sys
 import os
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 import random
 import string
 import csv
@@ -151,7 +154,7 @@ def _get_all_generated_suffixes():
                         suffix = parts[2].split("-")[-2] + parts[2].split("-")[-1]
                         suffixes.append(suffix)
     except Exception:
-        pass
+        logger.exception("异常详情")
     return suffixes
 
 def _save_user_pro_status(username, vip_type="PRO"):

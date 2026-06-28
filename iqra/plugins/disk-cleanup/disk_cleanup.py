@@ -73,7 +73,7 @@ def is_safe_path(path: Path) -> bool:
         path.resolve().relative_to(hermes_home)
         return True
     except (ValueError, OSError):
-        pass
+        logger.exception("异常详情")
     # Allow /tmp/hermes-* explicitly
     parts = path.parts
     if len(parts) >= 3 and parts[1] == "tmp" and parts[2].startswith("hermes-"):
@@ -93,7 +93,7 @@ def _log(message: str) -> None:
         with open(log_file, "a", encoding="utf-8") as f:
             f.write(f"[{ts}] {message}\n")
     except OSError:
-        # Never let the audit log break the agent loop.
+        logger.exception("异常详情")
         pass
 
 
@@ -119,7 +119,7 @@ def load_tracked() -> List[Dict[str, Any]]:
                 _log("WARN: tracked.json corrupted — restored from .bak")
                 return data
             except Exception:
-                pass
+                logger.exception("异常详情")
         _log("WARN: tracked.json corrupted, no backup — starting fresh")
         return []
 
@@ -318,9 +318,9 @@ def quick() -> Dict[str, Any]:
                     empty_removed += 1
                     _log(f"DELETED: {dirpath} (empty dir)")
             except OSError:
-                pass
+                logger.exception("异常详情")
     except OSError:
-        pass
+        logger.exception("异常详情")
 
     save_tracked(new_tracked)
     _log(
@@ -485,7 +485,7 @@ def guess_category(path: Path) -> Optional[str]:
         if top == "cache":
             return "temp"
     except ValueError:
-        # Path isn't under HERMES_HOME (e.g. /tmp/hermes-*) — fall through.
+        logger.exception("异常详情")
         pass
 
     name = path.name

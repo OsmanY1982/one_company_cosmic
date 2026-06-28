@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 定时任务调度服务
 管理定时任务的创建、修改、删除和执行
@@ -53,7 +57,7 @@ class SchedulerService:
                         task = ScheduledTask(**item)
                         self._tasks[task.task_id] = task
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _save_tasks(self):
         """保存任务配置"""

@@ -848,7 +848,7 @@ class GeminiNativeClient:
         try:
             self._http.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def __enter__(self):
         return self

@@ -75,7 +75,7 @@ def touch_activity_if_due(
             elapsed = int(now - state["start"])
             cb(f"{label} ({elapsed}s elapsed)")
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 
 def get_sandbox_dir() -> Path:
@@ -127,7 +127,7 @@ def _pipe_stdin(proc: subprocess.Popen, data: str) -> None:
             target.write(raw)
             target.close()
         except (BrokenPipeError, OSError):
-            pass
+            logger.exception("异常详情")
 
     threading.Thread(target=_write, daemon=True).start()
 
@@ -160,7 +160,7 @@ def _load_json_store(path: Path) -> dict:
         try:
             return json.loads(path.read_text(encoding="utf-8"))
         except Exception:
-            pass
+            logger.exception("异常详情")
     return {}
 
 
@@ -234,7 +234,7 @@ class _ThreadedProcessHandle:
                 try:
                     os.write(self._write_fd, output.encode("utf-8", errors="replace"))
                 except OSError:
-                    pass
+                    logger.exception("异常详情")
             except Exception as exc:
                 self._error = exc
                 self._returncode = 1
@@ -242,7 +242,7 @@ class _ThreadedProcessHandle:
                 try:
                     os.close(self._write_fd)
                 except OSError:
-                    pass
+                    logger.exception("异常详情")
                 self._done.set()
 
         t = threading.Thread(target=_worker, daemon=True)
@@ -264,7 +264,7 @@ class _ThreadedProcessHandle:
             try:
                 self._cancel_fn()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def wait(self, timeout: float | None = None) -> int:
         self._done.wait(timeout=timeout)
@@ -537,14 +537,14 @@ class BaseEnvironment(ABC):
                             break
                         output_chunks.append(decoder.decode(chunk))
                 except (ValueError, OSError):
-                    pass
+                    logger.exception("异常详情")
                 finally:
                     try:
                         tail = decoder.decode(b"", final=True)
                         if tail:
                             output_chunks.append(tail)
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
                 return
             idle_after_exit = 0
             try:
@@ -578,7 +578,7 @@ class BaseEnvironment(ABC):
                     if tail:
                         output_chunks.append(tail)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
 
         drain_thread = threading.Thread(target=_drain, daemon=True)
         drain_thread.start()
@@ -682,6 +682,7 @@ class BaseEnvironment(ABC):
                 self._kill_process(proc)
                 drain_thread.join(timeout=2)
             except Exception:
+                logger.exception("异常详情")
                 pass  # cleanup is best-effort
             raise
 
@@ -693,7 +694,7 @@ class BaseEnvironment(ABC):
         try:
             proc.stdout.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         if _DEBUG_INTERRUPT:
             logger.info(
@@ -711,7 +712,7 @@ class BaseEnvironment(ABC):
         try:
             proc.kill()
         except (ProcessLookupError, PermissionError, OSError):
-            pass
+            logger.exception("异常详情")
 
     # ------------------------------------------------------------------
     # CWD extraction
@@ -833,7 +834,7 @@ class BaseEnvironment(ABC):
         try:
             self.cleanup()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def _prepare_command(self, command: str) -> tuple[str, str | None]:
         """Transform sudo commands if SUDO_PASSWORD is available."""

@@ -45,7 +45,7 @@ def _read_nous_provider_state() -> Optional[dict]:
         if isinstance(nous_provider, dict):
             return nous_provider
     except Exception:
-        pass
+        logger.exception("异常详情")
     return None
 
 

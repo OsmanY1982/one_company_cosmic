@@ -1,12 +1,16 @@
 # `core/custom_fields.py`
 
-> 路径：`core/custom_fields.py` | 行数：284
+> 路径：`core/custom_fields.py` | 行数：290
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 自定义字段管理模块
 支持动态字段定义、数据验证、高级筛选
@@ -135,7 +139,7 @@ class CustomFieldManager:
                     field = CustomField.from_dict(field_data)
                     self.fields[field.id] = field
         except FileNotFoundError:
-            pass
+            logger.exception("异常详情")
     
     def _save_fields(self):
         data = {
@@ -212,12 +216,14 @@ class CustomFieldManager:
                 try:
                     if float(value) < float(rules['min']):
                         return False, f"{field.name} 最小值为 {rules['min']}"
-                except (ValueError, TypeError): pass
+                except (ValueError, TypeError):
+                    logger.exception("异常详情")
             if 'max' in rules:
                 try:
                     if float(value) > float(rules['max']):
                         return False, f"{field.name} 最大值为 {rules['max']}"
-                except (ValueError, TypeError): pass
+                except (ValueError, TypeError):
+                    logger.exception("异常详情")
             if 'pattern' in rules and not re.match(rules['pattern'], str(value)):
                 return False, f"{field.name} 格式不符合要求"
         return True, None

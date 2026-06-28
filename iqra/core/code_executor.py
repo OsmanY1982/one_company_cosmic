@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 代码执行沙箱
 安全执行 Python 代码，支持资源限制和超时控制
@@ -224,7 +228,7 @@ class SecureSandbox:
                 module = __import__(module_name)
                 safe_globals[module_name] = module
             except ImportError:
-                pass
+                logger.exception("异常详情")
         
         return safe_globals
     

@@ -1,12 +1,16 @@
 # `iqra/skills/productivity/maps/scripts/maps_client.py`
 
-> 路径：`iqra/skills/productivity/maps/scripts/maps_client.py` | 行数：1298
+> 路径：`iqra/skills/productivity/maps/scripts/maps_client.py` | 行数：1303
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 maps_client.py - CLI tool for maps, geocoding, routing, POI search, and more.
@@ -949,6 +953,7 @@ def cmd_timezone(args):
                         utc_offset = f"{utc_offset}:{os_:02d}"
             timezone_src = "timeapi.io"
     except (RuntimeError, KeyError, TypeError):
+        logger.exception("异常详情")
         pass  # API may be down; continue to fallback
 
     # --- Strategy 2: longitude-based UTC offset approximation ---

@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 草稿管理器
@@ -119,7 +123,7 @@ class DraftManager:
                 draft["_id"] = fname.replace(".json", "")
                 drafts.append(draft)
             except Exception:
-                pass
+                logger.exception("异常详情")
         drafts.sort(key=lambda d: d.get("updated_at", 0), reverse=True)
         return drafts
 

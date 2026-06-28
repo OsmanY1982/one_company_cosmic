@@ -306,7 +306,7 @@ def _handle_send(args):
                 ):
                     result["mirrored"] = True
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         if isinstance(result, dict) and "error" in result:
             result["error"] = _sanitize_error_text(result["error"])
@@ -563,7 +563,7 @@ async def _send_to_platform(platform, pconfig, chat_id, message, thread_id=None,
             if entry and entry.max_message_length > 0:
                 _MAX_LENGTHS[platform] = entry.max_message_length
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     # Smart-chunk the message to fit within platform limits.
     # For short messages or platforms without a known limit this is a no-op.
@@ -969,7 +969,7 @@ async def _send_discord(token, chat_id, message, thread_id=None, media_files=Non
                 from gateway.channel_directory import lookup_channel_type
                 _channel_type = lookup_channel_type("discord", chat_id)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
             if _channel_type == "forum":
                 is_forum = True
@@ -1497,7 +1497,7 @@ async def _send_matrix(token, extra, chat_id, message):
             payload["format"] = "org.matrix.custom.html"
             payload["formatted_body"] = html
         except ImportError:
-            pass
+            logger.exception("异常详情")
 
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
             async with session.put(url, headers=headers, json=payload) as resp:
@@ -1567,7 +1567,7 @@ async def _send_matrix_via_adapter(pconfig, chat_id, message, media_files=None, 
         try:
             await adapter.disconnect()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
 
 async def _send_homeassistant(token, extra, chat_id, message):

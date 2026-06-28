@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 系统服务
 获取系统信息、硬件信息
@@ -75,7 +79,7 @@ class SystemService:
                     "percent": usage.percent,
                 })
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         return {"disks": disks}
 
@@ -110,7 +114,7 @@ class SystemService:
             try:
                 processes.append(proc.info)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         processes.sort(key=lambda x: x.get("cpu_percent", 0), reverse=True)
         return processes[:top_n]
@@ -126,7 +130,7 @@ class SystemService:
                     "time_remaining": str(timedelta(seconds=battery.secsleft)) if battery.secsleft != -1 else "未知",
                 }
         except Exception:
-            pass
+            logger.exception("异常详情")
         return None
 
     def get_uptime(self) -> Dict:

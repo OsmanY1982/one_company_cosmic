@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 增强型聊天窗口 - 集成7项核心AI能力
@@ -351,7 +355,7 @@ class EnhancedChatWidget(QWidget):
                         tool_name = tools[0]
                         self._append_message("🧠 AI", f"智能选择工具: {tool_name}")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 如果没有智能选择，尝试直接匹配
         if not tool_name:

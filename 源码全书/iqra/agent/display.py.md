@@ -77,7 +77,7 @@ def _diff_ansi() -> dict[str, str]:
             or_, og, ob = int(ok_h[1:3], 16), int(ok_h[3:5], 16), int(ok_h[5:7], 16)
             plus = f"\033[38;2;255;255;255;48;2;{max(or_//4,10)};{max(og//2,20)};{max(ob//4,10)}m"
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     _diff_colors_cached = {
         "dim": dim, "file": file_c, "hunk": hunk,
@@ -162,7 +162,7 @@ def get_tool_emoji(tool_name: str, default: str = "⚡") -> str:
         if emoji:
             return emoji
     except Exception:
-        pass
+        logger.exception("异常详情")
     # 3. Hardcoded fallback
     return default
 
@@ -621,7 +621,7 @@ class KawaiiSpinner:
                 if faces:
                     return faces
         except Exception:
-            pass
+            logger.exception("异常详情")
         return cls.KAWAII_WAITING
 
     @classmethod
@@ -634,7 +634,7 @@ class KawaiiSpinner:
                 if faces:
                     return faces
         except Exception:
-            pass
+            logger.exception("异常详情")
         return cls.KAWAII_THINKING
 
     @classmethod
@@ -647,7 +647,7 @@ class KawaiiSpinner:
                 if verbs:
                     return verbs
         except Exception:
-            pass
+            logger.exception("异常详情")
         return cls.THINKING_VERBS
 
     def __init__(self, message: str = "", spinner_type: str = 'dots', print_fn=None):
@@ -676,14 +676,14 @@ class KawaiiSpinner:
             try:
                 self._print_fn(text)
             except Exception:
-                pass
+                logger.exception("异常详情")
             return
         try:
             self._out.write(text + end)
             if flush:
                 self._out.flush()
         except (ValueError, OSError):
-            pass
+            logger.exception("异常详情")
 
     @property
     def _is_tty(self) -> bool:

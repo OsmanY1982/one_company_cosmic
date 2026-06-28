@@ -148,7 +148,7 @@ def discover_memory_providers() -> List[Tuple[str, str, bool]]:
                     meta = yaml.safe_load(f) or {}
                 desc = meta.get("description", "")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # Quick availability check — try loading and calling is_available()
         available = True
@@ -231,7 +231,7 @@ def _load_provider_from_dir(provider_dir: Path) -> Optional["MemoryProvider"]:
                         try:
                             spec.loader.exec_module(parent_mod)
                         except Exception:
-                            pass
+                            logger.exception("异常详情")
 
         # Now load the provider module
         spec = importlib.util.spec_from_file_location(
@@ -289,7 +289,7 @@ def _load_provider_from_dir(provider_dir: Path) -> Optional["MemoryProvider"]:
             try:
                 return attr()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     return None
 
@@ -397,7 +397,7 @@ def discover_plugin_cli_commands() -> List[dict]:
                     help_text = desc
                     description = desc
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         handler_fn = getattr(cli_mod, f"{active_provider}_command", None) or \
                      getattr(cli_mod, "honcho_command", None)

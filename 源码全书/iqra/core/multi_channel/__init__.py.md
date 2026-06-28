@@ -1,12 +1,16 @@
 # `iqra/core/multi_channel/__init__.py`
 
-> 路径：`iqra/core/multi_channel/__init__.py` | 行数：420
+> 路径：`iqra/core/multi_channel/__init__.py` | 行数：424
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 Multi-Channel Content Distribution Module
@@ -266,7 +270,7 @@ def list_drafts(platform: Optional[str] = None) -> List[Dict[str, Any]]:
             if platform is None or draft.get("platform") == platform:
                 drafts.append(draft)
         except Exception:
-            pass
+            logger.exception("异常详情")
     # 按创建时间倒序
     drafts.sort(key=lambda d: d.get("created_at", 0), reverse=True)
     return drafts
@@ -383,7 +387,7 @@ def _auto_register(platform: str):
             register_adapter("linkedin", adapter)
             return adapter
     except ImportError:
-        pass
+        logger.exception("异常详情")
     return None
 
 
@@ -400,32 +404,32 @@ def auto_register_all() -> int:
             register_adapter("wechat", WechatAdapter())
             count += 1
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         if os.environ.get("WEIBO_ACCESS_TOKEN"):
             from .platforms.weibo import WeiboAdapter
             register_adapter("weibo", WeiboAdapter())
             count += 1
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         from .platforms.zhihu import ZhihuAdapter
         register_adapter("zhihu", ZhihuAdapter())
         count += 1
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         from .platforms.twitter import TwitterAdapter
         register_adapter("twitter", TwitterAdapter())
         count += 1
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         from .platforms.linkedin import LinkedInAdapter
         register_adapter("linkedin", LinkedInAdapter())
         count += 1
     except ImportError:
-        pass
+        logger.exception("异常详情")
     return count
 
 ```

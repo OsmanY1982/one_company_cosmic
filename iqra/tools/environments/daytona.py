@@ -127,7 +127,7 @@ class DaytonaEnvironment(BaseEnvironment):
                 if requested_cwd in ("~", "/home/daytona"):
                     self.cwd = home
         except Exception:
-            pass
+            logger.exception("异常详情")
         logger.info("Daytona: resolved home to %s, cwd to %s", self._remote_home, self.cwd)
 
         self._sync_manager = FileSyncManager(
@@ -182,6 +182,7 @@ class DaytonaEnvironment(BaseEnvironment):
         try:
             self._sandbox.process.exec(f"rm -f {shlex.quote(remote_tar)}")
         except Exception:
+            logger.exception("异常详情")
             pass  # best-effort cleanup
 
     def _daytona_delete(self, remote_paths: list[str]) -> None:
@@ -217,7 +218,7 @@ class DaytonaEnvironment(BaseEnvironment):
                 try:
                     sandbox.stop()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
 
         if login:
             shell_cmd = f"bash -l -c {shlex.quote(cmd_string)}"

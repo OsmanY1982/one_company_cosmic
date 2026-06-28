@@ -49,7 +49,7 @@ def resolve_active_host() -> str:
         if profile and profile not in ("default", "custom"):
             return f"{HOST}.{profile}"
     except Exception:
-        pass
+        logger.exception("异常详情")
     return HOST
 
 
@@ -106,7 +106,7 @@ def _parse_context_tokens(host_val, root_val) -> int | None:
             try:
                 return int(val)
             except (ValueError, TypeError):
-                pass
+                logger.exception("异常详情")
     return None
 
 
@@ -117,7 +117,7 @@ def _parse_int_config(host_val, root_val, default: int) -> int:
             try:
                 return int(val)
             except (ValueError, TypeError):
-                pass
+                logger.exception("异常详情")
     return default
 
 
@@ -128,7 +128,7 @@ def _parse_dialectic_depth(host_val, root_val) -> int:
             try:
                 return max(1, min(int(val), 3))
             except (ValueError, TypeError):
-                pass
+                logger.exception("异常详情")
     return 1
 
 
@@ -556,7 +556,7 @@ class HonchoClientConfig:
             if root.returncode == 0:
                 return Path(root.stdout.strip()).name
         except (OSError, subprocess.TimeoutExpired):
-            pass
+            logger.exception("异常详情")
         return None
 
     # Honcho enforces a 100-char limit on session IDs. Long gateway session keys
@@ -714,7 +714,7 @@ def get_honcho_client(config: HonchoClientConfig | None = None) -> Honcho:
                         honcho_cfg.get("request_timeout"),
                     )
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     # Fall back to the default so an unconfigured install cannot hang
     # indefinitely on a stalled Honcho request.

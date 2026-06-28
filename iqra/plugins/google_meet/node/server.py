@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Remote node server.
 
 Runs on the machine that will host the Meet bot (typically the user's
@@ -68,7 +72,7 @@ class NodeServer:
                     self._token = tok
                     return tok
             except (OSError, json.JSONDecodeError):
-                pass
+                logger.exception("异常详情")
         tok = secrets.token_hex(16)  # 32 hex chars
         self.token_path.parent.mkdir(parents=True, exist_ok=True)
         tmp = self.token_path.with_suffix(".json.tmp")
@@ -81,7 +85,7 @@ class NodeServer:
         try:
             tmp.chmod(0o600)
         except (OSError, NotImplementedError):
-            # Best-effort on non-POSIX filesystems; mode is set on POSIX.
+            logger.exception("异常详情")
             pass
         tmp.replace(self.token_path)
         self._token = tok

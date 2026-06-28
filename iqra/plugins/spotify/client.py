@@ -7,6 +7,9 @@ from typing import Any, Dict, Iterable, Optional
 from urllib.parse import urlparse
 
 import httpx
+import logging
+
+logger = logging.getLogger(__name__)
 
 from iqra_cli.auth import (
     AuthError,
@@ -332,7 +335,7 @@ def _extract_spotify_error_detail(response: httpx.Response, *, fallback: str) ->
             elif isinstance(error_obj, str):
                 detail = error_obj
     except Exception:
-        pass
+        logger.exception("异常详情")
     return detail.strip()
 
 

@@ -68,7 +68,7 @@ class MemoryStore:
                         "pinned": existing.get("pinned", False),
                     }
             except Exception:
-                pass
+                logger.exception("异常详情")
         
         # Auto-generate title from first user message if not set
         if not title and not existing_meta.get("title"):
@@ -422,7 +422,7 @@ class MemoryStore:
             if ctx and ctx.strip():
                 return ctx.strip()
         except Exception:
-            pass
+            logger.exception("异常详情")
         return None
 
     # ── Helpers ─────────────────────────────────────────────

@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 图片缓存服务
 本地图片缓存管理
@@ -84,7 +88,7 @@ class ImageCacheService:
                 with open(self._index_file, "r", encoding="utf-8") as f:
                     return json.load(f)
             except Exception:
-                pass
+                logger.exception("异常详情")
         return {}
 
     def _save_index(self, index: Dict):

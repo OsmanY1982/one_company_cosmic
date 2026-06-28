@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 health_check.py — One-stop verification that the ComfyUI environment is ready.
@@ -128,7 +132,7 @@ def smoke_test(host: str, headers: dict, ckpt_name: str | None) -> dict:
     try:
         cancelled = runner.cancel(pid)
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     return {
         "ran": True, "submitted": True, "prompt_id": pid,

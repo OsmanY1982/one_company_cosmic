@@ -44,7 +44,7 @@ except ImportError:
     try:
         import msvcrt
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
 logger = logging.getLogger(__name__)
 
@@ -175,7 +175,7 @@ class MemoryStore:
                     fd.seek(0)
                     msvcrt.locking(fd.fileno(), msvcrt.LK_UNLCK, 1)
                 except (OSError, IOError):
-                    pass
+                    logger.exception("异常详情")
             fd.close()
 
     @staticmethod
@@ -456,7 +456,7 @@ class MemoryStore:
                 try:
                     os.unlink(tmp_path)
                 except OSError:
-                    pass
+                    logger.exception("异常详情")
                 raise
         except (OSError, IOError) as e:
             raise RuntimeError(f"Failed to write memory file {path}: {e}")

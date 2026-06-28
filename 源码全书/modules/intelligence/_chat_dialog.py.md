@@ -1,12 +1,16 @@
 # `modules/intelligence/_chat_dialog.py`
 
-> 路径：`modules/intelligence/_chat_dialog.py` | 行数：686
+> 路径：`modules/intelligence/_chat_dialog.py` | 行数：690
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 AI 助手模块 v3 — 支持本地模型管理
@@ -405,7 +409,7 @@ class IqraChatDialog(QDialog):
             try:
                 self._iqra.append_message("user", text, self._session_id)
             except Exception:
-                pass
+                logger.exception("异常详情")
         now = datetime.now().strftime("%H:%M:%S")
         self._chat_log.append(
             f'<p style="color:#ffaa44;font-weight:700;">[{now}] 你:</p>'
@@ -465,7 +469,7 @@ class IqraChatDialog(QDialog):
             try:
                 self._iqra.append_message("assistant", reply, self._session_id)
             except Exception:
-                pass
+                logger.exception("异常详情")
         sb = self._chat_log.verticalScrollBar()
         sb.setValue(sb.maximum())
 
@@ -513,7 +517,7 @@ class IqraChatDialog(QDialog):
             try:
                 self._voice.speak(full_text)
             except Exception:
-                pass
+                logger.exception("异常详情")
         sb = self._chat_log.verticalScrollBar()
         sb.setValue(sb.maximum())
         # 实时保存 AI 回复
@@ -522,7 +526,7 @@ class IqraChatDialog(QDialog):
             try:
                 self._iqra.append_message("assistant", full_text, self._session_id)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _on_stream_tool(self, name: str, status: str):
         icon = "[OK]" if status == "OK" else "[FAIL]" if status == "Failed" else "[...]"
@@ -556,7 +560,7 @@ class IqraChatDialog(QDialog):
                 try:
                     self._iqra.save_session()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             parent = self.parent()
             if hasattr(parent, '_enable_voice_handlers'):
                 parent._enable_voice_handlers()
@@ -568,7 +572,7 @@ class IqraChatDialog(QDialog):
                         self._messages, self._session_id
                     )
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
         super().closeEvent(event)
 
     # ── 语音输入 ──

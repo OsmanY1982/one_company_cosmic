@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-28 00:41
-> 共 830 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-28 14:25
+> 共 844 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -16,11 +16,18 @@
 │       ├── license_crypto.py
 │       ├── license_db.py
 │       └── license_service.py
+├── backup/
+│   └── cloud_backups/
 ├── config/
 │   ├── agents/
 │   ├── __init__.py
 │   ├── supabase_config.py
 ├── core/
+│   ├── modules/
+│   │   ├── supabase/
+│   │   │   ├── __init__.py
+│   │   │   └── auth.py
+│   │   └── __init__.py
 │   ├── shapes/
 │   │   ├── __init__.py
 │   │   ├── alien.py
@@ -1010,9 +1017,14 @@
 │   │   └── hub.py
 │   ├── auth/
 │   │   ├── dao/
+│   │   │   ├── __init__.py
+│   │   │   ├── session_dao.py
 │   │   │   └── user_dao.py
 │   │   ├── service/
-│   │   │   └── cloud_api.py
+│   │   │   ├── __init__.py
+│   │   │   ├── cloud_api.py
+│   │   │   ├── session_service.py
+│   │   │   └── sync_auth_service.py
 │   │   ├── __init__.py
 │   │   ├── activation_gate.py
 │   │   ├── admin_login_dialog.py
@@ -1191,6 +1203,9 @@
 │   │   └── wallet_window.py
 │   ├── startup/
 │   │   └── startup_selector_window.py
+│   ├── supabase/
+│   │   ├── __init__.py
+│   │   └── auth.py
 │   ├── system/
 │   │   ├── _archived/
 │   │   │   ├── activation_window.py
@@ -1275,6 +1290,10 @@
 ├── planet_daemon.py
 ├── rollback_control.py
 ├── siri_command_handler.py
+├── test_sync_30_tables.py
+├── verify_both.py
+├── verify_pull.py
+├── verify_sync.py
 ```
 
 ---
@@ -1311,6 +1330,9 @@
 - [`core/machine_code.py`](./core/machine_code.py.md)
 - [`core/mobile_api.py`](./core/mobile_api.py.md)
 - [`core/module_manager.py`](./core/module_manager.py.md)
+- [`core/modules/__init__.py`](./core/modules/__init__.py.md)
+- [`core/modules/supabase/__init__.py`](./core/modules/supabase/__init__.py.md)
+- [`core/modules/supabase/auth.py`](./core/modules/supabase/auth.py.md)
 - [`core/notification_cron.py`](./core/notification_cron.py.md)
 - [`core/notification_service.py`](./core/notification_service.py.md)
 - [`core/notification_toast.py`](./core/notification_toast.py.md)
@@ -1888,13 +1910,18 @@
 - [`modules/auth/auth_service_sync.py`](./modules/auth/auth_service_sync.py.md)
 - [`modules/auth/change_password_dialog.py`](./modules/auth/change_password_dialog.py.md)
 - [`modules/auth/connect_window.py`](./modules/auth/connect_window.py.md)
+- [`modules/auth/dao/__init__.py`](./modules/auth/dao/__init__.py.md)
+- [`modules/auth/dao/session_dao.py`](./modules/auth/dao/session_dao.py.md)
 - [`modules/auth/dao/user_dao.py`](./modules/auth/dao/user_dao.py.md)
 - [`modules/auth/login_window.py`](./modules/auth/login_window.py.md)
 - [`modules/auth/model_config_panel.py`](./modules/auth/model_config_panel.py.md)
 - [`modules/auth/model_setup_window.py`](./modules/auth/model_setup_window.py.md)
 - [`modules/auth/register_window.py`](./modules/auth/register_window.py.md)
 - [`modules/auth/select_mode_window.py`](./modules/auth/select_mode_window.py.md)
+- [`modules/auth/service/__init__.py`](./modules/auth/service/__init__.py.md)
 - [`modules/auth/service/cloud_api.py`](./modules/auth/service/cloud_api.py.md)
+- [`modules/auth/service/session_service.py`](./modules/auth/service/session_service.py.md)
+- [`modules/auth/service/sync_auth_service.py`](./modules/auth/service/sync_auth_service.py.md)
 - [`modules/auth/upgrade_window.py`](./modules/auth/upgrade_window.py.md)
 - [`modules/business/__init__.py`](./modules/business/__init__.py.md)
 - [`modules/business/business_window.py`](./modules/business/business_window.py.md)
@@ -2040,6 +2067,8 @@
 - [`modules/personnel/wallet_service.py`](./modules/personnel/wallet_service.py.md)
 - [`modules/personnel/wallet_window.py`](./modules/personnel/wallet_window.py.md)
 - [`modules/startup/startup_selector_window.py`](./modules/startup/startup_selector_window.py.md)
+- [`modules/supabase/__init__.py`](./modules/supabase/__init__.py.md)
+- [`modules/supabase/auth.py`](./modules/supabase/auth.py.md)
 - [`modules/system/__init__.py`](./modules/system/__init__.py.md)
 - [`modules/system/_archived/activation_window.py`](./modules/system/_archived/activation_window.py.md)
 - [`modules/system/_archived/base_info_window.py`](./modules/system/_archived/base_info_window.py.md)
@@ -2107,7 +2136,11 @@
 - [`solar_explorer/body_encyclopedia.py`](./solar_explorer/body_encyclopedia.py.md)
 - [`solar_explorer/star_catalog_window.py`](./solar_explorer/star_catalog_window.py.md)
 - [`solar_explorer/voice_reader.py`](./solar_explorer/voice_reader.py.md)
+- [`test_sync_30_tables.py`](./test_sync_30_tables.py.md)
 - [`tools/__init__.py`](./tools/__init__.py.md)
 - [`tools/environments/__init__.py`](./tools/environments/__init__.py.md)
 - [`tools/environments/file_sync.py`](./tools/environments/file_sync.py.md)
 - [`tools/skills_sync.py`](./tools/skills_sync.py.md)
+- [`verify_both.py`](./verify_both.py.md)
+- [`verify_pull.py`](./verify_pull.py.md)
+- [`verify_sync.py`](./verify_sync.py.md)

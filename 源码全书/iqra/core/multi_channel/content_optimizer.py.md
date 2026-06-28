@@ -1,12 +1,16 @@
 # `iqra/core/multi_channel/content_optimizer.py`
 
-> 路径：`iqra/core/multi_channel/content_optimizer.py` | 行数：279
+> 路径：`iqra/core/multi_channel/content_optimizer.py` | 行数：283
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 内容优化器
@@ -248,7 +252,7 @@ def _llm_title_optimize(title: str, platform: str, llm_backend) -> Optional[str]
         if response:
             return response.strip().strip('"').strip("'")
     except Exception:
-        pass
+        logger.exception("异常详情")
     return None
 
 
@@ -278,7 +282,7 @@ def _llm_full_rewrite(content: str, platform: str, title: str, llm_backend) -> D
                 "actions": [f"[LLM] 已完成 {platform} 平台全量改写"],
             }
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     return {
         "optimized_content": content,

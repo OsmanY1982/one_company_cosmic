@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 增强 AI 工具集 — 自包含实现，零外部依赖
@@ -303,7 +307,7 @@ class EnhancedAIAssistant:
                                         matched_line = line.strip()[:200]
                                         break
                         except Exception:
-                            pass
+                            logger.exception("异常详情")
 
                 if name_match or content_match:
                     match_type = "文件名匹配" if name_match else "内容匹配"

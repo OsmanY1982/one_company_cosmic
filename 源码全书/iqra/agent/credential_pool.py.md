@@ -1198,7 +1198,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
             if not is_provider_explicitly_configured("anthropic"):
                 return changed, active_sources
         except ImportError:
-            pass
+            logger.exception("异常详情")
 
         from agent.anthropic_adapter import read_claude_code_credentials, read_hermes_oauth_credentials
 
@@ -1582,7 +1582,7 @@ def _seed_custom_pool(pool_key: str, entries: List[PooledCredential]) -> Tuple[b
                             },
                         )
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     return changed, active_sources
 

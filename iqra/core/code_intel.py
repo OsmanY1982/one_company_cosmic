@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 CodeIntel — 代码智能引擎（对标 Claude Code 代码理解/编辑/重构）
@@ -185,7 +189,7 @@ class SymbolExtractor(ast.NodeVisitor):
                 try:
                     arg_str += f": {ast.unparse(arg.annotation)}"
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             args.append(arg_str)
         if node.args.vararg:
             args.append(f"*{node.args.vararg.arg}")
@@ -196,7 +200,7 @@ class SymbolExtractor(ast.NodeVisitor):
             try:
                 returns = f" -> {ast.unparse(node.returns)}"
             except Exception:
-                pass
+                logger.exception("异常详情")
         return f"({', '.join(args)}){returns}"
 
 

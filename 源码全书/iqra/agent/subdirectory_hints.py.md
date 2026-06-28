@@ -1,6 +1,6 @@
 # `iqra/agent/subdirectory_hints.py`
 
-> 路径：`iqra/agent/subdirectory_hints.py` | 行数：224
+> 路径：`iqra/agent/subdirectory_hints.py` | 行数：225
 
 
 ---
@@ -145,7 +145,7 @@ class SubdirectoryHintTracker:
                     break  # filesystem root
                 p = parent
         except (OSError, ValueError):
-            pass
+            logger.exception("异常详情")
 
     def _extract_paths_from_command(self, cmd: str, candidates: Set[Path]):
         """Extract path-like tokens from a shell command string."""
@@ -209,6 +209,7 @@ class SubdirectoryHintTracker:
                         rel_path = str(hint_path.relative_to(Path.home()))
                         rel_path = "~/" + rel_path
                     except ValueError:
+                        logger.exception("异常详情")
                         pass  # keep absolute
                 found_hints.append((rel_path, content))
                 # First match wins per directory (like startup loading)

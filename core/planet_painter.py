@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 星球绘制引擎 — 程序化渐变 + 真实NASA纹理双轨渲染
@@ -360,7 +364,7 @@ def _paint_textured_sphere(p: QPainter, c: QPointF, r: float, tex_path: str, dia
                 from core.procedural_texture import generate_moon_texture
                 tex_arr = generate_moon_texture(body_key, width=64, height=32)
             except ImportError:
-                pass
+                logger.exception("异常详情")
             if tex_arr is not None:
                 _proc_tex_cache[body_key] = tex_arr
         if tex_arr is not None:

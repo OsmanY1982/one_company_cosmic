@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """hardware_check.py — Detect whether this machine can realistically run ComfyUI locally.
 
@@ -155,7 +159,7 @@ def detect_rocm() -> dict | None:
                     best["all_gpus"] = cards
                 return best
         except json.JSONDecodeError:
-            pass
+            logger.exception("异常详情")
     # Fall back to text parsing
     out = _run(["rocm-smi", "--showproductname", "--showmeminfo", "vram"])
     if not out.strip():
@@ -183,7 +187,7 @@ def detect_apple_silicon() -> dict | None:
     try:
         mem_bytes = int(_run(["sysctl", "-n", "hw.memsize"]).strip() or 0)
     except ValueError:
-        pass
+        logger.exception("异常详情")
     ram_gb = round(mem_bytes / (1024**3), 1) if mem_bytes else 0.0
 
     # Detect chip variant ("Pro", "Max", "Ultra") — affects performance even at same gen

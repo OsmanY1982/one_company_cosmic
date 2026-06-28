@@ -1,12 +1,16 @@
 # `iqra/core/web_search.py`
 
-> 路径：`iqra/core/web_search.py` | 行数：598
+> 路径：`iqra/core/web_search.py` | 行数：602
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 网络搜索能力
 支持多种搜索引擎和搜索模式
@@ -524,7 +528,7 @@ class SearchResultProcessor:
                     if result_date >= cutoff:
                         filtered.append(result)
                 except:
-                    pass
+                    logger.exception("异常详情")
             else:
                 filtered.append(result)
         

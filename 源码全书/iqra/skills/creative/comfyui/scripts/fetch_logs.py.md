@@ -1,12 +1,16 @@
 # `iqra/skills/creative/comfyui/scripts/fetch_logs.py`
 
-> 路径：`iqra/skills/creative/comfyui/scripts/fetch_logs.py` | 行数：158
+> 路径：`iqra/skills/creative/comfyui/scripts/fetch_logs.py` | 行数：162
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 fetch_logs.py — Retrieve workflow execution diagnostics from a ComfyUI server.
@@ -44,7 +48,7 @@ def fetch_history_entry(host: str, headers: dict, prompt_id: str, *, is_cloud: b
             try:
                 return {"ok": True, "entry": r.json(), "source": "/api/jobs"}
             except Exception:
-                pass
+                logger.exception("异常详情")
         # Fallback to history_v2
         url = resolve_url(host, f"/history/{prompt_id}", is_cloud=True)
         r = http_get(url, headers=headers, retries=2, timeout=30)

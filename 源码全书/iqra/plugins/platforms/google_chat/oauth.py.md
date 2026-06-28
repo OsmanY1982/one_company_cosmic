@@ -351,7 +351,7 @@ def install_deps() -> bool:
         print("Dependencies already installed.")
         return True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     print("Installing Google Chat OAuth dependencies...")
     try:

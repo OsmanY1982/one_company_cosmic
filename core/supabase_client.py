@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 from core.paths import BASE_DIR, DATA_DIR, CONFIG_DIR
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Supabase 云端同步客户端
 负责与 Supabase 后端通信：激活码管理、用户注册/激活、云端数据同步
@@ -56,7 +60,7 @@ def _dns_precheck():
                 socket.getaddrinfo(hostname, None)
                 result["ok"] = True
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         t = threading.Thread(target=_resolve, daemon=True)
         t.start()
@@ -563,7 +567,7 @@ class CloudSession:
                 service_key=True
             )
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return session_token
 

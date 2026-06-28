@@ -159,7 +159,7 @@ def reset_backend_for_tests() -> None:  # pragma: no cover
             try:
                 _backend.stop()
             except Exception:
-                pass
+                logger.exception("异常详情")
         _backend = None
     _session_auto_approve = False
     _always_allow = set()

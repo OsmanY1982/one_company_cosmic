@@ -1,6 +1,6 @@
 # `modules/system/system_logs_service.py`
 
-> 路径：`modules/system/system_logs_service.py` | 行数：164
+> 路径：`modules/system/system_logs_service.py` | 行数：168
 
 
 ---
@@ -9,6 +9,10 @@
 ```python
 # -*- coding: utf-8 -*-
 from __future__ import annotations
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 系统日志 — Service 层
 管理操作日志(operation_log.db) 和 系统日志(system_logs.db)
@@ -148,7 +152,7 @@ def clear_old_logs(days: int = 30) -> dict:
         commit("operation_log.db")
         deleted["operation"] = conn.total_changes
     except Exception:
-        pass
+        logger.exception("异常详情")
     # 同步日志 + 错误日志
     try:
         conn = get_conn("system_logs.db")
@@ -159,7 +163,7 @@ def clear_old_logs(days: int = 30) -> dict:
         commit("system_logs.db")
         deleted["error"] = conn.total_changes
     except Exception:
-        pass
+        logger.exception("异常详情")
     return {"ok": True, "deleted": deleted}
 
 

@@ -1,12 +1,16 @@
 # `services/sync_manager.py`
 
-> 路径：`services/sync_manager.py` | 行数：196
+> 路径：`services/sync_manager.py` | 行数：200
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 同步管理器
 多端数据同步引擎
@@ -109,7 +113,7 @@ class SyncManager:
                 try:
                     self._conflict_resolver(conflict)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
 
         self._last_sync = datetime.now()
         self._status = SyncStatus.CONFLICT if conflicts else SyncStatus.IDLE

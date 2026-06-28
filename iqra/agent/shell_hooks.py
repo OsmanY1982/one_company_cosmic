@@ -574,7 +574,7 @@ def save_allowlist(data: Dict[str, Any]) -> None:
             try:
                 os.unlink(tmp_path)
             except OSError:
-                pass
+                logger.exception("异常详情")
             raise
     except OSError as exc:
         logger.warning(

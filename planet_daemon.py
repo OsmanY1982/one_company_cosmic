@@ -36,7 +36,7 @@ def _floating_planet_exists() -> bool:
         try:
             os.remove(LOCK_FILE)
         except OSError:
-            pass
+            logger.exception("异常详情")
         return False
 
 

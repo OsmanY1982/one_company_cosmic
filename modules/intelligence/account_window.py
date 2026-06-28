@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 账号与安全 — 真实星球导航模式
 修改密码 / 升级会员 / 数据备份 / 检查更新
@@ -217,7 +221,7 @@ class AccountWindow(QMainWindow):
                     }
                 conn.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     # ═══ 数据备份 ═══
     def _user_backup(self):
@@ -323,7 +327,7 @@ class AccountWindow(QMainWindow):
                 with open(config_file, "r", encoding="utf-8") as f:
                     return json.load(f)
             except Exception:
-                pass
+                logger.exception("异常详情")
         return {}
 
     def _save_backup_config(self, config: dict):
@@ -360,5 +364,5 @@ class AccountWindow(QMainWindow):
                             "membership": row[2] or "trial", "expire_at": row[3] or ""}
                 conn.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
         return info

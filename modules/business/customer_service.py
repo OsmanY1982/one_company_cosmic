@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 客户管理服务层（从 customer_window.py 提取的数据库逻辑）。
 所有数据库操作委托给本模块，窗口文件只负责 UI 展示和交互。
@@ -77,12 +81,12 @@ def add_customer(name: str,
                 level=level, note=note.strip()
             )
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         try:
             log_action("system", "添加客户", "customer", name.strip())
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return {"ok": True}
     except Exception as e:
@@ -150,7 +154,7 @@ def update_customer(customer_id: int,
         try:
             log_action("system", "更新客户", "customer", f"ID={customer_id}, {name.strip()}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return {"ok": True}
     except Exception as e:
         return {"ok": False, "error": str(e)}
@@ -168,7 +172,7 @@ def delete_customer(customer_id: int) -> dict:
         try:
             log_action("system", "删除客户", "customer", f"ID={customer_id}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return {"ok": True}
     except Exception as e:
         return {"ok": False, "error": str(e)}

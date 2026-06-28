@@ -1,12 +1,16 @@
 # `iqra/skills/creative/comfyui/scripts/run_workflow.py`
 
-> 路径：`iqra/skills/creative/comfyui/scripts/run_workflow.py` | 行数：796
+> 路径：`iqra/skills/creative/comfyui/scripts/run_workflow.py` | 行数：800
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 run_workflow.py — Inject parameters into a ComfyUI workflow, submit it, monitor
@@ -342,7 +346,7 @@ class ComfyRunner:
             try:
                 ws.close()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         if error_payload is not None:
             return {"status": "error", "data": error_payload}
@@ -359,7 +363,7 @@ class ComfyRunner:
                 try:
                     return (r.json() or {}).get("outputs", {}) or {}
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             # Fallback
             r = http_get(self._url(f"/history/{prompt_id}"), headers=self.headers, retries=2)
             if r.status == 200:
@@ -426,7 +430,7 @@ class ComfyRunner:
                 if out_path.exists():
                     out_path.unlink()
             except Exception:
-                pass
+                logger.exception("异常详情")
             raise WorkflowRunError(
                 "download_failed",
                 f"Download of {filename} failed: HTTP {r.status}",

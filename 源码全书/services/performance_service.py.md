@@ -1,12 +1,16 @@
 # `services/performance_service.py`
 
-> 路径：`services/performance_service.py` | 行数：205
+> 路径：`services/performance_service.py` | 行数：209
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 性能监控服务
 应用性能指标收集和分析
@@ -66,7 +70,7 @@ class PerformanceService:
                     value = watcher()
                     self.record(name, value)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             time.sleep(interval)
 
     def register_watcher(self, name: str, watcher: Callable):

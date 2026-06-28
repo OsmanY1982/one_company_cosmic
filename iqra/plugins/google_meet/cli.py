@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """CLI commands for the google_meet plugin.
 
 Wires ``hermes meet <subcommand>``:
@@ -298,7 +302,7 @@ def _cmd_install(*, realtime: bool, assume_yes: bool) -> int:
                 out = _sp.check_output(["system_profiler", "SPAudioDataType"], text=True)
                 have_bh = "BlackHole" in out
             except Exception:
-                pass
+                logger.exception("异常详情")
             have_ffmpeg = bool(_shutil.which("ffmpeg"))
             needs = []
             if not have_bh:
@@ -359,7 +363,7 @@ def _cmd_auth() -> int:
             try:
                 input("press Enter after you've signed in ... ")
             except EOFError:
-                pass
+                logger.exception("异常详情")
             context.storage_state(path=str(path))
             browser.close()
     except Exception as e:

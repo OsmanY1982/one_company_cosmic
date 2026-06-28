@@ -1296,7 +1296,7 @@ def execute_code(
                         oldest = tail_buf.popleft()
                         tail_collected -= len(oldest)
             except (ValueError, OSError):
-                pass
+                logger.exception("异常详情")
             # Transfer final tail to output list
             tail_chunks.extend(tail_buf)
 
@@ -1335,7 +1335,7 @@ def execute_code(
                 from tools.environments.base import touch_activity_if_due
                 touch_activity_if_due(_activity_state, "execute_code running")
             except Exception:
-                pass
+                logger.exception("异常详情")
             time.sleep(0.2)
 
         # Wait for readers to finish draining
@@ -1446,6 +1446,7 @@ def execute_code(
             if sock_path:
                 os.unlink(sock_path)
         except OSError:
+            logger.exception("异常详情")
             pass  # already cleaned up or never created
 
 
@@ -1459,13 +1460,13 @@ def _kill_process_group(proc, escalate: bool = False):
             try:
                 child.terminate()
             except psutil.NoSuchProcess:
-                pass
+                logger.exception("异常详情")
         try:
             parent.terminate()
         except psutil.NoSuchProcess:
-            pass
+            logger.exception("异常详情")
     except psutil.NoSuchProcess:
-        pass
+        logger.exception("异常详情")
     except (PermissionError, OSError) as e:
         logger.debug("Could not terminate process tree: %s", e, exc_info=True)
         try:
@@ -1484,13 +1485,13 @@ def _kill_process_group(proc, escalate: bool = False):
                     try:
                         child.kill()
                     except psutil.NoSuchProcess:
-                        pass
+                        logger.exception("异常详情")
                 try:
                     parent.kill()
                 except psutil.NoSuchProcess:
-                    pass
+                    logger.exception("异常详情")
             except psutil.NoSuchProcess:
-                pass
+                logger.exception("异常详情")
             except (PermissionError, OSError) as e:
                 logger.debug("Could not kill process tree: %s", e, exc_info=True)
                 try:

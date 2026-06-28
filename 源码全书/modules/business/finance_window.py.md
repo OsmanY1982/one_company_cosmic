@@ -1,12 +1,16 @@
 # `modules/business/finance_window.py`
 
-> 路径：`modules/business/finance_window.py` | 行数：695
+> 路径：`modules/business/finance_window.py` | 行数：700
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 财务管理 · ORBIT — 独立弹窗模块
 """
@@ -51,7 +55,8 @@ def _init_finance_db():
         ("finance_no", "TEXT DEFAULT ''"),
     ]:
         try: c.execute(f"ALTER TABLE finance ADD COLUMN {col} {col_def}")
-        except sqlite3.OperationalError: pass
+        except sqlite3.OperationalError:
+            logger.exception("异常详情")
     conn.commit()
     conn.close()
 

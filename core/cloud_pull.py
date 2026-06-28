@@ -44,7 +44,7 @@ def _dns_check():
                 socket.getaddrinfo(hostname, None)
                 result["ok"] = True
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         t = threading.Thread(target=_resolve, daemon=True)
         t.start()
@@ -205,6 +205,152 @@ CLOUD_TO_LOCAL = {
         "total_contribution": "total_contribution",
         "created_at":         "created_at",
     },
+
+    # ── 激活记录（云端 activation_records → 本地 activation.db） ──
+    "activation_records": {
+        "code":          "code",
+        "type":          "type",
+        "status":        "status",
+        "bound_account": "bound_account",
+        "bound_machine": "bound_machine",
+        "created_at":    "created_at",
+        "used_at":       "used_at",
+        "expires_at":    "expires_at",
+    },
+
+    # ── 激活日志（云端 activation_logs → 本地 activation_log.db） ──
+    "activation_logs": {
+        "code":       "code",
+        "action":     "action",
+        "detail":     "detail",
+        "status":     "status",
+        "created_at": "created_at",
+    },
+
+    # ── 管理员（云端 admins → 本地 admin.db） ──
+    "admins": {
+        "username":   "username",
+        "password":   "password",
+        "role":       "role",
+        "status":     "status",
+        "created_at": "created_at",
+    },
+
+    # ── 审计日志（云端 audit_logs → 本地 audit.db） ──
+    "audit_logs": {
+        "user_id":       "user_id",
+        "user_name":     "user_name",
+        "action":        "action",
+        "level":         "level",
+        "resource_type": "resource_type",
+        "resource_id":   "resource_id",
+        "status":        "status",
+        "ip_address":    "ip_address",
+        "created_at":    "created_at",
+    },
+
+    # ── 操作日志（云端 operation_logs → 本地 operation_log.db） ──
+    "operation_logs": {
+        "username":   "username",
+        "action":     "action",
+        "module":     "module",
+        "detail":     "detail",
+        "created_at": "created_at",
+    },
+
+    # ── 订单备份（云端 orders_backup → 本地 orders.db） ──
+    "orders_backup": {
+        "order_no":     "order_no",
+        "customer":     "customer_name",
+        "product":      "product_name",
+        "quantity":     "quantity",
+        "unit_price":   "unit_price",
+        "total_price":  "total_amount",
+        "status":       "status",
+        "note":         "note",
+        "created_at":   "created_at",
+    },
+
+    # ── 人事档案（云端 personnel → 本地 personnel_db.sqlite） ──
+    "personnel": {
+        "name":       "name",
+        "phone":      "phone",
+        "email":      "email",
+        "position":   "position",
+        "department": "department",
+        "status":     "status",
+        "created_at": "created_at",
+    },
+
+    # ── 定时任务（云端 schedules → 本地 scheduler.db） ──
+    "schedules": {
+        "task_id":     "task_id",
+        "name":        "name",
+        "schedule":    "schedule",
+        "handler":     "handler",
+        "params":      "params",
+        "enabled":     "enabled",
+        "last_run":    "last_run",
+        "next_run":    "next_run",
+        "run_count":   "run_count",
+        "last_result": "last_result",
+    },
+
+    # ── 会话（云端 sessions → 本地 sessions.db） ──
+    "sessions": {
+        "id":               "id",
+        "title":            "title",
+        "summary":          "summary",
+        "message_count":    "message_count",
+        "tags":             "tags",
+        "content_snapshot": "content_snapshot",
+        "created_at":       "created_at",
+        "updated_at":       "updated_at",
+    },
+
+    # ── 同步日志（云端 sync_logs → 本地 sync_log.db） ──
+    "sync_logs": {
+        "sync_type":    "sync_type",
+        "status":       "status",
+        "detail":       "detail",
+        "files_synced": "files_synced",
+        "created_at":   "created_at",
+    },
+
+    # ── 系统日志（云端 system_logs → 本地 system_logs.db） ──
+    "system_logs": {
+        "table_name":   "table_name",
+        "direction":    "direction",
+        "record_count": "record_count",
+        "status":       "status",
+        "created_at":   "created_at",
+    },
+
+    # ── 待办事项（云端 todos → 本地 todos.db） ──
+    "todos": {
+        "id":         "id",
+        "content":    "content",
+        "status":     "status",
+        "priority":   "priority",
+        "created_at": "created_at",
+        "updated_at": "updated_at",
+    },
+
+    # ── 应用配置（云端 app_config → 本地 app.db） ──
+    "app_config": {
+        "key":         "key",
+        "value":       "value",
+        "description": "description",
+        "updated_at":  "updated_at",
+    },
+
+    # ── 缓存数据（云端 cache_data → 本地 cache.db） ──
+    "cache_data": {
+        "key":        "key",
+        "value":      "value",
+        "expire_at":  "expire_at",
+        "created_at": "created_at",
+    },
 }
 
 # ============================================================
@@ -225,6 +371,20 @@ TABLE_META = {
     "distribution_links": {"db": "distribution.db",      "table": "distribution_links"},
     "commissions":        {"db": "distribution.db",     "table": "commissions"},
     "team_members":       {"db": "distribution.db",     "table": "team_members"},
+    "activation_records": {"db": "activation.db",       "table": "activation_records"},
+    "activation_logs":    {"db": "activation_log.db",   "table": "activation_logs"},
+    "admins":             {"db": "admin.db",            "table": "admins"},
+    "audit_logs":         {"db": "audit.db",            "table": "audit_logs"},
+    "operation_logs":     {"db": "operation_log.db",    "table": "operation_logs"},
+    "orders_backup":      {"db": "orders.db",           "table": "orders"},
+    "personnel":          {"db": "personnel_db.sqlite", "table": "personnel"},
+    "schedules":          {"db": "scheduler.db",        "table": "schedules"},
+    "sessions":           {"db": "sessions.db",         "table": "sessions"},
+    "sync_logs":          {"db": "sync_log.db",         "table": "sync_logs"},
+    "system_logs":        {"db": "system_logs.db",      "table": "system_logs"},
+    "todos":              {"db": "todos.db",            "table": "todos"},
+    "app_config":         {"db": "app.db",              "table": "app_config"},
+    "cache_data":         {"db": "cache.db",            "table": "cache_data"},
 }
 
 # 需要保护不被覆盖的本地管理员数据
@@ -343,6 +503,77 @@ def pull_member():
     time.sleep(0.5)
     return result
 
+pull_members = pull_member
+
+def pull_activation_records():
+    """拉取云端 activation_records → 本地 activation.db"""
+    return _pull_simple("activation_records")
+
+
+def pull_activation_logs():
+    """拉取云端 activation_logs → 本地 activation_log.db"""
+    return _pull_simple("activation_logs")
+
+
+def pull_admins():
+    """拉取云端 admins → 本地 admin.db"""
+    return _pull_simple("admins")
+
+
+def pull_audit_logs():
+    """拉取云端 audit_logs → 本地 audit.db"""
+    return _pull_simple("audit_logs")
+
+
+def pull_operation_logs():
+    """拉取云端 operation_logs → 本地 operation_log.db"""
+    return _pull_simple("operation_logs")
+
+
+def pull_orders_backup():
+    """拉取云端 orders_backup → 本地 orders.db"""
+    return _pull_simple("orders_backup")
+
+
+def pull_personnel():
+    """拉取云端 personnel → 本地 personnel_db.sqlite"""
+    return _pull_simple("personnel")
+
+
+def pull_schedules():
+    """拉取云端 schedules → 本地 scheduler.db"""
+    return _pull_simple("schedules")
+
+
+def pull_sessions():
+    """拉取云端 sessions → 本地 sessions.db"""
+    return _pull_simple("sessions")
+
+
+def pull_sync_logs():
+    """拉取云端 sync_logs → 本地 sync_log.db"""
+    return _pull_simple("sync_logs")
+
+
+def pull_system_logs():
+    """拉取云端 system_logs → 本地 system_logs.db"""
+    return _pull_simple("system_logs")
+
+
+def pull_todos():
+    """拉取云端 todos → 本地 todos.db"""
+    return _pull_simple("todos")
+
+
+def pull_app_config():
+    """拉取云端 app_config → 本地 app.db"""
+    return _pull_simple("app_config")
+
+
+def pull_cache_data():
+    """拉取云端 cache_data → 本地 cache.db"""
+    return _pull_simple("cache_data")
+
 
 def _pull_with_preserve(cloud_table):
     """带 admin 保护的全量拉取（用于 users 表）"""
@@ -410,6 +641,20 @@ def pull_all_from_cloud():
             tasks = [
                 ("用户",             pull_users),
                 ("激活码",           pull_activation_codes),
+                ("激活记录",         pull_activation_records),
+                ("激活日志",         pull_activation_logs),
+                ("管理员",           pull_admins),
+                ("审计日志",         pull_audit_logs),
+                ("操作日志",         pull_operation_logs),
+                ("订单备份",         pull_orders_backup),
+                ("人事档案",         pull_personnel),
+                ("定时任务",         pull_schedules),
+                ("会话",             pull_sessions),
+                ("同步日志",         pull_sync_logs),
+                ("系统日志",         pull_system_logs),
+                ("待办事项",         pull_todos),
+                ("应用配置",         pull_app_config),
+                ("缓存数据",         pull_cache_data),
                 ("产品",             pull_products),
                 ("订单",             pull_orders),
                 ("客户",             pull_customers),

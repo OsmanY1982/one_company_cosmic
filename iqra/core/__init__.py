@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Iqra 智能核心 v2.0
 集成所有增强模块的主入口
@@ -25,7 +29,7 @@ def _safe_import(module_name, names, alias_map=None):
             if hasattr(module, name):
                 result[name] = getattr(module, name)
     except (ImportError, AttributeError, Exception):
-        pass
+        logger.exception("异常详情")
     
     # 应用别名映射
     if alias_map:

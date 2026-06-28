@@ -1,6 +1,6 @@
 # `modules/intelligence/intelligence_window.py`
 
-> 路径：`modules/intelligence/intelligence_window.py` | 行数：247
+> 路径：`modules/intelligence/intelligence_window.py` | 行数：249
 
 
 ---
@@ -19,6 +19,8 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QTimer, QPointF
 from PyQt5.QtGui import QPainter
 import logging
+
+logger = logging.getLogger(__name__)
 
 from core.planet_painter import (
     PLANET_STYLES, paint_planet, paint_orbit, paint_energy_line,
@@ -249,7 +251,7 @@ class IntelligenceWindow(QMainWindow):
                             "membership": row[2] or "trial", "expire_at": row[3] or ""}
                 conn.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
         return info
 
     def _get_project_root(self):

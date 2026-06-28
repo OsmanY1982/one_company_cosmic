@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """悬浮球右键菜单 Mixin — QMenu 原生实现（从备份恢复）"""
 import sys, os
@@ -31,7 +35,7 @@ class FloatingPlanetMenuMixin:
                 if widget.isVisible() and widget.windowFlags() & Qt.Window:
                     return
         except Exception:
-            pass
+            logger.exception("异常详情")
         self.raise_()
 
     def _show_context_menu(self, global_pos: QPoint):

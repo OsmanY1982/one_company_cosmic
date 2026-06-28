@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 MultiModelChatEngine — 多模型 ChatEngine 适配层
@@ -95,7 +99,7 @@ class MultiModelChatEngine(QObject):
                 self._engine.on_tool_start.disconnect()
                 self._engine.on_tool_result.disconnect()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         self._engine = ChatEngine(
             backend=backend,

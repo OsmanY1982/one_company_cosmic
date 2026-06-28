@@ -1,6 +1,6 @@
 # `modules/intelligence/screen_recorder.py`
 
-> 路径：`modules/intelligence/screen_recorder.py` | 行数：233
+> 路径：`modules/intelligence/screen_recorder.py` | 行数：237
 
 
 ---
@@ -14,6 +14,10 @@ import subprocess
 import tempfile
 import webbrowser
 from PIL import Image
+import logging
+
+logger = logging.getLogger(__name__)
+
 from datetime import datetime
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
@@ -133,7 +137,7 @@ class ScreenRecorder(QDialog):
             img = Image.open(fname)
             self.frames.append(img)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     def select_save_path(self):
         dir_path = QFileDialog.getExistingDirectory(self, "选择保存文件夹", self.save_path)

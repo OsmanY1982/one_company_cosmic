@@ -67,7 +67,7 @@ class TraceManager:
             try:
                 self._step_stack.remove(step_index)
             except ValueError:
-                pass
+                logger.exception("异常详情")
         self._active_trace.end_step(step_index, error, metadata)
 
     def set_token_usage(self, tokens_in: int, tokens_out: int):

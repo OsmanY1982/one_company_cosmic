@@ -1,6 +1,6 @@
 # `modules/admin/admin_window.py`
 
-> 路径：`modules/admin/admin_window.py` | 行数：326
+> 路径：`modules/admin/admin_window.py` | 行数：330
 
 
 ---
@@ -14,6 +14,9 @@ import os
 from core.paths import DATA_DIR, BASE_DIR
 
 import sqlite3
+import logging
+
+logger = logging.getLogger(__name__)
 
 from datetime import datetime
 
@@ -304,7 +307,8 @@ class AdminWindow(QMainWindow):
 
             log_action(user, action, "admin", detail)
 
-        except Exception: pass
+        except Exception:
+            logger.exception("异常详情")
 
 
 

@@ -150,7 +150,7 @@ class SeleniumRenderer:
             try:
                 self._driver.quit()
             except Exception:
-                pass
+                logger.exception("异常详情")
             finally:
                 self._driver = None
 

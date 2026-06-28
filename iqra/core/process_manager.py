@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Iqra Process Manager - 后台进程管理
 
@@ -132,7 +136,7 @@ class ProcessManager:
                                 break
                             output_bytes += chunk
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
             
             output = output_bytes.decode('utf-8', errors='replace')
             
@@ -250,7 +254,7 @@ class ProcessManager:
             if hasattr(proc_info["proc"], "stdin") and proc_info["proc"].stdin:
                 proc_info["proc"].stdin.close()
         except Exception:
-            pass
+            logger.exception("异常详情")
     
     def _save_log(self, process_id: str, extra_output: bytes = None):
         """保存进程日志"""

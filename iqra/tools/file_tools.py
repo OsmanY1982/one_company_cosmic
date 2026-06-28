@@ -54,7 +54,7 @@ def _get_max_read_chars() -> int:
             _max_read_chars_cached = int(val)
             return _max_read_chars_cached
     except Exception:
-        pass
+        logger.exception("异常详情")
     _max_read_chars_cached = _DEFAULT_MAX_READ_CHARS
     return _max_read_chars_cached
 
@@ -111,7 +111,7 @@ def _get_live_tracking_cwd(task_id: str = "default") -> str | None:
         if live_cwd:
             return live_cwd
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     return None
 
@@ -537,6 +537,7 @@ def read_file_tool(path: str, offset: int = 1, limit: int = 500, task_id: str = 
                         "content_returned": False,
                     }, ensure_ascii=False)
             except OSError:
+                logger.exception("异常详情")
                 pass  # stat failed — fall through to full read
 
         # ── Perform the read ──────────────────────────────────────────
@@ -614,6 +615,7 @@ def read_file_tool(path: str, offset: int = 1, limit: int = 500, task_id: str = 
                 task_data["dedup"][dedup_key] = _mtime_now
                 task_data.setdefault("read_timestamps", {})[resolved_str] = _mtime_now
             except OSError:
+                logger.exception("异常详情")
                 pass  # Can't stat — skip tracking for this entry
 
             # Bound the per-task containers so a long CLI session doesn't

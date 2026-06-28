@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 RAG 注入器 — 统一上下文构建
@@ -36,7 +40,7 @@ def build_context(user_message: str) -> Tuple[str, int]:
             )
             hit_count = rag.count("### [")
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     # ② 业务数据注入
     if any(kw in user_message for kw in DATA_KEYWORDS):
@@ -49,7 +53,7 @@ def build_context(user_message: str) -> Tuple[str, int]:
                     "如果某些数据为零或不存在，请如实说明。\n\n" + db_ctx
                 )
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     if not blocks:
         return user_message, 0

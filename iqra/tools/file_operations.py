@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 File Operations Module
@@ -950,7 +954,7 @@ class ShellFileOperations(FileOperations):
                 from tools.fuzzy_match import format_no_match_hint
                 err_msg += format_no_match_hint(err_msg, match_count, old_string, content)
             except Exception:
-                pass
+                logger.exception("异常详情")
             return PatchResult(error=err_msg)
         # Write back
         write_result = self.write_file(path, new_content)
@@ -1429,7 +1433,7 @@ class ShellFileOperations(FileOperations):
                         try:
                             counts[parts[0]] = int(parts[1])
                         except ValueError:
-                            pass
+                            logger.exception("异常详情")
             return SearchResult(counts=counts, total_count=sum(counts.values()))
         
         else:
@@ -1528,7 +1532,7 @@ class ShellFileOperations(FileOperations):
                         try:
                             counts[parts[0]] = int(parts[1])
                         except ValueError:
-                            pass
+                            logger.exception("异常详情")
             return SearchResult(counts=counts, total_count=sum(counts.values()))
         
         else:

@@ -1,12 +1,16 @@
 # `modules/business/product_service.py`
 
-> 路径：`modules/business/product_service.py` | 行数：343
+> 路径：`modules/business/product_service.py` | 行数：347
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 产品服务层
@@ -61,7 +65,7 @@ def init_db():
         try:
             conn.execute(f"ALTER TABLE products ADD COLUMN {col} {col_def}")
         except Exception:
-            pass
+            logger.exception("异常详情")
     conn.execute('''
         CREATE INDEX IF NOT EXISTS idx_products_name ON products(name)
     ''')
@@ -109,7 +113,7 @@ def add_product(name: str, specs: str = "", category: str = "",
         try:
             log_action("system", "添加产品", "product", name)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return {"ok": True, "msg": "产品创建成功", "id": product_id}
     except Exception as e:
@@ -207,7 +211,7 @@ def update_product(product_id: int, name: str = None, specs: str = None,
         try:
             log_action("system", "更新产品", "product", f"ID={product_id}, {name or ''}")
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return {"ok": True, "msg": "产品更新成功"}
     except Exception as e:
@@ -228,7 +232,7 @@ def delete_product(product_id: int) -> dict:
         try:
             log_action("system", "删除产品", "product", f"ID={product_id}")
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return {"ok": True, "msg": "产品删除成功"}
     except Exception as e:

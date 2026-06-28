@@ -1,6 +1,6 @@
 # `core/backup.py`
 
-> 路径：`core/backup.py` | 行数：415
+> 路径：`core/backup.py` | 行数：419
 
 
 ---
@@ -22,6 +22,9 @@ import traceback
 import struct
 from pathlib import Path
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 # 动态获取项目根目录（支持直接导入）
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -115,7 +118,7 @@ def _log(msg):
         with open(BACKUP_LOG, "a", encoding="utf-8") as f:
             f.write(line + "\n")
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 
 # ══════════════════════════════════════════════════════
@@ -153,7 +156,8 @@ def add_history(backup_name, desc="手动备份", encrypted=True, db_count=0, py
     except Exception as e:
         if temp_file.exists():
             try: temp_file.unlink()
-            except: pass
+            except:
+                logger.exception("异常详情")
         _log(f"[错误] 历史记录写入失败：{e}")
 
 
@@ -261,7 +265,7 @@ def auto_backup(desc="手动备份", encrypt=True):
                 else:
                     backup_path.unlink()
             except Exception:
-                pass
+                logger.exception("异常详情")
         return False, f"备份失败：{e}", None
 
 

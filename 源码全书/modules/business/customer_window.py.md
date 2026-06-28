@@ -1,12 +1,16 @@
 # `modules/business/customer_window.py`
 
-> 路径：`modules/business/customer_window.py` | 行数：413
+> 路径：`modules/business/customer_window.py` | 行数：418
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 客户管理 · ORBIT — 独立弹窗模块
 """
@@ -54,7 +58,8 @@ def _init_customer_db():
         ("total_amount", "REAL DEFAULT 0"),
     ]:
         try: c.execute(f"ALTER TABLE customer ADD COLUMN {col} {col_def}")
-        except sqlite3.OperationalError: pass
+        except sqlite3.OperationalError:
+            logger.exception("异常详情")
     conn.commit()
     conn.close()
 

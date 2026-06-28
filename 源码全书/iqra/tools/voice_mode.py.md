@@ -1,6 +1,6 @@
 # `iqra/tools/voice_mode.py`
 
-> 路径：`iqra/tools/voice_mode.py` | 行数：1017
+> 路径：`iqra/tools/voice_mode.py` | 行数：1018
 
 
 ---
@@ -131,7 +131,7 @@ def detect_audio_environment() -> dict:
                         "  3. Verify with: arecord -d 3 /tmp/test.wav && aplay /tmp/test.wav"
                     )
     except (FileNotFoundError, PermissionError, OSError):
-        pass
+        logger.exception("异常详情")
 
     # Check audio libraries
     try:
@@ -344,13 +344,13 @@ class TermuxAudioRecorder:
             try:
                 os.unlink(path)
             except OSError:
-                pass
+                logger.exception("异常详情")
             return None
         if os.path.getsize(path) <= 0:
             try:
                 os.unlink(path)
             except OSError:
-                pass
+                logger.exception("异常详情")
             return None
         logger.info("Termux voice recording stopped: %s", path)
         return path
@@ -364,12 +364,12 @@ class TermuxAudioRecorder:
         try:
             self._stop_termux_recording()
         except Exception:
-            pass
+            logger.exception("异常详情")
         if path and os.path.isfile(path):
             try:
                 os.unlink(path)
             except OSError:
-                pass
+                logger.exception("异常详情")
         logger.info("Termux voice recording cancelled")
 
     def shutdown(self) -> None:
@@ -565,7 +565,7 @@ class AudioRecorder:
                 try:
                     stream.close()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             raise RuntimeError(
                 f"Failed to open audio input stream: {e}. "
                 "Check that a microphone is connected and accessible."
@@ -631,7 +631,7 @@ class AudioRecorder:
                 stream.stop()
                 stream.close()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         t = threading.Thread(target=_do_close, daemon=True)
         t.start()
@@ -840,13 +840,13 @@ def stop_playback() -> None:
             proc.terminate()
             logger.info("Audio playback interrupted")
         except Exception:
-            pass
+            logger.exception("异常详情")
     # Also stop sounddevice playback if active
     try:
         sd, _ = _import_audio()
         sd.stop()
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 
 def play_audio_file(file_path: str) -> bool:
@@ -887,6 +887,7 @@ def play_audio_file(file_path: str) -> bool:
             sd.stop()
             return True
         except (ImportError, OSError):
+            logger.exception("异常详情")
             pass  # audio libs not available, fall through to system players
         except Exception as e:
             logger.debug("sounddevice playback failed: %s", e)
@@ -1019,7 +1020,7 @@ def cleanup_temp_recordings(max_age_seconds: int = 3600) -> int:
                     os.unlink(entry.path)
                     deleted += 1
             except OSError:
-                pass
+                logger.exception("异常详情")
 
     if deleted:
         logger.debug("Cleaned up %d old voice recordings", deleted)

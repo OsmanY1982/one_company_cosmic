@@ -1,12 +1,16 @@
 # `modules/business/product_window.py`
 
-> 路径：`modules/business/product_window.py` | 行数：381
+> 路径：`modules/business/product_window.py` | 行数：386
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 产品管理 · ORBIT — 独立弹窗模块
 """
@@ -45,7 +49,8 @@ def _init_product_db():
     )''')
     # 迁移：为已有 product 表补充业务字段
     try: c.execute("ALTER TABLE products ADD COLUMN product_no TEXT")
-    except sqlite3.OperationalError: pass
+    except sqlite3.OperationalError:
+        logger.exception("异常详情")
     conn.commit()
     conn.close()
 

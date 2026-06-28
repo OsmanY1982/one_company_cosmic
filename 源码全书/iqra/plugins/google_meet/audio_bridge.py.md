@@ -1,12 +1,16 @@
 # `iqra/plugins/google_meet/audio_bridge.py`
 
-> 路径：`iqra/plugins/google_meet/audio_bridge.py` | 行数：244
+> 路径：`iqra/plugins/google_meet/audio_bridge.py` | 行数：248
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Virtual audio bridge for feeding generated speech into Chrome's mic.
 
 v2 module. Provisions a platform-specific virtual audio device so the
@@ -97,7 +101,7 @@ class AudioBridge:
                         capture_output=True,
                     )
                 except Exception:
-                    # Best-effort teardown — never raise from here.
+                    logger.exception("异常详情")
                     pass
             self._module_ids = []
         self._torn_down = True

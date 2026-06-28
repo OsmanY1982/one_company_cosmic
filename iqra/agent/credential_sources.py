@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Unified removal contract for every credential source Hermes reads from.
 
 Hermes seeds its credential pool from many places:
@@ -167,7 +171,7 @@ def _remove_env_source(provider: str, removed) -> RemovalResult:
                 for line in env_path.read_text(errors="replace").splitlines()
             )
     except OSError:
-        pass
+        logger.exception("异常详情")
     shell_exported = env_in_process and not env_in_dotenv
 
     cleared = remove_env_value(env_var)

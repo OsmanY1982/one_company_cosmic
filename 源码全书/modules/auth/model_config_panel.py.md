@@ -1,12 +1,16 @@
 # `modules/auth/model_config_panel.py`
 
-> 路径：`modules/auth/model_config_panel.py` | 行数：931
+> 路径：`modules/auth/model_config_panel.py` | 行数：937
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 模型配置面板 — 可复用于登录后模型设置、智能中心AI对话、悬浮球对话框
 三种模式：预设云端模型 / 自定义端点 / 本地推理
@@ -335,7 +339,7 @@ class ModelConfigDialog(QWidget):
                 self._panel._model_fetcher.quit()
                 self._panel._model_fetcher.wait(2000)
             except Exception:
-                pass
+                logger.exception("异常详情")
         super().closeEvent(event)
 
     def _on_config_saved(self, config: dict):
@@ -708,6 +712,7 @@ class ModelConfigPanel(QWidget):
                     btn.setEnabled(True)
                     btn.setText("获取模型")
             except RuntimeError:
+                logger.exception("异常详情")
                 pass  # widget 已销毁
             finally:
                 self._model_fetcher = None
@@ -840,6 +845,7 @@ class ModelConfigPanel(QWidget):
                 self._refresh_btn.setEnabled(True)
                 self._refresh_btn.setText("刷新模型")
             except RuntimeError:
+                logger.exception("异常详情")
                 pass  # widget 已销毁
             finally:
                 self._model_fetcher = None

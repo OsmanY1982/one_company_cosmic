@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Hermes Achievements dashboard plugin backend.
 
 Mounted at /api/plugins/hermes-achievements/ by Hermes dashboard.
@@ -212,7 +216,7 @@ def load_checkpoint() -> Dict[str, Any]:
             if isinstance(data.get("sessions"), dict):
                 return data
     except Exception:
-        pass
+        logger.exception("异常详情")
     return {"schema_version": 1, "generated_at": 0, "sessions": {}}
 
 
@@ -644,7 +648,7 @@ def scan_sessions(
                 try:
                     progress_callback(list(sessions), idx, total_sessions)
                 except Exception:
-                    # Progress callbacks are advisory — a broken publisher
+                    logger.exception("异常详情")
                     # must never abort the scan itself.
                     pass
 
@@ -749,7 +753,7 @@ def aggregate_stats(sessions: List[Dict[str, Any]]) -> Dict[str, Any]:
                 if lt.tm_hour < 6 or lt.tm_hour >= 23:
                     agg["night_sessions"] += 1
             except Exception:
-                pass
+                logger.exception("异常详情")
     agg["distinct_model_count"] = len({m for m in model_names if m and m != "None"})
     agg["distinct_provider_count"] = len(provider_names)
     return agg
@@ -898,7 +902,7 @@ def _run_scan_and_update_cache(publish_partial_snapshots: bool = True) -> None:
                 _SNAPSHOT_CACHE = _json_safe(partial)
                 _SNAPSHOT_CACHE_AT = 0
             except Exception:
-                # Intermediate publication is best-effort; don't kill the scan.
+                logger.exception("异常详情")
                 pass
 
         callback = _publish_partial if publish_partial_snapshots else None
@@ -1053,9 +1057,9 @@ async def reset_state():
     try:
         snapshot_path().unlink(missing_ok=True)
     except Exception:
-        pass
+        logger.exception("异常详情")
     try:
         checkpoint_path().unlink(missing_ok=True)
     except Exception:
-        pass
+        logger.exception("异常详情")
     return {"ok": True}

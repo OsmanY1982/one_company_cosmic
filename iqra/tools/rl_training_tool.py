@@ -498,7 +498,7 @@ def _stop_training_run(run_state: RunState):
             try:
                 fh.close()
             except Exception:
-                pass
+                logger.exception("异常详情")
             setattr(run_state, attr, None)
 
 

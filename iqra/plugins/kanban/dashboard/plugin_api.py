@@ -30,6 +30,9 @@ import asyncio
 import hmac
 import json
 import logging
+
+logger = logging.getLogger(__name__)
+
 import os
 import sqlite3
 import time
@@ -540,7 +543,7 @@ def create_task(payload: CreateTaskBody, board: Optional[str] = Query(None)):
                 if not running and message:
                     body["warning"] = message
             except Exception:
-                # Probe failure must never block the create itself.
+                logger.exception("异常详情")
                 pass
         return body
     except ValueError as e:
@@ -1589,4 +1592,4 @@ async def stream_events(ws: WebSocket):
         try:
             await ws.close()
         except Exception:
-            pass
+            logger.exception("异常详情")

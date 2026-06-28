@@ -1,12 +1,16 @@
 # `modules/intelligence/iqra_floating_planet.py`
 
-> 路径：`modules/intelligence/iqra_floating_planet.py` | 行数：917
+> 路径：`modules/intelligence/iqra_floating_planet.py` | 行数：921
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 iqra 悬浮星球 — 桌面常驻 AI 助理
@@ -724,7 +728,7 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
                 with open(config_file, "r") as f:
                     stored_hash = json.load(f).get("password_hash", "")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         pwd = None
         if not stored_hash:
@@ -834,7 +838,7 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
         try:
             print(f"[FloatingPlanet] 切换到形态: {name} ({key})")
         except OSError:
-            pass
+            logger.exception("异常详情")
 
     # ── AI 对话 ──
 
@@ -848,7 +852,7 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
                 try:
                     self._standalone_chat.close()
                 except RuntimeError:
-                    pass
+                    logger.exception("异常详情")
                 self._standalone_chat = None
             self._standalone_chat = AIChatWindow(
                 iqra_engine=self._engine,

@@ -116,7 +116,7 @@ def _handle_feishu_doc_read(args: dict, **kwargs) -> str:
             content = body.get("data", {}).get("content", "")
             return tool_result(success=True, content=content)
         except (json.JSONDecodeError, AttributeError):
-            pass
+            logger.exception("异常详情")
 
     # Fallback: try response.data
     data = getattr(response, "data", None)

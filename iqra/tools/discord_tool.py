@@ -93,7 +93,7 @@ def _discord_request(
         try:
             error_body = e.read().decode("utf-8", errors="replace")
         except Exception:
-            pass
+            logger.exception("异常详情")
         raise DiscordAPIError(e.code, error_body) from e
 
 

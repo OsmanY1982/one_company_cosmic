@@ -94,14 +94,14 @@ class VoiceManager(QObject):
             import pyttsx3
             return True
         except ImportError:
-            pass
+            logger.exception("异常详情")
 
         try:
             # 检查 edge-tts
             import edge_tts
             return True
         except ImportError:
-            pass
+            logger.exception("异常详情")
 
         # macOS 原生 say 命令
         import shutil
@@ -117,14 +117,14 @@ class VoiceManager(QObject):
             import whisper
             return True
         except ImportError:
-            pass
+            logger.exception("异常详情")
 
         try:
             # 检查 speech_recognition
             import speech_recognition as sr
             return True
         except ImportError:
-            pass
+            logger.exception("异常详情")
 
         return False
 
@@ -202,7 +202,7 @@ class VoiceManager(QObject):
             engine.runAndWait()
             return
         except Exception as e1:
-            pass
+            logger.exception("异常详情")
 
         try:
             # 回退到 edge-tts
@@ -216,7 +216,7 @@ class VoiceManager(QObject):
             asyncio.run(_speak())
             return
         except Exception as e2:
-            pass
+            logger.exception("异常详情")
 
         try:
             # macOS 原生 say 命令（通过 stdin 传文本避免命令注入）
@@ -257,36 +257,36 @@ def check_voice_dependencies() -> dict:
         import sounddevice
         deps["sounddevice"] = True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     try:
         import numpy
         deps["numpy"] = True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     try:
         import pyttsx3
         deps["pyttsx3"] = True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     try:
         import edge_tts
         deps["edge_tts"] = True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     try:
         import whisper
         deps["whisper"] = True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     try:
         import speech_recognition
         deps["speech_recognition"] = True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     return deps

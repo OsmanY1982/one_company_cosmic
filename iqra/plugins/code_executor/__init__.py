@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 代码执行插件
 支持多种编程语言的代码执行和验证
@@ -122,7 +126,7 @@ class CodeExecutorPlugin:
                 try:
                     os.remove(temp_file)
                 except:
-                    pass
+                    logger.exception("异常详情")
     
     def validate_syntax(self, code: str, language: str = "python") -> Dict[str, Any]:
         """验证代码语法"""

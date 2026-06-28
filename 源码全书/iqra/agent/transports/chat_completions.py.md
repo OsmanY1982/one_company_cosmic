@@ -1,12 +1,16 @@
 # `iqra/agent/transports/chat_completions.py`
 
-> 路径：`iqra/agent/transports/chat_completions.py` | 行数：614
+> 路径：`iqra/agent/transports/chat_completions.py` | 行数：618
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """OpenAI Chat Completions transport.
 
 Handles the default api_mode ('chat_completions') used by ~16 OpenAI-compatible
@@ -545,7 +549,7 @@ class ChatCompletionsTransport(ProviderTransport):
                         try:
                             extra = extra.model_dump()
                         except Exception:
-                            pass
+                            logger.exception("异常详情")
                     tc_provider_data["extra_content"] = extra
                 tool_calls.append(
                     ToolCall(

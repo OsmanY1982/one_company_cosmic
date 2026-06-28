@@ -447,7 +447,7 @@ def resolve_skill_config_values(
             if isinstance(parsed, dict):
                 config = parsed
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     resolved: Dict[str, Any] = {}
     for var in config_vars:

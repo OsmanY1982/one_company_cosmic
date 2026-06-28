@@ -1,6 +1,6 @@
 # `modules/personnel/staff_service.py`
 
-> 路径：`modules/personnel/staff_service.py` | 行数：226
+> 路径：`modules/personnel/staff_service.py` | 行数：230
 
 
 ---
@@ -9,6 +9,10 @@
 ```python
 # -*- coding: utf-8 -*-
 from __future__ import annotations
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 人员管理 — Service 层
 """
@@ -66,7 +70,7 @@ def init_db():
             try:
                 conn.execute(f"ALTER TABLE staff ADD COLUMN {col} {coltype}")
             except Exception:
-                pass
+                logger.exception("异常详情")
     conn.commit()
 
 

@@ -442,7 +442,7 @@ class ProcessRegistry:
                 try:
                     child.terminate()
                 except psutil.NoSuchProcess:
-                    pass
+                    logger.exception("异常详情")
             parent.terminate()
         except psutil.NoSuchProcess:
             return
@@ -450,7 +450,7 @@ class ProcessRegistry:
             try:
                 os.kill(pid, signal.SIGTERM)
             except (OSError, ProcessLookupError, PermissionError):
-                pass
+                logger.exception("异常详情")
 
     # ----- Spawn -----
 
@@ -591,11 +591,11 @@ class ProcessRegistry:
                 else:
                     proc.kill()
             except Exception:
-                pass
+                logger.exception("异常详情")
             try:
                 proc.wait(timeout=5)
             except Exception:
-                pass
+                logger.exception("异常详情")
             raise
 
         return session
@@ -881,12 +881,12 @@ class ProcessRegistry:
                     if chunk:
                         drained = chunk if isinstance(chunk, str) else chunk.decode("utf-8", errors="replace")
                 except (BlockingIOError, OSError, ValueError):
-                    pass
+                    logger.exception("异常详情")
                 finally:
                     try:
                         fcntl.fcntl(fd, fcntl.F_SETFL, flags)
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
             except Exception as e:
                 logger.debug("Non-blocking drain failed for %s: %s", session.id, e)
 
@@ -1077,10 +1077,10 @@ class ProcessRegistry:
                                 try:
                                     child.terminate()
                                 except psutil.NoSuchProcess:
-                                    pass
+                                    logger.exception("异常详情")
                             parent.terminate()
                         except psutil.NoSuchProcess:
-                            pass
+                            logger.exception("异常详情")
                 except (ProcessLookupError, PermissionError):
                     session.process.kill()
             elif session.env_ref and session.pid:

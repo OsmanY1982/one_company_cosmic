@@ -1,6 +1,6 @@
 # `core/cloud_sync.py`
 
-> 路径：`core/cloud_sync.py` | 行数：384
+> 路径：`core/cloud_sync.py` | 行数：669
 
 
 ---
@@ -39,12 +39,32 @@ DB_PATHS = {
     "wallet":             _os.path.join(BASE_DIR, "data", "wallet.db"),
     "wallet_transactions": _os.path.join(BASE_DIR, "data", "wallet.db"),
     "activation_codes":   _os.path.join(BASE_DIR, "data", "activation_admin.db"),
+    "activation_records": _os.path.join(BASE_DIR, "data", "activation.db"),
+    "activation_logs":    _os.path.join(BASE_DIR, "data", "activation_log.db"),
+    "admins":             _os.path.join(BASE_DIR, "data", "admin.db"),
+    "audit_logs":         _os.path.join(BASE_DIR, "data", "audit.db"),
+    "members":            _os.path.join(BASE_DIR, "data", "member.db"),
+    "operation_logs":     _os.path.join(BASE_DIR, "data", "operation_log.db"),
+    "orders_backup":      _os.path.join(BASE_DIR, "data", "orders.db"),
+    "personnel":          _os.path.join(BASE_DIR, "data", "personnel_db.sqlite"),
+    "schedules":          _os.path.join(BASE_DIR, "data", "scheduler.db"),
+    "sessions":           _os.path.join(BASE_DIR, "data", "sessions.db"),
+    "sync_logs":          _os.path.join(BASE_DIR, "data", "sync_log.db"),
+    "system_logs":        _os.path.join(BASE_DIR, "data", "system_logs.db"),
+    "todos":              _os.path.join(BASE_DIR, "data", "todos.db"),
+    "app_config":         _os.path.join(BASE_DIR, "data", "app.db"),
+    "cache_data":         _os.path.join(BASE_DIR, "data", "cache.db"),
 }
 
 # ── 本地表名映射（当本地 SQLite 表名 ≠ Supabase 表名时） ──
 LOCAL_TABLE_NAMES = {
     "customers": "customer",       # customer.db 里的表叫 customer（单数）
     "activation_codes": "admin_codes",  # activation_admin.db 里的表叫 admin_codes
+    "activation_records": "activation_codes",  # activation.db 里的表叫 activation_codes
+    "admins": "admin_logs",        # admin.db 里的表叫 admin_logs
+    "schedules": "tasks",          # scheduler.db 里的表叫 tasks
+    "sync_logs": "sync_records",   # sync_log.db 里的表叫 sync_records
+    "system_logs": "sync_logs",    # system_logs.db 里的表叫 sync_logs
 }
 
 # ── 字段映射：{本地列名 → Supabase 列名} ──
@@ -181,6 +201,166 @@ COLUMN_MAPPING = {
         "used_at":       "used_at",
         "expires_at":    "expires_at",
     },
+
+    # ── 激活记录（activation.db/activation_codes → Supabase activation_records）──
+    "activation_records": {
+        "code":          "code",
+        "type":          "type",
+        "status":        "status",
+        "bound_account": "bound_account",
+        "bound_machine": "bound_machine",
+        "created_at":    "created_at",
+        "used_at":       "used_at",
+        "expires_at":    "expires_at",
+    },
+
+    # ── 激活日志（activation_log.db → Supabase activation_logs） ──
+    "activation_logs": {
+        "code":       "code",
+        "action":     "action",
+        "detail":     "detail",
+        "status":     "status",
+        "created_at": "created_at",
+    },
+
+    # ── 管理员（admin.db/admin_logs → Supabase admins） ──
+    "admins": {
+        "admin_user":  "admin_user",
+        "action":      "action",
+        "target":      "target",
+        "details":     "details",
+        "ip_address":  "ip_address",
+        "created_at":  "created_at",
+    },
+
+    # ── 审计日志（audit.db/audit_logs → Supabase audit_logs） ──
+    "audit_logs": {
+        "user_id":       "user_id",
+        "user_name":     "user_name",
+        "action":        "action",
+        "level":         "level",
+        "resource_type": "resource_type",
+        "resource_id":   "resource_id",
+        "status":        "status",
+        "ip_address":    "ip_address",
+        "timestamp":     "timestamp",
+    },
+
+    # ── 会员（member.db/member → Supabase members） ──
+    "members": {
+        "name":       "name",
+        "phone":      "phone",
+        "email":      "email",
+        "level":      "level",
+        "points":     "points",
+        "rights":     "rights",
+        "vip_expire": "vip_expire",
+        "status":     "status",
+        "created_at": "created_at",
+    },
+
+    # ── 操作日志（operation_log.db/operation_logs → Supabase operation_logs） ──
+    "operation_logs": {
+        "username":    "username",
+        "action":      "action",
+        "module":      "module",
+        "detail":      "detail",
+        "created_at":  "created_at",
+    },
+
+    # ── 订单备份（orders.db/orders → Supabase orders_backup） ──
+    "orders_backup": {
+        "order_no":      "order_no",
+        "customer_name": "customer",
+        "product_name":  "product",
+        "quantity":      "quantity",
+        "unit_price":    "unit_price",
+        "total_amount":  "total_price",
+        "status":        "status",
+        "note":          "note",
+        "created_at":    "created_at",
+    },
+
+    # ── 人事档案（personnel_db.sqlite/personnel → Supabase personnel） ──
+    "personnel": {
+        "name":       "name",
+        "phone":      "phone",
+        "email":      "email",
+        "position":   "position",
+        "department": "department",
+        "status":     "status",
+        "created_at": "created_at",
+    },
+
+    # ── 定时任务（scheduler.db/tasks → Supabase schedules） ──
+    "schedules": {
+        "task_id":     "task_id",
+        "name":        "name",
+        "schedule":    "schedule",
+        "handler":     "handler",
+        "params":      "params",
+        "enabled":     "enabled",
+        "last_run":    "last_run",
+        "next_run":    "next_run",
+        "run_count":   "run_count",
+        "last_result": "last_result",
+    },
+
+    # ── 会话（sessions.db/sessions → Supabase sessions） ──
+    "sessions": {
+        "id":               "id",
+        "title":            "title",
+        "summary":          "summary",
+        "message_count":    "message_count",
+        "tags":             "tags",
+        "content_snapshot": "content_snapshot",
+        "created_at":       "created_at",
+        "updated_at":       "updated_at",
+    },
+
+    # ── 同步日志（sync_log.db/sync_records → Supabase sync_logs） ──
+    "sync_logs": {
+        "sync_type":    "sync_type",
+        "status":       "status",
+        "detail":       "detail",
+        "files_synced": "files_synced",
+        "created_at":   "created_at",
+    },
+
+    # ── 系统日志（system_logs.db/sync_logs → Supabase system_logs） ──
+    "system_logs": {
+        "table_name":   "table_name",
+        "direction":    "direction",
+        "record_count": "record_count",
+        "status":       "status",
+        "created_at":   "created_at",
+    },
+
+    # ── 待办事项（todos.db/todos → Supabase todos） ──
+    "todos": {
+        "id":         "id",
+        "content":    "content",
+        "status":     "status",
+        "priority":   "priority",
+        "created_at": "created_at",
+        "updated_at": "updated_at",
+    },
+
+    # ── 应用配置（app.db/app_config → Supabase app_config） ──
+    "app_config": {
+        "key":         "key",
+        "value":       "value",
+        "description": "description",
+        "updated_at":  "updated_at",
+    },
+
+    # ── 缓存数据（cache.db/cache_data → Supabase cache_data） ──
+    "cache_data": {
+        "key":        "key",
+        "value":      "value",
+        "expire_at":  "expire_at",
+        "created_at": "created_at",
+    },
 }
 
 # ── 冲突列（upsert on_conflict 用） ──
@@ -198,6 +378,21 @@ CONFLICT_COLUMNS = {
     "users":              "username",
     "user_memberships":   "username",
     "activation_codes":   "code",
+    "activation_records": "code",
+    "activation_logs":    None,
+    "admins":             "username",
+    "audit_logs":         None,
+    "members":            "name",
+    "operation_logs":     None,
+    "orders_backup":      "order_no",
+    "personnel":          "name",
+    "schedules":          "name",
+    "sessions":           "user_id",
+    "sync_logs":          None,
+    "system_logs":        None,
+    "todos":              "title",
+    "app_config":         "key",
+    "cache_data":         "key",
 }
 
 
@@ -351,8 +546,83 @@ def sync_activation_codes():
     sync_table(DB_PATHS["activation_codes"], "activation_codes")
 
 
+def sync_activation_records():
+    """同步激活记录表 → Supabase"""
+    sync_table(DB_PATHS["activation_records"], "activation_records")
+
+
+def sync_activation_logs():
+    """同步激活日志表 → Supabase"""
+    sync_table(DB_PATHS["activation_logs"], "activation_logs")
+
+
+def sync_admins():
+    """同步管理员表 → Supabase"""
+    sync_table(DB_PATHS["admins"], "admins")
+
+
+def sync_audit_logs():
+    """同步审计日志表 → Supabase"""
+    sync_table(DB_PATHS["audit_logs"], "audit_logs")
+
+
+def sync_members():
+    """同步会员表 → Supabase"""
+    sync_table(DB_PATHS["members"], "members")
+
+
+def sync_operation_logs():
+    """同步操作日志表 → Supabase"""
+    sync_table(DB_PATHS["operation_logs"], "operation_logs")
+
+
+def sync_orders_backup():
+    """同步订单备份表 → Supabase"""
+    sync_table(DB_PATHS["orders_backup"], "orders_backup")
+
+
+def sync_personnel():
+    """同步人事档案表 → Supabase"""
+    sync_table(DB_PATHS["personnel"], "personnel")
+
+
+def sync_schedules():
+    """同步定时任务表 → Supabase"""
+    sync_table(DB_PATHS["schedules"], "schedules")
+
+
+def sync_sessions():
+    """同步会话表 → Supabase"""
+    sync_table(DB_PATHS["sessions"], "sessions")
+
+
+def sync_sync_logs():
+    """同步同步日志表 → Supabase"""
+    sync_table(DB_PATHS["sync_logs"], "sync_logs")
+
+
+def sync_system_logs():
+    """同步系统日志表 → Supabase"""
+    sync_table(DB_PATHS["system_logs"], "system_logs")
+
+
+def sync_todos():
+    """同步待办事项表 → Supabase"""
+    sync_table(DB_PATHS["todos"], "todos")
+
+
+def sync_app_config():
+    """同步应用配置表 → Supabase"""
+    sync_table(DB_PATHS["app_config"], "app_config")
+
+
+def sync_cache_data():
+    """同步缓存数据表 → Supabase"""
+    sync_table(DB_PATHS["cache_data"], "cache_data")
+
+
 def sync_all():
-    """同步所有业务表到 Supabase（共 13 表）"""
+    """同步所有业务表到 Supabase（共 28 表）"""
     logger.info("=" * 50)
     logger.info("开始同步所有业务表...")
     logger.info("=" * 50)
@@ -366,6 +636,21 @@ def sync_all():
         ("用户", sync_users),
         ("会员", sync_user_memberships),
         ("激活码", sync_activation_codes),
+        ("激活记录", sync_activation_records),
+        ("激活日志", sync_activation_logs),
+        ("管理员", sync_admins),
+        ("审计日志", sync_audit_logs),
+        ("会员资料", sync_members),
+        ("操作日志", sync_operation_logs),
+        ("订单备份", sync_orders_backup),
+        ("人事档案", sync_personnel),
+        ("定时任务", sync_schedules),
+        ("会话", sync_sessions),
+        ("同步日志", sync_sync_logs),
+        ("系统日志", sync_system_logs),
+        ("待办事项", sync_todos),
+        ("应用配置", sync_app_config),
+        ("缓存数据", sync_cache_data),
         ("钱包", sync_wallet),
         ("钱包交易", sync_wallet_transactions),
         ("分销链接", sync_distribution_links),

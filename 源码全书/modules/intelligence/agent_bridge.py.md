@@ -1,12 +1,16 @@
 # `modules/intelligence/agent_bridge.py`
 
-> 路径：`modules/intelligence/agent_bridge.py` | 行数：919
+> 路径：`modules/intelligence/agent_bridge.py` | 行数：923
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 AgentBridge v2 — iqra 自主 Agent 引擎（对标 Codex / Claude Code）
 
@@ -374,13 +378,13 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
             try:
                 self._model_status = ModelStatus()
             except Exception:
-                pass
+                logger.exception("异常详情")
         self._model_mgr = None
         if _HAVE_MODEL_MGR:
             try:
                 self._model_mgr = ModelStatusManager()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # ── 多模型路由 ──
         if _HAVE_MULTI_MODEL:
@@ -442,13 +446,13 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
             try:
                 self._cloud_sync = CloudSyncService()
             except Exception:
-                pass
+                logger.exception("异常详情")
         self._perf_mon = None
         if _HAVE_PERF_MON:
             try:
                 self._perf_mon = PerformanceMonitor()
             except Exception:
-                pass
+                logger.exception("异常详情")
         self._proc_mgr = ProcessManager() if _HAVE_PROC_MGR else None
         self._secure_store = SecureStorage() if _HAVE_SECURE else None
 
@@ -459,7 +463,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                 install_logging()
                 self._logger = get_logger("agent_bridge")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # ── 配置校验 ──
         self._config_validator = None
@@ -471,7 +475,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                 )
                 self._config_validator = ConfigValidator(config_path)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # ── 模型配置注册 ──
         self._provider_registry = ModelConfig() if _HAVE_PROVIDER_REG else None
@@ -484,7 +488,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                 self._token_stats = TokenStats()
                 self._token_saver = TokenSaverOptimizer(self._token_stats)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # ── 云端同步 ──
         self._sync_bridge = SyncBridge() if _HAVE_SYNC_BRIDGE else None
@@ -560,13 +564,13 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
             try:
                 self._stream_worker.finished.disconnect()
             except Exception:
-                pass
+                logger.exception("异常详情")
         if hasattr(self, '_stream_thread') and self._stream_thread:
             try:
                 self._stream_thread.quit()
                 self._stream_thread.wait(200)
             except Exception:
-                pass
+                logger.exception("异常详情")
         self._stream_worker = None
         self._stream_thread = None
 
@@ -577,7 +581,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
             try:
                 self._agent_loop.cancel()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def cancel_task(self):
         """取消正在执行的自主任务"""
@@ -651,14 +655,14 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                         f'<pipeline_rag>\n[项目上下文]\n{rag_ctx}\n</pipeline_rag>'
                     )
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 2. Token 压缩
         if self._token_opt:
             try:
                 self._engine.messages = self._token_opt.optimize_messages(self._engine.messages)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 3. SuperIntelligence 推理链注入
         if self._super_intel:
@@ -669,7 +673,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                         f'<pipeline_si>\n{si_prompt}\n</pipeline_si>'
                     )
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 4. 多模型路由
         if self._multi_model:
@@ -678,7 +682,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                 if route and route.get("model"):
                     self.switch_model(route.get("provider_id", ""), route["model"])
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 5. 调用 ChatEngine
         try:
@@ -692,7 +696,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                         self.switch_model(fallback.provider_id, fallback.model)
                         return self._engine.chat(message)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             raise e
 
     def _preprocess_stream(self, message: str):
@@ -711,14 +715,14 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                         f'<pipeline_rag>\n[项目上下文]\n{rag_ctx}\n</pipeline_rag>'
                     )
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 2. Token 压缩
         if self._token_opt:
             try:
                 self._engine.messages = self._token_opt.optimize_messages(self._engine.messages)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 3. SuperIntelligence 推理链注入
         if self._super_intel:
@@ -729,7 +733,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                         f'<pipeline_si>\n{si_prompt}\n</pipeline_si>'
                     )
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 4. 多模型路由
         if self._multi_model:
@@ -738,7 +742,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                 if route and route.get("model"):
                     self.switch_model(route.get("provider_id", ""), route["model"])
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def reset(self):
         """重置对话历史"""
@@ -841,7 +845,7 @@ class AgentBridge(AgentBridgeModelMixin, AgentBridgeToolsMixin):
                     for i, entry in enumerate(entries, 1):
                         lines.append(f"\n### 记忆 {i}\n{entry}")
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         return "\n".join(lines)
 

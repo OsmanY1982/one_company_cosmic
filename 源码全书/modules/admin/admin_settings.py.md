@@ -1,12 +1,16 @@
 # `modules/admin/admin_settings.py`
 
-> 路径：`modules/admin/admin_settings.py` | 行数：192
+> 路径：`modules/admin/admin_settings.py` | 行数：196
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 后台管理 - 系统设置（版本发布）
@@ -196,7 +200,7 @@ class AdminSettingsWidget(QWidget):
             try:
                 log_action("system", "版本发布", "setting", f"发布版本 v{version}")
             except Exception:
-                pass
+                logger.exception("异常详情")
         except Exception as e:
             QMessageBox.critical(self, "发布失败", f"发布失败:{str(e)[:100]}")
 

@@ -10,6 +10,9 @@ from typing import Any, AsyncIterator, Awaitable, Callable
 import httpx
 
 from tools.microsoft_graph_auth import GraphCredentials, MicrosoftGraphTokenProvider
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 DEFAULT_GRAPH_BASE_URL = "https://graph.microsoft.com/v1.0"
@@ -362,7 +365,7 @@ class MicrosoftGraphClient:
                 try:
                     return max(0.0, float(retry_after))
                 except ValueError:
-                    pass
+                    logger.exception("异常详情")
         return min(8.0, 0.5 * (2 ** attempt))
 
     @staticmethod

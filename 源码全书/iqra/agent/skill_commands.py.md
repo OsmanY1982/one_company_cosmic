@@ -1,6 +1,6 @@
 # `iqra/agent/skill_commands.py`
 
-> 路径：`iqra/agent/skill_commands.py` | 行数：501
+> 路径：`iqra/agent/skill_commands.py` | 行数：504
 
 
 ---
@@ -141,6 +141,7 @@ def _inject_skill_config(loaded_skill: dict[str, Any], parts: list[str]) -> None
         lines.append("]")
         parts.extend(lines)
     except Exception:
+        logger.exception("异常详情")
         pass  # Non-critical — skill still loads without config injection
 
 
@@ -309,7 +310,7 @@ def scan_skill_commands() -> Dict[str, Dict[str, Any]]:
                 except Exception:
                     continue
     except Exception:
-        pass
+        logger.exception("异常详情")
     return _skill_commands
 
 
@@ -443,6 +444,7 @@ def build_skill_invocation_message(
         from tools.skill_usage import bump_use
         bump_use(skill_name)
     except Exception:
+        logger.exception("异常详情")
         pass  # Non-critical — skill invocation proceeds regardless
 
     activation_note = (
@@ -490,6 +492,7 @@ def build_preloaded_skills_prompt(
             from tools.skill_usage import bump_use
             bump_use(skill_name)
         except Exception:
+            logger.exception("异常详情")
             pass  # Non-critical
 
         activation_note = (

@@ -1,12 +1,16 @@
 # `services/hotkey_manager.py`
 
-> 路径：`services/hotkey_manager.py` | 行数：170
+> 路径：`services/hotkey_manager.py` | 行数：174
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 热键管理器
 全局快捷键注册和管理
@@ -48,7 +52,7 @@ class HotkeyManager:
                     hk = HotKey(**item)
                     self._hotkeys[hk.action] = hk
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         # 默认热键
         if not self._hotkeys:

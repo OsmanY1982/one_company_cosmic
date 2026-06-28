@@ -652,7 +652,7 @@ def prompt_dangerous_approval(command: str, description: str,
             )
             return "deny"
     except Exception:
-        # prompt_toolkit not installed, or detection failed -- fall through
+        logger.exception("异常详情")
         # to the legacy input() path (safe in non-TUI contexts: scripts,
         # tests, sshd, etc.).
         pass
@@ -1010,6 +1010,7 @@ def check_all_command_guards(command: str, env_type: str,
         from tools.tirith_security import check_command_security
         tirith_result = check_command_security(command)
     except ImportError:
+        logger.exception("异常详情")
         pass  # tirith module not installed — allow
 
     # Dangerous command check (detection only, no approval)

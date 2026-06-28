@@ -548,7 +548,7 @@ def _terminate_command_tts_process_tree(proc: subprocess.Popen) -> None:
             try:
                 child.terminate()
             except psutil.NoSuchProcess:
-                pass
+                logger.exception("异常详情")
         parent.terminate()
     except psutil.NoSuchProcess:
         return
@@ -559,7 +559,7 @@ def _terminate_command_tts_process_tree(proc: subprocess.Popen) -> None:
         proc.wait(timeout=2)
         return
     except subprocess.TimeoutExpired:
-        pass
+        logger.exception("异常详情")
 
     try:
         parent = psutil.Process(proc.pid)
@@ -567,7 +567,7 @@ def _terminate_command_tts_process_tree(proc: subprocess.Popen) -> None:
             try:
                 child.kill()
             except psutil.NoSuchProcess:
-                pass
+                logger.exception("异常详情")
         parent.kill()
     except psutil.NoSuchProcess:
         return
@@ -1226,7 +1226,7 @@ def _generate_gemini_tts(text: str, output_path: str, tts_config: Dict[str, Any]
         try:
             os.remove(wav_path)
         except OSError:
-            pass
+            logger.exception("异常详情")
 
     return output_path
 
@@ -1469,7 +1469,7 @@ def _generate_piper_tts(text: str, output_path: str, tts_config: Dict[str, Any])
             try:
                 os.remove(wav_path)
             except OSError:
-                pass
+                logger.exception("异常详情")
         else:
             # No ffmpeg — keep WAV and return that path
             os.rename(wav_path, output_path)
@@ -1825,19 +1825,19 @@ def check_tts_requirements() -> bool:
         _import_edge_tts()
         return True
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         _import_elevenlabs()
         if get_env_value("ELEVENLABS_API_KEY"):
             return True
     except ImportError:
-        pass
+        logger.exception("异常详情")
     try:
         _import_openai_client()
         if _has_openai_audio_backend():
             return True
     except ImportError:
-        pass
+        logger.exception("异常详情")
     if get_env_value("MINIMAX_API_KEY"):
         return True
     if get_env_value("XAI_API_KEY"):
@@ -1849,7 +1849,7 @@ def check_tts_requirements() -> bool:
         if get_env_value("MISTRAL_API_KEY"):
             return True
     except ImportError:
-        pass
+        logger.exception("异常详情")
     if _check_neutts_available():
         return True
     if _check_kittentts_available():
@@ -2061,7 +2061,7 @@ def stream_tts_to_speaker(
                     try:
                         os.unlink(tmp_path)
                     except OSError:
-                        pass
+                        logger.exception("异常详情")
 
         while not stop_event.is_set():
             # Read next delta from queue
@@ -2125,7 +2125,7 @@ def stream_tts_to_speaker(
                 output_stream.stop()
                 output_stream.close()
             except Exception:
-                pass
+                logger.exception("异常详情")
         tts_done_event.set()
 
 

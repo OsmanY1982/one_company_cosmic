@@ -1,12 +1,16 @@
 # `core/voice.py`
 
-> 路径：`core/voice.py` | 行数：355
+> 路径：`core/voice.py` | 行数：359
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 语音输入模块 — 基于 faster-whisper 离线识别
 支持中文/英文，纯本地运行，无需网络
@@ -145,7 +149,7 @@ class VoiceListener(QThread):
         try:
             os.unlink(audio_path)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return " ".join(text_parts)
 
@@ -177,7 +181,7 @@ class VoiceListener(QThread):
         try:
             os.unlink(audio_path)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return result.get("text", "").strip()
 
@@ -361,6 +365,6 @@ def speak(text: str, voice: str = "Tingting", rate: int = 200):
             timeout=15,
         )
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 ```

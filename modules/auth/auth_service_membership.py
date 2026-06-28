@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 认证服务 — 会员管理 Mixin
 含升级会员、激活码激活、密码重置、会员信息查询
@@ -37,7 +41,7 @@ class MembershipMixin:
                 from core.operation_log import log_action
                 log_action(username, "升级会员", "membership", "升级为永久会员")
             except Exception:
-                pass
+                logger.exception("异常详情")
             return True, "升级为永久会员成功"
 
         if target_membership == self.MEMBERSHIP_VIP:
@@ -55,7 +59,7 @@ class MembershipMixin:
                 from core.operation_log import log_action
                 log_action(username, "升级会员", "membership", "升级为VIP会员（有效期1年）")
             except Exception:
-                pass
+                logger.exception("异常详情")
             return True, "升级为VIP会员成功（有效期1年）"
 
         return False, "未知的会员类型"
@@ -140,7 +144,7 @@ class MembershipMixin:
             from core.operation_log import log_action
             log_action(username, "激活会员", "membership", f"激活码激活，类型={code_type}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return True, "激活成功"
 
     def get_membership_info(self, username: str) -> dict:
@@ -192,5 +196,5 @@ class MembershipMixin:
             from core.operation_log import log_action
             log_action("admin", "重置密码", "admin", f"重置用户 {username} 的密码")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return True, f"用户 {username} 的密码已重置"

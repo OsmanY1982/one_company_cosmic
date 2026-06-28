@@ -1,6 +1,6 @@
 # `core/module_manager.py`
 
-> 路径：`core/module_manager.py` | 行数：101
+> 路径：`core/module_manager.py` | 行数：139
 
 
 ---
@@ -21,6 +21,7 @@ PROTECTED_MODULES = {
     "activation": "activation",
     "report": "report",
     "base_info": "base_info",
+    "auth": "admin",  # 认证管理仅限管理员
 }
 
 
@@ -46,8 +47,10 @@ class ModuleManager:
             return
         self._initialized = True
         self._modules: Dict[str, ModuleInfo] = {}
+        self._services: Dict[str, object] = {}  # 注册的服务实例
         self._project_root = BASE_DIR
         self._current_window = None  # 当前显示的窗口
+        self._register_auth_services()
 
     def register_module(self, module_id, name, import_path, class_name, icon=None):
         info = ModuleInfo(module_id, name, icon)
@@ -105,6 +108,41 @@ class ModuleManager:
             window.show()
 
         return window
+
+    def register_service(self, service_id: str, import_path: str, class_name: str):
+        """注册非 UI 服务模块（如 AuthService / SessionService 等）。
+        服务通过 service_id 索引，跨模块可通过 module_manager.get_service() 获取。
+        """
+        try:
+            module = __import__(import_path, fromlist=[class_name])
+            service_cls = getattr(module, class_name)
+            self._services[service_id] = service_cls
+            print(f"服务已注册: {service_id} → {import_path}.{class_name}")
+        except Exception as e:
+            print(f"注册服务失败: {service_id} - {e}")
+
+    def get_service(self, service_id: str):
+        """获取已注册的服务类（非实例）。
+        调用方自行实例化：module_manager.get_service('auth')( )
+        """
+        return self._services.get(service_id)
+
+    def list_services(self):
+        return self._services.copy()
+
+    def _register_auth_services(self):
+        """注册认证相关服务到模块管理器"""
+        # AuthService — 核心认证服务
+        self.register_service("auth", "modules.auth.auth_service", "AuthService")
+        # SessionService 和 SyncAuthService 如存在则注册
+        try:
+            self.register_service("session", "modules.auth.service.session_service", "SessionService")
+        except Exception:
+            pass  # SessionService 可选
+        try:
+            self.register_service("sync_auth", "modules.auth.service.sync_auth_service", "SyncAuthService")
+        except Exception:
+            pass  # SyncAuthService 可选
 
 
 module_manager = ModuleManager()

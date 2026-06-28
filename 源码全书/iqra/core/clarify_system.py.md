@@ -1,12 +1,16 @@
 # `iqra/core/clarify_system.py`
 
-> 路径：`iqra/core/clarify_system.py` | 行数：220
+> 路径：`iqra/core/clarify_system.py` | 行数：224
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 Iqra Clarify - 交互确认系统
 
@@ -182,7 +186,7 @@ class ClarifySystem:
                     if data.get("status") == "read" and (now - data.get("created_at", 0)) > 3600:
                         os.remove(path)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
     
     def quick_confirm(self, question: str, choices: List[str] = None) -> bool:
         """

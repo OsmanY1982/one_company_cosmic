@@ -36,7 +36,7 @@ def add_staff(name, position="", department="", phone="", email="", salary=0, hi
         try:
             log_action("system", "添加员工", "employee", name)
         except Exception:
-            pass
+            logger.exception("异常详情")
         sync_staff()
         return True
     except Exception as e:
@@ -59,7 +59,7 @@ def update_staff(staff_id, **kwargs):
         try:
             log_action("system", "更新员工", "employee", f"ID={staff_id}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         sync_staff()
         return True
     except Exception as e:
@@ -78,7 +78,7 @@ def delete_staff(staff_id):
         try:
             log_action("system", "删除员工", "employee", f"ID={staff_id}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         sync_staff()
         return True
     except Exception as e:

@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """Remove unreferenced files from an unpacked PPTX directory.
 
 Usage: python clean.py <unpacked_dir>
@@ -120,7 +124,7 @@ def get_slide_referenced_files(unpacked_dir: Path) -> set:
             try:
                 referenced.add(target_path.relative_to(unpacked_dir.resolve()))
             except ValueError:
-                pass
+                logger.exception("异常详情")
 
     return referenced
 
@@ -163,7 +167,7 @@ def get_referenced_files(unpacked_dir: Path) -> set:
             try:
                 referenced.add(target_path.relative_to(unpacked_dir.resolve()))
             except ValueError:
-                pass
+                logger.exception("异常详情")
 
     return referenced
 

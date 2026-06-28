@@ -175,7 +175,7 @@ class _AsyncBridge:
                 try:
                     self._loop.close()
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
 
         self._thread = threading.Thread(target=_run, daemon=True, name="cua-driver-loop")
         self._thread.start()

@@ -1,12 +1,16 @@
 # `iqra/skills/creative/comfyui/scripts/check_deps.py`
 
-> 路径：`iqra/skills/creative/comfyui/scripts/check_deps.py` | 行数：437
+> 路径：`iqra/skills/creative/comfyui/scripts/check_deps.py` | 行数：441
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 check_deps.py — Verify a ComfyUI workflow's dependencies (custom nodes, models,
@@ -140,7 +144,7 @@ def fetch_object_info(url: str, headers: dict) -> tuple[set[str] | None, dict | 
             if isinstance(data, dict):
                 return set(data.keys()), None
         except Exception:
-            pass
+            logger.exception("异常详情")
         return None, {"http_status": 200, "reason": "non-dict response"}
     if r.status == 403:
         try:
@@ -233,7 +237,7 @@ def fetch_embeddings(base: str, headers: dict, *, is_cloud: bool) -> tuple[set[s
                         names.add(Path(n).stem)
                 return names, None
         except Exception:
-            pass
+            logger.exception("异常详情")
     return None, {"http_status": r.status, "reason": "unexpected"}
 
 

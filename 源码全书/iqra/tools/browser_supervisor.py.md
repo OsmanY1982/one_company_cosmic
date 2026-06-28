@@ -1,6 +1,6 @@
 # `iqra/tools/browser_supervisor.py`
 
-> 路径：`iqra/tools/browser_supervisor.py` | 行数：1366
+> 路径：`iqra/tools/browser_supervisor.py` | 行数：1367
 
 
 ---
@@ -374,15 +374,16 @@ class CDPSupervisor:
                     try:
                         await ws.close()
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
 
             try:
                 fut = asyncio.run_coroutine_threadsafe(_close_ws(), loop)
                 try:
                     fut.result(timeout=2.0)
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
             except RuntimeError:
+                logger.exception("异常详情")
                 pass  # loop already shutting down
         if self._thread is not None:
             self._thread.join(timeout=timeout)
@@ -491,11 +492,11 @@ class CDPSupervisor:
                 if pending:
                     loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
             except Exception:
-                pass
+                logger.exception("异常详情")
             try:
                 loop.close()
             except Exception:
-                pass
+                logger.exception("异常详情")
             with self._state_lock:
                 self._active = False
 
@@ -573,7 +574,7 @@ class CDPSupervisor:
                     try:
                         await reader_task
                     except (asyncio.CancelledError, Exception):
-                        pass
+                        logger.exception("异常详情")
                 for handle in list(self._dialog_watchdogs.values()):
                     handle.cancel()
                 self._dialog_watchdogs.clear()
@@ -583,7 +584,7 @@ class CDPSupervisor:
                     try:
                         await ws.close()
                     except Exception:
-                        pass
+                        logger.exception("异常详情")
 
             if self._stop_requested:
                 return
@@ -680,7 +681,7 @@ class CDPSupervisor:
                 timeout=3.0,
             )
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     async def _cdp(
         self,
@@ -969,7 +970,7 @@ class CDPSupervisor:
                     session_id=session_id, timeout=3.0,
                 )
             except Exception:
-                pass
+                logger.exception("异常详情")
             return
 
         # Parse query string for dialog metadata. Use urllib to be robust.

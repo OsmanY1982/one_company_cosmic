@@ -1,12 +1,16 @@
 # `core/data.py`
 
-> 路径：`core/data.py` | 行数：479
+> 路径：`core/data.py` | 行数：484
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 统一数据层 — 路径管理 + 数据库初始化 + 版本迁移
 对齐桌面版 core/business_service.py init_business_dbs()
@@ -45,7 +49,7 @@ def _log_migration(msg):
             from datetime import datetime
             f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}\n")
     except Exception:
-        pass
+        logger.exception("异常详情")
 
 def _ensure_schema_version(conn, db_path):
     """为数据库创建 _schema_version 表并检查/写入版本号"""
@@ -80,6 +84,7 @@ def _migrate_distribution_db_v2():
             conn.close()
             return
     except sqlite3.OperationalError:
+        logger.exception("异常详情")
         pass  # no _schema_version table yet
     
     _log_migration(f"{DISTRIBUTION_DB}: 开始 v1→v2 迁移（修复 NOT NULL 约束）")
@@ -121,7 +126,7 @@ def _migrate_distribution_db_v2():
             try:
                 c.execute("ROLLBACK")
             except Exception:
-                pass
+                logger.exception("异常详情")
     
     # 检查并添加 related_id 到 wallet_transactions
     try:
@@ -131,7 +136,7 @@ def _migrate_distribution_db_v2():
             c.execute("ALTER TABLE wallet_transactions ADD COLUMN related_id TEXT DEFAULT ''")
             _log_migration("wallet_transactions: 添加 related_id 列")
     except sqlite3.OperationalError:
-        pass
+        logger.exception("异常详情")
     
     # 更新版本号
     c.execute("INSERT OR REPLACE INTO _schema_version (id, version) VALUES (1, 2)")
@@ -152,7 +157,7 @@ def _migrate_users_db_v2():
             conn.close()
             return
     except sqlite3.OperationalError:
-        pass
+        logger.exception("异常详情")
     
     try:
         info = c.execute("PRAGMA table_info(users)").fetchall()
@@ -207,7 +212,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE orders ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     _ensure_schema_version(conn, ORDER_DB)
     conn.commit()
     conn.close()
@@ -269,7 +274,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE users ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     c.execute('''CREATE TABLE IF NOT EXISTS user_memberships (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
@@ -313,7 +318,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE products ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     c.execute('CREATE INDEX IF NOT EXISTS idx_products_name ON products(name)')
     c.execute('CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)')
     _ensure_schema_version(conn, PRODUCT_DB)
@@ -340,7 +345,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE staff ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     _ensure_schema_version(conn, STAFF_DB)
     conn.commit()
     conn.close()
@@ -387,7 +392,7 @@ def init_all_dbs():
         try:
             c.execute(f"ALTER TABLE wallet ADD COLUMN {col} {col_def}")
         except sqlite3.OperationalError:
-            pass
+            logger.exception("异常详情")
     c.execute('''CREATE TABLE IF NOT EXISTS wallet_transactions (
         id             INTEGER PRIMARY KEY AUTOINCREMENT,
         wallet_id      INTEGER NOT NULL,
@@ -402,15 +407,15 @@ def init_all_dbs():
     try:
         c.execute('CREATE INDEX IF NOT EXISTS idx_wallet_txn_type ON wallet_transactions(wallet_id, type)')
     except Exception:
-        pass
+        logger.exception("异常详情")
     try:
         c.execute('CREATE INDEX IF NOT EXISTS idx_wallet_txn_created ON wallet_transactions(created_at DESC)')
     except Exception:
-        pass
+        logger.exception("异常详情")
     try:
         c.execute("ALTER TABLE wallet_transactions ADD COLUMN related_id TEXT DEFAULT ''")
     except sqlite3.OperationalError:
-        pass
+        logger.exception("异常详情")
     _ensure_schema_version(conn, WALLET_DB)
     conn.commit()
     conn.close()
@@ -463,7 +468,7 @@ def init_all_dbs():
             try:
                 c.execute(f"ALTER TABLE {tbl} ADD COLUMN {col} {col_def}")
             except sqlite3.OperationalError:
-                pass
+                logger.exception("异常详情")
     _ensure_schema_version(conn, DISTRIBUTION_DB)
     conn.commit()
     conn.close()

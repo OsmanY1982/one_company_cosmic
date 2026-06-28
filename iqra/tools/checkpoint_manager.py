@@ -463,7 +463,7 @@ def _register_project(store: Path, working_dir: str) -> None:
             if isinstance(existing, dict):
                 meta["created_at"] = existing.get("created_at", now)
         except (OSError, ValueError):
-            pass
+            logger.exception("异常详情")
     try:
         meta_path.parent.mkdir(parents=True, exist_ok=True)
         meta_path.write_text(json.dumps(meta), encoding="utf-8")
@@ -521,7 +521,7 @@ def _dir_file_count(path: str) -> int:
             if count > _MAX_FILES:
                 return count
     except (PermissionError, OSError):
-        pass
+        logger.exception("异常详情")
     return count
 
 
@@ -536,7 +536,7 @@ def _dir_size_bytes(path: Path) -> int:
             except OSError:
                 continue
     except OSError:
-        pass
+        logger.exception("异常详情")
     return total
 
 
@@ -564,7 +564,7 @@ def _init_shadow_repo(shadow_repo: Path, working_dir: str) -> Optional[str]:
             str(_normalize_path(working_dir)) + "\n", encoding="utf-8"
         )
     except OSError:
-        pass
+        logger.exception("异常详情")
     return None
 
 
@@ -878,7 +878,7 @@ class CheckpointManager:
                 try:
                     index_file.unlink()
                 except OSError:
-                    pass
+                    logger.exception("异常详情")
         else:
             # First snapshot for this project.
             index_file.parent.mkdir(parents=True, exist_ok=True)
@@ -1317,7 +1317,7 @@ def prune_checkpoints(
                     except OSError:
                         continue
             except OSError:
-                pass
+                logger.exception("异常详情")
             if newest > 0 and newest < cutoff:
                 reason = "stale"
         if reason is None:
@@ -1360,13 +1360,13 @@ def prune_checkpoints(
                 if idx.exists():
                     idx.unlink()
             except OSError:
-                pass
+                logger.exception("异常详情")
             try:
                 mp = _project_meta_path(store, dir_hash)
                 if mp.exists():
                     mp.unlink()
             except OSError:
-                pass
+                logger.exception("异常详情")
             if reason == "orphan":
                 result["deleted_orphan"] += 1
             else:
@@ -1496,6 +1496,7 @@ def maybe_auto_prune_checkpoints(
                     out["skipped"] = True
                     return out
             except (OSError, ValueError):
+                logger.exception("异常详情")
                 pass  # corrupt marker — treat as no prior run
 
         result = prune_checkpoints(

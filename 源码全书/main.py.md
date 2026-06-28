@@ -1,6 +1,6 @@
 # `main.py`
 
-> 路径：`main.py` | 行数：205
+> 路径：`main.py` | 行数：208
 
 
 ---
@@ -22,11 +22,14 @@ import atexit
 import traceback
 import threading
 import logging
+
+logger = logging.getLogger(__name__)
+
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "core"))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "services"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "core"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "services"))
 
 # ── 按需安装核心依赖（首次运行自动触发）──
 from deps.install_deps import ensure_core_deps
@@ -113,7 +116,7 @@ def _init_engine():
         try:
             engine.load_session()
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         return engine, config
     except Exception:
@@ -155,7 +158,7 @@ def _run_floating_only(app: QApplication):
             elif cmd == "hide":
                 planet.hide()
         except OSError:
-            pass
+            logger.exception("异常详情")
 
     from PyQt5.QtCore import QTimer
     _ipc_timer = QTimer(planet)

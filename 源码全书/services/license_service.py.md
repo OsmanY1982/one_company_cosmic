@@ -1,12 +1,16 @@
 # `services/license_service.py`
 
-> 路径：`services/license_service.py` | 行数：172
+> 路径：`services/license_service.py` | 行数：176
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 授权服务
 软件授权验证、激活
@@ -167,7 +171,7 @@ class LicenseService:
                     "machine_code": license_data.get("machine_code"),
                 })
             except Exception:
-                pass
+                logger.exception("异常详情")
 
         return info
 

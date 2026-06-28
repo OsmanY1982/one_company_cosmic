@@ -55,7 +55,7 @@ def _resolve_download_timeout() -> float:
         try:
             return float(env_val)
         except ValueError:
-            pass
+            logger.exception("异常详情")
     try:
         from iqra_cli.config import cfg_get, load_config
         cfg = load_config()
@@ -63,7 +63,7 @@ def _resolve_download_timeout() -> float:
         if val is not None:
             return float(val)
     except Exception:
-        pass
+        logger.exception("异常详情")
     return 30.0
 
 _VISION_DOWNLOAD_TIMEOUT = _resolve_download_timeout()
@@ -626,7 +626,7 @@ async def _vision_analyze_native(
                 if temp_image_path.exists():
                     temp_image_path.unlink()
             except Exception:
-                pass
+                logger.exception("异常详情")
 
 
 async def vision_analyze_tool(
@@ -794,7 +794,7 @@ async def vision_analyze_tool(
             if _vtemp is not None:
                 vision_temperature = float(_vtemp)
         except Exception:
-            pass
+            logger.exception("异常详情")
         call_kwargs = {
             "task": "vision",
             "messages": messages,
@@ -1276,7 +1276,7 @@ async def video_analyze_tool(
             if _vtemp is not None:
                 vision_temperature = float(_vtemp)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
         call_kwargs = {
             "task": "vision",

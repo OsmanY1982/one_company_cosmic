@@ -1,12 +1,16 @@
 # `iqra/iqra_cli/config.py`
 
-> 路径：`iqra/iqra_cli/config.py` | 行数：65
+> 路径：`iqra/iqra_cli/config.py` | 行数：69
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 #!/usr/bin/env python3
 """
 iqra_cli.config — Iqra 兼容存根
@@ -60,7 +64,7 @@ def load_config(config_path: str = None):
                 file_cfg = yaml.safe_load(f) or {}
             defaults.update(file_cfg)
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     return defaults
 

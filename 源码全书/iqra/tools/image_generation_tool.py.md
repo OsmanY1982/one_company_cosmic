@@ -835,7 +835,7 @@ def check_image_generation_requirements() -> bool:
             _load_fal_client()
             return True
     except ImportError:
-        pass
+        logger.exception("异常详情")
 
     # Probe plugin providers. Discovery is idempotent and cheap.
     try:
@@ -850,7 +850,7 @@ def check_image_generation_requirements() -> bool:
             except Exception:
                 continue
     except Exception:
-        pass
+        logger.exception("异常详情")
 
     return False
 

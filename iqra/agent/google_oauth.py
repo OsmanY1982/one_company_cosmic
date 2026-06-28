@@ -234,9 +234,9 @@ def _credentials_lock(timeout_seconds: float = LOCK_TIMEOUT_SECONDS):
                         try:
                             msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)
                         except OSError:
-                            pass
+                            logger.exception("异常详情")
                     except ImportError:
-                        pass
+                        logger.exception("异常详情")
         finally:
             os.close(fd)
             _lock_state.depth = 0
@@ -494,7 +494,7 @@ def save_credentials(creds: GoogleCredentials) -> Path:
     try:
         os.chmod(path.parent, 0o700)
     except OSError:
-        pass
+        logger.exception("异常详情")
     payload = json.dumps(creds.to_dict(), indent=2, sort_keys=True) + "\n"
 
     with _credentials_lock():
@@ -518,7 +518,7 @@ def save_credentials(creds: GoogleCredentials) -> Path:
                 if tmp_path.exists():
                     tmp_path.unlink()
             except OSError:
-                pass
+                logger.exception("异常详情")
     return path
 
 
@@ -529,7 +529,7 @@ def clear_credentials() -> None:
         try:
             path.unlink()
         except FileNotFoundError:
-            pass
+            logger.exception("异常详情")
         except OSError as exc:
             logger.warning("Failed to remove Google OAuth credentials at %s: %s", path, exc)
 
@@ -559,7 +559,7 @@ def _post_form(url: str, data: Dict[str, str], timeout: float) -> Dict[str, Any]
         try:
             detail = exc.read().decode("utf-8", errors="replace")
         except Exception:
-            pass
+            logger.exception("异常详情")
         # Detect invalid_grant to signal credential revocation
         code = "google_oauth_token_http_error"
         if "invalid_grant" in detail.lower():
@@ -922,11 +922,11 @@ def start_oauth_flow(
         try:
             server.shutdown()
         except Exception:
-            pass
+            logger.exception("异常详情")
         try:
             server.server_close()
         except Exception:
-            pass
+            logger.exception("异常详情")
         server_thread.join(timeout=2.0)
 
     if not code:

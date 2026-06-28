@@ -1,12 +1,16 @@
 # `core/machine_code.py`
 
-> 路径：`core/machine_code.py` | 行数：86
+> 路径：`core/machine_code.py` | 行数：90
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 跨平台机器码生成
@@ -46,7 +50,7 @@ def _win_machine_code():
                 if uuid and uuid != "":
                     parts.append(uuid)
     except Exception:
-        pass
+        logger.exception("异常详情")
     try:
         result = subprocess.run(["wmic", "diskdrive", "get", "serialnumber"], capture_output=True, text=True, shell=True)
         if result.stdout:
@@ -54,7 +58,7 @@ def _win_machine_code():
             if len(lines) > 1:
                 parts.append(lines[1])
     except Exception:
-        pass
+        logger.exception("异常详情")
     parts.append(platform.node())
     return hashlib.md5("-".join(parts).encode()).hexdigest()[:32]
 
@@ -72,7 +76,7 @@ def _mac_machine_code():
             if match:
                 parts.append(match.group(1))
     except Exception:
-        pass
+        logger.exception("异常详情")
     parts.append(platform.node())
     return hashlib.md5("-".join(parts).encode()).hexdigest()[:32]
 
@@ -85,7 +89,7 @@ def _linux_machine_code():
             with open("/etc/machine-id") as f:
                 parts.append(f.read().strip())
     except Exception:
-        pass
+        logger.exception("异常详情")
     parts.append(platform.node())
     return hashlib.md5("-".join(parts).encode()).hexdigest()[:32]
 

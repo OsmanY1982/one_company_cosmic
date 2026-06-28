@@ -1,6 +1,6 @@
 # `iqra/plugins/memory/hindsight/__init__.py`
 
-> 路径：`iqra/plugins/memory/hindsight/__init__.py` | 行数：1747
+> 路径：`iqra/plugins/memory/hindsight/__init__.py` | 行数：1748
 
 
 ---
@@ -316,7 +316,7 @@ def _load_config() -> dict:
         try:
             return json.loads(profile_path.read_text(encoding="utf-8"))
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     # Legacy shared path (backward compat)
     legacy_path = Path.home() / ".hindsight" / "config.json"
@@ -324,7 +324,7 @@ def _load_config() -> dict:
         try:
             return json.loads(legacy_path.read_text(encoding="utf-8"))
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     return {
         "mode": os.environ.get("HINDSIGHT_MODE", "cloud"),
@@ -629,7 +629,7 @@ class HindsightMemoryProvider(MemoryProvider):
             try:
                 existing = json.loads(config_path.read_text())
             except Exception:
-                pass
+                logger.exception("异常详情")
         existing.update(values)
         config_path.write_text(json.dumps(existing, indent=2))
 
@@ -814,7 +814,7 @@ class HindsightMemoryProvider(MemoryProvider):
             try:
                 materialized_config = json.loads(config_path.read_text(encoding="utf-8"))
             except Exception:
-                pass
+                logger.exception("异常详情")
 
             llm_api_key = env_writes.get("HINDSIGHT_LLM_API_KEY", "")
             if not llm_api_key:
@@ -1094,6 +1094,7 @@ class HindsightMemoryProvider(MemoryProvider):
                 else:
                     logger.warning("uv not found. Run: pip install 'hindsight-client>=%s'", _MIN_CLIENT_VERSION)
         except Exception:
+            logger.exception("异常详情")
             pass  # packaging not available or other issue — proceed anyway
 
         self._config = _load_config()
@@ -1196,7 +1197,7 @@ class HindsightMemoryProvider(MemoryProvider):
             from importlib.metadata import version as pkg_version
             _client_version = pkg_version("hindsight-client")
         except Exception:
-            pass
+            logger.exception("异常详情")
         logger.info("Hindsight initialized: mode=%s, api_url=%s, bank=%s, budget=%s, memory_mode=%s, prefetch_method=%s, client=%s",
                      self._mode, self._api_url, self._bank_id, self._budget, self._memory_mode, self._prefetch_method, _client_version)
         if self._bank_id_template:
@@ -1703,7 +1704,7 @@ class HindsightMemoryProvider(MemoryProvider):
             try:
                 self._retain_queue.put(_WRITER_SENTINEL)
             except Exception:
-                pass
+                logger.exception("异常详情")
             writer.join(timeout=10.0)
             if writer.is_alive():
                 logger.warning(
@@ -1728,15 +1729,15 @@ class HindsightMemoryProvider(MemoryProvider):
                         try:
                             self._client._client = None
                         except Exception:
-                            pass
+                            logger.exception("异常详情")
                     try:
                         self._client.close()
                     except RuntimeError:
-                        pass
+                        logger.exception("异常详情")
                 else:
                     self._run_sync(self._client.aclose())
             except Exception:
-                pass
+                logger.exception("异常详情")
             self._client = None
         # The module-global background event loop (_loop / _loop_thread)
         # is intentionally NOT stopped here. It is shared across every

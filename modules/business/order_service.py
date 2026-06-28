@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 # -*- coding: utf-8 -*-
 """
 订单服务层
@@ -83,7 +87,7 @@ def add_order(order_no: str, customer_name: str = "", product_name: str = "",
             log_action("system", "创建订单", "order",
                        f"{order_no}: {customer_name}, {product_name}, {total_amount}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return {"ok": True, "msg": msg}
     except Exception as e:
         return {"ok": False, "msg": str(e)}
@@ -140,7 +144,7 @@ def update_order(order_id: int, **kwargs) -> dict:
         try:
             log_action("system", "更新订单", "order", f"订单 ID={order_id}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return {"ok": True, "msg": "更新成功"}
     except Exception as e:
         return {"ok": False, "msg": str(e)}
@@ -155,7 +159,7 @@ def delete_order(order_id: int) -> dict:
         try:
             log_action("system", "删除订单", "order", f"订单 ID={order_id}")
         except Exception:
-            pass
+            logger.exception("异常详情")
         return {"ok": True, "msg": "删除成功"}
     except Exception as e:
         return {"ok": False, "msg": str(e)}

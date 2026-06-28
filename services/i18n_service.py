@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 国际化服务
 多语言支持
@@ -130,7 +134,7 @@ class I18nService:
                         else:
                             self._translations[lang] = trans
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _save_config(self):
         """保存配置"""

@@ -1,6 +1,6 @@
 {
   "admin": {
-    "password": "admin",
+    "password": "$2b$12$RKgAqksyxA9qE1CPmP26kOz21YKgOuQxboh.WxPsWWxMHxqUwIcFK",
     "role": "admin",
     "membership": "permanent",
     "expire_at": null,

@@ -302,7 +302,7 @@ def _looks_like_error_output(content: str) -> bool:
                 if status in {"error", "failed", "failure", "timeout"}:
                     return True
         except Exception:
-            pass
+            logger.exception("异常详情")
 
     first = content.splitlines()[0].strip().lower() if content.splitlines() else ""
     return (
@@ -391,7 +391,7 @@ def _get_child_timeout() -> float:
         try:
             return max(30.0, float(env_val))
         except (TypeError, ValueError):
-            pass
+            logger.exception("异常详情")
     return float(DEFAULT_CHILD_TIMEOUT)
 
 
@@ -1250,7 +1250,7 @@ def _dump_subagent_timeout_diagnostic(
             try:
                 _w(f"  loaded tools:      {sorted(list(tool_names))}")
             except Exception:
-                pass
+                logger.exception("异常详情")
         _w("")
 
         _w("## Prompt / schema sizes")
@@ -1422,11 +1422,11 @@ def _run_single_child(
                             f"(iteration {child_iter}/{child_max})"
                         )
             except Exception:
-                pass
+                logger.exception("异常详情")
             try:
                 touch(desc)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     _heartbeat_thread = threading.Thread(target=_heartbeat_loop, daemon=True)
     _heartbeat_thread.start()
@@ -1513,7 +1513,7 @@ def _run_single_child(
                 elif hasattr(child, "_interrupt_requested"):
                     child._interrupt_requested = True
             except Exception:
-                pass
+                logger.exception("异常详情")
 
             is_timeout = isinstance(_timeout_exc, (FuturesTimeoutError, TimeoutError))
             duration = round(time.monotonic() - child_start, 2)
@@ -1533,7 +1533,7 @@ def _run_single_child(
                 _summary = child.get_activity_summary()
                 child_api_calls = int(_summary.get("api_call_count", 0) or 0)
             except Exception:
-                pass
+                logger.exception("异常详情")
             if is_timeout and child_api_calls == 0:
                 diagnostic_path = _dump_subagent_timeout_diagnostic(
                     child=child,
@@ -1564,7 +1564,7 @@ def _run_single_child(
                         summary="",
                     )
                 except Exception:
-                    pass
+                    logger.exception("异常详情")
 
             if is_timeout:
                 if child_api_calls == 0:
@@ -1798,7 +1798,7 @@ def _run_single_child(
             try:
                 complete_kwargs["cost_usd"] = float(_cost_usd)
             except (TypeError, ValueError):
-                pass
+                logger.exception("异常详情")
 
         if child_progress_cb:
             try:
@@ -2224,7 +2224,7 @@ def delegate_task(
                     ),
                 )
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     # Fire subagent_stop hooks once per child, serialised on the parent thread.
     # This keeps Python-plugin and shell-hook callbacks off of the worker threads
@@ -2250,7 +2250,7 @@ def delegate_task(
             if child_cost:
                 _children_cost_total += float(child_cost)
         except (TypeError, ValueError):
-            pass
+            logger.exception("异常详情")
         if _invoke_hook is None:
             continue
         try:
@@ -2446,7 +2446,7 @@ def _load_config() -> dict:
         if cfg:
             return cfg
     except Exception:
-        pass
+        logger.exception("异常详情")
     try:
         from iqra_cli.config import load_config
 

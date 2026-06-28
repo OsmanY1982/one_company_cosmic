@@ -1,12 +1,16 @@
 # `services/theme_service.py`
 
-> 路径：`services/theme_service.py` | 行数：258
+> 路径：`services/theme_service.py` | 行数：262
 
 
 ---
 
 
 ```python
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 主题服务
 应用主题（亮色/暗色/自定义）管理
@@ -131,7 +135,7 @@ class ThemeService:
                     for name, colors in config.get("custom_themes", {}).items():
                         self._custom_themes[name] = ThemeColors(name=name, **colors)
             except Exception:
-                pass
+                logger.exception("异常详情")
 
     def _save_config(self):
         """保存配置"""

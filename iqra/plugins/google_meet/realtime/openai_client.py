@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """OpenAI Realtime API WebSocket client + file-queue speaker.
 
 This module is the "output" side of the v2 voice bridge: it takes text,
@@ -108,7 +112,7 @@ class RealtimeSession:
             try:
                 self._ws.close()
             except Exception:
-                pass
+                logger.exception("异常详情")
             self._ws = None
 
     # ── speaking ──────────────────────────────────────────────────────────

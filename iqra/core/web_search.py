@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 """
 网络搜索能力
 支持多种搜索引擎和搜索模式
@@ -515,7 +519,7 @@ class SearchResultProcessor:
                     if result_date >= cutoff:
                         filtered.append(result)
                 except:
-                    pass
+                    logger.exception("异常详情")
             else:
                 filtered.append(result)
         
