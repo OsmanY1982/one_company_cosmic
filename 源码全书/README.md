@@ -1,6 +1,6 @@
 # 一人公司 · 宇宙版 — 源码全书
-> 自动生成于 2026-06-29 08:34
-> 共 844 个模块，每个 `.py` 文件独立为一个文档
+> 自动生成于 2026-06-30 00:55
+> 共 850 个模块，每个 `.py` 文件独立为一个文档
 
 ---
 
@@ -254,6 +254,7 @@
 │   │   ├── config_validator.py
 │   │   ├── core_engine.py
 │   │   ├── enhanced_core.py
+│   │   ├── episodic_memory.py
 │   │   ├── git_ops.py
 │   │   ├── iqra_logging.py
 │   │   ├── llm_backend.py
@@ -281,16 +282,20 @@
 │   │   ├── super_intelligence.py
 │   │   ├── sync_bridge.py
 │   │   ├── task_scheduler.py
+│   │   ├── test_episodic_smoke.py
+│   │   ├── test_verification_smoke.py
 │   │   ├── todo_system.py
 │   │   ├── token_optimizer.py
 │   │   ├── token_saver.py
 │   │   ├── tool_registry.py
+│   │   ├── verification_hook.py
 │   │   ├── web_search.py
 │   │   └── workspace_indexer.py
 │   ├── cron/
 │   │   ├── __init__.py
 │   │   └── jobs.py
 │   ├── data/
+│   │   ├── episodic/
 │   │   ├── iqra/
 │   │   │   ├── data/
 │   │   │   │   └── smart_memory/
@@ -782,6 +787,7 @@
 │   │   │   ├── ddgs.py
 │   │   │   └── searxng.py
 │   │   ├── __init__.py
+│   │   ├── a2a_tool.py
 │   │   ├── alert_tools.py
 │   │   ├── analysis_tools.py
 │   │   ├── ansi_strip.py
@@ -862,6 +868,7 @@
 │   │   ├── sub_agent.py
 │   │   ├── template_tools.py
 │   │   ├── terminal_tool.py
+│   │   ├── test_a2a_smoke.py
 │   │   ├── tirith_security.py
 │   │   ├── todo_tool.py
 │   │   ├── tool_backend_helpers.py
@@ -1484,6 +1491,7 @@
 - [`iqra/core/config_validator.py`](./iqra/core/config_validator.py.md)
 - [`iqra/core/core_engine.py`](./iqra/core/core_engine.py.md)
 - [`iqra/core/enhanced_core.py`](./iqra/core/enhanced_core.py.md)
+- [`iqra/core/episodic_memory.py`](./iqra/core/episodic_memory.py.md)
 - [`iqra/core/firecrawl/__init__.py`](./iqra/core/firecrawl/__init__.py.md)
 - [`iqra/core/firecrawl/cache.py`](./iqra/core/firecrawl/cache.py.md)
 - [`iqra/core/firecrawl/converter.py`](./iqra/core/firecrawl/converter.py.md)
@@ -1540,10 +1548,13 @@
 - [`iqra/core/super_intelligence.py`](./iqra/core/super_intelligence.py.md)
 - [`iqra/core/sync_bridge.py`](./iqra/core/sync_bridge.py.md)
 - [`iqra/core/task_scheduler.py`](./iqra/core/task_scheduler.py.md)
+- [`iqra/core/test_episodic_smoke.py`](./iqra/core/test_episodic_smoke.py.md)
+- [`iqra/core/test_verification_smoke.py`](./iqra/core/test_verification_smoke.py.md)
 - [`iqra/core/todo_system.py`](./iqra/core/todo_system.py.md)
 - [`iqra/core/token_optimizer.py`](./iqra/core/token_optimizer.py.md)
 - [`iqra/core/token_saver.py`](./iqra/core/token_saver.py.md)
 - [`iqra/core/tool_registry.py`](./iqra/core/tool_registry.py.md)
+- [`iqra/core/verification_hook.py`](./iqra/core/verification_hook.py.md)
 - [`iqra/core/web_search.py`](./iqra/core/web_search.py.md)
 - [`iqra/core/workspace_indexer.py`](./iqra/core/workspace_indexer.py.md)
 - [`iqra/cron/__init__.py`](./iqra/cron/__init__.py.md)
@@ -1705,6 +1716,7 @@
 - [`iqra/skills/research/polymarket/scripts/polymarket.py`](./iqra/skills/research/polymarket/scripts/polymarket.py.md)
 - [`iqra/skills/smart_memory/package_skill.py`](./iqra/skills/smart_memory/package_skill.py.md)
 - [`iqra/tools/__init__.py`](./iqra/tools/__init__.py.md)
+- [`iqra/tools/a2a_tool.py`](./iqra/tools/a2a_tool.py.md)
 - [`iqra/tools/alert_tools.py`](./iqra/tools/alert_tools.py.md)
 - [`iqra/tools/analysis_tools.py`](./iqra/tools/analysis_tools.py.md)
 - [`iqra/tools/ansi_strip.py`](./iqra/tools/ansi_strip.py.md)
@@ -1812,6 +1824,7 @@
 - [`iqra/tools/sub_agent.py`](./iqra/tools/sub_agent.py.md)
 - [`iqra/tools/template_tools.py`](./iqra/tools/template_tools.py.md)
 - [`iqra/tools/terminal_tool.py`](./iqra/tools/terminal_tool.py.md)
+- [`iqra/tools/test_a2a_smoke.py`](./iqra/tools/test_a2a_smoke.py.md)
 - [`iqra/tools/tirith_security.py`](./iqra/tools/tirith_security.py.md)
 - [`iqra/tools/todo_tool.py`](./iqra/tools/todo_tool.py.md)
 - [`iqra/tools/tool_backend_helpers.py`](./iqra/tools/tool_backend_helpers.py.md)

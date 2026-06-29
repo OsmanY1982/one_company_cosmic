@@ -54,6 +54,7 @@ from .chat_engine import ChatEngine
 from .iqra_logging import logger
 from .rag_context import RAGContextInjector
 from .proactive_engine import SuggestionEngine
+from .verification_hook import VerificationHook, ReviewResult, format_findings_context
 
 
 # ═══════════════════════════════════════════
@@ -245,6 +246,9 @@ class AgentLoop(QObject):
         # 智能建议生成器（任务完成后生成下一步建议）
         self._suggester: Optional[SuggestionEngine] = None
 
+        # 执行后自检钩子（工具调用完成后、COMPLETE 前触发）
+        self._verification: Optional[VerificationHook] = None
+
         # 转发内部 engine 的信号到 AgentLoop 自身信号
         self._engine.on_tool_start.connect(self.on_tool_start.emit)
         self._engine.on_tool_result.connect(self.on_tool_result.emit)
@@ -258,6 +262,18 @@ class AgentLoop(QObject):
     def disable_suggestions(self):
         """关闭智能建议"""
         self._suggester = None
+
+    def enable_verification(self):
+        """启用执行后自检：Agent 完成工具调用后自动审查操作正确性"""
+        if self._engine and hasattr(self._engine, "backend"):
+            self._verification = VerificationHook(
+                chat_fn=self._engine.backend.chat,
+                enabled=True,
+            )
+
+    def disable_verification(self):
+        """关闭执行后自检"""
+        self._verification = None
 
     def _emit_suggestions(self, user_message: str, completion_text: str):
         """生成并发射下一步建议"""
@@ -668,6 +684,10 @@ class AgentLoop(QObject):
                 content = response.content or ""
                 self._engine.messages.append({"role": "assistant", "content": content})
                 self._emit(AgentEventType.REFLECT, "任务完成")
+
+                # 执行后自检（在 COMPLETE 前）
+                self._run_verification()
+
                 self._emit(AgentEventType.COMPLETE, content)
                 self._emit_suggestions(user_message, content)
                 self.on_progress.emit(100)
@@ -802,6 +822,10 @@ class AgentLoop(QObject):
                 event = AgentEvent(AgentEventType.REFLECT, self._current_step, self._total_steps, "任务完成")
                 self._events.append(event)
                 yield event
+
+                # 执行后自检（在 COMPLETE 前）
+                self._run_verification()
+
                 event = AgentEvent(AgentEventType.COMPLETE, self._current_step, self._total_steps, content)
                 self._events.append(event)
                 yield event
@@ -942,6 +966,47 @@ class AgentLoop(QObject):
             yield f"\n\n[达到最大迭代次数 {self._max_iterations}，任务可能未完成]"
         finally:
             self._restore_system_prompt()
+
+    def _run_verification(self) -> None:
+        """执行后自检：调用 VerificationHook 审查本轮工具调用"""
+        if not self._verification or not self._verification.enabled:
+            return
+        if not self._tools_called:
+            return
+
+        # 收集工具结果（从 events 中提取）
+        tool_results = []
+        for ev in self._events:
+            if ev.type == AgentEventType.OBSERVE and ev.data:
+                tool_results.append({
+                    "tool": ev.data.get("tool", ""),
+                    "success": ev.data.get("success", False),
+                    "output": ev.data.get("output", ""),
+                })
+
+        # 获取 user_query（从 messages 第一条 user 消息）
+        user_query = ""
+        for msg in self._engine.messages:
+            if msg.get("role") == "user":
+                user_query = msg.get("content", "")[:500]
+                break
+
+        result = self._verification.review(
+            messages=self._engine.messages,
+            tools_called=self._tools_called,
+            tool_results=tool_results,
+            user_query=user_query,
+        )
+
+        if result.findings:
+            context = format_findings_context(result.findings)
+            self._emit(AgentEventType.OBSERVE,
+                      f"自检: {result.verdict} ({len(result.findings)} 项发现)",
+                      {"verification_verdict": result.verdict,
+                       "verification_summary": result.summary,
+                       "verification_findings_count": len(result.findings)})
+            logger.info("VerificationHook: verdict=%s, findings=%d, summary=%s",
+                       result.verdict, len(result.findings), result.summary)
 
     # ── ChatEngine 兼容属性与方法 ──
 

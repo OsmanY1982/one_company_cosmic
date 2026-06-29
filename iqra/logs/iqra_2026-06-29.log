@@ -6,3 +6,8 @@
 2026-06-29 16:21:19 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
 2026-06-29 17:08:19 [WARNING] iqra.core.chat_engine: LLM 摘要压缩失败: OpenAICompatibleBackend.chat() got an unexpected keyword argument 'max_tokens'，回退机械裁剪
 2026-06-29 17:08:19 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-29 23:02:55 [INFO] iqra.iqra_cli.cli: A2A tools registered: a2a_discover_agents, a2a_send_task, a2a_get_task, a2a_cancel_task
+2026-06-29 23:02:55 [INFO] iqra.iqra_cli.cli: EpisodicMemory initialized (project=iqra)
+2026-06-29 23:02:55 [INFO] iqra.iqra_cli.cli: A2A tools registered: a2a_discover_agents, a2a_send_task, a2a_get_task, a2a_cancel_task
+2026-06-29 23:02:55 [INFO] iqra.iqra_cli.cli: EpisodicMemory initialized (project=iqra)
+2026-06-29 23:02:55 [INFO] iqra.iqra_cli.cli: AgentLoop enabled with verification hook
