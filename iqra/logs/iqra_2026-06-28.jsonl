@@ -68,3 +68,5 @@
 {"timestamp": "2026-06-28T23:14:49.767969", "level": "INFO", "logger": "iqra", "message": "Iqra 日志系统已启动 (level=INFO, json=False)", "module": "iqra_logging", "function": "install", "line": 246}
 {"timestamp": "2026-06-28T23:24:24.298097", "level": "WARNING", "logger": "iqra.core.chat_engine", "message": "LLM 摘要压缩失败: OpenAICompatibleBackend.chat() got an unexpected keyword argument 'max_tokens'，回退机械裁剪", "module": "chat_engine", "function": "_llm_summarize_context", "line": 218}
 {"timestamp": "2026-06-28T23:24:24.301307", "level": "INFO", "logger": "iqra", "message": "Iqra 日志系统已启动 (level=INFO, json=False)", "module": "iqra_logging", "function": "install", "line": 246}
+{"timestamp": "2026-06-28T23:46:31.448919", "level": "WARNING", "logger": "iqra.core.chat_engine", "message": "LLM 摘要压缩失败: OpenAICompatibleBackend.chat() got an unexpected keyword argument 'max_tokens'，回退机械裁剪", "module": "chat_engine", "function": "_llm_summarize_context", "line": 218}
+{"timestamp": "2026-06-28T23:46:31.450551", "level": "INFO", "logger": "iqra", "message": "Iqra 日志系统已启动 (level=INFO, json=False)", "module": "iqra_logging", "function": "install", "line": 246}

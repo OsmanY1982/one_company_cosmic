@@ -1,6 +1,6 @@
 # `modules/intelligence/intelligence_window.py`
 
-> 路径：`modules/intelligence/intelligence_window.py` | 行数：249
+> 路径：`modules/intelligence/intelligence_window.py` | 行数：252
 
 
 ---
@@ -184,8 +184,11 @@ class IntelligenceWindow(QMainWindow):
 
     def showEvent(self, event):
         super().showEvent(event)
-        from core.ad_launcher import check_and_prompt_ad
-        check_and_prompt_ad(self)
+        try:
+            from core.ad_launcher import check_and_prompt_ad
+            check_and_prompt_ad(self)
+        except (ModuleNotFoundError, ImportError):
+            pass
 
     def resizeEvent(self, event):
         super().resizeEvent(event)

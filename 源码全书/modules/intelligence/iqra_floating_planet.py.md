@@ -1,6 +1,6 @@
 # `modules/intelligence/iqra_floating_planet.py`
 
-> 路径：`modules/intelligence/iqra_floating_planet.py` | 行数：921
+> 路径：`modules/intelligence/iqra_floating_planet.py` | 行数：924
 
 
 ---
@@ -207,8 +207,11 @@ class FloatingPlanet(FloatingPlanetAnimMixin, FloatingPlanetDrawMixin,
 
     def showEvent(self, event):
         super().showEvent(event)
-        from core.ad_launcher import check_and_prompt_ad
-        check_and_prompt_ad(self)
+        try:
+            from core.ad_launcher import check_and_prompt_ad
+            check_and_prompt_ad(self)
+        except (ModuleNotFoundError, ImportError):
+            pass
 
     # ── 鼠标事件 ──
 

@@ -1,0 +1,6 @@
+2026-06-29 15:22:07 [WARNING] iqra.core.chat_engine: LLM 摘要压缩失败: chat() got an unexpected keyword argument 'max_tokens'，回退机械裁剪
+2026-06-29 15:22:07 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-29 16:21:18 [WARNING] iqra.core.chat_engine: LLM 摘要压缩失败: OpenAICompatibleBackend.chat() got an unexpected keyword argument 'max_tokens'，回退机械裁剪
+2026-06-29 16:21:18 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
+2026-06-29 16:21:19 [WARNING] iqra.core.chat_engine: LLM 摘要压缩失败: OpenAICompatibleBackend.chat() got an unexpected keyword argument 'max_tokens'，回退机械裁剪
+2026-06-29 16:21:19 [INFO] iqra: Iqra 日志系统已启动 (level=INFO, json=False)
